@@ -1,12 +1,8 @@
 <?php
-
-require_once 'Horde/Notification/Listener/status.php';
-require_once 'Horde/Notification/Event.php';
-
 /**
- * The Notification_Listener_status_kronolith:: class extends the
- * Notification_Listener_status:: class to return all messages instead of
- * printing them.
+ * The Kronolith_Notification_Listener_Status:: class extends the
+ * Horde_Notification_Listener_Status:: class to return all messages instead
+ * of printing them.
  *
  * Copyright 2005-2009 The Horde Project (http://www.horde.org/)
  *
@@ -17,14 +13,14 @@ require_once 'Horde/Notification/Event.php';
  * @author  Jan Schneider <jan@horde.org>
  * @package Horde_Notification
  */
-class Notification_Listener_status_kronolith extends Notification_Listener_status {
-
+class Kronolith_Notification_Listener_Status extends Horde_Notification_Listener_Status
+{
     /**
      * The notified message stack.
      *
      * @var array
      */
-    var $_messageStack = array();
+    protected $_messageStack = array();
 
     /**
      * Returns all status message if there are any on the 'status' message
@@ -33,7 +29,7 @@ class Notification_Listener_status_kronolith extends Notification_Listener_statu
      * @param array &$messageStack  The stack of messages.
      * @param array $options        An array of options.
      */
-    function notify(&$messageStack, $options = array())
+    public function notify(&$messageStack, $options = array())
     {
         while ($message = array_shift($messageStack)) {
             $event = @unserialize($message['event']);
@@ -53,12 +49,9 @@ class Notification_Listener_status_kronolith extends Notification_Listener_statu
      *
      * @return boolean  Whether this listener handles the type.
      */
-    function handles($type)
+    public function handles($type)
     {
-        if (substr($type, 0, 10) == 'kronolith.') {
-            return true;
-        }
-        return parent::handles($type);
+        return (substr($type, 0, 10) == 'kronolith.') || parent::handles($type);
     }
 
     /**
@@ -69,7 +62,7 @@ class Notification_Listener_status_kronolith extends Notification_Listener_statu
      *
      * @return array  List of message hashes.
      */
-    function getStack($encode = false)
+    public function getStack($encode = false)
     {
         $msgs = $this->_messageStack;
         if (!$encode) {
