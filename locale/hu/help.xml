@@ -8,7 +8,7 @@ A Kronolith egy web alapú naptárprogram. Azon túl, hogy elfoglaltságokat
 lehet létrehozni, változtatni és törölni, egy sor egyéb dolgot is támogat:
 ismétlődő eseményeket (kivételekkel és törlési lehetőségekkel), alarm, import
 és export funkciókat, mutatja a feladatok (Nag) listáját (amennyiben ez a
-program installálva van), továbbá az elfoglaltságok listáját a Horde 
+program installálva van), továbbá az elfoglaltságok listáját a Horde
 összefoglaló képernyőn is meg tudja jeleníteni.
     </para>
 </entry>
@@ -16,7 +16,7 @@ program installálva van), továbbá az elfoglaltságok listáját a Horde
     <title>Menü: Ma</title>
     <heading>Ma</heading>
     <para>
-    A <i>Ma</i> menüpont az alapértelmezett módon (havi, heti, napi stb. 
+    A <i>Ma</i> menüpont az alapértelmezett módon (havi, heti, napi stb.
 nézetben, ahogy az Opciókban be van állítva) jeleníti meg az aznapi dátumot.
     </para>
 </entry>
@@ -26,7 +26,7 @@ nézetben, ahogy az Opciókban be van állítva) jeleníti meg az aznapi dátumo
     <para>
     Az <i>Ugrás</i> menüpont egy kis felbukkanó ablakot jelenít meg, melyben
 gyorsan kiválasztható, hogy melyik dátumra ugorjunk (pl. megadható az év,
-a hónap, az év valahányadik hete, a hónap adott napja). Rendszerint ez a 
+a hónap, az év valahányadik hete, a hónap adott napja). Rendszerint ez a
 a naptárban való dátumválasztás leggyorsabb módja.
     </para>
 </entry>
@@ -74,7 +74,7 @@ a naptárban.
     <heading>Opciók</heading>
     <para>
     Az <i>Opciók</i> menüpont segítségével személyes igényeinek megfelelően
-állíthatja be a program tulajdonságait, más Horde programmodulokkal való 
+állíthatja be a program tulajdonságait, más Horde programmodulokkal való
 együttműködését, több ill. másokkal közös naptárakat használhat, továbbá
 személyes igényeinek megfelelően alakíthatja elfoglaltságainak kategorizálását.
     </para>
@@ -93,10 +93,10 @@ importálhatók. Exportálni csak CSV formátumban lehet.
     <title>Figyelmeztetés (alarm)</title>
     <heading>Figyelmeztetések</heading>
     <para>
-    A program ébresztőóraszerűen figyelmeztetni tudja a számítógép 
+    A program ébresztőóraszerűen figyelmeztetni tudja a számítógép
 felhasználóját az egyes elfoglaltságokra. Alapértelmezés szerint az
 első figyelmeztetést 15 perccel az esemény kezdete előtt kapja
-a felhasználó, de ez szabadon állítható be, külön-külön az egyes 
+a felhasználó, de ez szabadon állítható be, külön-külön az egyes
 elfoglaltságokra.
     </para>
 </entry>
@@ -120,7 +120,7 @@ dátum megadásával.
 az esemény összes előfordulására érvényes lesz. Amennyiben egy ismétlődő
 elfoglaltság egyetlen előfordulását kívánjuk megváltoztatni, akkor szüntessük
 meg az ismétlődését, majd az <i>Újként mentsük el</i> gombra kattintva
-mentsük el. Ezt követően az eseménynek ez az előfordulása a többi 
+mentsük el. Ezt követően az eseménynek ez az előfordulása a többi
 ismétlődéstől függetlenül módosítható.
     </para>
 </entry>

@@ -32,7 +32,7 @@ Kronolith és una aplicació d'agenda basada en web. A més de les funcions habi
     <title>Menú: Setmana laboral</title>
     <heading>Vista de setmana laboral</heading>
     <para>
-    L'element <i>Setmana laboral</i> del menú mostrarà la vista de setmana laboral (de dilluns a divendres) més adequada del día seleccionat actualment. 
+    L'element <i>Setmana laboral</i> del menú mostrarà la vista de setmana laboral (de dilluns a divendres) més adequada del día seleccionat actualment.
     </para>
 </entry>
   <entry id="menu-week" md5="3d8a3bfda629bb6e09819b2e660546e5" state="uptodate">
@@ -60,14 +60,14 @@ Kronolith és una aplicació d'agenda basada en web. A més de les funcions habi
     <title>Menú: Opcions</title>
     <heading>Opcions</heading>
     <para>
-    L'element <i>Opcions</i> del menú li permet configurar <i>Opcions</i> (o preferències) que controlen l'aspecte i comportament de kronolith, la seva interacció amb Horde i amb la resta de les aplicacions, gestionar diverses agendes y compartir-les, així com, gestionar codis de categories per als esdeveniments.  
+    L'element <i>Opcions</i> del menú li permet configurar <i>Opcions</i> (o preferències) que controlen l'aspecte i comportament de kronolith, la seva interacció amb Horde i amb la resta de les aplicacions, gestionar diverses agendes y compartir-les, així com, gestionar codis de categories per als esdeveniments.
     </para>
 </entry>
   <entry id="menu-import-export" md5="34bc9dfc4d6302fc1011696a1b8d1ca8" state="uptodate">
     <title>Menú: Importar/Exportar</title>
     <heading>Importar/Exportar</heading>
     <para>
-    L'element <i>Importar/Exportar</i> del menú li permet importar o exportar esdeveniments de l'agenda. Actualment es poden importar arxius en format CSV, Outlook de Microsoft, Palm DateBook i vCalendar/iCalendar. Només pot exportar a formats CSV i iCalendar. 
+    L'element <i>Importar/Exportar</i> del menú li permet importar o exportar esdeveniments de l'agenda. Actualment es poden importar arxius en format CSV, Outlook de Microsoft, Palm DateBook i vCalendar/iCalendar. Només pot exportar a formats CSV i iCalendar.
     </para>
 </entry>
   <entry id="alarms" md5="4c1c6f3eb13a416031ffbee4fce99ea1" state="uptodate">
@@ -82,21 +82,21 @@ Kronolith és una aplicació d'agenda basada en web. A més de les funcions habi
     <title>Esdeveniments recurrents</title>
     <heading>Esdeveniments recurrents</heading>
     <para>
-Els esdeveniments es poden fer recurrents de diverses formes. La majoría dels esdeveniments es repeteixen de certes formes habituals. Per exemple, el tipus de recurrència Mensual provoca que l'element seleccionat es repeteixi cada mes i el tipus Setmanal que ho faci cada setmana. Es poden utilitzar per a reflectir esdeveniments que es repeteixin de formes complexes: per exemple, un element que succeeixi cada últim divendres de cada mes o els dilluns, el dimecres i divendres de cada setmana. 
+Els esdeveniments es poden fer recurrents de diverses formes. La majoría dels esdeveniments es repeteixen de certes formes habituals. Per exemple, el tipus de recurrència Mensual provoca que l'element seleccionat es repeteixi cada mes i el tipus Setmanal que ho faci cada setmana. Es poden utilitzar per a reflectir esdeveniments que es repeteixin de formes complexes: per exemple, un element que succeeixi cada últim divendres de cada mes o els dilluns, el dimecres i divendres de cada setmana.
     </para>
     <para>
 També és pot limitar la durada de les repeticions d'un esdeveniment seleccionant una <i>data
 final</i>.
     </para>
     <para>
-Normalment, la modificació d'un esdeveniment recurrent s'aplicarà a totes les repeticions del mateix. Es pot modificar una repetició individual d'un esdeveniment recurrent modificant la repetició, eliminant la informació de recurrència i seleccionant l'opció Guardar com nou del menú de recurrència. L'esdeveniment seleccionat es podrà modificar llavors de forma independent a les altres repeticions del mateix. 
+Normalment, la modificació d'un esdeveniment recurrent s'aplicarà a totes les repeticions del mateix. Es pot modificar una repetició individual d'un esdeveniment recurrent modificant la repetició, eliminant la informació de recurrència i seleccionant l'opció Guardar com nou del menú de recurrència. L'esdeveniment seleccionat es podrà modificar llavors de forma independent a les altres repeticions del mateix.
     </para>
 </entry>
   <entry id="Printing" md5="2f90d14e34b715a054fb52bb919ac5f8" state="uptodate">
     <title>Impressió</title>
     <heading>Impressió d'agendes i esdeveniments</heading>
     <para>
-   Determinades vistes s'han dissenyat amb l'objectiu de poder imprimir-se. Si està en una d'elles, apareixerá la icona Imprimir en la barra de menú superior. Utilitzi aquesta icona per a imprimir la vista actual. 
+   Determinades vistes s'han dissenyat amb l'objectiu de poder imprimir-se. Si està en una d'elles, apareixerá la icona Imprimir en la barra de menú superior. Utilitzi aquesta icona per a imprimir la vista actual.
     </para>
 </entry>
   <entry id="shares" state="uptodate" md5="bf3a44d08a824979ba8dd8fd0e661eee">

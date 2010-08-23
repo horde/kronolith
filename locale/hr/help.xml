@@ -157,7 +157,7 @@
     Kalendar nudi mogu&#x107;nost ugra&#x111;ivanja razli&#x10D;itih pregleda doga&#x111;aja u
     vanjske web stranice. Ugraditi se mogu svi pogledi koje je mogu&#x107;e
     dodati u Webmail portal. U nastavku su navedeni primjeri koda koji
-    se mo&#x17E;e ugraditi u vanjski blog ili web stranicu. U primjerima je 
+    se mo&#x17E;e ugraditi u vanjski blog ili web stranicu. U primjerima je
     potrebno izmijeniti samo ime poslu&#x17E;itelja i ime kalendara.  Vrijednost
     parametra 'container' mo&#x17E;e se slobodno odabrati, ali mora odgovarati DOM
     identifikatoru div elementa i biti jedinstvena za cijelu stranicu u
