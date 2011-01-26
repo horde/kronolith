@@ -5,7 +5,7 @@
  * @author Michael J Rubinsky <mrubinsk@horde.org>
  * @package Kronolith
  */
-class Kronolith_Injector_Factory_Geo
+class Kronolith_Factory_Geo
 {
     /**
      * Instances.

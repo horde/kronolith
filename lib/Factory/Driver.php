@@ -2,7 +2,7 @@
 /**
  * Horde_Injector based factory for Kronolith_Driver
  */
-class Kronolith_Injector_Factory_Driver
+class Kronolith_Factory_Driver
 {
     /**
      * Instances.

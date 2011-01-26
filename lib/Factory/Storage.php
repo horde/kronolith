@@ -1,6 +1,6 @@
 <?php
 
-class Kronolith_Injector_Factory_Storage
+class Kronolith_Factory_Storage
 {
     /**
      * Instances.
