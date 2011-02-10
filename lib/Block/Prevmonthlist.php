@@ -1,28 +1,39 @@
 <?php
-
-$block_name = _("Prior Events");
-
 /**
- * Horde_Block_Kronolith_monthlist:: Implementation of the Horde_Block
+ * Horde_Block_Kronolith_Monthlist:: Implementation of the Horde_Block
  * API to display a list of previous calendar items grouped by month.
- *
- * @package Horde_Block
  */
-class Horde_Block_Kronolith_prevmonthlist extends Horde_Block
+class Kronolith_Block_Prevmonthlist extends Horde_Block
 {
-    protected $_app = 'kronolith';
+    /**
+     */
+    public function getName()
+    {
+        return _("Prior Events");
+    }
 
+    /**
+     */
     protected function _params()
     {
-        $params = array('calendar' => array('name' => _("Calendar"),
-                                            'type' => 'enum',
-                                            'default' => '__all'),
-                        'months' => array('name' => _("Months Before"),
-                                          'type' => 'int',
-                                          'default' => 2),
-                        'alarms' => array('name' => _("Show only events that have an alarm set?"),
-                                          'type' => 'checkbox',
-                                          'default' => 0));
+        $params = array(
+            'calendar' => array(
+                'name' => _("Calendar"),
+                'type' => 'enum',
+                'default' => '__all'
+            ),
+            'months' => array(
+                'name' => _("Months Before"),
+                'type' => 'int',
+                'default' => 2
+            ),
+            'alarms' => array(
+                'name' => _("Show only events that have an alarm set?"),
+                'type' => 'checkbox',
+                'default' => 0
+            )
+        );
+
         $params['calendar']['values']['__all'] = _("All Visible");
         foreach (Kronolith::listCalendars(Horde_Perms::SHOW, true) as $id => $cal) {
             $params['calendar']['values'][$id] = $cal->name();
@@ -32,9 +43,6 @@ class Horde_Block_Kronolith_prevmonthlist extends Horde_Block
     }
 
     /**
-     * The title to go in this block.
-     *
-     * @return string   The title text.
      */
     protected function _title()
     {
@@ -44,13 +52,10 @@ class Horde_Block_Kronolith_prevmonthlist extends Horde_Block
             $url->add('display_cal', $this->_params['calendar']);
         }
 
-        return $url->link() . _("Prior Events") . '</a>';
+        return $url->link() . $this->getName() . '</a>';
     }
 
     /**
-     * The content to go in this block.
-     *
-     * @return string   The content
      */
     protected function _content()
     {

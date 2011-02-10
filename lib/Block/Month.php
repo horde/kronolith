@@ -1,23 +1,32 @@
 <?php
-
-$block_name = _("This Month");
-
 /**
- * Horde_Block_Kronolith_month:: Implementation of the Horde_Block API
- * to display a mini month view of calendar items.
- *
- * @package Horde_Block
+ * Display a mini month view of calendar items.
  */
-class Horde_Block_Kronolith_month extends Horde_Block
+class Kronolith_Block_Month extends Horde_Block
 {
-    protected $_app = 'kronolith';
+    /**
+     */
     private $_share = null;
 
+    /**
+     */
+    public function getName()
+    {
+        return _("This Month");
+    }
+
+    /**
+     */
     protected function _params()
     {
-        $params = array('calendar' => array('name' => _("Calendar"),
-                                            'type' => 'enum',
-                                            'default' => '__all'));
+        $params = array(
+            'calendar' => array(
+                'name' => _("Calendar"),
+                'type' => 'enum',
+                'default' => '__all'
+            )
+        );
+
         $params['calendar']['values']['__all'] = _("All Visible");
         foreach (Kronolith::listCalendars(Horde_Perms::SHOW, true) as $id => $cal) {
             $params['calendar']['values'][$id] = $cal->name();
@@ -27,9 +36,6 @@ class Horde_Block_Kronolith_month extends Horde_Block
     }
 
     /**
-     * The title to go in this block.
-     *
-     * @return string   The title text.
      */
     protected function _title()
     {
@@ -51,9 +57,6 @@ class Horde_Block_Kronolith_month extends Horde_Block
     }
 
     /**
-     * The content to go in this block.
-     *
-     * @return string   The content
      */
     protected function _content()
     {

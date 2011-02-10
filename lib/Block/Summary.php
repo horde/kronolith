@@ -1,17 +1,11 @@
 <?php
-
-$block_name = _("Calendar Summary");
-
 /**
- * Horde_Block_Kronolith_summary:: Implementation of the Horde_Block API to
- * display a summary of calendar items.
- *
- * @package Horde_Block
+ * Block to display a summary of calendar items.
  */
-class Horde_Block_Kronolith_summary extends Horde_Block
+class Kronolith_Block_Summary extends Horde_Block
 {
-    protected $_app = 'kronolith';
-
+    /**
+     */
     public function __construct($params = array(), $row = null, $col = null)
     {
         parent::__construct($params, $row, $col);
@@ -20,30 +14,52 @@ class Horde_Block_Kronolith_summary extends Horde_Block
         }
     }
 
+    /**
+     */
+    public function getName()
+    {
+        return _("Calendar Summary");
+    }
+
+    /**
+     */
     protected function _params()
     {
-        $params = array('calendar' => array('name' => _("Calendar"),
-                                            'type' => 'enum',
-                                            'default' => '__all'),
-                        'days' => array('name' => _("The time span to show"),
-                                        'type' => 'enum',
-                                        'default' => 7,
-                                        'values' => array(1 => '1 ' . _("day"),
-                                                          2 => '2 ' . _("days"),
-                                                          3 => '3 ' . _("days"),
-                                                          4 => '4 ' . _("days"),
-                                                          5 => '5 ' . _("days"),
-                                                          6 => '6 ' . _("days"),
-                                                          7 => '1 ' . _("week"),
-                                                          14 => '2 ' . _("weeks"),
-                                                          21 => '3 ' . _("weeks"),
-                                                          28 => '4 ' . _("weeks"))),
-                        'maxevents' => array('name' => _("Maximum number of events to display (0 = no limit)"),
-                                             'type' => 'int',
-                                             'default' => 0),
-                        'alarms' => array('name' => _("Show only events that have an alarm set?"),
-                                          'type' => 'checkbox',
-                                          'default' => 0));
+        $params = array(
+            'calendar' => array(
+                'name' => _("Calendar"),
+                'type' => 'enum',
+                'default' => '__all'
+            ),
+            'days' => array(
+                'name' => _("The time span to show"),
+                'type' => 'enum',
+                'default' => 7,
+                'values' => array(
+                    1 => '1 ' . _("day"),
+                    2 => '2 ' . _("days"),
+                    3 => '3 ' . _("days"),
+                    4 => '4 ' . _("days"),
+                    5 => '5 ' . _("days"),
+                    6 => '6 ' . _("days"),
+                    7 => '1 ' . _("week"),
+                    14 => '2 ' . _("weeks"),
+                    21 => '3 ' . _("weeks"),
+                    28 => '4 ' . _("weeks")
+                )
+            ),
+            'maxevents' => array(
+                'name' => _("Maximum number of events to display (0 = no limit)"),
+                'type' => 'int',
+                'default' => 0
+            ),
+            'alarms' => array(
+                'name' => _("Show only events that have an alarm set?"),
+                'type' => 'checkbox',
+                'default' => 0
+            )
+        );
+
         $params['calendar']['values']['__all'] = _("All Visible");
         foreach (Kronolith::listCalendars(Horde_Perms::SHOW, true) as $id => $cal) {
             $params['calendar']['values'][$id] = $cal->name();
@@ -53,9 +69,6 @@ class Horde_Block_Kronolith_summary extends Horde_Block
     }
 
     /**
-     * The title to go in this block.
-     *
-     * @return string   The title text.
      */
     protected function _title()
     {
@@ -69,11 +82,8 @@ class Horde_Block_Kronolith_summary extends Horde_Block
     }
 
     /**
-     * The content to go in this block.
-     *
-     * @return string   The content
      */
-    function _content()
+    protected function _content()
     {
         Horde::addScriptFile('tooltips.js', 'horde');
 
