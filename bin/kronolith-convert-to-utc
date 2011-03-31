@@ -4,8 +4,14 @@
  * This script converts all dates from the user's timezone to UTC.
  */
 
-/* Set up the CLI environment. */
-require_once dirname(__FILE__) . '/../../lib/Application.php';
+if (file_exists(dirname(__FILE__) . '/../../kronolith/lib/Application.php')) {
+    $baseDir = dirname(__FILE__) . '/../';
+} else {
+    require_once 'PEAR/Config.php';
+    $baseDir = PEAR_Config::singleton()
+        ->get('horde_dir', null, 'pear.horde.org') . '/kronolith/';
+}
+require_once $baseDir . 'lib/Application.php';
 Horde_Registry::appInit('kronolith', array('cli' => true));
 
 /* Prepare DB stuff. */

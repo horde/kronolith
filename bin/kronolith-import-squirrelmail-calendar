@@ -14,14 +14,20 @@
  * @author Jan Schneider <jan@horde.org>
  */
 
-// Do CLI checks and environment setup first.
-require_once dirname(__FILE__) . '/../lib/Application.php';
+if (file_exists(dirname(__FILE__) . '/../../kronolith/lib/Application.php')) {
+    $baseDir = dirname(__FILE__) . '/../';
+} else {
+    require_once 'PEAR/Config.php';
+    $baseDir = PEAR_Config::singleton()
+        ->get('horde_dir', null, 'pear.horde.org') . '/kronolith/';
+}
+require_once $baseDir . 'lib/Application.php';
 Horde_Registry::appInit('kronolith', array('cli' => true, 'user_admin' => true));
 
 // Read command line parameters.
 if ($argc != 2) {
     $cli->message('Too many or too few parameters.', 'cli.error');
-    $cli->writeln('Usage: import_squirrelmail_calendar.php DSN');
+    $cli->writeln('Usage: kronolith-import-squirrelmail-calendar DSN');
     $cli->writeln($cli->indent('DSN are json-encoded connection parameters to the database containing the "userprefs" table. Example:'));
     $cli->writeln($cli->indent('{"adapter":"mysql","user":"root","password":"password","host":"localhost","database":"squirrelmail"}'));
     exit;

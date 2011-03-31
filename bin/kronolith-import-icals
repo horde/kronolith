@@ -13,7 +13,14 @@
  * @author Jan Schneider <jan@horde.org>
  */
 
-require_once dirname(__FILE__) . '/../lib/Application.php';
+if (file_exists(dirname(__FILE__) . '/../../kronolith/lib/Application.php')) {
+    $baseDir = dirname(__FILE__) . '/../';
+} else {
+    require_once 'PEAR/Config.php';
+    $baseDir = PEAR_Config::singleton()
+        ->get('horde_dir', null, 'pear.horde.org') . '/kronolith/';
+}
+require_once $baseDir . 'lib/Application.php';
 Horde_Registry::appInit('kronolith', array('cli' => true));
 
 // Read command line parameters.
@@ -46,7 +53,7 @@ $cli->message('Imported successfully ' . count($result) . ' events', 'cli.succes
 
 function usage()
 {
-    $GLOBALS['cli']->writeln('Usage: import_icals.php calendar user');
+    $GLOBALS['cli']->writeln('Usage: kronolith-import-icals calendar user');
     exit;
 }
 
