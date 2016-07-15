@@ -33,7 +33,6 @@
  </stability>
  <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
  <notes>
-* 
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -1021,10 +1020,6 @@
     <min>2.0.0</min>
     <max>3.0.0alpha1</max>
     <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Date</name>
-    <channel>pear.php.net</channel>
    </package>
    <extension>
     <name>gettext</name>
@@ -4227,6 +4222,7 @@
    <date>2016-12-16</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
+<<<<<<< HEAD
 * [mjr] Fix allowing ics import on when user has edit permissions on a shared calendar (Bug #14501).
 * [jan] Disallow setting of creator permissions too if sharing with world is disabled.
 * [jan] Split shared users by linebreaks too.
@@ -4406,7 +4402,7 @@
    <date>2020-07-12</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
-* 
+* ([jan] Remove dependency on PEAR's Date package.) 
    </notes>
   </release>
   <release>
