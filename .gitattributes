@@ -1,6 +1,6 @@
 # Add tracking hash to config files
-*/config/conf.xml  ident
-*/config/*.dist    ident
+config/conf.xml  ident
+config/*.dist    ident
 
 # Ignore CRLF
 kronolith/test/Kronolith/fixtures/*.ics -crlf
