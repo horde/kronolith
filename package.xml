@@ -22,7 +22,7 @@
   <email>chuck@horde.org</email>
   <active>no</active>
  </lead>
- <date>2017-10-13</date>
+ <date>2017-10-16</date>
  <version>
   <release>5.0.0</release>
   <api>5.0.0</api>
@@ -844,7 +844,7 @@
    <file name="month.php" role="horde" />
    <file name="new.php" role="horde" />
    <file name="perms.php" role="horde" />
-   <file name="README" role="doc" />
+   <file name="README.rst" role="doc" />
    <file name="search.php" role="horde" />
    <file name="smartmobile.php" role="horde" />
    <file name="view.php" role="horde" />
@@ -1166,7 +1166,7 @@
    <install as="kronolith/month.php" name="month.php" />
    <install as="kronolith/new.php" name="new.php" />
    <install as="kronolith/perms.php" name="perms.php" />
-   <install as="README" name="README" />
+   <install as="README.rst" name="README.rst" />
    <install as="kronolith/search.php" name="search.php" />
    <install as="kronolith/smartmobile.php" name="smartmobile.php" />
    <install as="kronolith/view.php" name="view.php" />
@@ -2908,7 +2908,7 @@
    <stability>
     <release>beta</release>
     <api>beta</api></stability>
-   <date>2017-10-13</date>
+   <date>2017-10-16</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
 * [jan] Add API to backup and restore user data.
