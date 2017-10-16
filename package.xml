@@ -22,7 +22,7 @@
   <email>chuck@horde.org</email>
   <active>no</active>
  </lead>
- <date>2017-08-11</date>
+ <date>2017-10-13</date>
  <version>
   <release>5.0.0</release>
   <api>5.0.0</api>
@@ -107,7 +107,7 @@
     <file name="menu.php.dist" role="horde" />
     <file name="prefs.php" role="horde" />
    </dir> <!-- /config -->
-   <dir name="docs">
+   <dir name="doc">
     <file name="CHANGES" role="doc" />
     <file name="CREDITS" role="doc" />
     <file name="INSTALL" role="doc" />
@@ -115,7 +115,7 @@
     <file name="RELEASE_NOTES" role="doc" />
     <file name="TODO" role="doc" />
     <file name="UPGRADING" role="doc" />
-   </dir> <!-- /docs -->
+   </dir> <!-- /doc -->
    <dir name="feed">
     <file name=".htaccess" role="horde" />
     <file name="index.php" role="horde" />
@@ -231,7 +231,7 @@
       <file name="Base.php" role="horde" />
       <file name="Dav.php" role="horde" />
      </dir> <!-- /lib/Icalendar/Handler -->
-     </dir> <!-- /lib/Icalendar -->
+    </dir> <!-- /lib/Icalendar -->
     <dir name="LoginTasks">
      <dir name="SystemTask">
       <file name="Upgrade.php" role="horde" />
@@ -828,7 +828,7 @@
      <file name="screen.css" role="horde" />
      <file name="webkit.css" role="horde" />
     </dir> <!-- /themes/default -->
-    </dir> <!-- /themes -->
+   </dir> <!-- /themes -->
    <file name="add.php" role="horde" />
    <file name="attend.php" role="horde" />
    <file name="attendees.php" role="horde" />
@@ -1151,6 +1151,29 @@
  </usesrole>
  <phprelease>
   <filelist>
+   <install as="kronolith/add.php" name="add.php" />
+   <install as="kronolith/attend.php" name="attend.php" />
+   <install as="kronolith/attendees.php" name="attendees.php" />
+   <install as="kronolith/contacts.php" name="contacts.php" />
+   <install as="COPYING" name="COPYING" />
+   <install as="kronolith/data.php" name="data.php" />
+   <install as="kronolith/day.php" name="day.php" />
+   <install as="kronolith/delete.php" name="delete.php" />
+   <install as="kronolith/edit.php" name="edit.php" />
+   <install as="kronolith/event.php" name="event.php" />
+   <install as="kronolith/fb.php" name="fb.php" />
+   <install as="kronolith/index.php" name="index.php" />
+   <install as="kronolith/month.php" name="month.php" />
+   <install as="kronolith/new.php" name="new.php" />
+   <install as="kronolith/perms.php" name="perms.php" />
+   <install as="README" name="README" />
+   <install as="kronolith/search.php" name="search.php" />
+   <install as="kronolith/smartmobile.php" name="smartmobile.php" />
+   <install as="kronolith/view.php" name="view.php" />
+   <install as="kronolith/viewer.php" name="viewer.php" />
+   <install as="kronolith/week.php" name="week.php" />
+   <install as="kronolith/workweek.php" name="workweek.php" />
+   <install as="kronolith/year.php" name="year.php" />
    <install as="kronolith-agenda" name="bin/kronolith-agenda" />
    <install as="kronolith-convert-datatree-shares-to-sql" name="bin/kronolith-convert-datatree-shares-to-sql" />
    <install as="kronolith-convert-sql-shares-to-sqlng" name="bin/kronolith-convert-sql-shares-to-sqlng" />
@@ -1171,13 +1194,13 @@
    <install as="kronolith/config/hooks.php.dist" name="config/hooks.php.dist" />
    <install as="kronolith/config/menu.php.dist" name="config/menu.php.dist" />
    <install as="kronolith/config/prefs.php" name="config/prefs.php" />
-   <install as="CHANGES" name="docs/CHANGES" />
-   <install as="CREDITS" name="docs/CREDITS" />
-   <install as="INSTALL" name="docs/INSTALL" />
-   <install as="lighttpd-kronolith.conf" name="docs/lighttpd-kronolith.conf" />
-   <install as="RELEASE_NOTES" name="docs/RELEASE_NOTES" />
-   <install as="TODO" name="docs/TODO" />
-   <install as="UPGRADING" name="docs/UPGRADING" />
+   <install as="CHANGES" name="doc/CHANGES" />
+   <install as="CREDITS" name="doc/CREDITS" />
+   <install as="INSTALL" name="doc/INSTALL" />
+   <install as="lighttpd-kronolith.conf" name="doc/lighttpd-kronolith.conf" />
+   <install as="RELEASE_NOTES" name="doc/RELEASE_NOTES" />
+   <install as="TODO" name="doc/TODO" />
+   <install as="UPGRADING" name="doc/UPGRADING" />
    <install as="kronolith/feed/.htaccess" name="feed/.htaccess" />
    <install as="kronolith/feed/index.php" name="feed/index.php" />
    <install as="kronolith/js/dragdrop2.js" name="js/dragdrop2.js" />
@@ -1595,30 +1618,7 @@
    <install as="kronolith/themes/default/graphics/alerts/success.png" name="themes/default/graphics/alerts/success.png" />
    <install as="kronolith/themes/default/graphics/alerts/warning.png" name="themes/default/graphics/alerts/warning.png" />
    <install as="kronolith/themes/default/smartmobile/screen.css" name="themes/default/smartmobile/screen.css" />
-   <install as="kronolith/add.php" name="add.php" />
-   <install as="kronolith/attend.php" name="attend.php" />
-   <install as="kronolith/attendees.php" name="attendees.php" />
-   <install as="kronolith/contacts.php" name="contacts.php" />
-   <install as="COPYING" name="COPYING" />
-   <install as="kronolith/data.php" name="data.php" />
-   <install as="kronolith/day.php" name="day.php" />
-   <install as="kronolith/delete.php" name="delete.php" />
-   <install as="kronolith/edit.php" name="edit.php" />
-   <install as="kronolith/event.php" name="event.php" />
-   <install as="kronolith/fb.php" name="fb.php" />
-   <install as="kronolith/index.php" name="index.php" />
-   <install as="kronolith/month.php" name="month.php" />
-   <install as="kronolith/new.php" name="new.php" />
-   <install as="kronolith/perms.php" name="perms.php" />
-   <install as="README" name="README" />
-   <install as="kronolith/search.php" name="search.php" />
-   <install as="kronolith/smartmobile.php" name="smartmobile.php" />
-   <install as="kronolith/view.php" name="view.php" />
-   <install as="kronolith/viewer.php" name="viewer.php" />
-   <install as="kronolith/week.php" name="week.php" />
-   <install as="kronolith/workweek.php" name="workweek.php" />
-   <install as="kronolith/year.php" name="year.php" />
-   </filelist>
+  </filelist>
  </phprelease>
  <changelog>
   <release>
@@ -2908,7 +2908,7 @@
    <stability>
     <release>beta</release>
     <api>beta</api></stability>
-   <date>2017-08-11</date>
+   <date>2017-10-13</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
 * [jan] Add API to backup and restore user data.

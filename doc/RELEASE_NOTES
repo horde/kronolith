@@ -24,10 +24,10 @@ tracking system.  Updated translations are very welcome, though some strings
 might still change before the final release.
 
 For upgrading instructions, please see
-http://www.horde.org/apps/kronolith/docs/UPGRADING
+http://www.horde.org/apps/kronolith/doc/UPGRADING
 
 For detailed installation and configuration instructions, please see
-http://www.horde.org/apps/kronolith/docs/INSTALL
+http://www.horde.org/apps/kronolith/doc/INSTALL
 
 The major changes compared to Kronolith version H5 (4.2.0beta1) are:
     * Synchronize attendees via CalDAV.

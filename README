@@ -36,18 +36,18 @@ The following documentation is available in the Kronolith distribution:
 
 :README_:            This file
 :COPYING_:           Copyright and license information
-:`docs/CHANGES`_:    Changes by release
-:`docs/CREDITS`_:    Project developers
-:`docs/INSTALL`_:    Installation instructions and notes
-:`docs/TODO`_:       Development TODO list
-:`docs/UPGRADING`_:  Pointers on upgrading from previous Kronolith versions
+:`doc/CHANGES`_:    Changes by release
+:`doc/CREDITS`_:    Project developers
+:`doc/INSTALL`_:    Installation instructions and notes
+:`doc/TODO`_:       Development TODO list
+:`doc/UPGRADING`_:  Pointers on upgrading from previous Kronolith versions
 
 
 Installation
 ============
 
 Instructions for installing Kronolith can be found in the file INSTALL_ in the
-``docs/`` directory of the Kronolith distribution.
+``doc/`` directory of the Kronolith distribution.
 
 
 Assistance
@@ -83,9 +83,9 @@ The Kronolith Team
 
 .. _README: README
 .. _COPYING: http://www.horde.org/licenses/gpl
-.. _docs/CHANGES: CHANGES
-.. _docs/CREDITS: CREDITS
+.. _doc/CHANGES: CHANGES
+.. _doc/CREDITS: CREDITS
 .. _INSTALL:
-.. _docs/INSTALL: INSTALL
-.. _docs/TODO: TODO
-.. _docs/UPGRADING: UPGRADING
+.. _doc/INSTALL: INSTALL
+.. _doc/TODO: TODO
+.. _doc/UPGRADING: UPGRADING

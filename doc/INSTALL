@@ -29,7 +29,7 @@ To function properly, Kronolith **requires** the following:
                   earlier versions of Horde will **not** work.
 
    .. Important:: Be sure to have completed all of the steps in the
-                  `horde/docs/INSTALL`_ file for the Horde Framework before
+                  `horde/doc/INSTALL`_ file for the Horde Framework before
                   installing Kronolith. Many of Kronolith's prerequisites are
                   also Horde prerequisites. Additionally, many of Kronolith's
                   optional features are configured via the Horde install.
@@ -40,7 +40,7 @@ To function properly, Kronolith **requires** the following:
 
    Kronolith store its data in a backend - either an SQL database or a
    Kolab server. Build PHP with whichever SQL driver you require; see
-   the Horde `horde/docs/INSTALL`_ file for more details on using databases
+   the Horde `horde/doc/INSTALL`_ file for more details on using databases
    with Horde, or the Kolab webclient documentation for how to set up
    Kronolith for Kolab.
 
@@ -51,7 +51,7 @@ To function properly, Kronolith **requires** the following:
    timestamps. Microsoft Windows does **not** support such dates.
 
 4. The following PEAR package:
-   (See `horde/docs/INSTALL`_ for instructions on installing PEAR package)
+   (See `horde/doc/INSTALL`_ for instructions on installing PEAR package)
 
    .. Important:: If you are going to install Kronolith the recommended way,
                   i.e. using the PEAR installer, you can skip the remainder of
@@ -82,7 +82,7 @@ latest not yet released fixes, you can install Kronolith from Git.
 Installing with PEAR
 ~~~~~~~~~~~~~~~~~~~~
 
-First follow the instructions in `horde/docs/INSTALL`_ to prepare a PEAR
+First follow the instructions in `horde/doc/INSTALL`_ to prepare a PEAR
 environment for Horde and install the Horde Framework.
 
 When installing Kronolith through PEAR now, the installer will automatically
@@ -161,7 +161,7 @@ Configuring Kronolith
 
    a. If you have not already set up the Horde Alarm system, you have to set up
       a cron entry for the Horde alarm script as documented in
-      `horde/docs/INSTALL`_. This will send reminders for individual events.
+      `horde/doc/INSTALL`_. This will send reminders for individual events.
 
    b. To send daily agendas, you must create a cron entry for
       ``kronolith-agenda``, and running the job once a day is recommended,
@@ -215,5 +215,5 @@ The Horde team
 
 
 .. _README: README
-.. _`horde/docs/INSTALL`: ../../horde/docs/INSTALL
-.. _`horde/docs/TRANSLATIONS`: ../../horde/docs/TRANSLATIONS
+.. _`horde/doc/INSTALL`: ../../horde/doc/INSTALL
+.. _`horde/doc/TRANSLATIONS`: ../../horde/doc/TRANSLATIONS
