@@ -22,7 +22,7 @@
   <email>chuck@horde.org</email>
   <active>no</active>
  </lead>
- <date>2017-10-16</date>
+ <date>2017-10-17</date>
  <version>
   <release>5.0.0</release>
   <api>5.0.0</api>
@@ -833,7 +833,6 @@
    <file name="attend.php" role="horde" />
    <file name="attendees.php" role="horde" />
    <file name="contacts.php" role="horde" />
-   <file name="COPYING" role="doc" />
    <file name="data.php" role="horde" />
    <file name="day.php" role="horde" />
    <file name="delete.php" role="horde" />
@@ -841,6 +840,7 @@
    <file name="event.php" role="horde" />
    <file name="fb.php" role="horde" />
    <file name="index.php" role="horde" />
+   <file name="LICENSE" role="doc" />
    <file name="month.php" role="horde" />
    <file name="new.php" role="horde" />
    <file name="perms.php" role="horde" />
@@ -1154,26 +1154,6 @@
    <install as="kronolith/add.php" name="add.php" />
    <install as="kronolith/attend.php" name="attend.php" />
    <install as="kronolith/attendees.php" name="attendees.php" />
-   <install as="kronolith/contacts.php" name="contacts.php" />
-   <install as="COPYING" name="COPYING" />
-   <install as="kronolith/data.php" name="data.php" />
-   <install as="kronolith/day.php" name="day.php" />
-   <install as="kronolith/delete.php" name="delete.php" />
-   <install as="kronolith/edit.php" name="edit.php" />
-   <install as="kronolith/event.php" name="event.php" />
-   <install as="kronolith/fb.php" name="fb.php" />
-   <install as="kronolith/index.php" name="index.php" />
-   <install as="kronolith/month.php" name="month.php" />
-   <install as="kronolith/new.php" name="new.php" />
-   <install as="kronolith/perms.php" name="perms.php" />
-   <install as="README.rst" name="README.rst" />
-   <install as="kronolith/search.php" name="search.php" />
-   <install as="kronolith/smartmobile.php" name="smartmobile.php" />
-   <install as="kronolith/view.php" name="view.php" />
-   <install as="kronolith/viewer.php" name="viewer.php" />
-   <install as="kronolith/week.php" name="week.php" />
-   <install as="kronolith/workweek.php" name="workweek.php" />
-   <install as="kronolith/year.php" name="year.php" />
    <install as="kronolith-agenda" name="bin/kronolith-agenda" />
    <install as="kronolith-convert-datatree-shares-to-sql" name="bin/kronolith-convert-datatree-shares-to-sql" />
    <install as="kronolith-convert-sql-shares-to-sqlng" name="bin/kronolith-convert-sql-shares-to-sqlng" />
@@ -1194,6 +1174,10 @@
    <install as="kronolith/config/hooks.php.dist" name="config/hooks.php.dist" />
    <install as="kronolith/config/menu.php.dist" name="config/menu.php.dist" />
    <install as="kronolith/config/prefs.php" name="config/prefs.php" />
+   <install as="kronolith/contacts.php" name="contacts.php" />
+   <install as="kronolith/data.php" name="data.php" />
+   <install as="kronolith/day.php" name="day.php" />
+   <install as="kronolith/delete.php" name="delete.php" />
    <install as="CHANGES" name="doc/CHANGES" />
    <install as="CREDITS" name="doc/CREDITS" />
    <install as="INSTALL" name="doc/INSTALL" />
@@ -1201,8 +1185,12 @@
    <install as="RELEASE_NOTES" name="doc/RELEASE_NOTES" />
    <install as="TODO" name="doc/TODO" />
    <install as="UPGRADING" name="doc/UPGRADING" />
+   <install as="kronolith/edit.php" name="edit.php" />
+   <install as="kronolith/event.php" name="event.php" />
+   <install as="kronolith/fb.php" name="fb.php" />
    <install as="kronolith/feed/.htaccess" name="feed/.htaccess" />
    <install as="kronolith/feed/index.php" name="feed/index.php" />
+   <install as="kronolith/index.php" name="index.php" />
    <install as="kronolith/js/dragdrop2.js" name="js/dragdrop2.js" />
    <install as="kronolith/js/edit.js" name="js/edit.js" />
    <install as="kronolith/js/embed.js" name="js/embed.js" />
@@ -1212,44 +1200,35 @@
    <install as="kronolith/js/views.js" name="js/views.js" />
    <install as="kronolith/lib/.htaccess" name="lib/.htaccess" />
    <install as="kronolith/lib/Ajax.php" name="lib/Ajax.php" />
-   <install as="kronolith/lib/Api.php" name="lib/Api.php" />
-   <install as="kronolith/lib/Application.php" name="lib/Application.php" />
-   <install as="kronolith/lib/Attendee.php" name="lib/Attendee.php" />
-   <install as="kronolith/lib/Calendar.php" name="lib/Calendar.php" />
-   <install as="kronolith/lib/CalendarsManager.php" name="lib/CalendarsManager.php" />
-   <install as="kronolith/lib/Day.php" name="lib/Day.php" />
-   <install as="kronolith/lib/Driver.php" name="lib/Driver.php" />
-   <install as="kronolith/lib/Event.php" name="lib/Event.php" />
-   <install as="kronolith/lib/Exception.php" name="lib/Exception.php" />
-   <install as="kronolith/lib/FreeBusy.php" name="lib/FreeBusy.php" />
-   <install as="kronolith/lib/Kronolith.php" name="lib/Kronolith.php" />
-   <install as="kronolith/lib/Resource.php" name="lib/Resource.php" />
-   <install as="kronolith/lib/Shares.php" name="lib/Shares.php" />
-   <install as="kronolith/lib/Storage.php" name="lib/Storage.php" />
-   <install as="kronolith/lib/Tagger.php" name="lib/Tagger.php" />
-   <install as="kronolith/lib/Test.php" name="lib/Test.php" />
    <install as="kronolith/lib/Ajax/Application.php" name="lib/Ajax/Application.php" />
    <install as="kronolith/lib/Ajax/Application/Handler.php" name="lib/Ajax/Application/Handler.php" />
    <install as="kronolith/lib/Ajax/Imple/ContactAutoCompleter.php" name="lib/Ajax/Imple/ContactAutoCompleter.php" />
    <install as="kronolith/lib/Ajax/Imple/ResourceAutoCompleter.php" name="lib/Ajax/Imple/ResourceAutoCompleter.php" />
    <install as="kronolith/lib/Ajax/Imple/TagAutoCompleter.php" name="lib/Ajax/Imple/TagAutoCompleter.php" />
    <install as="kronolith/lib/Ajax/Imple/UserAutoCompleter.php" name="lib/Ajax/Imple/UserAutoCompleter.php" />
+   <install as="kronolith/lib/Api.php" name="lib/Api.php" />
+   <install as="kronolith/lib/Application.php" name="lib/Application.php" />
+   <install as="kronolith/lib/Attendee.php" name="lib/Attendee.php" />
    <install as="kronolith/lib/Attendee/List.php" name="lib/Attendee/List.php" />
    <install as="kronolith/lib/Backup/Events.php" name="lib/Backup/Events.php" />
    <install as="kronolith/lib/Block/Month.php" name="lib/Block/Month.php" />
    <install as="kronolith/lib/Block/Monthlist.php" name="lib/Block/Monthlist.php" />
    <install as="kronolith/lib/Block/Prevmonthlist.php" name="lib/Block/Prevmonthlist.php" />
    <install as="kronolith/lib/Block/Summary.php" name="lib/Block/Summary.php" />
+   <install as="kronolith/lib/Calendar.php" name="lib/Calendar.php" />
    <install as="kronolith/lib/Calendar/External.php" name="lib/Calendar/External.php" />
+   <install as="kronolith/lib/Calendar/External/Tasks.php" name="lib/Calendar/External/Tasks.php" />
    <install as="kronolith/lib/Calendar/Holiday.php" name="lib/Calendar/Holiday.php" />
    <install as="kronolith/lib/Calendar/Internal.php" name="lib/Calendar/Internal.php" />
    <install as="kronolith/lib/Calendar/Remote.php" name="lib/Calendar/Remote.php" />
    <install as="kronolith/lib/Calendar/Resource.php" name="lib/Calendar/Resource.php" />
    <install as="kronolith/lib/Calendar/ResourceGroup.php" name="lib/Calendar/ResourceGroup.php" />
-   <install as="kronolith/lib/Calendar/External/Tasks.php" name="lib/Calendar/External/Tasks.php" />
    <install as="kronolith/lib/Calendars/Base.php" name="lib/Calendars/Base.php" />
    <install as="kronolith/lib/Calendars/Default.php" name="lib/Calendars/Default.php" />
    <install as="kronolith/lib/Calendars/Kolab.php" name="lib/Calendars/Kolab.php" />
+   <install as="kronolith/lib/CalendarsManager.php" name="lib/CalendarsManager.php" />
+   <install as="kronolith/lib/Day.php" name="lib/Day.php" />
+   <install as="kronolith/lib/Driver.php" name="lib/Driver.php" />
    <install as="kronolith/lib/Driver/Holidays.php" name="lib/Driver/Holidays.php" />
    <install as="kronolith/lib/Driver/Horde.php" name="lib/Driver/Horde.php" />
    <install as="kronolith/lib/Driver/Ical.php" name="lib/Driver/Ical.php" />
@@ -1257,6 +1236,7 @@
    <install as="kronolith/lib/Driver/Mock.php" name="lib/Driver/Mock.php" />
    <install as="kronolith/lib/Driver/Resource.php" name="lib/Driver/Resource.php" />
    <install as="kronolith/lib/Driver/Sql.php" name="lib/Driver/Sql.php" />
+   <install as="kronolith/lib/Event.php" name="lib/Event.php" />
    <install as="kronolith/lib/Event/Holidays.php" name="lib/Event/Holidays.php" />
    <install as="kronolith/lib/Event/Horde.php" name="lib/Event/Horde.php" />
    <install as="kronolith/lib/Event/Ical.php" name="lib/Event/Ical.php" />
@@ -1264,6 +1244,7 @@
    <install as="kronolith/lib/Event/Mock.php" name="lib/Event/Mock.php" />
    <install as="kronolith/lib/Event/Resource.php" name="lib/Event/Resource.php" />
    <install as="kronolith/lib/Event/Sql.php" name="lib/Event/Sql.php" />
+   <install as="kronolith/lib/Exception.php" name="lib/Exception.php" />
    <install as="kronolith/lib/Factory/Calendars.php" name="lib/Factory/Calendars.php" />
    <install as="kronolith/lib/Factory/Driver.php" name="lib/Factory/Driver.php" />
    <install as="kronolith/lib/Factory/Geo.php" name="lib/Factory/Geo.php" />
@@ -1280,8 +1261,9 @@
    <install as="kronolith/lib/Form/EditResource.php" name="lib/Form/EditResource.php" />
    <install as="kronolith/lib/Form/EditResourceGroup.php" name="lib/Form/EditResourceGroup.php" />
    <install as="kronolith/lib/Form/SubscribeRemoteCalendar.php" name="lib/Form/SubscribeRemoteCalendar.php" />
-   <install as="kronolith/lib/Form/UnsubscribeRemoteCalendar.php" name="lib/Form/UnsubscribeRemoteCalendar.php" />
    <install as="kronolith/lib/Form/Type/KronolithTags.php" name="lib/Form/Type/KronolithTags.php" />
+   <install as="kronolith/lib/Form/UnsubscribeRemoteCalendar.php" name="lib/Form/UnsubscribeRemoteCalendar.php" />
+   <install as="kronolith/lib/FreeBusy.php" name="lib/FreeBusy.php" />
    <install as="kronolith/lib/FreeBusy/View.php" name="lib/FreeBusy/View.php" />
    <install as="kronolith/lib/FreeBusy/View/Day.php" name="lib/FreeBusy/View/Day.php" />
    <install as="kronolith/lib/FreeBusy/View/Month.php" name="lib/FreeBusy/View/Month.php" />
@@ -1292,16 +1274,22 @@
    <install as="kronolith/lib/Geo/Sql.php" name="lib/Geo/Sql.php" />
    <install as="kronolith/lib/Icalendar/Handler/Base.php" name="lib/Icalendar/Handler/Base.php" />
    <install as="kronolith/lib/Icalendar/Handler/Dav.php" name="lib/Icalendar/Handler/Dav.php" />
+   <install as="kronolith/lib/Kronolith.php" name="lib/Kronolith.php" />
    <install as="kronolith/lib/LoginTasks/SystemTask/Upgrade.php" name="lib/LoginTasks/SystemTask/Upgrade.php" />
    <install as="kronolith/lib/LoginTasks/Task/PurgeEvents.php" name="lib/LoginTasks/Task/PurgeEvents.php" />
    <install as="kronolith/lib/Prefs/Special/DefaultAlarm.php" name="lib/Prefs/Special/DefaultAlarm.php" />
    <install as="kronolith/lib/Prefs/Special/EventAlarms.php" name="lib/Prefs/Special/EventAlarms.php" />
    <install as="kronolith/lib/Prefs/Special/Sourceselect.php" name="lib/Prefs/Special/Sourceselect.php" />
+   <install as="kronolith/lib/Resource.php" name="lib/Resource.php" />
    <install as="kronolith/lib/Resource/Base.php" name="lib/Resource/Base.php" />
    <install as="kronolith/lib/Resource/Group.php" name="lib/Resource/Group.php" />
    <install as="kronolith/lib/Resource/Single.php" name="lib/Resource/Single.php" />
+   <install as="kronolith/lib/Shares.php" name="lib/Shares.php" />
+   <install as="kronolith/lib/Storage.php" name="lib/Storage.php" />
    <install as="kronolith/lib/Storage/Kolab.php" name="lib/Storage/Kolab.php" />
    <install as="kronolith/lib/Storage/Sql.php" name="lib/Storage/Sql.php" />
+   <install as="kronolith/lib/Tagger.php" name="lib/Tagger.php" />
+   <install as="kronolith/lib/Test.php" name="lib/Test.php" />
    <install as="kronolith/lib/Ui/VarRenderer/Kronolith.php" name="lib/Ui/VarRenderer/Kronolith.php" />
    <install as="kronolith/lib/View/Attendees.php" name="lib/View/Attendees.php" />
    <install as="kronolith/lib/View/Day.php" name="lib/View/Day.php" />
@@ -1315,8 +1303,8 @@
    <install as="kronolith/lib/View/Week.php" name="lib/View/Week.php" />
    <install as="kronolith/lib/View/WorkWeek.php" name="lib/View/WorkWeek.php" />
    <install as="kronolith/lib/View/Year.php" name="lib/View/Year.php" />
+   <install as="LICENSE" name="LICENSE" />
    <install as="kronolith/locale/.htaccess" name="locale/.htaccess" />
-   <install as="kronolith/locale/kronolith.pot" name="locale/kronolith.pot" />
    <install as="kronolith/locale/ar/LC_MESSAGES/kronolith.mo" name="locale/ar/LC_MESSAGES/kronolith.mo" />
    <install as="kronolith/locale/ar/LC_MESSAGES/kronolith.po" name="locale/ar/LC_MESSAGES/kronolith.po" />
    <install as="kronolith/locale/bg/LC_MESSAGES/kronolith.mo" name="locale/bg/LC_MESSAGES/kronolith.mo" />
@@ -1360,6 +1348,7 @@
    <install as="kronolith/locale/ja/LC_MESSAGES/kronolith.po" name="locale/ja/LC_MESSAGES/kronolith.po" />
    <install as="kronolith/locale/ko/LC_MESSAGES/kronolith.mo" name="locale/ko/LC_MESSAGES/kronolith.mo" />
    <install as="kronolith/locale/ko/LC_MESSAGES/kronolith.po" name="locale/ko/LC_MESSAGES/kronolith.po" />
+   <install as="kronolith/locale/kronolith.pot" name="locale/kronolith.pot" />
    <install as="kronolith/locale/lt/LC_MESSAGES/kronolith.mo" name="locale/lt/LC_MESSAGES/kronolith.mo" />
    <install as="kronolith/locale/lt/LC_MESSAGES/kronolith.po" name="locale/lt/LC_MESSAGES/kronolith.po" />
    <install as="kronolith/locale/lv/help.xml" name="locale/lv/help.xml" />
@@ -1424,18 +1413,21 @@
    <install as="kronolith/migration/25_kronolith_upgrade_typetocalendartype.php" name="migration/25_kronolith_upgrade_typetocalendartype.php" />
    <install as="kronolith/migration/26_kronolith_event_organizer.php" name="migration/26_kronolith_event_organizer.php" />
    <install as="kronolith/migration/27_kronolith_upgrade_description_to_text.php" name="migration/27_kronolith_upgrade_description_to_text.php" />
+   <install as="kronolith/month.php" name="month.php" />
+   <install as="kronolith/new.php" name="new.php" />
+   <install as="kronolith/perms.php" name="perms.php" />
+   <install as="README.rst" name="README.rst" />
    <install as="kronolith/resources/create.php" name="resources/create.php" />
    <install as="kronolith/resources/delete.php" name="resources/delete.php" />
    <install as="kronolith/resources/edit.php" name="resources/edit.php" />
-   <install as="kronolith/resources/index.html" name="resources/index.html" />
    <install as="kronolith/resources/groups/create.php" name="resources/groups/create.php" />
    <install as="kronolith/resources/groups/delete.php" name="resources/groups/delete.php" />
    <install as="kronolith/resources/groups/edit.php" name="resources/groups/edit.php" />
    <install as="kronolith/resources/groups/index.html" name="resources/groups/index.html" />
+   <install as="kronolith/resources/index.html" name="resources/index.html" />
+   <install as="kronolith/search.php" name="search.php" />
+   <install as="kronolith/smartmobile.php" name="smartmobile.php" />
    <install as="kronolith/templates/.htaccess" name="templates/.htaccess" />
-   <install as="kronolith/templates/buttonbar.html.php" name="templates/buttonbar.html.php" />
-   <install as="kronolith/templates/calendar_titles.inc" name="templates/calendar_titles.inc" />
-   <install as="kronolith/templates/javascript_defs.php" name="templates/javascript_defs.php" />
    <install as="kronolith/templates/agenda/notification.html.php" name="templates/agenda/notification.html.php" />
    <install as="kronolith/templates/agenda/notification.plain.php" name="templates/agenda/notification.plain.php" />
    <install as="kronolith/templates/alarm/mail.html.php" name="templates/alarm/mail.html.php" />
@@ -1443,6 +1435,8 @@
    <install as="kronolith/templates/attendees/attendees.html.php" name="templates/attendees/attendees.html.php" />
    <install as="kronolith/templates/attendees/_attendee.html.php" name="templates/attendees/_attendee.html.php" />
    <install as="kronolith/templates/attendees/_resource.html.php" name="templates/attendees/_resource.html.php" />
+   <install as="kronolith/templates/buttonbar.html.php" name="templates/buttonbar.html.php" />
+   <install as="kronolith/templates/calendar_titles.inc" name="templates/calendar_titles.inc" />
    <install as="kronolith/templates/chunks/calendar.php" name="templates/chunks/calendar.php" />
    <install as="kronolith/templates/chunks/permissions.inc" name="templates/chunks/permissions.inc" />
    <install as="kronolith/templates/contacts/contacts.inc" name="templates/contacts/contacts.inc" />
@@ -1478,6 +1472,7 @@
    <install as="kronolith/templates/feeds/atom.xml" name="templates/feeds/atom.xml" />
    <install as="kronolith/templates/itip/notification.html.php" name="templates/itip/notification.html.php" />
    <install as="kronolith/templates/itip/notification.plain.php" name="templates/itip/notification.plain.php" />
+   <install as="kronolith/templates/javascript_defs.php" name="templates/javascript_defs.php" />
    <install as="kronolith/templates/month/head.inc" name="templates/month/head.inc" />
    <install as="kronolith/templates/month/head_side_by_side.inc" name="templates/month/head_side_by_side.inc" />
    <install as="kronolith/templates/perms/perms.inc" name="templates/perms/perms.inc" />
@@ -1505,8 +1500,6 @@
    <install as="Kronolith/AllTests.php" name="test/Kronolith/AllTests.php" />
    <install as="Kronolith/Autoload.php" name="test/Kronolith/Autoload.php" />
    <install as="Kronolith/bootstrap.php" name="test/Kronolith/bootstrap.php" />
-   <install as="Kronolith/phpunit.xml" name="test/Kronolith/phpunit.xml" />
-   <install as="Kronolith/TestCase.php" name="test/Kronolith/TestCase.php" />
    <install as="Kronolith/fixtures/allday.ics" name="test/Kronolith/fixtures/allday.ics" />
    <install as="Kronolith/fixtures/attendees.php" name="test/Kronolith/fixtures/attendees.php" />
    <install as="Kronolith/fixtures/attendees1.ics" name="test/Kronolith/fixtures/attendees1.ics" />
@@ -1519,16 +1512,17 @@
    <install as="Kronolith/fixtures/export4.ics" name="test/Kronolith/fixtures/export4.ics" />
    <install as="Kronolith/fixtures/fromicalendar.ics" name="test/Kronolith/fixtures/fromicalendar.ics" />
    <install as="Kronolith/Integration/AllDayTest.php" name="test/Kronolith/Integration/AllDayTest.php" />
-   <install as="Kronolith/Integration/FromIcalendarTest.php" name="test/Kronolith/Integration/FromIcalendarTest.php" />
-   <install as="Kronolith/Integration/ToIcalendarTest.php" name="test/Kronolith/Integration/ToIcalendarTest.php" />
    <install as="Kronolith/Integration/Driver/Base.php" name="test/Kronolith/Integration/Driver/Base.php" />
    <install as="Kronolith/Integration/Driver/KolabTest.php" name="test/Kronolith/Integration/Driver/KolabTest.php" />
    <install as="Kronolith/Integration/Driver/Sql/Base.php" name="test/Kronolith/Integration/Driver/Sql/Base.php" />
    <install as="Kronolith/Integration/Driver/Sql/Pdo/SqliteTest.php" name="test/Kronolith/Integration/Driver/Sql/Pdo/SqliteTest.php" />
+   <install as="Kronolith/Integration/FromIcalendarTest.php" name="test/Kronolith/Integration/FromIcalendarTest.php" />
    <install as="Kronolith/Integration/Kronolith/Base.php" name="test/Kronolith/Integration/Kronolith/Base.php" />
    <install as="Kronolith/Integration/Kronolith/KolabTest.php" name="test/Kronolith/Integration/Kronolith/KolabTest.php" />
    <install as="Kronolith/Integration/Kronolith/Sql/Base.php" name="test/Kronolith/Integration/Kronolith/Sql/Base.php" />
    <install as="Kronolith/Integration/Kronolith/Sql/Pdo/SqliteTest.php" name="test/Kronolith/Integration/Kronolith/Sql/Pdo/SqliteTest.php" />
+   <install as="Kronolith/Integration/ToIcalendarTest.php" name="test/Kronolith/Integration/ToIcalendarTest.php" />
+   <install as="Kronolith/phpunit.xml" name="test/Kronolith/phpunit.xml" />
    <install as="Kronolith/Stub/CalendarManager.php" name="test/Kronolith/Stub/CalendarManager.php" />
    <install as="Kronolith/Stub/Driver.php" name="test/Kronolith/Stub/Driver.php" />
    <install as="Kronolith/Stub/Objects.php" name="test/Kronolith/Stub/Objects.php" />
@@ -1536,20 +1530,22 @@
    <install as="Kronolith/Stub/ShareFactory.php" name="test/Kronolith/Stub/ShareFactory.php" />
    <install as="Kronolith/Stub/Tagger.php" name="test/Kronolith/Stub/Tagger.php" />
    <install as="Kronolith/Stub/Types.php" name="test/Kronolith/Stub/Types.php" />
+   <install as="Kronolith/TestCase.php" name="test/Kronolith/TestCase.php" />
    <install as="Kronolith/Unit/AttendeeListTest.php" name="test/Kronolith/Unit/AttendeeListTest.php" />
    <install as="Kronolith/Unit/AttendeeTest.php" name="test/Kronolith/Unit/AttendeeTest.php" />
-   <install as="kronolith/themes/default/embed.css" name="themes/default/embed.css" />
-   <install as="kronolith/themes/default/ie8.css" name="themes/default/ie8.css" />
-   <install as="kronolith/themes/default/opera.css" name="themes/default/opera.css" />
-   <install as="kronolith/themes/default/screen.css" name="themes/default/screen.css" />
-   <install as="kronolith/themes/default/webkit.css" name="themes/default/webkit.css" />
    <install as="kronolith/themes/default/block/screen.css" name="themes/default/block/screen.css" />
    <install as="kronolith/themes/default/dynamic/screen.css" name="themes/default/dynamic/screen.css" />
+   <install as="kronolith/themes/default/embed.css" name="themes/default/embed.css" />
    <install as="kronolith/themes/default/graphics/addressbook_browse.png" name="themes/default/graphics/addressbook_browse.png" />
    <install as="kronolith/themes/default/graphics/agenda.png" name="themes/default/graphics/agenda.png" />
    <install as="kronolith/themes/default/graphics/alarm-000.png" name="themes/default/graphics/alarm-000.png" />
    <install as="kronolith/themes/default/graphics/alarm-fff.png" name="themes/default/graphics/alarm-fff.png" />
    <install as="kronolith/themes/default/graphics/alarm.png" name="themes/default/graphics/alarm.png" />
+   <install as="kronolith/themes/default/graphics/alerts/alarm.png" name="themes/default/graphics/alerts/alarm.png" />
+   <install as="kronolith/themes/default/graphics/alerts/error.png" name="themes/default/graphics/alerts/error.png" />
+   <install as="kronolith/themes/default/graphics/alerts/message.png" name="themes/default/graphics/alerts/message.png" />
+   <install as="kronolith/themes/default/graphics/alerts/success.png" name="themes/default/graphics/alerts/success.png" />
+   <install as="kronolith/themes/default/graphics/alerts/warning.png" name="themes/default/graphics/alerts/warning.png" />
    <install as="kronolith/themes/default/graphics/attendee-accepted.png" name="themes/default/graphics/attendee-accepted.png" />
    <install as="kronolith/themes/default/graphics/attendee-declined.png" name="themes/default/graphics/attendee-declined.png" />
    <install as="kronolith/themes/default/graphics/attendee-none.png" name="themes/default/graphics/attendee-none.png" />
@@ -1612,12 +1608,16 @@
    <install as="kronolith/themes/default/graphics/weekview.png" name="themes/default/graphics/weekview.png" />
    <install as="kronolith/themes/default/graphics/workweekview.png" name="themes/default/graphics/workweekview.png" />
    <install as="kronolith/themes/default/graphics/yearview.png" name="themes/default/graphics/yearview.png" />
-   <install as="kronolith/themes/default/graphics/alerts/alarm.png" name="themes/default/graphics/alerts/alarm.png" />
-   <install as="kronolith/themes/default/graphics/alerts/error.png" name="themes/default/graphics/alerts/error.png" />
-   <install as="kronolith/themes/default/graphics/alerts/message.png" name="themes/default/graphics/alerts/message.png" />
-   <install as="kronolith/themes/default/graphics/alerts/success.png" name="themes/default/graphics/alerts/success.png" />
-   <install as="kronolith/themes/default/graphics/alerts/warning.png" name="themes/default/graphics/alerts/warning.png" />
+   <install as="kronolith/themes/default/ie8.css" name="themes/default/ie8.css" />
+   <install as="kronolith/themes/default/opera.css" name="themes/default/opera.css" />
+   <install as="kronolith/themes/default/screen.css" name="themes/default/screen.css" />
    <install as="kronolith/themes/default/smartmobile/screen.css" name="themes/default/smartmobile/screen.css" />
+   <install as="kronolith/themes/default/webkit.css" name="themes/default/webkit.css" />
+   <install as="kronolith/view.php" name="view.php" />
+   <install as="kronolith/viewer.php" name="viewer.php" />
+   <install as="kronolith/week.php" name="week.php" />
+   <install as="kronolith/workweek.php" name="workweek.php" />
+   <install as="kronolith/year.php" name="year.php" />
   </filelist>
  </phprelease>
  <changelog>
@@ -2908,7 +2908,7 @@
    <stability>
     <release>beta</release>
     <api>beta</api></stability>
-   <date>2017-10-16</date>
+   <date>2017-10-17</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
 * [jan] Add API to backup and restore user data.
