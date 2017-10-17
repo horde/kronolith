@@ -3,7 +3,7 @@
  * This file contains all Horde_Core_Ui_VarRenderer extensions required for
  * editing calendars.
  *
- * See the enclosed file COPYING for license information (GPL). If you
+ * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
  *
  * @package Kronolith

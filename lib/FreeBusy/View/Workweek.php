@@ -4,7 +4,7 @@
  *
  * Copyright 2003-2017 Horde LLC (http://www.horde.org/)
  *
- * See the enclosed file COPYING for license information.
+ * See the enclosed file LICENSE for license information.
  *
  * @author  Mike Cochrane <mike@graftonhall.co.nz>
  * @author  Jan Schneider <jan@horde.org>

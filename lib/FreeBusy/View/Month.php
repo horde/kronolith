@@ -4,7 +4,7 @@
  *
  * Copyright 2004-2017 Horde LLC (http://www.horde.org/)
  *
- * See the enclosed file COPYING for license information.
+ * See the enclosed file LICENSE for license information.
  *
  * @author  Gunnar Wrobel <wrobel@pardus.de>
  * @author  Jan Schneider <jan@horde.org>

@@ -3,7 +3,7 @@
  * Copyright 2004-2007 Code Fusion  <http://www.codefusion.co.za/>
  * Copyright 2004-2007 Stuart Binge <s.binge@codefusion.co.za>
  *
- * See the enclosed file COPYING for license information (GPL). If you
+ * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
  */
 

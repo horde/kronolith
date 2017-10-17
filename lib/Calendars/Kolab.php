@@ -2,7 +2,7 @@
 /**
  * The Kolab specific calendars handler.
  *
- * See the enclosed file COPYING for license information (GPL). If you
+ * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
  *
  * @author  Gunnar Wrobel <wrobel@pardus.de>
