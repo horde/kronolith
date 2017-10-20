@@ -22,7 +22,7 @@
   <email>chuck@horde.org</email>
   <active>no</active>
  </lead>
- <date>2017-10-17</date>
+ <date>2017-10-20</date>
  <version>
   <release>5.0.0</release>
   <api>5.0.0</api>
@@ -731,7 +731,6 @@
      <file name="AllTests.php" role="test" />
      <file name="Autoload.php" role="test" />
      <file name="bootstrap.php" role="test" />
-     <file name="phpunit.xml" role="test" />
      <file name="TestCase.php" role="test" />
     </dir> <!-- /test/Kronolith -->
    </dir> <!-- /test -->
@@ -1522,7 +1521,6 @@
    <install as="Kronolith/Integration/Kronolith/Sql/Base.php" name="test/Kronolith/Integration/Kronolith/Sql/Base.php" />
    <install as="Kronolith/Integration/Kronolith/Sql/Pdo/SqliteTest.php" name="test/Kronolith/Integration/Kronolith/Sql/Pdo/SqliteTest.php" />
    <install as="Kronolith/Integration/ToIcalendarTest.php" name="test/Kronolith/Integration/ToIcalendarTest.php" />
-   <install as="Kronolith/phpunit.xml" name="test/Kronolith/phpunit.xml" />
    <install as="Kronolith/Stub/CalendarManager.php" name="test/Kronolith/Stub/CalendarManager.php" />
    <install as="Kronolith/Stub/Driver.php" name="test/Kronolith/Stub/Driver.php" />
    <install as="Kronolith/Stub/Objects.php" name="test/Kronolith/Stub/Objects.php" />
@@ -2908,7 +2906,7 @@
    <stability>
     <release>beta</release>
     <api>beta</api></stability>
-   <date>2017-10-17</date>
+   <date>2017-10-20</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
 * [jan] Add API to backup and restore user data.
