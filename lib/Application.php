@@ -663,8 +663,6 @@ class Kronolith_Application extends Horde_Registry_Application
             break;
 
         case 'events':
-            $factory = $injector->getInstance('Kronolith_Factory_Driver');
-            $map = array();
             foreach ($data as $event) {
                 $driver = Kronolith::getDriver(null, $event['calendar']);
                 $object = $driver->getEvent();
