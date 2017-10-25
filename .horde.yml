@@ -11,3 +11,83 @@ description: >
   arbitrary numbers of overlapping events.
 list:
 type: application
+homepage: https://www.horde.org/apps/kronolith
+authors:
+  -
+    name: Jan Schneider
+    user: jan
+    email: jan@horde.org
+    active: true
+    role: lead
+  -
+    name: Michael J Rubinsky
+    user: mrubinsk
+    email: mrubinsk@horde.org
+    active: true
+    role: lead
+  -
+    name: Chuck Hagenbuch
+    user: chuck
+    email: chuck@horde.org
+    active: false
+    role: lead
+version:
+  release: 5.0.0
+  api: 5.0.0
+state:
+  release: beta
+  api: beta
+license:
+  identifier: GPL-2.0
+  uri: http://www.horde.org/licenses/gpl
+dependencies:
+  required:
+    php: ^5.3.4 || ^7
+    pear:
+      pear.horde.org/content: ^2.0.5
+      pear.horde.org/horde: ^5
+      pear.horde.org/Horde_Auth: ^2
+      pear.horde.org/Horde_Autoloader: ^2
+      pear.horde.org/Horde_Core: ^2.31
+      pear.horde.org/Horde_Data: ^2.4
+      pear.horde.org/Horde_Date: ^2.2
+      pear.horde.org/Horde_Date_Parser: ^2
+      pear.horde.org/Horde_Dav: ^1
+      pear.horde.org/Horde_Exception: ^2
+      pear.horde.org/Horde_Form: ^2
+      pear.horde.org/Horde_Group: ^2
+      pear.horde.org/Horde_Http: ^2
+      pear.horde.org/Horde_History: ^2.1
+      pear.horde.org/Horde_Icalendar: ^2
+      pear.horde.org/Horde_Image: ^2
+      pear.horde.org/Horde_Lock: ^2
+      pear.horde.org/Horde_LoginTasks: ^2
+      pear.horde.org/Horde_Mail: ^2
+      pear.horde.org/Horde_Mime: ^2
+      pear.horde.org/Horde_Nls: ^2.2
+      pear.horde.org/Horde_Notification: ^2
+      pear.horde.org/Horde_Perms: ^2
+      pear.horde.org/Horde_Serialize: ^2
+      pear.horde.org/Horde_Share: ^2.1
+      pear.horde.org/Horde_Support: ^2
+      pear.horde.org/Horde_Text_Filter: ^2
+      pear.horde.org/Horde_Timezone: ^1
+      pear.horde.org/Horde_Url: ^2
+      pear.horde.org/Horde_Util: ^2
+      pear.horde.org/Horde_View: ^2
+    ext:
+      gettext: '*'
+      json: '*'
+      SimpleXML: '*'
+  optional:
+    pear:
+      pear.horde.org/nag: ^4.2
+      pear.horde.org/timeobjects: ^2
+      pear.horde.org/Horde_ActiveSync: ^2.31
+      pear.horde.org/Horde_Backup: ^1
+      pear.horde.org/Horde_Db: ^2
+      pear.horde.org/Horde_OpenXchange: ^1
+      pear.horde.org/Horde_Test: ^2
+      pear.php.net/Date_Holidays: ^0.21
+    ext:
+      xmlwriter: '*'
