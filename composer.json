@@ -22,7 +22,7 @@
         }
     ],
     "version": "5.0.0",
-    "time": "2016-11-09",
+    "time": "2017-10-20",
     "repositories": [
         {
             "type": "pear",
@@ -30,13 +30,13 @@
         }
     ],
     "require": {
-        "php": "^5.3.4",
+        "php": "^5.3.4 || ^7",
         "pear-pear.horde.org/content": "^2.0.5",
         "pear-pear.horde.org/horde": "^5",
         "pear-pear.horde.org/Horde_Auth": "^2",
         "pear-pear.horde.org/Horde_Autoloader": "^2",
-        "pear-pear.horde.org/Horde_Core": "^2.23",
-        "pear-pear.horde.org/Horde_Data": "^2",
+        "pear-pear.horde.org/Horde_Core": "^2.31",
+        "pear-pear.horde.org/Horde_Data": "^2.4",
         "pear-pear.horde.org/Horde_Date": "^2.2",
         "pear-pear.horde.org/Horde_Date_Parser": "^2",
         "pear-pear.horde.org/Horde_Dav": "^1",
@@ -70,10 +70,20 @@
         "pear-pear.horde.org/nag": "^4.2",
         "pear-pear.horde.org/timeobjects": "^2",
         "pear-pear.horde.org/Horde_ActiveSync": "^2.31",
+        "pear-pear.horde.org/Horde_Backup": "^1",
         "pear-pear.horde.org/Horde_Db": "^2",
         "pear-pear.horde.org/Horde_OpenXchange": "^1",
         "pear-pear.horde.org/Horde_Test": "^2",
-        "pear-pear.php.net/Date_Holidays": "^21",
+        "pear-pear.php.net/Date_Holidays": "^0.21",
         "ext-xmlwriter": "*"
+    },
+    "replace": {
+        "pear-pear.horde.org/kronolith": "5.*",
+        "pear-horde/kronolith": "5.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Kronolith": "lib/"
+        }
     }
 }
