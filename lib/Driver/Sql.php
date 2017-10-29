@@ -831,7 +831,9 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
         }
 
         /* Delete Geolocation */
-        $injector->getInstance('Kronolith_Geo')->deleteLocation($eventId);
+        try {
+            $injector->getInstance('Kronolith_Geo')->deleteLocation($eventId);
+        } catch (Kronolith_Exception $e) { }
 
         return $event;
     }
