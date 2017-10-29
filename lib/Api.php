@@ -1160,14 +1160,20 @@ class Kronolith_Api extends Horde_Registry_Api
             throw new Horde_Exception_PermissionDenied();
         }
 
+        // Check for delegate users.
+        if (strpos($target, '\\')) {
+            list($target, $user) = explode('\\', $target, 2);
+        } else {
+            $user = $registry->getAuth();
+        }
+
         $sourceShare = Kronolith::getInternalCalendar($kronolith_driver->calendar);
-        $share = Kronolith::getInternalCalendar($target);
+        $targetShare = Kronolith::getInternalCalendar($target);
         if ($sourceShare->hasPermission($registry->getAuth(), Horde_Perms::DELETE) &&
             (($user == $registry->getAuth() &&
-              $share->hasPermission($registry->getAuth(), Horde_Perms::EDIT)) ||
+              $sourceShare->hasPermission($registry->getAuth(), Horde_Perms::EDIT)) ||
              ($user != $registry->getAuth() &&
-              $share->hasPermission($registry->getAuth(), Kronolith::PERMS_DELEGATE)))) {
-
+              $sourceShare->hasPermission($registry->getAuth(), Kronolith::PERMS_DELEGATE)))) {
             $kronolith_driver->move($event->id, $target);
         }
     }
