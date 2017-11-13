@@ -2,7 +2,7 @@
 <package packagerversion="1.9.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
  <name>kronolith</name>
  <channel>pear.horde.org</channel>
- <summary>A web based calendar</summary>
+ <summary>Calendar and scheduling application</summary>
  <description>Kronolith is the Horde calendar application. It provides web-based calendars backed by a SQL database or a Kolab server. Supported features include Ajax and mobile interfaces, shared calendars, remote calendars, invitation management (iCalendar/iTip), free/busy management, resource management, alarms, recurring events, and a sophisticated day/week view which handles arbitrary numbers of overlapping events.</description>
  <lead>
   <name>Jan Schneider</name>
@@ -22,7 +22,7 @@
   <email>chuck@horde.org</email>
   <active>no</active>
  </lead>
- <date>2017-10-20</date>
+ <date>2017-11-11</date>
  <version>
   <release>5.0.0</release>
   <api>5.0.0</api>
@@ -1144,6 +1144,8 @@
     <name>Date_Holidays</name>
     <channel>pear.php.net</channel>
     <min>0.21.0</min>
+    <max>1.0.0alpha1</max>
+    <exclude>1.0.0alpha1</exclude>
    </package>
    <extension>
     <name>xmlwriter</name>
@@ -2950,7 +2952,7 @@
    <stability>
     <release>beta</release>
     <api>beta</api></stability>
-   <date>2017-10-20</date>
+   <date>2017-11-11</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
 * [jan] Add API to backup and restore user data.
