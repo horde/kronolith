@@ -45,7 +45,7 @@ dependencies:
     php: ^5.3 || ^7
     pear:
       pear.horde.org/content: ^2.0.5
-      pear.horde.org/horde: ^5 <=6.0.0alpha1
+      pear.horde.org/horde: ^5
       pear.horde.org/Horde_Auth: ^2
       pear.horde.org/Horde_Autoloader: ^2
       pear.horde.org/Horde_Core: ^2.30

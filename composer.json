@@ -1,8 +1,8 @@
 {
     "name": "horde/kronolith",
-    "description": "A web based calendar",
-    "type": "library",
-    "homepage": "https://pear.horde.org",
+    "description": "Calendar and scheduling application",
+    "type": "project",
+    "homepage": "https://www.horde.org/apps/kronolith",
     "license": "GPL-2.0",
     "authors": [
         {
@@ -22,7 +22,7 @@
         }
     ],
     "version": "4.2.24",
-    "time": "2017-09-19",
+    "time": "2017-11-14",
     "repositories": [
         {
             "type": "pear",
@@ -32,7 +32,7 @@
     "require": {
         "php": "^5.3 || ^7",
         "pear-pear.horde.org/content": "^2.0.5",
-        "pear-pear.horde.org/horde": "^5 <=6.0.0alpha1",
+        "pear-pear.horde.org/horde": "^5",
         "pear-pear.horde.org/Horde_Auth": "^2",
         "pear-pear.horde.org/Horde_Autoloader": "^2",
         "pear-pear.horde.org/Horde_Core": "^2.30",
