@@ -50,6 +50,7 @@
     identifier: GPL-2.0
     uri: http://www.horde.org/licenses/gpl
   notes: |
+    [mjr] Prevent fatal error if calendar not found during DAV sync.
     [jan] Fix regression in exporting single tags to iCalendar CATEGORIES (Bug #14698).
 4.2.23:
   api: 4.2.0
