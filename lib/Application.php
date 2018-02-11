@@ -920,9 +920,11 @@ class Kronolith_Application extends Horde_Registry_Application
             if ($user == '-system-' && $share->get('owner')) {
                 continue;
             }
-            $calendar = $calendar_manager
-                ->getEntry(Kronolith::ALL_CALENDARS, $id)
-                ->toHash();
+            if (!$calendar = $calendar_manager->getEntry(Kronolith::ALL_CALENDARS, $id)) {
+                Horde::log(sprintf('Unable to find share id: %s', $id)):
+                continue;
+            }
+            $calendar = $calendar->toHash();
             try {
                 $id = $dav->getExternalCollectionId($id, 'calendar');
             } catch (Horde_Dav_Exception $e) {
