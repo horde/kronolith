@@ -1,7 +1,8 @@
------------
-v4.2.24-git
------------
+-------
+v4.2.24
+-------
 
+[mjr] Prevent fatal error if calendar not found during DAV sync.
 [jan] Fix regression in exporting single tags to iCalendar CATEGORIES (Bug
       #14698).
 
@@ -1090,9 +1091,9 @@ v2.3.1
 [mms] Upgrade prototype.js to v1.6.0.3.
 
 
-----
-v2.3
-----
+------
+v2.3.0
+------
 
 [jan] Change group field in shares table to work with LDAP groups (Bug #6883).
 [jan] Fix user name conversion with user hooks in the calendar panel (Bug
@@ -1103,9 +1104,9 @@ v2.3
       year view.
 
 
---------
-v2.3-RC1
---------
+---------
+v2.3.0RC1
+---------
 
 [jan] Send correct iTip notifications when deleting recurring event instances
       (Bug #6636).
@@ -1138,9 +1139,9 @@ v2.3-RC1
 [jan] Use smaller icons for private events.
 
 
-----
-v2.2
-----
+------
+v2.2.0
+------
 
 [jan] Identify the correct event when using attend.php to update invitations
       (Bug #6606).
@@ -1150,9 +1151,9 @@ v2.2
 [cjh] Ensure that event_category is always a string (Bug #6696).
 
 
---------
-v2.2-RC3
---------
+---------
+v2.2.0RC3
+---------
 
 [cjh] Apply fix for http://dev.rubyonrails.org/ticket/11473 to prototype.js
       (Request #6590).
@@ -1181,9 +1182,9 @@ v2.2-RC3
 [jan] Add Turkish translation (METU <horde-tr@metu.edu.tr>).
 
 
---------
-v2.2-RC2
---------
+---------
+v2.2.0RC2
+---------
 
 [jan] SECURITY: Fix privilege escalation in Horde API.
 [cjh] SECURITY: Fix missing ownership validation on share changes.
@@ -1203,9 +1204,9 @@ v2.2-RC2
 [cjh] New share management UI that doesn't require JavaScript.
 
 
---------
-v2.2-RC1
---------
+---------
+v2.2.0RC1
+---------
 
 [jan] Don't allow to modify private events throught the API (Bug #5736).
 [jan] Don't overwrite event owner when changing events over WebDAV (Bug #5736).
@@ -1229,9 +1230,9 @@ v2.2-RC1
       validating them (Bug #5670).
 
 
-----------
-v2.2-ALPHA
-----------
+-----------
+v2.2.0alpha
+-----------
 
 [cjh] Add vCalendar 2.0 alarm export (munzli@olmero.ch, Bug #4851).
 [jan] Add Ukrainian translation (Andriy Kopystyansky <anri@polynet.lviv.ua>).
@@ -1404,17 +1405,17 @@ v2.1.1
 [cjh] Fix fatal error during first login of new users.
 
 
-----
-v2.1
-----
+------
+v2.1.0
+------
 
 [cjh] There are now several guards against users being stuck with no selected
       calendars and no way to select one (Bug #3538).
 
 
---------
-v2.1-RC3
---------
+---------
+v2.1.0RC3
+---------
 
 [jan] Fix retrieving of free/busy URLs from Kolab servers (tokoe@kde.org, Bug
       #3450).
@@ -1425,18 +1426,18 @@ v2.1-RC3
 [jan] Improve attendees and contacts forms.
 
 
---------
-v2.1-RC2
---------
+---------
+v2.1.0RC2
+---------
 
 [jan] Show subscription URL for calendars in "My Calendars" overview
       (kevin_myer@iu13.org, Request #3256).
 [jan] Fix browser redirection after saving events.
 
 
---------
-v2.1-RC1
---------
+---------
+v2.1.0RC1
+---------
 
 [cjh] The calendar(s) to export data from are now configurable (Request #2330).
 [jan] Add Portuguese translation (Manuel Menezes de Sequeira
@@ -1519,9 +1520,9 @@ v2.0.4
       checking for any event with a recurInterval of 0 (Bug #2709).
 
 
-----------
-v2.0.4-RC1
-----------
+---------
+v2.0.4RC1
+---------
 
 [jan] Fix navigation popup with Safari browsers (t.zell@gmx.de, Bug #2447).
 [cjh] Fix infinite loop with some recurring events (Bug #2346).
@@ -1542,9 +1543,9 @@ v2.0.3
 [jan] Fix time grids in free/busy view (Bugs #1557, #1868, tasin@fhm.edu).
 
 
-----------
-v2.0.3-RC1
-----------
+---------
+v2.0.3RC1
+---------
 
 [jan] Fix browsing through work weeks in attendees view (Bug #1852,
       tasin@fhm.edu).
@@ -1587,9 +1588,9 @@ v2.0.2
 [jan] Fix portal block for missing events at the turn of the year (Bug #1337).
 
 
-----------
-v2.0.2-RC1
-----------
+---------
+v2.0.2RC1
+---------
 
 [jan] Fix free/busy views with some languages (Bug #1036).
 [cjh] Prevent infinite loops if events are set to recur weekly on no weekdays
@@ -1623,9 +1624,9 @@ v2.0.1
 [cjh] Fix typo that prevented attendees from being saved (Bug #1019).
 
 
-----
-v2.0
-----
+------
+v2.0.0
+------
 
 [cjh] UIDs need to be stored in the History system with a kronolith: prefix and
       with the calendar so as not to confuse different instances of the same
@@ -1647,9 +1648,9 @@ v2.0
       category legend, instead of having to find them in Horde's prefs.
 
 
---------
-v2.0-RC3
---------
+---------
+v2.0.0RC3
+---------
 
 [cjh] Add All Past as an option on simple searches.
 [cjh] Add My Calendars menu entry.
@@ -1662,9 +1663,9 @@ v2.0-RC3
 [jan] Correctly highlight the current view's tab (Bug #896).
 
 
---------
-v2.0-RC2
---------
+---------
+v2.0.0RC2
+---------
 
 [jan] Fix recurring events from remote calendars (Bug #559).
 [cjh] The menubar Goto popup is now always on top of <select> boxes, even in
@@ -1672,9 +1673,9 @@ v2.0-RC2
 [cjh] Menubar Goto link works on the Options screen again.
 
 
---------
-v2.0-RC1
---------
+---------
+v2.0.0RC1
+---------
 
 [cjh] Fix the menubar popup date navigator on the New Event screen.
 [cjh] Remove unused specialized notification listener.
@@ -1685,9 +1686,9 @@ v2.0-RC1
 [cjh] Show free/busy view only in the event screen.
 
 
----------
-v2.0-BETA
----------
+----------
+v2.0.0beta
+----------
 
 [cjh] The guts of Kronolith_Event objects are now based on Horde_Date objects
       instead of timestamps.
@@ -1701,9 +1702,9 @@ v2.0-BETA
 [cjh] Add Kolab drivers (Stuart Bingë <s.binge@codefusion.co.za>).
 
 
-----------
-v2.0-ALPHA
-----------
+-----------
+v2.0.0alpha
+-----------
 
 [cjh] Remote calendars are now parsed with the Horde_iCalendar library, which
       allows for much better iCalendar support, better handling of timezones,
@@ -1791,9 +1792,9 @@ v1.1.1
 [jan] Fix some display bugs with recurring events in the sql driver (cjh).
 
 
-----------
-v1.1.1-RC1
-----------
+---------
+v1.1.1RC1
+---------
 
 [jan] Fix broken image tag in day and week views.
 [jan] Fix "New Category" selection in event edit view.
@@ -1801,9 +1802,9 @@ v1.1.1-RC1
       <devteam@platinum-sy.net>).
 
 
-----
-v1.1
-----
+------
+v1.1.0
+------
 
 [cjh] Kronolith_Event objects now know how to obtain their driver, rather than
       storing a reference. Makes for much smaller/better return values over
@@ -1839,9 +1840,9 @@ v1.1
 [jan] Remove deprecated DB::isWarning() calls.
 
 
-----
-v1.0
-----
+------
+v1.0.0
+------
 
 [jan] Add Hungarian translation (Laszlo L. Tornoci <torlasz@xenia.sote.hu>).
 [jan] Add Korean translation (J.I Kim <aporie@netian.com>).
