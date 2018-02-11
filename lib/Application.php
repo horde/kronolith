@@ -692,7 +692,7 @@ class Kronolith_Application extends Horde_Registry_Application
                 continue;
             }
             if (!$calendar = $calendar_manager->getEntry(Kronolith::ALL_CALENDARS, $id)) {
-                Horde::log(sprintf('Unable to find share id: %s', $id)):
+                Horde::log(sprintf('Unable to find share id: %s', $id));
                 continue;
             }
             $calendar = $calendar->toHash();
