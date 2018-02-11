@@ -9,6 +9,7 @@
     identifier: GPL-2.0
     uri: http://www.horde.org/licenses/gpl
   notes: |
+    [mjr] Allow to optinoally specify end date for calendar feed.
     [jan] Add API to backup and restore user data.
     [jan] Use colors, names, and descriptions of remote CalDAV calendars (Request #14612).
     [jan] Add headers to print views.
