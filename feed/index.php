@@ -25,6 +25,8 @@ require_once __DIR__ . '/../lib/Application.php';
 Horde_Registry::appInit('kronolith', array('authentication' => 'none', 'session_control' => 'readonly'));
 
 $calendar = Horde_Util::getFormData('c');
+$endDate = Horde_Util::getFormData('e');
+
 try {
     $share = $injector->getInstance('Kronolith_Shares')->getShare($calendar);
 } catch (Exception $e) {
@@ -66,13 +68,25 @@ if (empty($feed_type)) {
     $feed_type = 'atom';
 }
 
-$startDate = new Horde_Date(array('year' => date('Y'),
-                                  'month' => date('n'),
-                                  'mday' => date('j')));
+$startDate = new Horde_Date(array(
+    'year' => date('Y'),
+    'month' => date('n'),
+    'mday' => date('j'))
+);
+if ($endDate) {
+    try {
+        $endDate = new Horde_Date($endDate);
+    } catch (Horde_Date_Exception $e) {
+        $endDate = new Horde_Date($startDate);
+    }
+} else {
+    $endDate = new Horde_Date($startDate);
+}
+
 try {
-    $events = Kronolith::listEvents($startDate,
-                                    new Horde_Date($startDate),
-                                    array($calendar));
+    $events = Kronolith::listEvents(
+        $startDate, $endDate, array($calendar)
+    );
 } catch (Exception $e) {
     Horde::log($e, 'ERR');
     $events = array();
