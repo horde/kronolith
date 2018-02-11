@@ -4267,6 +4267,7 @@
    <date>2017-09-19</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
+* [mjr] Prevent fatal error if calendar not found during DAV sync.
 * [jan] Fix regression in exporting single tags to iCalendar CATEGORIES (Bug #14698).
    </notes>
   </release>
