@@ -3656,8 +3656,12 @@ abstract class Kronolith_Event
             $recurrence->setRecurStart($start);
         }
         if (Horde_Util::getFormData('recur_end_type') == 'date') {
-            if ($end_date = Horde_Util::getFormData('recur_end_date')) {
+            $end_date = Horde_Util::getFormData('recur_end_date', false);
+            if ($end_date !== false) {
                 // From ajax interface.
+                if (empty($end_date)) {
+                    throw new Kronolith_Exception("Missing required end date of recurrence.");
+                }
                 $date_ob = Kronolith::parseDate($end_date, false);
                 $recur_enddate = array(
                     'year'  => $date_ob->year,
