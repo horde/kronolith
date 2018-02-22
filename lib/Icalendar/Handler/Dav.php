@@ -161,6 +161,9 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
         } catch (Horde_Icalendar_Exception $e) {}
         try {
             $attendee = $component->getAttribute('ATTENDEE');
+            if (!is_array($attendee)) {
+                $attendee = array($attendee);
+            }
             $params = $component->getAttribute('ATTENDEE', true);
             for ($i = 0; $i < count($attendee); ++$i) {
                 if (!empty($params[$i]['SCHEDULE-AGENT']) &&
