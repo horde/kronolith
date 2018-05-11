@@ -121,7 +121,7 @@ foreach ($events as $day_events) {
             $desc .= '<br /><br />';
         }
         /* Time. */
-        $desc .= _("When:") . ' ' . $event->start->strftime($prefs->getValue('date_format')) . ' ' . $event->start->format($twentyFour ? 'H:i' : 'H:ia') . _(" to ");
+        $desc .= _("When:") . ' ' . $event->start->strftime($prefs->getValue('date_format')) . ' ' . $event->start->format($twentyFour ? 'H:i' : 'h:ia') . _(" to ");
         if ($event->start->compareDate($event->end->timestamp()) == 0) {
             $desc .= $event->end->format($twentyFour ? 'H:i' : 'h:ia');
         } else {
