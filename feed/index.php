@@ -68,11 +68,7 @@ if (empty($feed_type)) {
     $feed_type = 'atom';
 }
 
-$startDate = new Horde_Date(array(
-    'year' => date('Y'),
-    'month' => date('n'),
-    'mday' => date('j'))
-);
+$startDate = new Horde_Date(time());
 if ($endDate) {
     try {
         $endDate = new Horde_Date($endDate);
@@ -85,7 +81,10 @@ if ($endDate) {
 
 try {
     $events = Kronolith::listEvents(
-        $startDate, $endDate, array($calendar)
+        $startDate,
+        $endDate,
+        array($calendar),
+        array('show_recurrence' => true, 'cover_dates' => false)
     );
 } catch (Exception $e) {
     Horde::log($e, 'ERR');
@@ -119,7 +118,7 @@ $template->set('self_url', $self_url);
 
 $twentyFour = $prefs->getValue('twentyFor');
 $entries = array();
-foreach ($events as $day_events) {
+foreach ($events as $date => $day_events) {
     foreach ($day_events as $id => $event) {
         /* Modification date. */
         $modified = $history->getActionTimestamp('kronolith:' . $calendar . ':'
@@ -152,10 +151,10 @@ foreach ($events as $day_events) {
         }
         $desc .= '<br />' . _("Event Status:") . ' ' . Kronolith::statusToString($event->status);
 
-        $entries[$id]['title'] = htmlspecialchars($event->getTitle());
-        $entries[$id]['desc'] = htmlspecialchars($desc);
-        $entries[$id]['url'] = htmlspecialchars(Horde::url($event->getViewUrl(), true, -1));
-        $entries[$id]['modified'] = $modified->format(DATE_ATOM);
+        $entries[$id . $date]['title'] = htmlspecialchars($event->getTitle());
+        $entries[$id . $date]['desc'] = htmlspecialchars($desc);
+        $entries[$id . $date]['url'] = htmlspecialchars(Horde::url($event->getViewUrl(), true, -1));
+        $entries[$id . $date]['modified'] = $modified->format(DATE_ATOM);
     }
 }
 $template->set('entries', $entries, true);
