@@ -33,6 +33,8 @@
  </stability>
  <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
  <notes>
+* [jan] Fix displaying event start time in calendar feed if using 12-hours time format.
+* [jan] Fix SCHEDULE-AGENT setting if there is only one attendee.
 * [mjr] Prevent fatal error if calendar not found during DAV sync.
 * [jan] Fix regression in exporting single tags to iCalendar CATEGORIES (Bug #14698).
  </notes>
@@ -4183,6 +4185,8 @@
    <date>2018-07-04</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
+* [jan] Fix displaying event start time in calendar feed if using 12-hours time format.
+* [jan] Fix SCHEDULE-AGENT setting if there is only one attendee.
 * [mjr] Prevent fatal error if calendar not found during DAV sync.
 * [jan] Fix regression in exporting single tags to iCalendar CATEGORIES (Bug #14698).
    </notes>
