@@ -33,7 +33,8 @@
  </stability>
  <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
  <notes>
-* 
+* [mjr] SECURITY: Fix XSS vulnerability in event URL field (Bug #14857).
+* |+
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -4200,7 +4201,8 @@
    <date>2018-07-04</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
-* 
+* [mjr] SECURITY: Fix XSS vulnerability in event URL field (Bug #14857).
+* |+
    </notes>
   </release>
   <release>

@@ -2,7 +2,8 @@
 v4.2.25
 -------
 
-
+[mjr] SECURITY: Fix XSS vulnerability in event URL field (Bug #14857).
+|+
 
 
 -------
