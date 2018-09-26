@@ -47,13 +47,13 @@
   state:
     release: stable
     api: stable
-  date: 2018-07-04
+  date: 2018-09-26
   license:
     identifier: GPL-2.0
     uri: http://www.horde.org/licenses/gpl
   notes: |
+    [mjr] SECURITY: Fix XSS vulnerability in resource group property view (Bug #14857).
     [mjr] SECURITY: Fix XSS vulnerability in event URL field (Bug #14857).
-    |+
 4.2.24:
   api: 4.2.0
   state:
