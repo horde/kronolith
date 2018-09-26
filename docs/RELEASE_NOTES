@@ -1,11 +1,11 @@
 <?php
 /* Security release? */
-$notes['security'] = false;
+$notes['security'] = true;
 
 /* Mailing list release notes. */
 $notes['changes'] = <<<ML
 The Horde Team is pleased to announce the final release of the Kronolith
-Calendar Application version H5 (4.2.24).
+Calendar Application version H5 (4.2.25).
 
 Kronolith is the Horde calendar application. It provides web-based calendars
 backed by a SQL database or a Kolab server. Supported features include Ajax and
@@ -21,11 +21,9 @@ http://www.horde.org/apps/kronolith/docs/UPGRADING
 For detailed installation and configuration instructions, please see
 http://www.horde.org/apps/kronolith/docs/INSTALL
 
-The major changes compared to Kronolith version H5 (4.2.23) are:
-    * Prevent fatal error if calendar not found during DAV sync.
-    * Fix regression in exporting single tags to iCalendar CATEGORIES.
-    * Fix SCHEDULE-AGENT setting if there is only one attendee.
-    * Fix displaying event start time in calendar feed if using 12-hours time format.
+The major changes compared to Kronolith version H5 (4.2.24) are:
+    * Fix XSS vulnerability in resource group property view (Bug #14857).
+    * Fix XSS vulnerability in event URL field (Bug #14857).
 ML;
 
 $notes['name'] = 'Kronolith';
