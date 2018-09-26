@@ -3322,7 +3322,7 @@ KronolithCore = {
         }
         $('kronolithCalendarresourcegroupmembers').update();
         $H(Kronolith.conf.calendars.resource).each(function(r) {
-            var o = new Element('option', { value: r.value.id }).update(r.value.name);
+            var o = new Element('option', { value: r.value.id }).update(r.value.name.escapeHTML());
             $('kronolithCalendarresourcegroupmembers').insert(o);
         });
     },
