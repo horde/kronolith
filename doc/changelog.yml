@@ -10,7 +10,6 @@
     uri: http://www.horde.org/licenses/gpl
   notes: |
     [mjr] Prevent creation of corrupt recurrence end dates (Bug #14752).
-    [mjr] Allow to optionally specify end date for calendar feed.
     [jan] Add API to backup and restore user data.
     [jan] Use colors, names, and descriptions of remote CalDAV calendars (Request #14612).
     [jan] Add headers to print views.
@@ -42,6 +41,17 @@
     [mjr] Add Kronolith_Api::move().
     [jan] Return ETags with browse() API method.
     [jan] Add importing of calendar data from a URL.
+4.2.26:
+  api: 4.2.0
+  state:
+    release: stable
+    api: stable
+  date: 2018-11-03
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |+
+    [mjr] Remove hard coded end date for calendar feed and allow it to be specified in url.
 4.2.25:
   api: 4.2.0
   state:
