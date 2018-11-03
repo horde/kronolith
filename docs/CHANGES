@@ -2,7 +2,8 @@
 v4.2.26
 -------
 
-
+[mjr] Remove hard coded end date for calendar feed and allow it to be specified
+      in url.
 
 
 -------

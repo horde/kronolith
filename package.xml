@@ -33,7 +33,7 @@
  </stability>
  <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
  <notes>
-* 
+* [mjr] Remove hard coded end date for calendar feed and allow it to be specified in url.
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -4213,10 +4213,10 @@
     <release>stable</release>
     <api>stable</api>
    </stability>
-   <date>2018-09-26</date>
+   <date>2018-11-03</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
-* 
+* [mjr] Remove hard coded end date for calendar feed and allow it to be specified in url.
    </notes>
   </release>
   <release>
@@ -4232,7 +4232,6 @@
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
 * [mjr] Prevent creation of corrupt recurrence end dates (Bug #14752).
-* [mjr] Allow to optinoally specify end date for calendar feed.
 * [jan] Add API to backup and restore user data.
 * [jan] Use colors, names, and descriptions of remote CalDAV calendars (Request #14612).
 * [jan] Add headers to print views.
