@@ -1573,13 +1573,15 @@ abstract class Kronolith_Event
 
             $erules = $message->getExceptions();
             foreach ($erules as $rule){
-                /* Readd the exception event, but only if not deleted */
+                /* Add exception to recurrence obj*/
+                $original = $rule->getExceptionStartTime();
+                $original->setTimezone($tz);
+                $this->recurrence->addException($original->format('Y'), $original->format('m'), $original->format('d'));
+
+                /* Readd the exception event, if not deleted */
                 if (!$rule->deleted) {
                     $event = $kronolith_driver->getEvent();
                     $times = $rule->getDatetime();
-                    $original = $rule->getExceptionStartTime();
-                    $original->setTimezone($tz);
-                    $this->recurrence->addException($original->format('Y'), $original->format('m'), $original->format('d'));
                     $event->start = $times['start'];
                     $event->end = $times['end'];
                     $event->start->setTimezone($tz);
@@ -1596,12 +1598,7 @@ abstract class Kronolith_Event
                         $event->timezone = $tz;
                     }
                     $event->save();
-                } else {
-                    /* For exceptions that are deletions, just add the exception */
-                    $exceptiondt = $rule->getExceptionStartTime();
-                    $exceptiondt->setTimezone($tz);
-                    $this->recurrence->addException($exceptiondt->format('Y'), $exceptiondt->format('m'), $exceptiondt->format('d'));
-               }
+                }
             }
         }
 
