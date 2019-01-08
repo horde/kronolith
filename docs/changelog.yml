@@ -41,6 +41,17 @@
     [mjr] Add Kronolith_Api::move().
     [jan] Return ETags with browse() API method.
     [jan] Add importing of calendar data from a URL.
+4.2.28:
+  api: 4.2.0
+  state:
+    release: stable
+    api: stable
+  date: 2019-01-08
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |+
+    
 4.2.27:
   api: 4.2.0
   state:
