@@ -46,13 +46,12 @@
   state:
     release: stable
     api: stable
-  date: 2019-01-06
+  date: 2019-01-08
   license:
     identifier: GPL-2.0
     uri: http://www.horde.org/licenses/gpl
   notes: |
     [mjr] Remove erroneously added patch file.
-    |+
 4.2.26:
   api: 4.2.0
   state:

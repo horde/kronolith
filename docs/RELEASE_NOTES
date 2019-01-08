@@ -5,7 +5,7 @@ $notes['security'] = false;
 /* Mailing list release notes. */
 $notes['changes'] = <<<ML
 The Horde Team is pleased to announce the final release of the Kronolith
-Calendar Application version H5 (4.2.26).
+Calendar Application version H5 (4.2.27).
 
 Kronolith is the Horde calendar application. It provides web-based calendars
 backed by a SQL database or a Kolab server. Supported features include Ajax and
@@ -21,9 +21,8 @@ http://www.horde.org/apps/kronolith/docs/UPGRADING
 For detailed installation and configuration instructions, please see
 http://www.horde.org/apps/kronolith/docs/INSTALL
 
-The major changes compared to Kronolith version H5 (4.2.25) are:
-    * Remove hard coded end date for calendar feed and allow it to be specified
-      in url.
+The major changes compared to Kronolith version H5 (4.2.26) are:
+    * Release to remove erroneously added patch file.
 ML;
 
 $notes['name'] = 'Kronolith';
