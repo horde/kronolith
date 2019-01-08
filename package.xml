@@ -33,7 +33,8 @@
  </stability>
  <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
  <notes>
-* 
+* [mjr] Remove erroneously added patch file.
+* |+
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -4233,7 +4234,8 @@
    <date>2019-01-06</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
-* 
+* [mjr] Remove erroneously added patch file.
+* |+
    </notes>
   </release>
   <release>
