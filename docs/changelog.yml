@@ -50,8 +50,9 @@
   license:
     identifier: GPL-2.0
     uri: http://www.horde.org/licenses/gpl
-  notes: |+
-    
+  notes: |
+    [mjr] Remove erroneously added patch file.
+    |+
 4.2.26:
   api: 4.2.0
   state:
