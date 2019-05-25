@@ -133,7 +133,7 @@ class Kronolith_Resource
                 }
                 try {
                     Kronolith::getDriver('Resource')->open($rcal);
-                    $resource->addEvent($this);
+                    $resource->addEvent($event);
                 } catch (Exception $e) {
                 }
             }
