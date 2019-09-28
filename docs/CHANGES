@@ -2,7 +2,8 @@
 v4.2.28
 -------
 
-
+[mjr] Fix regression in display of clickable event URL property (Bug #14941).
+|+
 
 
 -------
@@ -1276,7 +1277,8 @@ v2.2.0alpha
       adding/updating/deleting the event (steven.deboeck@excentis.com, Request
       #4770).
 [cjh] Add calendar/subscribe and calendar/unsubscribe methods for adding/
-      removing calendars to the currently displayed calendars (duck@obala.net).
+      removing calendars to the currently displayed calendars
+      (duck@obala.net).
 [cjh] Remove unneeded Kronolith_Driver::close method.
 [cjh] Fix error handling when moving events (thomas.jarosch@intra2net.com, Bug
       #5401).
@@ -1755,7 +1757,8 @@ v2.0.0alpha
 [cjh] GUIDs now only contain kronolith: and the event ID - sharename is not
       needed.
 [cjh] Event IDs are now 32-character unique strings, to be useable as GUIDs.
-      The SQL table definition has changed; conversion scripts are in scripts/.
+      The SQL table definition has changed; conversion scripts are in
+      scripts/.
 [cjh] eventd now uses the Horde_Scheduler API's ability to serialize and save
       state; it's now meant to be run out of cron every minute (no more slow
       memory munching).
@@ -2001,7 +2004,8 @@ v0.0.2
       the Kronolith_Event:: class, allowing status.php to work with recurring
       events.
 [cjh] We now have the Kronolith_Event abstraction class that abstracts away
-      details of events, so that the frontend scripts aren't dependant on mcal.
+      details of events, so that the frontend scripts aren't dependant on
+      mcal.
 [cjh] Display events which are in progress, just starting, or start in under
       two hours along with other messages just under the menu.
 [cjh] Much slicker UI.

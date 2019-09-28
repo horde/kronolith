@@ -33,7 +33,8 @@
  </stability>
  <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
  <notes>
-* 
+* [mjr] Fix regression in display of clickable event URL property (Bug #14941).
+* |+
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -4246,7 +4247,8 @@
    <date>2019-01-08</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
-* 
+* [mjr] Fix regression in display of clickable event URL property (Bug #14941).
+* |+
    </notes>
   </release>
   <release>
