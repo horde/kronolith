@@ -2919,7 +2919,10 @@ abstract class Kronolith_Event
             if (!$this->isPrivate()) {
                 $json->d = $this->description;
                 $json->u =  htmlentities($this->url);
-                $json->uhl = htmlentities($GLOBALS['injector']->getInstance('Horde_Core_Factory_TextFilter')->filter($this->url, 'linkurls'));
+                $json->uhl = $GLOBALS['injector']->getInstance('Horde_Core_Factory_TextFilter')->filter(
+                    $GLOBALS['injector']->getInstance('Horde_Core_Factory_TextFilter')->filter($this->url, 'linkurls'),
+                    'Xss'
+                );
                 $json->tg = array_values($this->tags);
                 $json->gl = $this->geoLocation;
                 if (count($this->attendees)) {
