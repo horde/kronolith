@@ -45,7 +45,7 @@ $registry->setAuth($user, array());
 try {
     $result = $registry->call('calendar/import', array($ical, 'text/calendar', $cal));
 } catch (Horde_Exception $e) {
-    $cli->fatal($e->toString());
+    $cli->fatal($e->getMessage());
 }
 
 $cli->message('Imported successfully ' . count($result) . ' events', 'cli.success');
