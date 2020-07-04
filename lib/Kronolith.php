@@ -2163,7 +2163,7 @@ class Kronolith
             return;
         }
 
-         foreach ($addresses as $lang => $twentyFour) {
+        foreach ($addresses as $lang => $twentyFour) {
             $registry->setLanguageEnvironment($lang);
 
             switch ($action) {
