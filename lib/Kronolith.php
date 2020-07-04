@@ -2101,7 +2101,8 @@ class Kronolith
     }
 
     /**
-     * Sends email notifications that a event has been added, edited, or
+     * Sends email notifications that a event has been added, :q
+     * edited, or
      * deleted to users that want such notifications.
      *
      * @param Kronolith_Event $event  An event.
@@ -2124,6 +2125,7 @@ class Kronolith
         if ($event->calendarType == 'resource') {
             return;
         }
+
         $groups = $injector->getInstance('Horde_Group');
         $calendar = $event->calendar;
         $recipients = array();
@@ -2136,6 +2138,7 @@ class Kronolith
         $owner = $share->get('owner');
         if ($owner) {
             $recipients[$owner] = self::_notificationPref($owner, 'owner');
+            $recipients[$owner]['private'] = $event->isPrivate($owner);
         }
 
         $senderIdentity = $injector->getInstance('Horde_Core_Factory_Identity')
@@ -2144,6 +2147,7 @@ class Kronolith
         foreach ($share->listUsers(Horde_Perms::READ) as $user) {
             if (empty($recipients[$user])) {
                 $recipients[$user] = self::_notificationPref($user, 'read', $calendar);
+                $recipients[$user]['private'] = $event->isPrivate($user);
             }
         }
 
@@ -2158,6 +2162,7 @@ class Kronolith
             foreach ($group_users as $user) {
                 if (empty($recipients[$user])) {
                     $recipients[$user] = self::_notificationPref($user, 'read', $calendar);
+                    $recipients[$user]['private'] = $event->isPrivate($user);
                 }
             }
         }
@@ -2173,13 +2178,13 @@ class Kronolith
                 continue;
             }
 
-            if (!isset($addresses[$vals['lang']][$vals['tf']][$vals['df']])) {
-                $addresses[$vals['lang']][$vals['tf']][$vals['df']] = array();
+            if (!isset($addresses[$vals['lang']][$vals['tf']][$vals['df']][$vals['private']])) {
+                $addresses[$vals['lang']][$vals['tf']][$vals['df']][$vals['private']] = array();
             }
 
             $tmp = new Horde_Mail_Rfc822_Address($email);
             $tmp->personal = $identity->getValue('fullname');
-            $addresses[$vals['lang']][$vals['tf']][$vals['df']][] = strval($tmp);
+            $addresses[$vals['lang']][$vals['tf']][$vals['df']][$vals['private']][] = strval($tmp);
         }
 
         if (!$addresses) {
@@ -2197,6 +2202,7 @@ class Kronolith
         new Horde_View_Helper_Text($view);
 
         foreach ($addresses as $lang => $twentyFour) {
+
             $registry->setLanguageEnvironment($lang);
 
             switch ($action) {
@@ -2214,18 +2220,26 @@ class Kronolith
             }
 
             foreach ($twentyFour as $tf => $dateFormat) {
-                foreach ($dateFormat as $df => $df_recipients) {
-                    $view->header = $subject . ' ' . $event->title;
-                    $mail = new Horde_Mime_Mail(array(
-                        'Subject' => $view->header,
-                        'To' => implode(',', $df_recipients),
-                        'From' => $senderIdentity->getDefaultFromAddress(true),
-                        'User-Agent' => 'Kronolith ' . $registry->getVersion(),
-                    ));
-                    $multipart = self::buildMimeMessage($view, 'notification', $image);
-                    $mail->setBasePart($multipart);
-                    Horde::log(sprintf('Sending event notifications for %s to %s', $event->title, implode(', ', $df_recipients)), 'DEBUG');
-                    $mail->send($injector->getInstance('Horde_Mail'));
+                foreach ($dateFormat as $df => $recipients) {
+                    foreach ($recipients as $is_private => $df_recipients) {
+                        $event_title = $is_private ? _("busy") : $event->title;
+                        $view->header = $subject . ' ' . $event_title;
+                        $view->private = $is_private;
+                        $mail = new Horde_Mime_Mail(array(
+                            'Subject' => $view->header,
+                            'To' => implode(',', $df_recipients),
+                            'From' => $senderIdentity->getDefaultFromAddress(true),
+                            'User-Agent' => 'Kronolith ' . $registry->getVersion(),
+                        ));
+                        $multipart = self::buildMimeMessage($view, 'notification', $image);
+                        $mail->setBasePart($multipart);
+                        Horde::log(sprintf('Sending event notifications for %s to %s', $event->title, implode(', ', $df_recipients)), 'DEBUG');
+                        try {
+                            $mail->send($injector->getInstance('Horde_Mail'));
+                        } catch (Horde_Mime_Exception $e) {
+                            Horde::log(sprintf('Could not send notification to all recipients %s: %s', implode(', ', $df_recipients), $e->getMessage()), 'ERR');
+                        }
+                    }
                 }
             }
         }

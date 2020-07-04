@@ -34,7 +34,7 @@
           <td width="5">&nbsp;</td>
           <td width="100%"><font size="2"><strong><?php echo $this->event->end->strftime('%x %X') ?></strong></font></td>
         </tr>
-        <?php if (strlen($this->event->location)): ?>
+        <?php if (strlen($this->event->location) && !$this->private): ?>
 
         <tr<?php if ($i++ % 2) echo ' bgcolor="#f1f1f1"' ?>>
           <td nowrap="nowrap" align="right">
@@ -44,7 +44,7 @@
           <td width="100%"><font size="2"><strong><?php echo $this->h($this->event->location) ?></strong></font></td>
         </tr>
         <?php endif ?>
-        <?php if (count($this->event->attendees)): ?>
+        <?php if (count($this->event->attendees) && !$this->private): ?>
 
         <tr<?php if ($i++ % 2) echo ' bgcolor="#f1f1f1"' ?>>
           <td nowrap="nowrap" align="right" valign="top">
@@ -64,7 +64,7 @@
         </tr>
         <?php endif ?>
 
-        <?php if (strlen($this->event->description)): ?>
+        <?php if (strlen($this->event->description) && !$this->private): ?>
 
         <tr<?php if ($i++ % 2) echo ' bgcolor="#f1f1f1"' ?>>
           <td nowrap="nowrap" align="right" valign="top">

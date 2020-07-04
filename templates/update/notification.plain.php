@@ -5,7 +5,7 @@
 
 
 <?php if (strlen($this->event->location)): ?>
-<?php echo _("Location:") ?> <?php echo $this->event->location ?>
+<?php echo _("Location:") ?> <?php echo ($this->private ? '' : $this->event->location) ?>
 
 
 <?php endif; ?>
@@ -18,7 +18,7 @@
 <?php echo _("The following is a more detailed description of the event:") ?>
 
 
-<?php echo $this->event->description ?>
+<?php echo ($this->private ? _("Busy") : $this->event->description) ?>
 
 
 <?php endif; ?>
