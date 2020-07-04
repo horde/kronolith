@@ -2204,7 +2204,11 @@ class Kronolith
                             'body' => $message));
 
                         Horde::log(sprintf('Sending event notifications for %s to %s', $event_title, implode(', ', $df_recipients)), 'DEBUG');
-                        $mime_mail->send($injector->getInstance('Horde_Mail'));
+                        try {
+                            $mime_mail->send($injector->getInstance('Horde_Mail'));
+                        } catch (Horde_Mime_Exception $e) {
+                            Horde::log(sprintf('Could not send notification to all recipients %s: %s', implode(', ', $df_recipients), $e->getMessage()), 'ERR');
+                        }
                     }
                 }
             }
