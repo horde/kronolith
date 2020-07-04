@@ -2111,7 +2111,7 @@ class Kronolith
         $owner = $share->get('owner');
         if ($owner) {
             $recipients[$owner] = self::_notificationPref($owner, 'owner');
-            $recipients[$owner]['private'] = $event->isPrivate($owner) ? 'private' : 'non-private';
+            $recipients[$owner]['private'] = $event->isPrivate($owner);
         }
 
         $senderIdentity = $injector->getInstance('Horde_Core_Factory_Identity')
@@ -2120,7 +2120,7 @@ class Kronolith
         foreach ($share->listUsers(Horde_Perms::READ) as $user) {
             if (empty($recipients[$user])) {
                 $recipients[$user] = self::_notificationPref($user, 'read', $calendar);
-                $recipients[$user]['private'] = $event->isPrivate($user) ? 'private' : 'non-private';
+                $recipients[$user]['private'] = $event->isPrivate($user);
             }
         }
 
@@ -2135,7 +2135,7 @@ class Kronolith
             foreach ($group_users as $user) {
                 if (empty($recipients[$user])) {
                     $recipients[$user] = self::_notificationPref($user, 'read', $calendar);
-                    $recipients[$user]['private'] = $event->isPrivate($user) ? 'private' : 'non-private';
+                    $recipients[$user]['private'] = $event->isPrivate($user);
                 }
             }
         }
@@ -2186,14 +2186,14 @@ class Kronolith
             foreach ($twentyFour as $tf => $dateFormat) {
                     foreach ($dateFormat as $df => $recipients) {
                             foreach ($recipients as $is_private => $df_recipients) {
-                        $event_title = $is_private == 'private' ? _("busy") : $event->title;
+                        $event_title = $is_private ? _("busy") : $event->title;
                         $message = "\n"
                             . sprintf($notification_message,
                                       $event_title,
                                       Kronolith::getLabel($share),
                                       $event->start->strftime($df),
                                       $event->start->strftime($tf ? '%R' : '%I:%M%p'))
-                            . "\n\n" . ($is_private == 'private' ? "" : $event->description);
+                            . "\n\n" . ($is_private ? "" : $event->description);
 
                         $mime_mail = new Horde_Mime_Mail(array(
                             'Subject' => $subject . ' ' . $event_title,
