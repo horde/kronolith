@@ -2075,8 +2075,7 @@ class Kronolith
     }
 
     /**
-     * Sends email notifications that a event has been added, :q
-     * edited, or
+     * Sends email notifications that a event has been added, edited, or
      * deleted to users that want such notifications.
      *
      * @param Kronolith_Event $event  An event.
