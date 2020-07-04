@@ -2075,7 +2075,8 @@ class Kronolith
     }
 
     /**
-     * Sends email notifications that a event has been added, edited, or
+     * Sends email notifications that a event has been added, :q
+     * edited, or
      * deleted to users that want such notifications.
      *
      * @param Kronolith_Event $event  An event.
@@ -2098,6 +2099,7 @@ class Kronolith
         if ($event->calendarType == 'resource') {
             return;
         }
+
         $groups = $injector->getInstance('Horde_Group');
         $calendar = $event->calendar;
         $recipients = array();
@@ -2110,6 +2112,7 @@ class Kronolith
         $owner = $share->get('owner');
         if ($owner) {
             $recipients[$owner] = self::_notificationPref($owner, 'owner');
+            $recipients[$owner]['private'] = $event->isPrivate($owner) ? 'private' : 'non-private';
         }
 
         $senderIdentity = $injector->getInstance('Horde_Core_Factory_Identity')
@@ -2118,6 +2121,7 @@ class Kronolith
         foreach ($share->listUsers(Horde_Perms::READ) as $user) {
             if (empty($recipients[$user])) {
                 $recipients[$user] = self::_notificationPref($user, 'read', $calendar);
+                $recipients[$user]['private'] = $event->isPrivate($user) ? 'private' : 'non-private';
             }
         }
 
@@ -2132,6 +2136,7 @@ class Kronolith
             foreach ($group_users as $user) {
                 if (empty($recipients[$user])) {
                     $recipients[$user] = self::_notificationPref($user, 'read', $calendar);
+                    $recipients[$user]['private'] = $event->isPrivate($user) ? 'private' : 'non-private';
                 }
             }
         }
@@ -2146,20 +2151,20 @@ class Kronolith
             if (strpos($email, '@') === false) {
                 continue;
             }
-            if (!isset($addresses[$vals['lang']][$vals['tf']][$vals['df']])) {
-                $addresses[$vals['lang']][$vals['tf']][$vals['df']] = array();
+            if (!isset($addresses[$vals['lang']][$vals['tf']][$vals['df']][$vals['private']])) {
+                $addresses[$vals['lang']][$vals['tf']][$vals['df']][$vals['private']] = array();
             }
 
             $tmp = new Horde_Mail_Rfc822_Address($email);
             $tmp->personal = $identity->getValue('fullname');
-            $addresses[$vals['lang']][$vals['tf']][$vals['df']][] = strval($tmp);
+            $addresses[$vals['lang']][$vals['tf']][$vals['df']][$vals['private']][] = strval($tmp);
         }
 
         if (!$addresses) {
             return;
         }
 
-        foreach ($addresses as $lang => $twentyFour) {
+         foreach ($addresses as $lang => $twentyFour) {
             $registry->setLanguageEnvironment($lang);
 
             switch ($action) {
@@ -2180,23 +2185,27 @@ class Kronolith
             }
 
             foreach ($twentyFour as $tf => $dateFormat) {
-                foreach ($dateFormat as $df => $df_recipients) {
-                    $message = "\n"
-                        . sprintf($notification_message,
-                                  $event->title,
-                                  Kronolith::getLabel($share),
-                                  $event->start->strftime($df),
-                                  $event->start->strftime($tf ? '%R' : '%I:%M%p'))
-                        . "\n\n" . $event->description;
+                    foreach ($dateFormat as $df => $recipients) {
+                            foreach ($recipients as $is_private => $df_recipients) {
+                        $event_title = $is_private == 'private' ? _("busy") : $event->title;
+                        $message = "\n"
+                            . sprintf($notification_message,
+                                      $event_title,
+                                      Kronolith::getLabel($share),
+                                      $event->start->strftime($df),
+                                      $event->start->strftime($tf ? '%R' : '%I:%M%p'))
+                            . "\n\n" . ($is_private == 'private' ? "" : $event->description);
 
-                    $mime_mail = new Horde_Mime_Mail(array(
-                        'Subject' => $subject . ' ' . $event->title,
-                        'To' => implode(',', $df_recipients),
-                        'From' => $senderIdentity->getDefaultFromAddress(true),
-                        'User-Agent' => 'Kronolith ' . $registry->getVersion(),
-                        'body' => $message));
-                    Horde::log(sprintf('Sending event notifications for %s to %s', $event->title, implode(', ', $df_recipients)), 'DEBUG');
-                    $mime_mail->send($injector->getInstance('Horde_Mail'));
+                        $mime_mail = new Horde_Mime_Mail(array(
+                            'Subject' => $subject . ' ' . $event_title,
+                            'To' => implode(',', $df_recipients),
+                            'From' => $senderIdentity->getDefaultFromAddress(true),
+                            'User-Agent' => 'Kronolith ' . $registry->getVersion(),
+                            'body' => $message));
+
+                        Horde::log(sprintf('Sending event notifications for %s to %s', $event_title, implode(', ', $df_recipients)), 'DEBUG');
+                        $mime_mail->send($injector->getInstance('Horde_Mail'));
+                    }
                 }
             }
         }
