@@ -2,7 +2,7 @@
 v4.2.29
 -------
 
-
+[mjr] Fix regresssion in event modification notifications (Bug #15022).
 
 
 -------
@@ -12,7 +12,6 @@ v4.2.28
 [mjr] SECURITY: Don't leak private details when sending notifications for
       private events (Bug #15011).
 [mjr] Fix regression in display of clickable event URL property (Bug #14941).
-|+
 
 
 -------
