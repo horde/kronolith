@@ -2313,8 +2313,9 @@ class Kronolith
      *                          currently shown.
      * @param string $calendar  The name of the calendar if mode is "read".
      *
-     * @return mixed  The user's email, time, and language preferences if they
-     *                want a notification for this calendar.
+     * @return array|boolen  The user's email, time, and language preferences if
+     *                       they want a notification for this calendar. False
+     *                       if no notification should be sent.
      */
     public static function _notificationPref($user, $mode, $calendar = null)
     {
