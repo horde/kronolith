@@ -1,7 +1,7 @@
 {
     "name": "horde/kronolith",
     "description": "Calendar and scheduling application",
-    "type": "project",
+    "type": "horde-application",
     "homepage": "https://www.horde.org/apps/kronolith",
     "license": "GPL-2.0",
     "authors": [
@@ -22,68 +22,78 @@
         }
     ],
     "version": "5.0.0",
-    "time": "2017-11-11",
+    "time": "2020-10-27",
     "repositories": [
         {
-            "type": "pear",
-            "url": "https://pear.horde.org"
+            "type": "composer",
+            "url": "https://horde-satis.maintaina.com"
+        },
+        {
+            "url": "https://pear.php.net",
+            "type": "pear"
         }
     ],
     "require": {
+        "horde/horde-installer-plugin": "dev-master",
         "php": "^5.3.4 || ^7",
-        "pear-pear.horde.org/content": "^2.0.5",
-        "pear-pear.horde.org/horde": "^5",
-        "pear-pear.horde.org/Horde_Auth": "^2",
-        "pear-pear.horde.org/Horde_Autoloader": "^2",
-        "pear-pear.horde.org/Horde_Core": "^2.31",
-        "pear-pear.horde.org/Horde_Data": "^2.4",
-        "pear-pear.horde.org/Horde_Date": "^2.2",
-        "pear-pear.horde.org/Horde_Date_Parser": "^2",
-        "pear-pear.horde.org/Horde_Dav": "^1",
-        "pear-pear.horde.org/Horde_Exception": "^2",
-        "pear-pear.horde.org/Horde_Form": "^2",
-        "pear-pear.horde.org/Horde_Group": "^2",
-        "pear-pear.horde.org/Horde_Http": "^2",
-        "pear-pear.horde.org/Horde_History": "^2.1",
-        "pear-pear.horde.org/Horde_Icalendar": "^2",
-        "pear-pear.horde.org/Horde_Image": "^2",
-        "pear-pear.horde.org/Horde_Lock": "^2",
-        "pear-pear.horde.org/Horde_LoginTasks": "^2",
-        "pear-pear.horde.org/Horde_Mail": "^2",
-        "pear-pear.horde.org/Horde_Mime": "^2",
-        "pear-pear.horde.org/Horde_Nls": "^2.2",
-        "pear-pear.horde.org/Horde_Notification": "^2",
-        "pear-pear.horde.org/Horde_Perms": "^2",
-        "pear-pear.horde.org/Horde_Serialize": "^2",
-        "pear-pear.horde.org/Horde_Share": "^2.1",
-        "pear-pear.horde.org/Horde_Support": "^2",
-        "pear-pear.horde.org/Horde_Text_Filter": "^2",
-        "pear-pear.horde.org/Horde_Timezone": "^1",
-        "pear-pear.horde.org/Horde_Url": "^2",
-        "pear-pear.horde.org/Horde_Util": "^2",
-        "pear-pear.horde.org/Horde_View": "^2",
+        "horde/content": "dev-master",
+        "horde/horde": "dev-master",
+        "horde/auth": "dev-master",
+        "horde/autoloader": "dev-master",
+        "horde/core": "dev-master",
+        "horde/data": "dev-master",
+        "horde/date": "dev-master",
+        "horde/date_parser": "dev-master",
+        "horde/dav": "dev-master",
+        "horde/exception": "dev-master",
+        "horde/form": "dev-master",
+        "horde/group": "dev-master",
+        "horde/http": "dev-master",
+        "horde/history": "dev-master",
+        "horde/icalendar": "dev-master",
+        "horde/image": "dev-master",
+        "horde/lock": "dev-master",
+        "horde/logintasks": "dev-master",
+        "horde/mail": "dev-master",
+        "horde/mime": "dev-master",
+        "horde/nls": "dev-master",
+        "horde/notification": "dev-master",
+        "horde/perms": "dev-master",
+        "horde/serialize": "dev-master",
+        "horde/share": "dev-master",
+        "horde/support": "dev-master",
+        "horde/text_filter": "dev-master",
+        "horde/timezone": "dev-master",
+        "horde/url": "dev-master",
+        "horde/util": "dev-master",
+        "horde/view": "dev-master",
         "ext-gettext": "*",
         "ext-json": "*",
         "ext-SimpleXML": "*"
     },
     "suggest": {
-        "pear-pear.horde.org/nag": "^4.2",
-        "pear-pear.horde.org/timeobjects": "^2",
-        "pear-pear.horde.org/Horde_ActiveSync": "^2.31",
-        "pear-pear.horde.org/Horde_Backup": "^1",
-        "pear-pear.horde.org/Horde_Db": "^2",
-        "pear-pear.horde.org/Horde_OpenXchange": "^1",
-        "pear-pear.horde.org/Horde_Test": "^2",
+        "horde/nag": "^4.2",
+        "horde/timeobjects": "^2",
+        "horde/activesync": "^2.31",
+        "horde/backup": "^1",
+        "horde/db": "^2",
+        "horde/openxchange": "^1",
+        "horde/test": "^2",
         "pear-pear.php.net/Date_Holidays": "^0.21",
         "ext-xmlwriter": "*"
-    },
-    "replace": {
-        "pear-pear.horde.org/kronolith": "5.*",
-        "pear-horde/kronolith": "5.*"
     },
     "autoload": {
         "psr-0": {
             "Kronolith": "lib/"
         }
-    }
+    },
+    "bin": [
+        "bin/kronolith-convert-to-utc",
+        "bin/kronolith-convert-sql-shares-to-sqlng",
+        "bin/kronolith-convert-datatree-shares-to-sql",
+        "bin/kronolith-import-squirrelmail-calendar",
+        "bin/kronolith-import-icals",
+        "bin/kronolith-import-openxchange",
+        "bin/kronolith-agenda"
+    ]
 }
