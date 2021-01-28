@@ -902,7 +902,16 @@ abstract class Kronolith_Event
                 }
             }
 
-            $vEvent->setAttribute($attribute, $email, $params);
+            /**
+             * Do not set attributes without a name
+             * This may happen if an (imported?) attendee has no proper email
+             * address AND is not a horde user.
+             * 
+             * See also https://lists.horde.org/archives/kronolith/Week-of-Mon-20210125/009723.html
+             */
+            if ($attribute) {
+                $vEvent->setAttribute($attribute, $email, $params);
+            }
         }
 
         // Alarms.
