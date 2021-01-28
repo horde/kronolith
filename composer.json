@@ -47,6 +47,7 @@
         "pear-pear.horde.org/Horde_History": "^2.1",
         "pear-pear.horde.org/Horde_Icalendar": "^2",
         "pear-pear.horde.org/Horde_Image": "^2",
+        "pear-pear.horde.org/Horde_Itip": "^2",
         "pear-pear.horde.org/Horde_Lock": "^2",
         "pear-pear.horde.org/Horde_LoginTasks": "^2",
         "pear-pear.horde.org/Horde_Mail": "^2",
