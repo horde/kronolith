@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 1999-2021 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -906,10 +906,10 @@ abstract class Kronolith_Event
              * Do not set attributes without a name
              * This may happen if an (imported?) attendee has no proper email
              * address AND is not a horde user.
-             * 
+             *
              * See also https://lists.horde.org/archives/kronolith/Week-of-Mon-20210125/009723.html
              */
-            if ($attribute) {
+            if (!empty($attribute)) {
                 $vEvent->setAttribute($attribute, $email, $params);
             }
         }
