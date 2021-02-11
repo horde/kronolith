@@ -50,8 +50,8 @@
   license:
     identifier: GPL-2.0
     uri: http://www.horde.org/licenses/gpl
-  notes: |+
-    
+  notes: |
+    [mjr] Fix regression in sending event change notifications.
 4.2.28:
   api: 4.2.0
   state:
@@ -64,7 +64,6 @@
   notes: |
     [mjr] SECURITY: Don't leak private details when sending notifications for private events (Bug #15011).
     [mjr] Fix regression in display of clickable event URL property (Bug #14941).
-    |+
 4.2.27:
   api: 4.2.0
   state:
