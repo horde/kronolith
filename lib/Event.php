@@ -13,6 +13,17 @@
 /**
  * Kronolith_Event defines a generic API for events.
  *
+ * @property string|null $id
+ * @property string|null $creator
+ * @property array $geoLocation
+ * @property int $indent
+ * @property Horde_Date $originalStart
+ * @property Horde_Date $originalEnd
+ * @property int $overlap
+ * @property int $rowspan
+ * @property int $span
+ * @property array|string|null $tags
+ *
  * @author  Chuck Hagenbuch <chuck@horde.org>
  * @author  Jan Schneider <jan@horde.org>
  * @package Kronolith
