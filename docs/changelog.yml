@@ -51,6 +51,7 @@
     identifier: GPL-2.0
     uri: http://www.horde.org/licenses/gpl
   notes: |
+    [jan] Fix deprecation warnings about each() with PHP 7.2+.
     [mjr] Fix regression in sending event change notifications.
 4.2.28:
   api: 4.2.0
