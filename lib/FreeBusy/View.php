@@ -305,8 +305,8 @@ abstract class Kronolith_FreeBusy_View
         $template = $GLOBALS['injector']->createInstance('Horde_Template');
         $template->set('label', $label);
 
-        reset($periods);
-        list($periodStart, $periodEnd) = each($periods);
+        $periodEnd = reset($periods);
+        next($periods);
 
         $blocks = '';
         foreach ($this->_timeBlocks as $span) {
@@ -321,7 +321,10 @@ abstract class Kronolith_FreeBusy_View
             }
 
             while ($start > $periodEnd &&
-                   list($periodStart, $periodEnd) = each($periods));
+                   $periodEnd = current($periods)) {
+                next($periods);
+            }
+            $periodStart = key($periods);
 
             if (($periodStart <= $start && $periodEnd >= $start) ||
                 ($periodStart <= $end && $periodEnd >= $end) ||
