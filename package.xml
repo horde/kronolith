@@ -24,7 +24,7 @@
  </lead>
  <date>2021-02-24</date>
  <version>
-  <release>5.0.0alpha1</release>
+  <release>5.0.0alpha2</release>
   <api>5.0.0alpha1</api>
  </version>
  <stability>
@@ -33,38 +33,7 @@
  </stability>
  <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
  <notes>
-* [mjr] Prevent creation of corrupt recurrence end dates (Bug #14752).
-* [jan] Add API to backup and restore user data.
-* [jan] Use colors, names, and descriptions of remote CalDAV calendars (Request #14612).
-* [jan] Add headers to print views.
-* [mjr] Add support for tracking the ORGANIZER of an event independently of the horde user (Bug #3965, PR: 127, Ralf Lang &lt;lang@b1-systems.de&gt;).
-* [jan] Use preferred start and end of day for color shades in dynamic view.
-* [jan] Automatically scroll to preferred start of day (heinz@htl-steyr.ac.at, Request #14498).
-* [mjr] Changes to support EAS attachment sync support.
-* [jan] Remove dependency on PEAR&apos;s Date package.
-* [mjr] Fix display of recurring multi-day events ("Pascal Rigaux" &lt;pascal.rigaux@univ-paris1.fr&gt;).
-* [jan] Only export the timezone rules required for an event to iCalendar objects.
-* [jan] Show timezone abbreviations in event dialog too.
-* [jan] Show users&apos; full names in share dialogs.
-* [mjr] Support for subset of features of ActiveSync 16.0.
-* [mjr] Disconnect exceptions from base event when series changes.
-* [mjr] Support file attachments to events (Request #2009).
-* [mjr] Add ability to prevent any iTip notifications from being sent (Request #14157).
-* [mjr] Remove maps configuration, replaced by global maps configuration (Bug #14168).
-* [mjr] Show created/last-modified info on event view (Request #10715).
-* [jan] Allow to edit system calendars in dynamic view.
-* [jan] Add support for monthly recurrence on last weekday (Request #1922).
-* [jan] Send event update notifications with HTML part.
-* [mjr] Resource permissions have been implemented (Request #13647).
-* [jan] Add refresh button to individual calendars and task lists.
-* [mjr] Enforce case on attendee user part, but add attendee to event if only only the case differs (Bug #13905).
-* [jan] Keep original file names when PUTing events via WebDAV.
-* [jan] Remove configuration options for database tables.
-* [mjr] Honor the UID value sent from EAS clients directly in the message structure.
-* [jan] Add entries for Tasks and Agenda to top menu.
-* [mjr] Add Kronolith_Api::move().
-* [jan] Return ETags with browse() API method.
-* [jan] Add importing of calendar data from a URL.
+* 
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -1358,6 +1327,134 @@
   </filelist>
  </phprelease>
  <changelog>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
   <release>
    <version>
     <release>0.0.1</release>
@@ -4070,10 +4167,10 @@
     <api>5.0.0alpha1</api>
    </version>
    <stability>
-    <release>alpha</release>
-    <api>alpha</api>
+    <release>beta</release>
+    <api>beta</api>
    </stability>
-   <date>2017-10-20</date>
+   <date>2021-02-24</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
 * [mjr] Prevent creation of corrupt recurrence end dates (Bug #14752).
@@ -4108,6 +4205,21 @@
 * [mjr] Add Kronolith_Api::move().
 * [jan] Return ETags with browse() API method.
 * [jan] Add importing of calendar data from a URL.
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>5.0.0alpha2</release>
+    <api>5.0.0alpha1</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2021-02-24</date>
+   <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
+   <notes>
+* 
    </notes>
   </release>
  </changelog>
