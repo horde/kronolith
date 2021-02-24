@@ -42,52 +42,52 @@ license:
   uri: http://www.horde.org/licenses/gpl
 dependencies:
   required:
-    php: ^5.3.4 || ^7
-    pear:
-      pear.horde.org/content: ^2.0.5
-      pear.horde.org/horde: ^5
-      pear.horde.org/Horde_Auth: ^2
-      pear.horde.org/Horde_Autoloader: ^2
-      pear.horde.org/Horde_Core: ^2.31
-      pear.horde.org/Horde_Data: ^2.4
-      pear.horde.org/Horde_Date: ^2.2
-      pear.horde.org/Horde_Date_Parser: ^2
-      pear.horde.org/Horde_Dav: ^1
-      pear.horde.org/Horde_Exception: ^2
-      pear.horde.org/Horde_Form: ^2
-      pear.horde.org/Horde_Group: ^2
-      pear.horde.org/Horde_Http: ^2
-      pear.horde.org/Horde_History: ^2.1
-      pear.horde.org/Horde_Icalendar: ^2
-      pear.horde.org/Horde_Image: ^2
-      pear.horde.org/Horde_Lock: ^2
-      pear.horde.org/Horde_LoginTasks: ^2
-      pear.horde.org/Horde_Mail: ^2
-      pear.horde.org/Horde_Mime: ^2
-      pear.horde.org/Horde_Nls: ^2.2
-      pear.horde.org/Horde_Notification: ^2
-      pear.horde.org/Horde_Perms: ^2
-      pear.horde.org/Horde_Serialize: ^2
-      pear.horde.org/Horde_Share: ^2.1
-      pear.horde.org/Horde_Support: ^2
-      pear.horde.org/Horde_Text_Filter: ^2
-      pear.horde.org/Horde_Timezone: ^1
-      pear.horde.org/Horde_Url: ^2
-      pear.horde.org/Horde_Util: ^2
-      pear.horde.org/Horde_View: ^2
+    php: ^7
+    composer:
+      horde/content: ^3
+      horde/horde: ^6
+      horde/auth: ^3
+      horde/autoloader: ^3
+      horde/core: ^3
+      horde/data: ^3
+      horde/date: ^3
+      horde/date_parser: ^3
+      horde/dav: ^2
+      horde/exception: ^3
+      horde/form: ^3
+      horde/group: ^3
+      horde/http: ^3
+      horde/history: ^3
+      horde/icalendar: ^3
+      horde/image: ^3
+      horde/lock: ^3
+      horde/logintasks: ^3
+      horde/mail: ^3
+      horde/mime: ^3
+      horde/nls: ^3
+      horde/notification: ^3
+      horde/perms: ^3
+      horde/serialize: ^3
+      horde/share: ^3
+      horde/support: ^3
+      horde/text_filter: ^3
+      horde/timezone: ^2
+      horde/url: ^3
+      horde/util: ^3
+      horde/view: ^3
     ext:
       gettext: '*'
       json: '*'
       SimpleXML: '*'
   optional:
-    pear:
-      pear.horde.org/nag: ^4.2
-      pear.horde.org/timeobjects: ^2
-      pear.horde.org/Horde_ActiveSync: ^2.31
-      pear.horde.org/Horde_Backup: ^1
-      pear.horde.org/Horde_Db: ^2
-      pear.horde.org/Horde_OpenXchange: ^1
-      pear.horde.org/Horde_Test: ^2
-      pear.php.net/Date_Holidays: ^0.21
+    composer:
+      horde/nag: ^5
+      horde/timeobjects: ^3
+      horde/activesync: ^3
+      horde/backup: ^2
+      horde/db: ^3
+      horde/openxchange: ^2
+      horde/test: ^3
+      pear/date_holidays: '*'
     ext:
       xmlwriter: '*'

@@ -34,7 +34,6 @@
  <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
  <notes>
 * [mjr] Prevent creation of corrupt recurrence end dates (Bug #14752).
-* [mjr] Allow to optinoally specify end date for calendar feed.
 * [jan] Add API to backup and restore user data.
 * [jan] Use colors, names, and descriptions of remote CalDAV calendars (Request #14612).
 * [jan] Add headers to print views.
@@ -859,230 +858,13 @@
  <dependencies>
   <required>
    <php>
-    <min>5.3.4</min>
+    <min>7.0.0</min>
     <max>8.0.0alpha1</max>
     <exclude>8.0.0alpha1</exclude>
    </php>
    <pearinstaller>
     <min>1.7.0</min>
    </pearinstaller>
-   <package>
-    <name>content</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.5</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>horde</name>
-    <channel>pear.horde.org</channel>
-    <min>5.0.0</min>
-    <max>6.0.0alpha1</max>
-    <exclude>6.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Auth</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Autoloader</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Core</name>
-    <channel>pear.horde.org</channel>
-    <min>2.31.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Data</name>
-    <channel>pear.horde.org</channel>
-    <min>2.4.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Date</name>
-    <channel>pear.horde.org</channel>
-    <min>2.2.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Date_Parser</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Dav</name>
-    <channel>pear.horde.org</channel>
-    <min>1.0.0</min>
-    <max>2.0.0alpha1</max>
-    <exclude>2.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Exception</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Form</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Group</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Http</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_History</name>
-    <channel>pear.horde.org</channel>
-    <min>2.1.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Icalendar</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Image</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Lock</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_LoginTasks</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Mail</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Mime</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Nls</name>
-    <channel>pear.horde.org</channel>
-    <min>2.2.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Notification</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Perms</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Serialize</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Share</name>
-    <channel>pear.horde.org</channel>
-    <min>2.1.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Support</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Text_Filter</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Timezone</name>
-    <channel>pear.horde.org</channel>
-    <min>1.0.0</min>
-    <max>2.0.0alpha1</max>
-    <exclude>2.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Url</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Util</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_View</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
    <extension>
     <name>gettext</name>
    </extension>
@@ -1094,62 +876,6 @@
    </extension>
   </required>
   <optional>
-   <package>
-    <name>nag</name>
-    <channel>pear.horde.org</channel>
-    <min>4.2.0</min>
-    <max>5.0.0alpha1</max>
-    <exclude>5.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>timeobjects</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_ActiveSync</name>
-    <channel>pear.horde.org</channel>
-    <min>2.31.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Backup</name>
-    <channel>pear.horde.org</channel>
-    <min>1.0.0</min>
-    <max>2.0.0alpha1</max>
-    <exclude>2.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Db</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_OpenXchange</name>
-    <channel>pear.horde.org</channel>
-    <min>1.0.0</min>
-    <max>2.0.0alpha1</max>
-    <exclude>2.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Horde_Test</name>
-    <channel>pear.horde.org</channel>
-    <min>2.0.0</min>
-    <max>3.0.0alpha1</max>
-    <exclude>3.0.0alpha1</exclude>
-   </package>
-   <package>
-    <name>Date_Holidays</name>
-    <channel>pear.php.net</channel>
-    <min>0.21.0</min>
-    <max>1.0.0alpha1</max>
-    <exclude>1.0.0alpha1</exclude>
-   </package>
    <extension>
     <name>xmlwriter</name>
    </extension>
@@ -1642,7 +1368,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] Don&apos;t display delete links in month view; slimmer UI.
 * [jon] Silence session_start warnings.
@@ -1663,7 +1389,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] Allow all-day events and montly-on-weekday recurrence.
 * [cjh] Add a Horde summary API function.
@@ -1705,7 +1431,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [bjn] Change &apos;en&apos; and &apos;en_EN&apos; locales to &apos;en_US&apos; (default).
 * [jan] Add Brazilian Portuguese translation (Samuel Mota &lt;samuel@bumerangue.com&gt;).
@@ -1750,7 +1476,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Add Hungarian translation (Laszlo L. Tornoci &lt;torlasz@xenia.sote.hu&gt;).
 * [jan] Add Korean translation (J.I Kim &lt;aporie@netian.com&gt;).
@@ -1795,7 +1521,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] Kronolith_Event objects now know how to obtain their driver, rather than storing a reference. Makes for much smaller/better return values over XML-RPC, at least.
 * [cjh] Fix a bug in the spanning algorithm when there were two independant sets of overlapping events that were not common factors (i.e, a set of 2 events and a set of 3 events). Also start to document the row spanning code.
@@ -1831,7 +1557,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Fix broken image tag in day and week views.
 * [jan] Fix "New Category" selection in event edit view.
@@ -1848,7 +1574,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Fix some display bugs with recurring events in the sql driver (cjh).
    </notes>
@@ -1863,7 +1589,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] Fix a bug in the SQL driver preventing events from being displayed.
    </notes>
@@ -1878,7 +1604,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Fix display of category colors in week and day views (Björn Tackmann &lt;bjoern.tackmann@consultico.de&gt;).
 * [jan] Add Latvian translation (Ivars Stivrins &lt;ivars@kraslava.lv&gt;).
@@ -1895,7 +1621,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Close XSS when setting the parent frame&apos;s page title by javascript (cjh).
    </notes>
@@ -1910,7 +1636,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] Remote calendars are now parsed with the Horde_iCalendar library, which allows for much better iCalendar support, better handling of timezones, etc.
 * [cjh] The month view no longer shows blank boxes for days in the grid that are outside of the current month - instead, it goes back into the previous month and forward into the next month however many days are showable.
@@ -1952,7 +1678,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] The guts of Kronolith_Event objects are now based on Horde_Date objects instead of timestamps.
 * [cjh] Lots of date-related functions moved to the Horde_Date class.
@@ -1975,7 +1701,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] Fix the menubar popup date navigator on the New Event screen.
 * [cjh] Remove unused specialized notification listener.
@@ -1996,7 +1722,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Fix recurring events from remote calendars (Bug #559).
 * [cjh] The menubar Goto popup is now always on top of &lt;select&gt; boxes, even in Internet Explorer (Bug #822).
@@ -2013,7 +1739,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] Add All Past as an option on simple searches.
 * [cjh] Add My Calendars menu entry.
@@ -2034,7 +1760,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] UIDs need to be stored in the History system with a kronolith: prefix and with the calendar so as not to confuse different instances of the same event (if two users both have a event on their seperate calendars, they should have unique histories for that event).
 * [cjh] The My Calendars page now has a tool for generating Free/Busy URLs (Bug #571).
@@ -2056,7 +1782,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] Fix one page load delay in showing new/removing deleted shares on the My Calendars screen (Bug #1048).
 * [cjh] Fix labeling of weekday columns in the Month view when the week starts on Monday and show_shared_side_by_side preference is on (Bug #1049).
@@ -2078,7 +1804,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Fix free/busy views with some languages (Bug #1036).
 * [cjh] Prevent infinite loops if events are set to recur weekly on no weekdays (Bug #1074).
@@ -2098,7 +1824,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Fix portal block for missing events at the turn of the year (Bug #1337).
    </notes>
@@ -2113,7 +1839,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Fix browsing through work weeks in attendees view (Bug #1852, tasin@fhm.edu).
 * [jan] Fix updating of attendee status in attendees view (Bug #1188).
@@ -2151,7 +1877,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Respect SMTP authentication settings when sending reminders and notifications (requires Horde 3.0.4).
 * [jan] Include date in reminder message (Bug #1855).
@@ -2168,7 +1894,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Fix navigation popup with Safari browsers (t.zell@gmx.de, Bug #2447).
 * [cjh] Fix infinite loop with some recurring events (Bug #2346).
@@ -2188,7 +1914,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Allow to import more than one event from iCalendar data at once.
 * [cjh] Avoid loops and other errors by immediately failing nextRecurrence() checking for any event with a recurInterval of 0 (Bug #2709).
@@ -2204,7 +1930,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Fix warnings with Internet Explorer on HTTPS connections.
 * [jan] Fix reminder emails.
@@ -2220,7 +1946,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] Close several XSS problems with calendar and event fields.
    </notes>
@@ -2235,7 +1961,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] SECURITY: Close arbitrary file inclusion in free/busy views.
    </notes>
@@ -2250,7 +1976,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] The calendar(s) to export data from are now configurable (Request #2330).
 * [jan] Add Portuguese translation (Manuel Menezes de Sequeira &lt;Manuel.Sequeira&gt;).
@@ -2296,7 +2022,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Show subscription URL for calendars in "My Calendars" overview (kevin_myer@iu13.org, Request #3256).
 * [jan] Fix browser redirection after saving events.
@@ -2312,7 +2038,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Fix retrieving of free/busy URLs from Kolab servers (tokoe@kde.org, Bug #3450).
 * [jan] Fix recurring events without end dates using the Kolab driver (tokoe@kde.org, Bug #2734).
@@ -2330,7 +2056,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] There are now several guards against users being stuck with no selected calendars and no way to select one (Bug #3538).
    </notes>
@@ -2345,7 +2071,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Fix updating attendee status from KOrganizer replies.
 * [jan] Fix events of status "free" being included in busy information.
@@ -2368,7 +2094,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Don&apos;t show calendar creation form if multiple calendars are not allowed (Bug #3988).
 * [jan] Add "Save and Finish" button to attendees popup (Request #1158).
@@ -2387,7 +2113,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] Set vEvent ORGANIZER to the event creator, not the calendar owner (kajtzu@basen.net, Bug #4527).
 * [jan] Fix importing of events without end date and duration (Bug #4519).
@@ -2416,7 +2142,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] SECURITY: Close arbitrary file inclusion in free/busy views.
    </notes>
@@ -2431,7 +2157,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Fix character set encoding of exported vCalendar/iCalendar data.
 * [jan] Fixed MS-SQL driver (Bug #5088).
@@ -2451,7 +2177,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] Display attendees list correctly without a mail/compose method (Bug #5127).
 * [cjh] Send iCalendar data as UTF-8 (Bug #5427).
@@ -2470,7 +2196,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] SECURITY: Fix privilege escalation in Horde API.
 * [cjh] SECURITY: Fix missing ownership validation on share changes.
@@ -2488,7 +2214,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] Add vCalendar 2.0 alarm export (munzli@olmero.ch, Bug #4851).
 * [jan] Add Ukrainian translation (Andriy Kopystyansky &lt;anri@polynet.lviv.ua&gt;).
@@ -2551,7 +2277,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Don&apos;t allow to modify private events throught the API (Bug #5736).
 * [jan] Don&apos;t overwrite event owner when changing events over WebDAV (Bug #5736).
@@ -2577,7 +2303,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] SECURITY: Fix privilege escalation in Horde API.
 * [cjh] SECURITY: Fix missing ownership validation on share changes.
@@ -2603,7 +2329,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [cjh] Apply fix for http://dev.rubyonrails.org/ticket/11473 to prototype.js (Request #6590).
 * [cjh] In WebDAV PUT operations, only look for existing events on the calendar being uploaded (Bug #6617).
@@ -2634,7 +2360,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Identify the correct event when using attend.php to update invitations (Bug #6606).
 * [cjh] Improve resource usage in datatree_to_sql share migration script (Bug #6740).
@@ -2652,7 +2378,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Send correct iTip notifications when deleting recurring event instances (Bug #6636).
 * [mjr] Add support for embedding calendar widgets on external websites.
@@ -2687,7 +2413,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Change group field in shares table to work with LDAP groups (Bug #6883).
 * [jan] Fix user name conversion with user hooks in the calendar panel (Bug #7366).
@@ -2705,7 +2431,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Render contact autocompletion list on top of free/busy blocks (Bug #7273).
 * [jan] Save recurrence exceptions when copying events (Bug #7689).
@@ -2737,7 +2463,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [mms] Upgrade prototype.js to v1.6.1.
 * [jan] Allow to add address lists as attendees through the address book popup (Bug #7834).
@@ -2761,7 +2487,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Fix editing URLs of remote calendars.
 * [gwr] Fix recurring weekly events with fixed number of occurences but multiple incidences per week (kolab/issue3846).
@@ -2785,7 +2511,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Delete Horde alarms when resetting an event alarm.
 * [jan] Set an alarm to one minute, if users try to set an alarm without time.
@@ -2802,7 +2528,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [gwr] Fix moving events between calendars for the Kolab driver (Bug #7932)
 * [jan] Import and export the privacy field in CSV data (Request #9139).
@@ -2822,7 +2548,7 @@
     <api/>
    </stability>
    <date/>
-   <license uri="" />
+   <license uri=""></license>
    <notes>
 * [jan] Add upgrade scripts for next-generation SQL share driver.
 * [jan] Export recurrence exceptions in a more portable way.
@@ -4271,8 +3997,71 @@
    <date>2017-09-19</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
+* [jan] Fix displaying event start time in calendar feed if using 12-hours time format.
+* [jan] Fix SCHEDULE-AGENT setting if there is only one attendee.
 * [mjr] Prevent fatal error if calendar not found during DAV sync.
 * [jan] Fix regression in exporting single tags to iCalendar CATEGORIES (Bug #14698).
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>4.2.25</release>
+    <api>4.2.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2018-09-26</date>
+   <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
+   <notes>
+* [mjr] SECURITY: Fix XSS vulnerability in resource group property view (Bug #14857).
+* [mjr] SECURITY: Fix XSS vulnerability in event URL field (Bug #14857).
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>4.2.26</release>
+    <api>4.2.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2018-11-03</date>
+   <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
+   <notes>
+* [mjr] Remove hard coded end date for calendar feed and allow it to be specified in url.
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>4.2.27</release>
+    <api>4.2.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2019-01-08</date>
+   <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
+   <notes>
+* [mjr] Remove erroneously added patch file.
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>4.2.28</release>
+    <api>4.2.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2019-01-08</date>
+   <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
+   <notes>
+* [mjr] Fix regression in display of clickable event URL property (Bug #14941).
    </notes>
   </release>
   <release>
@@ -4284,11 +4073,10 @@
     <release>alpha</release>
     <api>alpha</api>
    </stability>
-   <date>2021-02-24</date>
+   <date>2017-10-20</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
 * [mjr] Prevent creation of corrupt recurrence end dates (Bug #14752).
-* [mjr] Allow to optinoally specify end date for calendar feed.
 * [jan] Add API to backup and restore user data.
 * [jan] Use colors, names, and descriptions of remote CalDAV calendars (Request #14612).
 * [jan] Add headers to print views.
