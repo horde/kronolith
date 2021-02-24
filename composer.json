@@ -81,9 +81,6 @@
     "autoload": {
         "psr-0": {
             "Kronolith": "lib/"
-        },
-        "psr-4": {
-            "Horde\\Kronolith\\": "src/"
         }
     },
     "bin": [
