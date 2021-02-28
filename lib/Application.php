@@ -946,7 +946,7 @@ class Kronolith_Application extends Horde_Registry_Application
                     $share->get('desc'),
                 '{http://apple.com/ns/ical/}calendar-color' =>
                     $share->get('color') . 'ff',
-                '{' . CalDAV\Plugin::NS_CALDAV . '}supported-calendar-component-set' => new CalDAV\Property\SupportedCalendarComponentSet(array('VEVENT')),
+                '{' . CalDAV\Plugin::NS_CALDAV . '}supported-calendar-component-set' => new CalDAV\Xml\Property\SupportedCalendarComponentSet(array('VEVENT')),
                 '{http://sabredav.org/ns}read-only' => !$share->hasPermission($hordeUser, Horde_Perms::EDIT),
             );
         }
@@ -977,6 +977,9 @@ class Kronolith_Application extends Horde_Registry_Application
                 $id = $event->id;
                 $event->loadHistory();
                 $modified = $event->modified ?: $event->created;
+                if ($modified instanceof \Horde_Date) {
+                   $modified = $modified->toDateTime();
+                }
                 try {
                     $id = $dav->getExternalObjectId($id, $internal) ?: $id . '.ics';
                 } catch (Horde_Dav_Exception $e) {
@@ -990,7 +993,6 @@ class Kronolith_Application extends Horde_Registry_Application
                 );
             }
         }
-
         return $events;
     }
 
@@ -1020,7 +1022,9 @@ class Kronolith_Application extends Horde_Registry_Application
 
         $event->loadHistory();
         $modified = $event->modified ?: $event->created;
-
+        if ($modified instanceof \Horde_Date) {
+            $modified = $modified->toDateTime();
+        }
         $share = $GLOBALS['injector']
             ->getInstance('Kronolith_Shares')
             ->getShare($event->calendar);
