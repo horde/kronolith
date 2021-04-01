@@ -48,7 +48,7 @@ class Kronolith_Application extends Horde_Registry_Application
 
     /**
      */
-    public $version = 'H5 (5.0.0alpha4)';
+    public $version = 'H5 (5.0.0alpha3)';
 
     /**
      * Global variables defined:
@@ -988,7 +988,7 @@ class Kronolith_Application extends Horde_Registry_Application
                     'id' => $id,
                     'uri' => $id,
                     'lastmodified' => $modified,
-                    'etag' => '"' . md5($event->id . '|' . $modified) . '"',
+                    'etag' => '"' . md5($event->id . '|' . $modified->getTimestamp()) . '"',
                     'calendarid' => $collection,
                 );
             }
@@ -1038,7 +1038,7 @@ class Kronolith_Application extends Horde_Registry_Application
             'calendardata' => $data,
             'uri' => $id,
             'lastmodified' => $modified,
-            'etag' => '"' . md5($event->id . '|' . $modified) . '"',
+            'etag' => '"' . md5($event->id . '|' . $modified->getTimestamp()) . '"',
             'calendarid' => $collection,
             'size' => strlen($data),
         );
