@@ -1,15 +1,4 @@
 ---
-5.0.0alpha3:
-  api: 5.0.0alpha3
-  state:
-    release: stable
-    api: stable
-  date: 2021-04-01
-  license:
-    identifier: GPL-2.0
-    uri: http://www.horde.org/licenses/gpl
-  notes: |
-    [rla] Try to get around merge issues when refreshing the maintaina clone
 5.0.0:
   api: 5.0.0
   state:
@@ -52,6 +41,28 @@
     [mjr] Add Kronolith_Api::move().
     [jan] Return ETags with browse() API method.
     [jan] Add importing of calendar data from a URL.
+5.0.0alpha4:
+  api: 5.0.0alpha3
+  state:
+    release: alpha
+    api: alpha
+  date: 2021-04-01
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |+
+    
+5.0.0alpha3:
+  api: 5.0.0alpha3
+  state:
+    release: stable
+    api: stable
+  date: 2021-04-01
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |
+    [rla] Try to get around merge issues when refreshing the maintaina clone
 4.2.28:
   api: 4.2.0
   state:

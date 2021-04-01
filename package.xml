@@ -24,7 +24,7 @@
  </lead>
  <date>2021-04-01</date>
  <version>
-  <release>5.0.0alpha3</release>
+  <release>5.0.0alpha4</release>
   <api>5.0.0alpha1</api>
  </version>
  <stability>
@@ -33,7 +33,7 @@
  </stability>
  <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
  <notes>
-* [rla] Try to get around merge issues when refreshing the maintaina clone
+* 
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -1327,6 +1327,135 @@
   </filelist>
  </phprelease>
  <changelog>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
   <release>
    <version>
     <release>0.0.1</release>
@@ -4035,6 +4164,36 @@
   </release>
   <release>
    <version>
+    <release>5.0.0alpha3</release>
+    <api>5.0.0alpha3</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2021-04-01</date>
+   <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
+   <notes>
+* [rla] Try to get around merge issues when refreshing the maintaina clone
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>5.0.0alpha4</release>
+    <api>5.0.0alpha3</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2021-04-01</date>
+   <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
+   <notes>
+* 
+   </notes>
+  </release>
+  <release>
+   <version>
     <release>5.0.0</release>
     <api>5.0.0</api>
    </version>
@@ -4077,21 +4236,6 @@
 * [mjr] Add Kronolith_Api::move().
 * [jan] Return ETags with browse() API method.
 * [jan] Add importing of calendar data from a URL.
-   </notes>
-  </release>
-  <release>
-   <version>
-    <release>5.0.0alpha3</release>
-    <api>5.0.0alpha1</api>
-   </version>
-   <stability>
-    <release>alpha</release>
-    <api>alpha</api>
-   </stability>
-   <date>2021-04-01</date>
-   <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
-   <notes>
-* [rla] Try to get around merge issues when refreshing the maintaina clone
    </notes>
   </release>
  </changelog>
