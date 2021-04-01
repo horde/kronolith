@@ -83,7 +83,7 @@
   license:
     identifier: GPL-2.0
     uri: http://www.horde.org/licenses/gpl
-  notes: |+
+  notes: |
     [mjr] Remove hard coded end date for calendar feed and allow it to be specified in url.
 4.2.25:
   api: 4.2.0

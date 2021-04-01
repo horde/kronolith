@@ -1,0 +1,94 @@
+{
+    "name": "horde/kronolith",
+    "description": "Calendar and scheduling application",
+    "type": "horde-application",
+    "homepage": "https://www.horde.org/apps/kronolith",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Jan Schneider",
+            "email": "jan@horde.org",
+            "role": "lead"
+        },
+        {
+            "name": "Michael J Rubinsky",
+            "email": "mrubinsk@horde.org",
+            "role": "lead"
+        },
+        {
+            "name": "Chuck Hagenbuch",
+            "email": "chuck@horde.org",
+            "role": "lead"
+        }
+    ],
+    "time": "2021-04-01",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://horde-satis.maintaina.com/"
+        }
+    ],
+    "require": {
+        "horde/horde-installer-plugin": "*",
+        "php": "^7",
+        "horde/content": "^3",
+        "horde/horde": "^6",
+        "horde/auth": "^3",
+        "horde/autoloader": "^3",
+        "horde/core": "^3",
+        "horde/data": "^3",
+        "horde/date": "^3",
+        "horde/date_parser": "^3",
+        "horde/dav": "^2",
+        "horde/exception": "^3",
+        "horde/form": "^3",
+        "horde/group": "^3",
+        "horde/http": "^3",
+        "horde/history": "^3",
+        "horde/icalendar": "^3",
+        "horde/image": "^3",
+        "horde/lock": "^3",
+        "horde/logintasks": "^3",
+        "horde/mail": "^3",
+        "horde/mime": "^3",
+        "horde/nls": "^3",
+        "horde/notification": "^3",
+        "horde/perms": "^3",
+        "horde/serialize": "^3",
+        "horde/share": "^3",
+        "horde/support": "^3",
+        "horde/text_filter": "^3",
+        "horde/timezone": "^2",
+        "horde/url": "^3",
+        "horde/util": "^3",
+        "horde/view": "^3",
+        "ext-gettext": "*",
+        "ext-json": "*",
+        "ext-SimpleXML": "*"
+    },
+    "suggest": {
+        "horde/nag": "^5",
+        "horde/timeobjects": "^3",
+        "horde/activesync": "^3",
+        "horde/backup": "^2",
+        "horde/db": "^3",
+        "horde/openxchange": "^2",
+        "horde/test": "^3",
+        "pear/date_holidays": "*",
+        "ext-xmlwriter": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Kronolith": "lib/"
+        }
+    },
+    "bin": [
+        "bin/kronolith-agenda",
+        "bin/kronolith-convert-datatree-shares-to-sql",
+        "bin/kronolith-convert-sql-shares-to-sqlng",
+        "bin/kronolith-convert-to-utc",
+        "bin/kronolith-import-icals",
+        "bin/kronolith-import-openxchange",
+        "bin/kronolith-import-squirrelmail-calendar"
+    ]
+}
