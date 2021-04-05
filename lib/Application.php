@@ -1092,6 +1092,8 @@ class Kronolith_Application extends Horde_Registry_Application
 
         $kronolith_driver = Kronolith::getDriver(null, $internal);
         $event = $kronolith_driver->getEvent($object);
+        $storage = $GLOBALS['injector']->getInstance('Kronolith_Icalendar_Storage');
+        $storage->remove($event->calendar, $event->id);
         $kronolith_driver->deleteEvent($object);
 
         try {
