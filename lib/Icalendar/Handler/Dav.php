@@ -30,6 +30,13 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
     protected $_dav;
 
     /**
+     * The iCalendar storage driver.
+     *
+     * @var Kronolith_Icalendar_Storage
+     */
+    protected $_storage;
+
+    /**
      * The calendar id to be imported into.
      *
      * @var string
@@ -62,15 +69,20 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
      *
      * @param Horde_Icalendar  $iCal    The iCalendar data.
      * @param Kronolith_Driver $driver  The Kronolith driver.
+     * @param Kronolith_Icalendar_Storage $storage  The raw Icalendar Storage driver.
      * @param array            $params  Any additional parameters needed for
      *                                  the importer. For this driver we
      *                                  require: 'object' - contains the DAV
      *                                  identifier for the (base) event.
      */
     public function __construct(
-        Horde_Icalendar $iCal, Kronolith_Driver $driver, $params = array())
+        Horde_Icalendar $iCal,
+        Kronolith_Driver $driver,
+        Kronolith_Icalendar_Storage $storage,
+        array $params = [])
     {
         parent::__construct($iCal, $driver, $params);
+        $this->_storage = $storage;
         $this->_dav = $GLOBALS['injector']->getInstance('Horde_Dav_Storage');
         $this->_calendar = $this->_driver->calendar;
     }
@@ -186,9 +198,10 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
         if (!$this->_dav->getInternalObjectId($this->_params['object'], $this->_calendar)) {
             $this->_dav->addObjectMap($event->id, $this->_params['object'], $this->_calendar);
         }
+        $this->_storage->put($this->_calendar, $event->id, $this->_iCal->toString());
 
         // Send iTip messages if necessary.
-	    $type = Kronolith::ITIP_REQUEST;
+        $type = Kronolith::ITIP_REQUEST;
         if ($event->organizer && !Kronolith::isUserEmail($event->creator, $event->organizer)) {
             $type = Kronolith::ITIP_REPLY;
         }

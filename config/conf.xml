@@ -17,6 +17,25 @@
   </configswitch>
  </configsection>
 
+ <configsection name="caldav">
+  <configheader>CalDAV Driver Settings</configheader>
+  <configdescription>
+    Store any caldav attributes Kronolith does not process.
+    When exposing the event again, these attributes will be added again.
+    This prevents 'forgetting' unknown fields a client supports.
+    Storage is independent of the calendar backend.
+  </configdescription>
+  <configswitch name="driver" desc="What CalDAV storage driver should we use?">sql
+   <case name="sql" desc="SQL">
+    <configsection name="params">
+     <configsql switchname="driverconfig"/>
+    </configsection>
+   </case>
+   <case name="null" desc="Do not save extra attributes" />
+  </configswitch>
+ </configsection>
+
+
  <configsection name="documents">
   <configheader>Virtual File Storage</configheader>
   <configvfs switchname="type" />

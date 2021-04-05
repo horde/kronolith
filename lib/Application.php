@@ -67,6 +67,7 @@ class Kronolith_Application extends Horde_Registry_Application
             throw new Horde_Exception(_("The Content_Tagger class could not be found. Make sure the Content application is installed."));
         }
 
+        $GLOBALS['injector']->bindFactory('Kronolith_Icalendar_Storage', 'Kronolith_Factory_IcalendarStorage', 'create');
         $GLOBALS['injector']->bindFactory('Kronolith_Geo', 'Kronolith_Factory_Geo', 'create');
         $GLOBALS['injector']->bindFactory('Kronolith_Shares', 'Kronolith_Factory_Shares', 'create');
 
@@ -1055,6 +1056,7 @@ class Kronolith_Application extends Horde_Registry_Application
     {
         $dav = $GLOBALS['injector']
             ->getInstance('Horde_Dav_Storage');
+        $storage = $GLOBALS['injector']->getInstance('Kronolith_Icalendar_Storage');
 
         $internal = $dav->getInternalCollectionId($collection, 'calendar') ?: $collection;
         if (!Kronolith::hasPermission($internal, Horde_Perms::EDIT)) {
@@ -1066,7 +1068,7 @@ class Kronolith_Application extends Horde_Registry_Application
             throw new Kronolith_Exception(_("There was an error importing the iCalendar data."));
         }
         $importer = new Kronolith_Icalendar_Handler_Dav(
-            $ical, Kronolith::getDriver(null, $internal), array('object' => $object)
+            $ical, Kronolith::getDriver(null, $internal), $storage, ['object' => $object]
         );
         $importer->process();
     }
