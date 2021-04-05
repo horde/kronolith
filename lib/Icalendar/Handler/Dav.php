@@ -191,6 +191,59 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
         return true;
     }
 
+    /**
+     * Is an event update worthy of an Itip update?
+     *
+     * TODO: Factor out to separate class
+     * Prevent update itip spam for minor changes
+     * Relevant:
+     *  - change of attendee list or resources
+     *  - title
+     *  - description
+     *  - location
+     *  - recurrences and exceptions
+     *  - url
+     *  - private flag changes
+     *  - timezone
+     *  - start & end time
+     *
+     * Irrelevant:
+     *  - noop updates
+     *  - alerts & snoozes
+     *  - X- attributes
+     *  - tags
+     *  - status
+     *  - everything else
+     */
+    protected function _relevantEventChanges(
+        \Kronolith_Event $event,
+        \Kronolith_Event $existing = null
+    ): bool {
+        // If there is no existing event, send out original invitation
+        if (empty($existing)) {
+            return true;
+        }
+        $attributes = [
+            'title',
+            'description',
+            'location',
+            'private',
+            'timezone',
+            'url',
+            'start',
+            'end',
+            'recurrence',
+            'attendees'
+        ];
+        foreach ($attributes as $attribute) {
+            if ($existing->{$attribute} != $event->{$attribute}) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected function _postSave(Kronolith_Event $event)
     {
         global $registry;
@@ -208,11 +261,21 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
         $event_copy = clone($event);
         $event_copy->attendees = $event->attendees->without($this->_noItips);
         $notification = new Horde_Notification_Handler(new Horde_Notification_Storage_Object());
-        Kronolith::sendITipNotifications(
-            $event_copy,
-            $notification,
-            $type
-        );
+        // If this is an existing event, only send updates for relevant changes
+        // Do not send updates if somebody snoozes an alert or adds a tag
+        $preventItip = $this->_relevantEventChanges($event, $this->_existingEvent);
+        // Never send event updates for past events
+        // TODO: Check if this breaks on recurrences
+        if ($event->end->timestamp() <= time()) {
+            $preventItip = true;
+        }
+        if (!$preventItip) {
+            Kronolith::sendITipNotifications(
+                $event_copy,
+                $notification,
+                $type
+            );
+        }
 
         // Send ITIP_CANCEL to any attendee that was removed, but only if this
         // is the ORGANZIER's copy of the event.
