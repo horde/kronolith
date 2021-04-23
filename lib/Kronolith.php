@@ -816,8 +816,7 @@ class Kronolith
     /**
      * Return Kronolith_Attendee object for a local user.
      *
-     * @param string $user  The local username.
-     *
+     * @param string $user  The local username OR a user attendee string
      * @return mixed Return the Kronolith_Attendee object for $user, or false
      *               if the auth backend supports user listing and the user
      *               is not found.
@@ -825,6 +824,15 @@ class Kronolith
     public static function validateUserAttendee($user)
     {
         global $injector, $registry;
+        /**
+         * If a user is supplied by readForm,
+         * strip it to the bare user name
+         * Attendee strings have the form "Displayname [username]"
+         */
+        preg_match('/.*\[(.*)\]/', $user, $matches);
+        if (!empty($matches[1])) {
+            $user = $matches[1];
+        }
 
         $user = $registry->convertUsername($user, true);
         $auth = $injector->getInstance('Horde_Core_Factory_Auth')->create();

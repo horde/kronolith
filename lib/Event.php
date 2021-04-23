@@ -3474,7 +3474,7 @@ abstract class Kronolith_Event
             if ($userattendees) {
                 foreach (explode(',', $userattendees) as $user) {
                     if (!$newUser = Kronolith::validateUserAttendee($user)) {
-                        $notification->push(sprintf(_("The user \"%s\" does not exist."), $newUser), 'horde.error');
+                        $notification->push(sprintf(_("The user \"%s\" does not exist."), $user), 'horde.error');
                     } else {
                         $newattendees->add($newUser);
                     }
