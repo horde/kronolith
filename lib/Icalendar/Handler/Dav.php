@@ -263,7 +263,7 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
         $notification = new Horde_Notification_Handler(new Horde_Notification_Storage_Object());
         // If this is an existing event, only send updates for relevant changes
         // Do not send updates if somebody snoozes an alert or adds a tag
-        $preventItip = $this->_relevantEventChanges($event, $this->_existingEvent);
+        $preventItip = !$this->_relevantEventChanges($event, $this->_existingEvent);
         // Never send event updates for past events
         // TODO: Check if this breaks on recurrences
         if ($event->end->timestamp() <= time()) {
