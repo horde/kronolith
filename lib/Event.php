@@ -949,7 +949,7 @@ abstract class Kronolith_Event
         // Attached files
         if ($includeFiles && count($this->listFiles())) {
             $vfs = $this->vfsInit();
-            foreach ($this->listFiles() as $file) {
+            foreach ($this->listFiles() as $cnt => $file) {
                 try {
                     $data = $vfs->read(Kronolith::VFS_PATH . '/' . $this->getVfsUid(), $file['name']);
                 } catch (Horde_Vfs_Exception $e) {
@@ -957,7 +957,16 @@ abstract class Kronolith_Event
                 }
                 if ($data) {
                     try {
-                        $vEvent->setAttribute('ATTACH', $data, array('FMTTYPE' => $file['type'], 'VALUE' => 'BINARY', 'ENCODING' => 'BASE64'));
+                        // We should have filename and type information.
+                        $filename = empty($file['name']) ? 'attachment' . $cnt . '.' .'$file[type]'  : $file['name'] ;
+                        // At least recent MS clients implementing MS-OXCMSG 23.1 understand X-FILENAME
+                        $vEvent->setAttribute('ATTACH', base64_encode($data), [
+                              'FMTTYPE' => $file['type'],
+                              'X-FILENAME' => $filename,
+                              'VALUE' => 'BINARY',
+                              'ENCODING' => 'BASE64'
+                            ]
+                        );
                     } catch (Horde_Icalendar_Exception $e) {
                         Horde::log($e->getMessage(), 'ERR');
                     }
@@ -1338,12 +1347,22 @@ abstract class Kronolith_Event
                             ? $attach_params[$key]['FMTTYPE']
                             : '';
                         // @todo We really should add stream support to VFS
-                        $file_data = base64_decode($attribute);
+                        // base64_decode will swallow almost anything without strict.
+                        // Use strict check to bypass decoding. Advertising base64 and sending plain happens with some clients
+                        if (base64_decode($attribute, true) === false) {
+                            $file_data = $attribute;
+                        } else {
+                            $file_data = base64_decode($attribute);
+                        }
                         $vfs = $this->vfsInit();
                         $dir = Kronolith::VFS_PATH . '/' . $this->getVfsUid();
-                        // @todo - Is there a way to get a filename from a
-                        // non-uri ATTACH attribute??
-                        $filename = sprintf(_("File %d.%s"), $key, Horde_Mime_Magic::mimeToExt($mime_type));
+                        // Some clients use X-FILENAME to convey filename.
+                        // Otherwise, we can only generate a standin filename from type
+                        if (!empty($attachment_params[$key]['X-FILENAME'])) {
+                            $filename = $attachment_params[$key]['X-FILENAME'];
+                        } else {
+                            $filename = sprintf(_("File %d.%s"), $key, Horde_Mime_Magic::mimeToExt($mime_type));
+                        }
                         try {
                             $vfs->writeData($dir, $filename, $file_data, true);
                         } catch (Horde_Vfs_Exception $e) {
