@@ -6020,6 +6020,7 @@ KronolithCore = {
             params.set('cstart', this.cacheStart.toISOString());
             params.set('cend', this.cacheEnd.toISOString());
         }
+
         HordeImple.AutoCompleter.kronolithEventTags.shutdown();
         $('kronolithEventSave').disable();
         $('kronolithEventSaveAsNew').disable();
@@ -6286,9 +6287,16 @@ KronolithCore = {
             HordeImple.AutoCompleter.kronolithEventAttendees.reset(
                 ev.at.reject(filter).pluck('l')
             );
-            HordeImple.AutoCompleter.kronolithEventUsers.reset(
-                ev.at.findAll(filter).pluck('l')
-            );
+            let users = [];
+            /* We need to feed the full user string here.
+               Feeding only the caption will produce errors on re-saving existing events
+               as soon as the name is not the username
+            */
+            ev.at.findAll(filter).each(function(foundUser) {
+                users.push(foundUser.l + ' [' + foundUser.u + ']');
+            })
+
+            HordeImple.AutoCompleter.kronolithEventUsers.reset(users);
             ev.at.each(this.addAttendee.bind(this));
             if (this.fbLoading) {
                 $('kronolithFBLoading').show();
@@ -6763,8 +6771,10 @@ KronolithCore = {
     {
         user = this.parseUser(user);
         var row = this.freeBusyRows.get('user:' + user.user);
-        row.purge();
-        row.remove();
+        if (row) {
+          row.purge();
+          row.remove();
+        }
     },
 
     normalizeAttendee: function(attendee)
