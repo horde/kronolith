@@ -756,7 +756,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         try {
             $properties = $client->propfind(
                 '',
-                array('{DAV:}resourcetype', '{DAV:}current-user-privilege-set')
+                ['{DAV:}resourcetype', '{DAV:}current-user-privilege-set']
              );
         } catch (\Sabre\HTTP\ClientException $e) {
             Horde::log($e, 'INFO');
@@ -776,20 +776,29 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         /* Read ACLs. */
         if (!empty($properties['{DAV:}current-user-privilege-set'])) {
             $privileges = $properties['{DAV:}current-user-privilege-set'];
-            if ($privileges->has('{DAV:}read')) {
+            // TODO: Move this to a helper/iterator
+            foreach ($privileges as $id => $privilege)
+            {
+                if (empty($privilege['value'][0]['name'])) {
+                    continue;
+                }
+                $privilegeName = $privilege['value'][0]['name'];
+                if ($privilegeName == '{DAV:}read') {
                 /* GET access. */
-                $this->_permission |= Horde_Perms::SHOW;
-                $this->_permission |= Horde_Perms::READ;
-            }
-            if ($privileges->has('{DAV:}write') ||
-                $privileges->has('{DAV:}write-content')) {
+                    $this->_permission |= Horde_Perms::SHOW;
+                    $this->_permission |= Horde_Perms::READ;
+                }
+                if ($privilegeName == '{DAV:}write' ||
+                    $privilegeName == '{DAV:}write-content') {
                 /* PUT access. */
-                $this->_permission |= Horde_Perms::EDIT;
-            }
-            if ($privileges->has('{DAV:}unbind')) {
+                    $this->_permission |= Horde_Perms::EDIT;
+                }
+                if ($privilegeName == '{DAV:}unbind') {
                 /* DELETE access. */
-                $this->_permission |= Horde_Perms::DELETE;
+                    $this->_permission |= Horde_Perms::DELETE;
+                }
             }
+
         }
 
         return true;
