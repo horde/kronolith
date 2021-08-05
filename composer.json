@@ -40,6 +40,7 @@
         "horde/date": "^3 || dev-FRAMEWORK_6_0",
         "horde/date_parser": "^3 || dev-FRAMEWORK_6_0",
         "horde/dav": "^2 || dev-FRAMEWORK_6_0",
+        "horde/eventdispatcher": "* || dev-FRAMEWORK_6_0",
         "horde/exception": "^3 || dev-FRAMEWORK_6_0",
         "horde/form": "^3 || dev-FRAMEWORK_6_0",
         "horde/group": "^3 || dev-FRAMEWORK_6_0",

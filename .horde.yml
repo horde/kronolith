@@ -53,6 +53,7 @@ dependencies:
       horde/date: ^3
       horde/date_parser: ^3
       horde/dav: ^2
+      horde/eventdispatcher: '*'
       horde/exception: ^3
       horde/form: ^3
       horde/group: ^3
