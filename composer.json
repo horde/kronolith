@@ -1,5 +1,4 @@
 {
-    "minimum-stability": "dev",
     "name": "horde/kronolith",
     "description": "Calendar and scheduling application",
     "type": "horde-application",
@@ -22,7 +21,7 @@
             "role": "lead"
         }
     ],
-    "time": "2021-04-01",
+    "time": "2021-08-05",
     "repositories": [
         {
             "type": "composer",
@@ -31,7 +30,7 @@
     ],
     "require": {
         "horde/horde-installer-plugin": "dev-FRAMEWORK_6_0 || *",
-        "php": "^7",
+        "php": "^7 || ^8",
         "horde/content": "^3 || dev-FRAMEWORK_6_0",
         "horde/horde": "^6 || dev-FRAMEWORK_6_0",
         "horde/auth": "^3 || dev-FRAMEWORK_6_0",
@@ -67,6 +66,7 @@
         "ext-json": "*",
         "ext-SimpleXML": "*"
     },
+    "require-dev": {},
     "suggest": {
         "horde/nag": "^5 || dev-FRAMEWORK_6_0",
         "horde/timeobjects": "^3 || dev-FRAMEWORK_6_0",
@@ -81,15 +81,23 @@
     "autoload": {
         "psr-0": {
             "Kronolith": "lib/"
+        },
+        "psr-4": {
+            "Horde\\Kronolith\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Horde\\Kronolith\\Test\\": "test/"
         }
     },
     "bin": [
-        "bin/kronolith-agenda",
         "bin/kronolith-convert-datatree-shares-to-sql",
-        "bin/kronolith-convert-sql-shares-to-sqlng",
-        "bin/kronolith-convert-to-utc",
+        "bin/kronolith-import-squirrelmail-calendar",
         "bin/kronolith-import-icals",
         "bin/kronolith-import-openxchange",
-        "bin/kronolith-import-squirrelmail-calendar"
+        "bin/kronolith-agenda",
+        "bin/kronolith-convert-sql-shares-to-sqlng",
+        "bin/kronolith-convert-to-utc"
     ]
 }
