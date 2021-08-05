@@ -46,7 +46,8 @@ jobs:
     - name: Install horde/test dependency and other dependencies
       run: |
         ## For unclear reasons, github action fails randomly if we do not install before we require.
+        COMPOSER_ROOT_VERSION=dev-FRAMEWORK_6_0 composer config minimum-stability dev
         COMPOSER_ROOT_VERSION=dev-FRAMEWORK_6_0 composer install
         COMPOSER_ROOT_VERSION=dev-FRAMEWORK_6_0 composer require --dev horde/test dev-FRAMEWORK_6_0 horde/log dev-FRAMEWORK_6_0
     - name: run phpunit
-      run: phpunit --bootstrap test/Kronolith/bootstrap.php test/Kronolith/
+      run: phpunit --bootstrap test/bootstrap.php
