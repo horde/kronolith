@@ -977,7 +977,16 @@ class Kronolith_Application extends Horde_Registry_Application
             foreach ($dayevents as $event) {
                 $id = $event->id;
                 $event->loadHistory();
-                $modified = $event->modified ?: $event->created;
+                $modified = $event->modified ? $event->modified : $event->created;
+                if (empty($modified)) {
+                    /**
+                     * Fallback: For some reasons, some events may have neither
+                     * created nor modified date. Fall back to event date as last resort
+                     */
+                     $modified = $event->start;
+                     $event->created = $modified;
+                     $event->modified = $modified;
+                }
                 if ($modified instanceof \Horde_Date) {
                    $modified = $modified->toDateTime();
                 }
@@ -1023,6 +1032,15 @@ class Kronolith_Application extends Horde_Registry_Application
 
         $event->loadHistory();
         $modified = $event->modified ?: $event->created;
+        if (empty($modified)) {
+            /**
+             * Fallback: For some reasons, some events may have neither
+             * created nor modified date. Fall back to event date as last resort
+             */
+             $modified = $event->start;
+             $event->created = $modified;
+             $event->modified = $modified;
+        }
         if ($modified instanceof \Horde_Date) {
             $modified = $modified->toDateTime();
         }
