@@ -174,6 +174,10 @@ class Kronolith_Event_Sql extends Kronolith_Event
             }
 
         }
+        if (isset($SQLEvent['other_attributes'])) {
+            // Maybe we need to guard this better against crap from the backend
+            $this->otherAttributes = json_decode($SQLEvent['other_attributes'], true) ?? [];
+        }
 
         $this->initialized = true;
         $this->stored = true;
@@ -279,6 +283,7 @@ class Kronolith_Event_Sql extends Kronolith_Event
             $properties['event_baseid'] = '';
             $properties['event_exceptionoriginaldate'] = null;
         }
+        $properties['other_attributes'] = json_encode($this->otherAttributes);
 
         return $properties;
     }

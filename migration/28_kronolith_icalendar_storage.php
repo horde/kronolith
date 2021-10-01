@@ -39,6 +39,12 @@ class KronolithIcalendarStorage extends Horde_Db_Migration_Base
         $t->column('event_data', 'text', ['null' => false]);
         $t->end();
         $this->addIndex('kronolith_icalendar_storage', ['calendar_id', 'event_uid'], ['unique' => true]);
+
+        $t = $this->_connection->table('kronolith_events');
+        $cols = $t->getColumns();
+        if (!in_array('other_attributes', array_keys($cols))) {
+            $this->addColumn('kronolith_events', 'other_attributes', 'text', ['default' => '[]']);
+        }
     }
 
     /**
@@ -46,6 +52,7 @@ class KronolithIcalendarStorage extends Horde_Db_Migration_Base
      */
     public function down()
     {
+        $this->removeColumn('kronolith_events', 'other_attributes');
         $this->dropTable('kronolith_icalendar_storage');
     }
 }

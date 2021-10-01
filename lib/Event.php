@@ -402,6 +402,51 @@ abstract class Kronolith_Event
     protected $_vfs;
 
     /**
+     * List of attributes imported from icalendar which do not map to
+     * native Kronolith Event attributes
+     *
+     * It depends on the backend driver to actually store and recover these
+     * 
+     * @var array
+     */
+    protected array $otherAttributes = [];
+
+    /**
+     * List of vevent attributes kronolith does handle
+     * 
+     * If you add capabilities which match with vevent structures,
+     * add them here. All unlisted attributes will be saved to otherAttributes
+     * and it is up to the driver if they are serialized and restored
+     * 
+     * @var array 
+     */
+    protected array $knownAttributes = [
+        'ATTACH',
+        'ATTENDEE',
+        'CATEGORIES',
+        'CLASS',
+        'CREATED',
+        'DESCRIPTION',
+        'DTSTART',
+        'DTEND',
+        'DTSTAMP',
+        'EXDATE',
+        'GEO',
+        'LAST-MODIFIED',
+        'LOCATION',
+        'ORGANIZER',
+        'RRULE',
+        'STATUS',
+        'SUMMARY',
+        'UID',
+        'URL',
+        'TRANSP',
+        'X-FUNAMBOL-ALLDAY',
+        'X-HORDE-ATTENDEE'
+    ];
+
+
+    /**
      * Constructor.
      *
      * @param Kronolith_Driver $driver  The backend driver that this event is
@@ -704,6 +749,9 @@ abstract class Kronolith_Event
 
             $vEvent->setAttribute('DTSTART', clone $this->start, $params);
             $vEvent->setAttribute('DTEND', clone $this->end, $params);
+        }
+        foreach ($this->otherAttributes as $attribute) {
+            $vEvent->setAttribute($attribute['name'], $attribute['value'], $attribute['params'], true, $attribute['values']);
         }
 
         $vEvent->setAttribute('DTSTAMP', $_SERVER['REQUEST_TIME']);
@@ -1487,6 +1535,13 @@ abstract class Kronolith_Event
         }
 
         $this->_handlevEventRecurrence($vEvent);
+        foreach ($vEvent->getAllAttributes() as $attribute) {
+            // drop all known attributes
+            if (in_array($attribute['name'], $this->knownAttributes)) {
+                continue;
+            }
+            $this->otherAttributes[] = $attribute;
+        }
 
         $this->initialized = true;
     }
