@@ -22,7 +22,7 @@
   <email>chuck@horde.org</email>
   <active>no</active>
  </lead>
- <date>2021-04-01</date>
+ <date>2021-10-06</date>
  <version>
   <release>5.0.0alpha4</release>
   <api>5.0.0alpha1</api>
@@ -33,10 +33,18 @@
  </stability>
  <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
  <notes>
-* 
+* |+
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
+   <dir name=".github">
+    <dir name="workflows">
+     <file name="ci.yml" role="horde" />
+     <file name="phpdoc.yml" role="horde" />
+     <file name="update-satis.yml" role="horde" />
+     <file name="upstream.yml" role="horde" />
+    </dir> <!-- /.github/workflows -->
+   </dir> <!-- /.github -->
    <dir name="bin">
     <file name="kronolith-agenda" role="script">
      <tasks:replace from="/usr/bin/env php" to="php_bin" type="pear-config" />
@@ -162,6 +170,7 @@
      <file name="Calendars.php" role="horde" />
      <file name="Driver.php" role="horde" />
      <file name="Geo.php" role="horde" />
+     <file name="IcalendarStorage.php" role="horde" />
      <file name="Shares.php" role="horde" />
      <file name="Storage.php" role="horde" />
     </dir> <!-- /lib/Factory -->
@@ -201,6 +210,12 @@
       <file name="Base.php" role="horde" />
       <file name="Dav.php" role="horde" />
      </dir> <!-- /lib/Icalendar/Handler -->
+     <dir name="Storage">
+      <file name="Entity.php" role="horde" />
+      <file name="Null.php" role="horde" />
+      <file name="Sql.php" role="horde" />
+     </dir> <!-- /lib/Icalendar/Storage -->
+     <file name="Storage.php" role="horde" />
     </dir> <!-- /lib/Icalendar -->
     <dir name="LoginTasks">
      <dir name="SystemTask">
@@ -514,6 +529,7 @@
     <file name="25_kronolith_upgrade_typetocalendartype.php" role="horde" />
     <file name="26_kronolith_event_organizer.php" role="horde" />
     <file name="27_kronolith_upgrade_description_to_text.php" role="horde" />
+    <file name="28_kronolith_icalendar_storage.php" role="horde" />
    </dir> <!-- /migration -->
    <dir name="resources">
     <dir name="groups">
@@ -527,6 +543,21 @@
     <file name="edit.php" role="horde" />
     <file name="index.html" role="horde" />
    </dir> <!-- /resources -->
+   <dir name="src">
+    <dir name="Calendar">
+     <file name="CalendarInterface.php" role="horde" />
+     <file name="CalendarProviderInterface.php" role="horde" />
+     <file name="CalendarTrait.php" role="horde" />
+     <file name="Event.php" role="horde" />
+     <file name="EventDeleted.php" role="horde" />
+     <file name="EventDeletedListener.php" role="horde" />
+     <file name="EventInterface.php" role="horde" />
+     <file name="EventPut.php" role="horde" />
+     <file name="EventPutListener.php" role="horde" />
+     <file name="WritableCalendarInterface.php" role="horde" />
+    </dir> <!-- /src/Calendar -->
+    <file name="ListenerProvider.php" role="horde" />
+   </dir> <!-- /src -->
    <dir name="templates">
     <dir name="agenda">
      <file name="notification.html.php" role="horde" />
@@ -703,6 +734,7 @@
      <file name="bootstrap.php" role="test" />
      <file name="TestCase.php" role="test" />
     </dir> <!-- /test/Kronolith -->
+    <file name="bootstrap.php" role="test" />
    </dir> <!-- /test -->
    <dir name="themes">
     <dir name="default">
@@ -828,8 +860,8 @@
   <required>
    <php>
     <min>7.0.0</min>
-    <max>8.0.0alpha1</max>
-    <exclude>8.0.0alpha1</exclude>
+    <max>9.0.0alpha1</max>
+    <exclude>9.0.0alpha1</exclude>
    </php>
    <pearinstaller>
     <min>1.7.0</min>
@@ -857,6 +889,10 @@
  </usesrole>
  <phprelease>
   <filelist>
+   <install as="kronolith/.github/workflows/ci.yml" name=".github/workflows/ci.yml" />
+   <install as="kronolith/.github/workflows/phpdoc.yml" name=".github/workflows/phpdoc.yml" />
+   <install as="kronolith/.github/workflows/update-satis.yml" name=".github/workflows/update-satis.yml" />
+   <install as="kronolith/.github/workflows/upstream.yml" name=".github/workflows/upstream.yml" />
    <install as="kronolith/add.php" name="add.php" />
    <install as="kronolith/attend.php" name="attend.php" />
    <install as="kronolith/attendees.php" name="attendees.php" />
@@ -955,6 +991,7 @@
    <install as="kronolith/lib/Factory/Calendars.php" name="lib/Factory/Calendars.php" />
    <install as="kronolith/lib/Factory/Driver.php" name="lib/Factory/Driver.php" />
    <install as="kronolith/lib/Factory/Geo.php" name="lib/Factory/Geo.php" />
+   <install as="kronolith/lib/Factory/IcalendarStorage.php" name="lib/Factory/IcalendarStorage.php" />
    <install as="kronolith/lib/Factory/Shares.php" name="lib/Factory/Shares.php" />
    <install as="kronolith/lib/Factory/Storage.php" name="lib/Factory/Storage.php" />
    <install as="kronolith/lib/Form/CreateCalendar.php" name="lib/Form/CreateCalendar.php" />
@@ -981,6 +1018,10 @@
    <install as="kronolith/lib/Geo/Sql.php" name="lib/Geo/Sql.php" />
    <install as="kronolith/lib/Icalendar/Handler/Base.php" name="lib/Icalendar/Handler/Base.php" />
    <install as="kronolith/lib/Icalendar/Handler/Dav.php" name="lib/Icalendar/Handler/Dav.php" />
+   <install as="kronolith/lib/Icalendar/Storage.php" name="lib/Icalendar/Storage.php" />
+   <install as="kronolith/lib/Icalendar/Storage/Entity.php" name="lib/Icalendar/Storage/Entity.php" />
+   <install as="kronolith/lib/Icalendar/Storage/Null.php" name="lib/Icalendar/Storage/Null.php" />
+   <install as="kronolith/lib/Icalendar/Storage/Sql.php" name="lib/Icalendar/Storage/Sql.php" />
    <install as="kronolith/lib/Kronolith.php" name="lib/Kronolith.php" />
    <install as="kronolith/lib/LoginTasks/SystemTask/Upgrade.php" name="lib/LoginTasks/SystemTask/Upgrade.php" />
    <install as="kronolith/lib/LoginTasks/Task/PurgeEvents.php" name="lib/LoginTasks/Task/PurgeEvents.php" />
@@ -1120,6 +1161,7 @@
    <install as="kronolith/migration/25_kronolith_upgrade_typetocalendartype.php" name="migration/25_kronolith_upgrade_typetocalendartype.php" />
    <install as="kronolith/migration/26_kronolith_event_organizer.php" name="migration/26_kronolith_event_organizer.php" />
    <install as="kronolith/migration/27_kronolith_upgrade_description_to_text.php" name="migration/27_kronolith_upgrade_description_to_text.php" />
+   <install as="kronolith/migration/28_kronolith_icalendar_storage.php" name="migration/28_kronolith_icalendar_storage.php" />
    <install as="kronolith/month.php" name="month.php" />
    <install as="kronolith/new.php" name="new.php" />
    <install as="kronolith/perms.php" name="perms.php" />
@@ -1134,6 +1176,17 @@
    <install as="kronolith/resources/index.html" name="resources/index.html" />
    <install as="kronolith/search.php" name="search.php" />
    <install as="kronolith/smartmobile.php" name="smartmobile.php" />
+   <install as="kronolith/src/Calendar/CalendarInterface.php" name="src/Calendar/CalendarInterface.php" />
+   <install as="kronolith/src/Calendar/CalendarProviderInterface.php" name="src/Calendar/CalendarProviderInterface.php" />
+   <install as="kronolith/src/Calendar/CalendarTrait.php" name="src/Calendar/CalendarTrait.php" />
+   <install as="kronolith/src/Calendar/Event.php" name="src/Calendar/Event.php" />
+   <install as="kronolith/src/Calendar/EventDeleted.php" name="src/Calendar/EventDeleted.php" />
+   <install as="kronolith/src/Calendar/EventDeletedListener.php" name="src/Calendar/EventDeletedListener.php" />
+   <install as="kronolith/src/Calendar/EventInterface.php" name="src/Calendar/EventInterface.php" />
+   <install as="kronolith/src/Calendar/EventPut.php" name="src/Calendar/EventPut.php" />
+   <install as="kronolith/src/Calendar/EventPutListener.php" name="src/Calendar/EventPutListener.php" />
+   <install as="kronolith/src/Calendar/WritableCalendarInterface.php" name="src/Calendar/WritableCalendarInterface.php" />
+   <install as="kronolith/src/ListenerProvider.php" name="src/ListenerProvider.php" />
    <install as="kronolith/templates/.htaccess" name="templates/.htaccess" />
    <install as="kronolith/templates/agenda/notification.html.php" name="templates/agenda/notification.html.php" />
    <install as="kronolith/templates/agenda/notification.plain.php" name="templates/agenda/notification.plain.php" />
@@ -1204,6 +1257,7 @@
    <install as="kronolith/templates/view/view.inc" name="templates/view/view.inc" />
    <install as="kronolith/templates/week/head.inc" name="templates/week/head.inc" />
    <install as="kronolith/templates/week/head_side_by_side.inc" name="templates/week/head_side_by_side.inc" />
+   <install as="bootstrap.php" name="test/bootstrap.php" />
    <install as="Kronolith/AllTests.php" name="test/Kronolith/AllTests.php" />
    <install as="Kronolith/Autoload.php" name="test/Kronolith/Autoload.php" />
    <install as="Kronolith/bootstrap.php" name="test/Kronolith/bootstrap.php" />
@@ -1327,135 +1381,6 @@
   </filelist>
  </phprelease>
  <changelog>
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
   <release>
    <version>
     <release>0.0.1</release>
@@ -4180,7 +4105,7 @@
   <release>
    <version>
     <release>5.0.0alpha4</release>
-    <api>5.0.0alpha3</api>
+    <api>5.0.0alpha1</api>
    </version>
    <stability>
     <release>alpha</release>
@@ -4189,7 +4114,7 @@
    <date>2021-04-01</date>
    <license uri="http://www.horde.org/licenses/gpl">GPL-2.0</license>
    <notes>
-* 
+* |+
    </notes>
   </release>
   <release>
