@@ -4,7 +4,7 @@
     "description": "Calendar and scheduling application",
     "type": "horde-application",
     "homepage": "https://www.horde.org/apps/kronolith",
-    "license": "GPL-2.0",
+    "license": "GPL-2.0-only",
     "authors": [
         {
             "name": "Jan Schneider",
@@ -30,8 +30,8 @@
         }
     ],
     "require": {
-        "horde/horde-installer-plugin": "dev-FRAMEWORK_6_0 || *",
-        "php": "^7 || ^8",
+        "horde/horde-installer-plugin": "^2 || dev-FRAMEWORK_6_0",
+        "php": "^7.4 || ^8",
         "horde/content": "^3 || dev-FRAMEWORK_6_0",
         "horde/horde": "^6 || dev-FRAMEWORK_6_0",
         "horde/auth": "^3 || dev-FRAMEWORK_6_0",
@@ -41,7 +41,7 @@
         "horde/date": "^3 || dev-FRAMEWORK_6_0",
         "horde/date_parser": "^3 || dev-FRAMEWORK_6_0",
         "horde/dav": "^2 || dev-FRAMEWORK_6_0",
-        "horde/eventdispatcher": "* || dev-FRAMEWORK_6_0",
+        "horde/eventdispatcher": "^1 || dev-FRAMEWORK_6_0",
         "horde/exception": "^3 || dev-FRAMEWORK_6_0",
         "horde/form": "^3 || dev-FRAMEWORK_6_0",
         "horde/group": "^3 || dev-FRAMEWORK_6_0",
