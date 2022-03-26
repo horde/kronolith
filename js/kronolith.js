@@ -6283,16 +6283,25 @@ KronolithCore = {
 
         /* Attendees */
         if (!Object.isUndefined(ev.at)) {
-            var filter = function(attendee) { return !!attendee.u; }
-            HordeImple.AutoCompleter.kronolithEventAttendees.reset(
-                ev.at.reject(filter).pluck('l')
-            );
+            let emailFilter = function (attendee) {return !!attendee.e}
+            let emails = [];
+            ev.at.findAll(emailFilter).each(function(foundUser) {
+                if (foundUser.l) {
+                    emails.push(foundUser.l + ' <' + foundUser.e + '>');
+                } else {
+                    emails.push(foundUser.e);
+                }
+                
+            });
+            HordeImple.AutoCompleter.kronolithEventAttendees.reset(emails);
+
+            let userFilter = function(attendee) { return !!attendee.u; }
             let users = [];
             /* We need to feed the full user string here.
                Feeding only the caption will produce errors on re-saving existing events
                as soon as the name is not the username
             */
-            ev.at.findAll(filter).each(function(foundUser) {
+            ev.at.findAll(userFilter).each(function(foundUser) {
                 users.push(foundUser.l + ' [' + foundUser.u + ']');
             })
 
