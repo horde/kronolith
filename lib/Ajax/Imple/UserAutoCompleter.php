@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
  *
@@ -49,6 +50,9 @@ extends Horde_Core_Ajax_Imple_UserAutoCompleter
         $users = array();
         foreach (parent::_handleAutoCompleter($input) as $user) {
             $name = $identFactory->create($user)->getName();
+            if ($name) {
+                $name = str_replace(',', '', $name);
+            }
             if ($name != $user) {
                 $user = $name . ' [' . $user . ']';
             }

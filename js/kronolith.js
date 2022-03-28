@@ -6286,8 +6286,8 @@ KronolithCore = {
             let emailFilter = function (attendee) {return !!attendee.e}
             let emails = [];
             ev.at.findAll(emailFilter).each(function(foundUser) {
-                if (foundUser.l) {
-                    emails.push(foundUser.l + ' <' + foundUser.e + '>');
+                if (foundUser.l && foundUser.l !== foundUser.e) {
+                    emails.push('"' + foundUser.l +'"' + ' <' + foundUser.e + '>');
                 } else {
                     emails.push(foundUser.e);
                 }
@@ -6303,9 +6303,12 @@ KronolithCore = {
             */
             ev.at.findAll(userFilter).each(function(foundUser) {
                 users.push(foundUser.l + ' [' + foundUser.u + ']');
-            })
-
+            });
+            users = users.map(function(u){
+                return u.replace(',', '');
+            });
             HordeImple.AutoCompleter.kronolithEventUsers.reset(users);
+            
             ev.at.each(this.addAttendee.bind(this));
             if (this.fbLoading) {
                 $('kronolithFBLoading').show();
@@ -7743,6 +7746,7 @@ KronolithCore = {
         $('kronolithResourceFBDatePrev').observe('click', this.prevFreebusy.bind(this));
         $('kronolithResourceFBDateNext').observe('click', this.nextFreebusy.bind(this));
         $('kronolithEventAttendance').observe('change', this.eventAttendanceChange.bind(this));
+
     },
 
     initialize: function(location, r)

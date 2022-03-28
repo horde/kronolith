@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Imple to attach the contact autocompleter to a HTML element.
  *
@@ -37,11 +38,10 @@ class Kronolith_Ajax_Imple_ContactAutoCompleter extends Horde_Core_Ajax_Imple_Co
     {
         $params = Kronolith::getAddressbookSearchParams();
 
-        $ob = new stdClass;
+        $ob = new stdClass();
         $ob->fields = $params['fields'];
         $ob->sources = $params['sources'];
 
         return $ob;
     }
-
 }
