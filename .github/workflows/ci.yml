@@ -8,10 +8,12 @@ on:
   push:
     branches:
       - master
+      - maintaina-composerfixed
       - FRAMEWORK_6_0
   pull_request:
     branches:
       - master
+      - maintaina-composerfixed
       - FRAMEWORK_6_0
 
 
@@ -48,6 +50,5 @@ jobs:
         ## For unclear reasons, github action fails randomly if we do not install before we require.
         COMPOSER_ROOT_VERSION=dev-FRAMEWORK_6_0 composer config minimum-stability dev
         COMPOSER_ROOT_VERSION=dev-FRAMEWORK_6_0 composer install
-        COMPOSER_ROOT_VERSION=dev-FRAMEWORK_6_0 composer require --dev horde/test dev-FRAMEWORK_6_0 horde/log dev-FRAMEWORK_6_0 --with-all-dependencies
     - name: run phpunit
       run: phpunit --bootstrap test/bootstrap.php
