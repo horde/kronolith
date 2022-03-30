@@ -1,5 +1,4 @@
 {
-    "minimum-stability": "dev",
     "name": "horde/kronolith",
     "description": "Calendar and scheduling application",
     "type": "horde-application",
@@ -22,15 +21,15 @@
             "role": "lead"
         }
     ],
-    "time": "2021-10-06",
+    "time": "2022-03-30",
     "repositories": [
         {
             "type": "composer",
-            "url": "https://horde-satis.maintaina.com/"
+            "url": "https://horde-satis.maintaina.com"
         }
     ],
     "require": {
-        "horde/horde-installer-plugin": "^2 || dev-FRAMEWORK_6_0",
+        "horde/horde-installer-plugin": "dev-FRAMEWORK_6_0 || ^2",
         "php": "^7.4 || ^8",
         "horde/content": "^3 || dev-FRAMEWORK_6_0",
         "horde/horde": "^6 || dev-FRAMEWORK_6_0",
@@ -94,12 +93,12 @@
         }
     },
     "bin": [
-        "bin/kronolith-convert-datatree-shares-to-sql",
-        "bin/kronolith-import-squirrelmail-calendar",
+        "bin/kronolith-convert-sql-shares-to-sqlng",
+        "bin/kronolith-agenda",
         "bin/kronolith-import-icals",
         "bin/kronolith-import-openxchange",
-        "bin/kronolith-agenda",
-        "bin/kronolith-convert-sql-shares-to-sqlng",
+        "bin/kronolith-convert-datatree-shares-to-sql",
+        "bin/kronolith-import-squirrelmail-calendar",
         "bin/kronolith-convert-to-utc"
     ]
 }
