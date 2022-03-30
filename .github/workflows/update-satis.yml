@@ -51,11 +51,8 @@ jobs:
         export REPO=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
         export WORK_DIR=/home/runner/
         export BIN_DIR="${WORK_DIR}/bin"
-        mkdir -p satis
-        cd satis
-        composer require "composer/satis:dev-main"
-        cd ..
-        php satis/vendor/composer/satis/bin/satis build -vvv  maintaina-com.github.io/satis.json maintaina-com.github.io/ horde/${REPO,,}
+        composer create-project composer/satis:dev-main
+        php satis/bin/satis build -vvv  maintaina-com.github.io/satis.json maintaina-com.github.io/ horde/${REPO,,}
         cd maintaina-com.github.io
         git add include/ index.html p2/ packages.json
         git commit -m "Update for horde/${REPO,,}"
