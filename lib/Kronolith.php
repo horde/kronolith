@@ -340,8 +340,9 @@ class Kronolith
         // limit and other issues due to extremely long loops if a single event
         // was added with a duration of thousands of years while still
         // providing for reasonable alarm trigger times.
-        if ($coverDates && empty($endDate)) {
-            $endDate = clone $startDate;
+        // If we also have no startDate, default to 5 years from now
+        if ($coverDates && empty($endDate)) {         
+            $endDate = $startDate ? clone $startDate : new Horde_Date(time());
             $endDate->year += 5;
         }
         if ($event->recurs() && $showRecurrence) {
