@@ -45,11 +45,17 @@ class Kronolith_Form_CreateCalendar extends Horde_Form
         return Kronolith::addShare($info);
     }
 
-    public function renderActive()
+    public function renderActive($renderer = null, $vars = null, $action = '',
+                          $method = 'get', $enctype = null, $focus = true)
     {
         return parent::renderActive(
             $this->getRenderer(array('varrenderer_driver' => array('kronolith', 'kronolith'))),
-            $this->_vars);
+            $this->_vars,
+            $action,
+            $method,
+            $enctype,
+            $focus
+        );
     }
 
 }
