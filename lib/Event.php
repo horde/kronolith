@@ -1326,6 +1326,10 @@ abstract class Kronolith_Event
                 // @todo consider implementing different ACTION types.
                 // $action = $alarm->getAttribute('ACTION');
                 $trigger = $alarm->getAttribute('TRIGGER');
+                if ($trigger === 0) {
+                    // if trigger is explicitly 0 then set it to one minute before the event
+                    $trigger = -60;
+                }
                 $triggerParams = $alarm->getAttribute('TRIGGER', true);
             } catch (Horde_Icalendar_Exception $e) {
                 continue;
