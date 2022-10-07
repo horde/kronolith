@@ -22,7 +22,7 @@ class Kronolith_Factory_Driver extends Horde_Core_Factory_Base
      */
     public function create($driver, array $params = array())
     {
-        $driver = basename($driver);
+        $driver = basename($driver ?? '');
 
         switch ($driver) {
         case 'external':
