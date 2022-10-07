@@ -39,6 +39,8 @@ class Kronolith_Icalendar_Handler_Base
      */
     protected $_exceptions = array();
 
+    protected array $_params;
+
     /**
      *
      * @param Horde_Icalendar  $iCal    The iCalendar data.

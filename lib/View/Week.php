@@ -18,6 +18,14 @@ class Kronolith_View_Week
     protected $_controller = 'week.php';
     public $sidebyside = false;
     public $_currentCalendars = array();
+    public $first;
+    public $last;
+    public $slotLength;
+    public $slotsPerDay;
+    public $slotsPerHour;
+    public $totalspan;
+    public $span;
+    
 
     /**
      * How many time slots are we dividing each hour into?
