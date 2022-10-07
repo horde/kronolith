@@ -255,7 +255,7 @@ class Kronolith_CalendarsManager
             $calId = $session->get('kronolith', 'display_cal');
         }
 
-        if (strlen($calId)) {
+        if (is_string($calId) && strlen($calId)) {
             // Specifying a value for display_cal is always to make sure
             // that only the specified calendars are shown. Use the
             // "toggle_calendar" argument to toggle the state of a single
