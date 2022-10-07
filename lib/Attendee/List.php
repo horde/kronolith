@@ -200,6 +200,7 @@ implements ArrayAccess, Countable, IteratorAggregate, Serializable
 
     /**
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($index)
     {
         return isset($this->_list[$index]);
@@ -207,6 +208,7 @@ implements ArrayAccess, Countable, IteratorAggregate, Serializable
 
     /**
      */
+    #[\ReturnTypeWillChange]
     public function &offsetGet($index)
     {
         if (isset($this->_list[$index])) {
@@ -218,6 +220,7 @@ implements ArrayAccess, Countable, IteratorAggregate, Serializable
 
     /**
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($index, $value)
     {
         if (!($value instanceof Kronolith_Attendee)) {
@@ -231,6 +234,7 @@ implements ArrayAccess, Countable, IteratorAggregate, Serializable
 
     /**
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($index)
     {
         unset($this->_list[$index]);
@@ -238,6 +242,7 @@ implements ArrayAccess, Countable, IteratorAggregate, Serializable
 
     /* Countable method. */
 
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->_list);
@@ -247,7 +252,7 @@ implements ArrayAccess, Countable, IteratorAggregate, Serializable
 
     /**
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->_list);
     }
@@ -260,11 +265,20 @@ implements ArrayAccess, Countable, IteratorAggregate, Serializable
     {
         return serialize($this->_list);
     }
+    public function __serialize(): array
+    {
+        return $this->_list;
+    }
 
     /**
      */
     public function unserialize($data)
     {
         $this->_list = @unserialize($data);
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->_list = $data;
     }
 }

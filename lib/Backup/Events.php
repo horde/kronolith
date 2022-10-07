@@ -81,6 +81,7 @@ class Events implements Iterator
 
     /**
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         global $registry;
