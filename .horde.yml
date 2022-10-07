@@ -60,6 +60,7 @@ dependencies:
       horde/http: ^3
       horde/history: ^3
       horde/icalendar: ^3
+      horde/itip: ^3
       horde/image: ^3
       horde/lock: ^3
       horde/logintasks: ^3
@@ -88,7 +89,16 @@ dependencies:
       horde/backup: ^2
       horde/db: ^3
       horde/openxchange: ^2
-      horde/test: ^3
       pear/date_holidays: '*'
     ext:
       xmlwriter: '*'
+  dev:
+    composer:
+      horde/nag: ^5
+      horde/timeobjects: ^3
+      horde/activesync: ^3
+      horde/backup: ^2
+      horde/db: ^3
+      horde/openxchange: ^2
+      horde/test: ^3
+      pear/date_holidays: '*'
