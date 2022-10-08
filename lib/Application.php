@@ -48,7 +48,7 @@ class Kronolith_Application extends Horde_Registry_Application
 
     /**
      */
-    public $version = 'H5 (5.0.0alpha6)';
+    public $version = 'H5 (5.0.0alpha7)';
 
     /**
      * Global variables defined:
