@@ -2,7 +2,8 @@
 v5.0.0alpha6
 ------------
 
-
+[rla] PHP 8.1 compatibility improvements. Added modern serialization methods
+      and tentative return types.
 
 
 ------------
