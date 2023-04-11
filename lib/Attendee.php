@@ -241,7 +241,7 @@ class Kronolith_Attendee implements Serializable
             'p' => $this->role,
             'r' => $this->response,
             'n' => $this->name,
-        ]
+        ];
     }
 
     /**
