@@ -231,24 +231,32 @@ class Kronolith_Attendee implements Serializable
      */
     public function serialize()
     {
-        return serialize(array(
+        return array_shift($this->__serialize());
+    }
+    public function __serialize(): array 
+    {
+        return [
             'u' => $this->user,
             'e' => $this->email,
             'p' => $this->role,
             'r' => $this->response,
             'n' => $this->name,
-        ));
+        ]
     }
 
     /**
      */
     public function unserialize($data)
     {
-        $data = @unserialize($data);
+        $this->__unserialize([$data]);
+
+    }
+    public function __unserialize(array $data): void 
+    {
         $this->user     = $data['u'];
         $this->email    = $data['e'];
         $this->role     = $data['p'];
         $this->response = $data['r'];
         $this->name     = $data['n'];
     }
-}
+}   
