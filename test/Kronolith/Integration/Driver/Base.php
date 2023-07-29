@@ -53,14 +53,14 @@ class Kronolith_Integration_Driver_Base extends Kronolith_TestCase
      */
     private $_added = array();
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$setup = new Horde_Test_Setup();
         self::createBasicKronolithSetup(self::$setup);
         parent::setUpBeforeClass();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$driver = null;
         parent::tearDownAfterClass();
@@ -70,7 +70,7 @@ class Kronolith_Integration_Driver_Base extends Kronolith_TestCase
         unset($GLOBALS['session']);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $error = self::$setup->getError();
         if (!empty($error)) {
@@ -78,7 +78,7 @@ class Kronolith_Integration_Driver_Base extends Kronolith_TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         foreach ($this->_added as $added) {

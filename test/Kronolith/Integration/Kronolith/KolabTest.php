@@ -38,7 +38,7 @@ class Kronolith_Integration_Kronolith_KolabTest extends Kronolith_Integration_Kr
      */
     protected $default_name = 'Calendar';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         return;
         self::$setup = new Horde_Test_Setup();
@@ -46,7 +46,7 @@ class Kronolith_Integration_Kronolith_KolabTest extends Kronolith_Integration_Kr
         self::createKolabShares(self::$setup);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->markTestIncomplete("No query of type 'Share' registered!");
     }

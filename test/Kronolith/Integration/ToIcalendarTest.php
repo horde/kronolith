@@ -29,7 +29,7 @@
  */
 class Kronolith_Integration_ToIcalendarTest extends Kronolith_TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->_timezone = date_default_timezone_get();
         date_default_timezone_set('Europe/Berlin');
@@ -43,7 +43,7 @@ class Kronolith_Integration_ToIcalendarTest extends Kronolith_TestCase
         $GLOBALS['conf']['calendar']['driver'] = 'Mock';
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($GLOBALS['registry']);
         unset($GLOBALS['injector']);

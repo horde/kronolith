@@ -43,14 +43,14 @@ class Kronolith_Integration_Kronolith_Base extends Kronolith_TestCase
      */
     protected $default_name = 'Calendar of test@example.com';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$setup = new Horde_Test_Setup();
         self::createBasicKronolithSetup(self::$setup);
         parent::setUpBeforeClass();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
         unset($GLOBALS['registry']);
@@ -59,7 +59,7 @@ class Kronolith_Integration_Kronolith_Base extends Kronolith_TestCase
         unset($GLOBALS['session']);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $GLOBALS['conf']['autoshare']['shareperms'] = 'none';
         $error = self::$setup->getError();
@@ -68,7 +68,7 @@ class Kronolith_Integration_Kronolith_Base extends Kronolith_TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         foreach ($GLOBALS['injector']->getInstance('Kronolith_Shares')->listShares('test@example.com') as $share) {
             $GLOBALS['injector']->getInstance('Kronolith_Shares')->removeShare($share);

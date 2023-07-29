@@ -29,13 +29,13 @@
  */
 class Kronolith_Integration_FromIcalendarTest extends Kronolith_TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->_timezone = date_default_timezone_get();
         date_default_timezone_set('Europe/Berlin');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         date_default_timezone_set($this->_timezone);
     }
@@ -107,6 +107,8 @@ class Kronolith_Integration_FromIcalendarTest extends Kronolith_TestCase
 
     public function testInvalidTimezone()
     {
+        $this->expectNotToPerformAssertions();
+
         $GLOBALS['conf']['calendar']['driver'] = 'Mock';
         $GLOBALS['injector'] = new Horde_Injector(new Horde_Injector_TopLevel());
         $event = $this->_getFixture('bug11688.ics', 1);

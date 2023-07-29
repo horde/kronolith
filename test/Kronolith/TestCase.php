@@ -28,7 +28,7 @@
  * @license    http://www.horde.org/licenses/gpl GNU General Public License, version 2
  */
 class Kronolith_TestCase
-extends PHPUnit_Framework_TestCase
+extends Horde_Test_Case
 {
     protected function getInjector()
     {

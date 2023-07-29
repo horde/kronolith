@@ -31,7 +31,7 @@ class Kronolith_Integration_Driver_Sql_Pdo_SqliteTest extends Kronolith_Integrat
 {
     protected $backupGlobals = false;
 
-    static public function setUpBeforeClass()
+    static public function setUpBeforeClass(): void
     {
         self::$callback = array(__CLASS__, 'getDb');
         parent::setUpBeforeClass();

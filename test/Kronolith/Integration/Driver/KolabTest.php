@@ -31,7 +31,7 @@ class Kronolith_Integration_Driver_KolabTest extends Kronolith_Integration_Drive
 {
     protected $backupGlobals = false;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         return;
         parent::setUpBeforeClass();
@@ -41,7 +41,7 @@ class Kronolith_Integration_Driver_KolabTest extends Kronolith_Integration_Drive
         self::$type = 'Kolab';
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->markTestIncomplete('Unserialization error from Kolab share objects.');
     }
