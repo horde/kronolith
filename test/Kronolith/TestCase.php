@@ -47,7 +47,8 @@ extends Horde_Test_Case
             array(
                 '_PARAMS' => array(
                     'user' => 'test@example.com',
-                    'app' => 'kronolith'
+                    'app' => 'kronolith',
+                    'noset' => true,
                 ),
                 'Horde_Alarm' => 'Alarm',
                 'Horde_Cache' => 'Cache',
