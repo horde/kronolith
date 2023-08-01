@@ -283,6 +283,21 @@ class Kronolith_Event_Sql extends Kronolith_Event
             $properties['event_baseid'] = '';
             $properties['event_exceptionoriginaldate'] = null;
         }
+
+        foreach ($this->otherAttributes as $key => $attribute) {
+            // added by boekhorst as a quickfix
+            // TODO: is it necessary to have this html info saved? If so: find a way to convert it to some format that is saveable for sql.
+            if (strpos($attribute['value'], '<html xmlns') === 0) {
+                $this->otherAttributes[$key]['value'] = "Html-xmlns format is too large, not being saved";
+            }
+            foreach ($attribute['values'] as $subKey => $value) {
+                if (strpos($value, '<html xmlns') === 0) {
+                    $this->otherAttributes[$key]['values'][$subKey] = "Html-xmlns format is too large, not being saved";
+                }
+            }
+        }
+        
+        
         $properties['other_attributes'] = json_encode($this->otherAttributes);
 
         return $properties;
