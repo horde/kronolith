@@ -33,13 +33,14 @@ class KronolithIcalendarStorage extends Horde_Db_Migration_Base
          * exist in backend. That would issue an UPDATE where an INSERT is more
          * appropriate.
          */
-        $t = $this->createTable('kronolith_icalendar_storage', ['autoincrementKey' => 'ical_id']);
-        $t->column('calendar_id', 'string', ['limit' => 255, 'null' => false]);
-        $t->column('event_uid', 'string', ['limit' => 255, 'null' => false]);
-        $t->column('event_data', 'text', ['null' => false]);
-        $t->end();
-        $this->addIndex('kronolith_icalendar_storage', ['calendar_id', 'event_uid'], ['unique' => true]);
-
+        if (!in_array('kronolith_icalendar_storage', $this->tables())) {
+            $t = $this->createTable('kronolith_icalendar_storage', ['autoincrementKey' => 'ical_id']);
+            $t->column('calendar_id', 'string', ['limit' => 255, 'null' => false]);
+            $t->column('event_uid', 'string', ['limit' => 255, 'null' => false]);
+            $t->column('event_data', 'text', ['null' => false]);
+            $t->end();
+            $this->addIndex('kronolith_icalendar_storage', ['calendar_id', 'event_uid'], ['unique' => true]);
+        }
         $t = $this->_connection->table('kronolith_events');
         $cols = $t->getColumns();
         if (!in_array('other_attributes', array_keys($cols))) {
