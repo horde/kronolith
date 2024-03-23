@@ -13,6 +13,13 @@
 abstract class Kronolith_Calendar
 {
     /**
+     * The background.
+     *
+     * @var string
+     */
+    protected $_background;
+
+    /**
      * Constructor.
      *
      * @param array $params  A hash with any parameters that this calendar
