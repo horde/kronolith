@@ -20,7 +20,7 @@ msgstr ""
 
 #: feed/index.php:124
 msgid " to "
-msgstr " para"
+msgstr " para "
 
 #: templates/edit/edit.inc:283
 #, php-format
@@ -575,7 +575,7 @@ msgstr "URL de Conta CalDAV"
 #: lib/Form/EditCalendar.php:98 templates/chunks/calendar.php:109
 #: templates/chunks/calendar.php:226
 msgid "CalDAV Subscription URL"
-msgstr "URAL de Subscrição CalDAV"
+msgstr "URL de Subscrição CalDAV"
 
 #: templates/edit/edit.inc:73
 msgid "Cal_endar"
@@ -632,7 +632,7 @@ msgstr "Calendários"
 
 #: templates/calendar_titles.inc:9
 msgid "Calendars Printed: "
-msgstr "Calendários Impressos:"
+msgstr "Calendários Impressos: "
 
 #: data.php:171
 msgid "Can't create a new event."
@@ -1033,11 +1033,15 @@ msgstr "Mostrar Preferências"
 
 #: lib/Form/EditCalendar.php:66 lib/Form/EditResource.php:62
 msgid "Display URL"
-msgstr "Exibir URL"
+msgstr "URL de Exibição"
 
 #: lib/Kronolith.php:811
 msgid "Does not recur"
 msgstr "Não repete"
+
+#: lib/Driver.php:357
+msgid "Invalid date"
+msgstr "Data inválida"
 
 #: config/prefs.php:397
 msgid ""

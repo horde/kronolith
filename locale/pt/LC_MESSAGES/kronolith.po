@@ -17,6 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: feed/index.php:124
+msgid " to "
+msgstr " para "
+
+#: templates/calendar_titles.inc:9
+msgid "Calendars Printed: "
+msgstr "Calendários Impressos: "
+
 #: templates/calendars/search.inc:16
 #, php-format
 msgid "%d calendars found"
@@ -26,6 +34,16 @@ msgstr "%d calendários encontrados"
 #, php-format
 msgid "%d events"
 msgstr "%d eventos"
+
+#: lib/Form/EditCalendar.php:107 templates/chunks/calendar.php:114
+#: templates/chunks/calendar.php:231
+msgid "CalDAV Account URL"
+msgstr "URL de Conta CalDAV"
+
+#: lib/Form/EditCalendar.php:98 templates/chunks/calendar.php:109
+#: templates/chunks/calendar.php:226
+msgid "CalDAV Subscription URL"
+msgstr "URL de Subscrição CalDAV"
 
 #: templates/edit/edit_timespan.inc:121
 #, php-format
@@ -490,6 +508,14 @@ msgstr "Descrição"
 #: templates/contacts/contacts.inc:174
 msgid "Display"
 msgstr "Mostrar"
+
+#: lib/Driver.php:357
+msgid "Invalid date"
+msgstr "Data inválida"
+
+#: lib/Form/EditCalendar.php:66 lib/Form/EditResource.php:62
+msgid "Display URL"
+msgstr "URL de Exibição"
 
 #: templates/calendars/calendars.inc:61
 msgid "Display Calendars"
@@ -1643,6 +1669,10 @@ msgstr "Tipo de conteúdo (Content-Type) não suportado: %s"
 #, php-format
 msgid "Updated: %s."
 msgstr "Actualizado: %s."
+
+#: lib/Ajax.php:145
+msgid "User does not exist"
+msgstr "Usuário não existe"
 
 #: config/prefs.php.dist:10
 msgid "User Interface"
