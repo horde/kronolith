@@ -795,11 +795,13 @@ KronolithCore = {
             layout = td.getLayout(),
             spacing = td.up('table').getStyle('borderSpacing');
 
-        // FIXME: spacing is hardcoded for IE 7 because it doesn't know about
-        // border-spacing, but still uses it. WTF?
-        spacing = spacing ? parseInt($w(spacing)[1], 10) : 2;
+        // Firefox return 1px for spacing, chrome returns 1px 1px for spacing
+        // Split the spacing into an array of values
+        var spacingValues = spacing ? spacing.split(' ') : [];
+        var verticalSpacing = spacingValues.length > 1 ? parseInt(spacingValues[1], 10) : parseInt(spacingValues[0], 10) || 2;
+
         this[storage] = {};
-        this[storage].height = layout.get('margin-box-height') + spacing;
+        this[storage].height = layout.get('margin-box-height') + verticalSpacing;
         this[storage].spacing = this[storage].height - layout.get('padding-box-height') - layout.get('border-bottom');
     },
 
