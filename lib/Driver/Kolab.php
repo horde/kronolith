@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Horde Kronolith driver for the Kolab IMAP Server.
  *
@@ -86,7 +87,7 @@ class Kronolith_Driver_Kolab extends Kronolith_Driver
      */
     public function reset()
     {
-        $this->_events_cache = array();
+        $this->_events_cache = [];
         $this->_synchronized = false;
     }
 
@@ -131,7 +132,7 @@ class Kronolith_Driver_Kolab extends Kronolith_Driver
         }
 
         // build internal event cache
-        $this->_events_cache = $uids = array();
+        $this->_events_cache = $uids = [];
         $events = $this->_data->getObjects();
         foreach ($events as $event) {
             $this->_events_cache[Horde_Url::uriB64Encode($event['uid'])] = new Kronolith_Event_Kolab($this, $event);
@@ -152,8 +153,8 @@ class Kronolith_Driver_Kolab extends Kronolith_Driver
      */
     public function listAlarms($date, $fullevent = false)
     {
-        $allevents = $this->listEvents($date, null, array('has_alarm' => true));
-        $events = array();
+        $allevents = $this->listEvents($date, null, ['has_alarm' => true]);
+        $events = [];
 
         foreach (array_keys($allevents) as $eventId) {
             $event = $this->getEvent($eventId);
@@ -171,12 +172,12 @@ class Kronolith_Driver_Kolab extends Kronolith_Driver
                     }
                     $start = new Horde_Date($next);
                     $start->min -= $event->alarm;
-                    $end = new Horde_Date(array('year' => $next->year,
-                                                'month' => $next->month,
-                                                'mday' => $next->mday,
-                                                'hour' => $event->end->hour,
-                                                'min' => $event->end->min,
-                                                'sec' => $event->end->sec));
+                    $end = new Horde_Date(['year' => $next->year,
+                        'month' => $next->month,
+                        'mday' => $next->mday,
+                        'hour' => $event->end->hour,
+                        'min' => $event->end->min,
+                        'sec' => $event->end->sec]);
                     if ($start->compareDateTime($date) <= 0 &&
                         $date->compareDateTime($end) <= -1) {
                         if ($fullevent) {
@@ -191,7 +192,7 @@ class Kronolith_Driver_Kolab extends Kronolith_Driver
             }
         }
 
-        return is_array($events) ? $events : array();
+        return is_array($events) ? $events : [];
     }
 
     /**
@@ -248,19 +249,22 @@ class Kronolith_Driver_Kolab extends Kronolith_Driver
      *
      * @throws Kronolith_Exception
      */
-    protected function _listEvents(Horde_Date $startDate = null,
-                                   Horde_Date $endDate = null,
-                                   array $options = array())
-    {
+    protected function _listEvents(
+        ?Horde_Date $startDate = null,
+        ?Horde_Date $endDate = null,
+        array $options = []
+    ) {
         $this->synchronize();
 
         if (empty($startDate)) {
             $startDate = new Horde_Date(
-                array('mday' => 1, 'month' => 1, 'year' => 0000));
+                ['mday' => 1, 'month' => 1, 'year' => 0o000]
+            );
         }
         if (empty($endDate)) {
             $endDate = new Horde_Date(
-                array('mday' => 31, 'month' => 12, 'year' => 9999));
+                ['mday' => 31, 'month' => 12, 'year' => 9999]
+            );
         }
         if (!($startDate instanceof Horde_Date)) {
             $startDate = new Horde_Date($startDate);
@@ -275,7 +279,7 @@ class Kronolith_Driver_Kolab extends Kronolith_Driver
         $endDate->hour = 23;
         $endDate->min = $endDate->sec = 59;
 
-        $events = array();
+        $events = [];
         foreach ($this->_events_cache as $event) {
             if ($options['has_alarm'] && !$event->alarm) {
                 continue;
@@ -310,10 +314,14 @@ class Kronolith_Driver_Kolab extends Kronolith_Driver
             }
 
             Kronolith::addEvents(
-                $events, $event, $startDate, $endDate,
+                $events,
+                $event,
+                $startDate,
+                $endDate,
                 $options['show_recurrence'],
                 $options['json'],
-                $options['cover_dates']);
+                $options['cover_dates']
+            );
         }
 
         return $events;
@@ -369,7 +377,7 @@ class Kronolith_Driver_Kolab extends Kronolith_Driver
             $event = $this->_events_cache[$id];
 
             if ($getAll) {
-                return array($event);
+                return [$event];
             }
 
             return $event;
@@ -417,8 +425,8 @@ class Kronolith_Driver_Kolab extends Kronolith_Driver
         $this->synchronize();
 
         $action = $edit
-            ? array('action' => 'modify')
-            : array('action' => 'add');
+            ? ['action' => 'modify']
+            : ['action' => 'add'];
 
         if (!$event->uid) {
             $event->uid = $this->_data->generateUID();

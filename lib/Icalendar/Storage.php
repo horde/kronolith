@@ -1,4 +1,5 @@
 <?php
+
 interface Kronolith_Icalendar_Storage
 {
     public function put(string $calendarId, string $eventUid, string $data): void;

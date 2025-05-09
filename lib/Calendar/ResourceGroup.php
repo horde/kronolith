@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith_Calendar_ResourceGroup defines an API for single internal
  * resourcegroup calendars.
@@ -29,7 +30,7 @@ class Kronolith_Calendar_ResourceGroup extends Kronolith_Calendar
      *                       Required parameters:
      *                       - share: The share of this calendar.
      */
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
         if (!isset($params['resource'])) {
             throw new BadMethodCallException('resource parameter is missing.');
@@ -117,11 +118,11 @@ class Kronolith_Calendar_ResourceGroup extends Kronolith_Calendar
         $hash['embed'] = null;
         $hash['members'] = $this->_resource->get('members');
         if ($owner) {
-            $hash['perms'] = array(
+            $hash['perms'] = [
                 'type' => 'matrix',
                 'default' => 0,
                 'guest' => 0,
-                'creator' => 0);
+                'creator' => 0];
         }
         return $hash;
     }

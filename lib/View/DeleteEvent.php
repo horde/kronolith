@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_View_DeleteEvent:: class provides an API for viewing
  * event delete forms.
@@ -25,10 +26,10 @@ class Kronolith_View_DeleteEvent
     public function __get($property)
     {
         switch ($property) {
-        case 'event':
-            return $this->_event;
-        default:
-            throw new LogicException('Property does not exist.');
+            case 'event':
+                return $this->_event;
+            default:
+                throw new LogicException('Property does not exist.');
         }
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2009-2017 Horde LLC (http://www.horde.org/)
  *
@@ -33,7 +34,7 @@ abstract class Kronolith_Resource_Base
      *
      * @var array
      */
-    protected $_params = array();
+    protected $_params = [];
 
     /**
      *
@@ -62,7 +63,7 @@ abstract class Kronolith_Resource_Base
      *
      * @return Kronolith_Resource_Base
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
         $this->_share = $params['share'];
         $this->_id = $this->_share->getId();
@@ -80,7 +81,10 @@ abstract class Kronolith_Resource_Base
         $this->_lock = $locks->setLock(
             $GLOBALS['registry']->getAuth(),
             'kronolith',
-            $principle, 5, Horde_Lock::TYPE_EXCLUSIVE);
+            $principle,
+            5,
+            Horde_Lock::TYPE_EXCLUSIVE
+        );
 
         return !empty($this->_lock);
     }
@@ -210,20 +214,21 @@ abstract class Kronolith_Resource_Base
      */
     public function getResponse(Kronolith_Event $event)
     {
-        switch($this->getResponseType()) {
-        case Kronolith_Resource::RESPONSETYPE_ALWAYS_ACCEPT:
-            return Kronolith::RESPONSE_ACCEPTED;
-        case Kronolith_Resource::RESPONSETYPE_AUTO:
-            if ($this->isFree($event)) {
+        switch ($this->getResponseType()) {
+            case Kronolith_Resource::RESPONSETYPE_ALWAYS_ACCEPT:
                 return Kronolith::RESPONSE_ACCEPTED;
-            } else {
+            case Kronolith_Resource::RESPONSETYPE_AUTO:
+                if ($this->isFree($event)) {
+                    return Kronolith::RESPONSE_ACCEPTED;
+                } else {
+                    return Kronolith::RESPONSE_DECLINED;
+                }
+                // no break
+            case Kronolith_Resource::RESPONSETYPE_ALWAYS_DECLINE:
                 return Kronolith::RESPONSE_DECLINED;
-            }
-        case Kronolith_Resource::RESPONSETYPE_ALWAYS_DECLINE:
-            return Kronolith::RESPONSE_DECLINED;
-        case Kronolith_Resource::RESPONSETYPE_NONE:
-        case Kronolith_Resource::RESPONSETYPE_MANUAL:
-            return Kronolith::RESPONSE_NONE;
+            case Kronolith_Resource::RESPONSETYPE_NONE:
+            case Kronolith_Resource::RESPONSETYPE_MANUAL:
+                return Kronolith::RESPONSE_NONE;
         }
     }
 

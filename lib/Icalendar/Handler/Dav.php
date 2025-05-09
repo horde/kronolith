@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2015-2017 Horde LLC (http://www.horde.org/)
  *
@@ -55,7 +56,7 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
      *
      * @var  array
      */
-    protected $_noItips = array();
+    protected $_noItips = [];
 
     /**
      * List of attendess that have been previously invited. Used to detect if
@@ -79,8 +80,8 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
         Horde_Icalendar $iCal,
         Kronolith_Driver $driver,
         Kronolith_Icalendar_Storage $storage,
-        array $params = [])
-    {
+        array $params = []
+    ) {
         parent::__construct($iCal, $driver, $params);
         $this->_storage = $storage;
         $this->_dav = $GLOBALS['injector']->getInstance('Horde_Dav_Storage');
@@ -107,7 +108,7 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
         // Ensure we start with a fresh state.
         $this->_existingEvent = null;
         $this->_oldAttendees = new Kronolith_Attendee_List();
-        $this->_noItips = array();
+        $this->_noItips = [];
 
         // Get the internal id of the existing copy of the event, if it exists.
         try {
@@ -138,7 +139,7 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
             }
         } catch (Horde_Icalendar_Exception $e) {
             // Base event or event with no recurrence.
-           try {
+            try {
                 $this->_existingEvent = $this->_driver->getEvent($existing_id);
                 $this->_existingEvent->loadHistory();
                 $modified = $this->_existingEvent->modified
@@ -154,11 +155,12 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
         try {
             if (!empty($modified) &&
                 $component->getAttribute('LAST-MODIFIED') < $modified->timestamp()) {
-                 /* LAST-MODIFIED timestamp of existing entry is newer:
-                 * don't replace it. */
+                /* LAST-MODIFIED timestamp of existing entry is newer:
+                * don't replace it. */
                 return false;
             }
-        } catch (Horde_Icalendar_Exception $e) {}
+        } catch (Horde_Icalendar_Exception $e) {
+        }
 
         try {
             $organizer = $component->getAttribute('ORGANIZER');
@@ -166,27 +168,29 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
             if (!empty($organizer_params[0]['SCHEDULE-AGENT']) &&
                 ($organizer_params[0]['SCHEDULE-AGENT'] == 'CLIENT' ||
                  $organizer_params[0]['SCHEDULE-AGENT'] == 'NONE')) {
-                $tmp = str_replace(array('MAILTO:', 'mailto:'), '', $organizer);
+                $tmp = str_replace(['MAILTO:', 'mailto:'], '', $organizer);
                 $tmp = new Horde_Mail_Rfc822_Address($tmp);
                 $this->_noItips[] = $tmp->bare_address;
             }
-        } catch (Horde_Icalendar_Exception $e) {}
+        } catch (Horde_Icalendar_Exception $e) {
+        }
         try {
             $attendee = $component->getAttribute('ATTENDEE');
             if (!is_array($attendee)) {
-                $attendee = array($attendee);
+                $attendee = [$attendee];
             }
             $params = $component->getAttribute('ATTENDEE', true);
             for ($i = 0; $i < count($attendee); ++$i) {
                 if (!empty($params[$i]['SCHEDULE-AGENT']) &&
                     ($params[$i]['SCHEDULE-AGENT'] == 'CLIENT' ||
                      $params[$i]['SCHEDULE-AGENT'] == 'NONE')) {
-                    $tmp = str_replace(array('MAILTO:', 'mailto:'), '', $attendee[$i]);
+                    $tmp = str_replace(['MAILTO:', 'mailto:'], '', $attendee[$i]);
                     $tmp = new Horde_Mail_Rfc822_Address($tmp);
                     $this->_noItips[] = $tmp->bare_address;
                 }
             }
-        } catch (Horde_Icalendar_Exception $e) {}
+        } catch (Horde_Icalendar_Exception $e) {
+        }
 
         return true;
     }
@@ -217,7 +221,7 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
      */
     protected function _relevantEventChanges(
         \Kronolith_Event $event,
-        \Kronolith_Event $existing = null
+        ?\Kronolith_Event $existing = null
     ): bool {
         // If there is no existing event, send out original invitation
         if (empty($existing)) {
@@ -233,7 +237,7 @@ class Kronolith_Icalendar_Handler_Dav extends Kronolith_Icalendar_Handler_Base
             'start',
             'end',
             'recurrence',
-            'attendees'
+            'attendees',
         ];
         foreach ($attributes as $attribute) {
             if ($existing->{$attribute} != $event->{$attribute}) {

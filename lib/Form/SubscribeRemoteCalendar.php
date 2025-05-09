@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Horde_Form for subscribing to remote calendars.
  *
@@ -29,11 +30,11 @@ class Kronolith_Form_SubscribeRemoteCalendar extends Horde_Form
         }
         $v->setDefault($color);
         $this->addVariable(_("URL"), 'url', 'text', true);
-        $this->addVariable(_("Description"), 'desc', 'longtext', false, false, null, array(4, 60));
+        $this->addVariable(_("Description"), 'desc', 'longtext', false, false, null, [4, 60]);
         $this->addVariable(_("Username"), 'user', 'text', false);
         $this->addVariable(_("Password"), 'password', 'password', false);
 
-        $this->setButtons(array(_("Subscribe")));
+        $this->setButtons([_("Subscribe")]);
     }
 
     /**
@@ -41,8 +42,8 @@ class Kronolith_Form_SubscribeRemoteCalendar extends Horde_Form
      */
     public function execute()
     {
-        $info = array();
-        foreach (array('name', 'url', 'user', 'password', 'color', 'desc') as $key) {
+        $info = [];
+        foreach (['name', 'url', 'user', 'password', 'color', 'desc'] as $key) {
             $info[$key] = $this->_vars->get($key);
         }
         Kronolith::subscribeRemoteCalendar($info);

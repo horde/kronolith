@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith_Driver defines an API for implementing storage backends for
  * Kronolith.
@@ -40,7 +41,7 @@ class Kronolith_Driver
      *
      * @var array
      */
-    protected $_params = array();
+    protected $_params = [];
 
     /**
      * An error message to throw when something is wrong.
@@ -58,7 +59,7 @@ class Kronolith_Driver
      * @param array $params     Any parameters needed for this driver.
      * @param string $errormsg  A custom error message to use.
      */
-    public function __construct(array $params = array(), $errormsg = null)
+    public function __construct(array $params = [], $errormsg = null)
     {
         $this->_params = $params;
         if ($errormsg === null) {
@@ -77,7 +78,7 @@ class Kronolith_Driver
      */
     public function getParam($param)
     {
-        return isset($this->_params[$param]) ? $this->_params[$param] : null;
+        return $this->_params[$param] ?? null;
     }
 
     /**
@@ -129,7 +130,7 @@ class Kronolith_Driver
     public function colors()
     {
         $color = $this->backgroundColor();
-        return array($color, Kronolith::foregroundColor($color));
+        return [$color, Kronolith::foregroundColor($color)];
     }
 
     /**
@@ -159,11 +160,12 @@ class Kronolith_Driver
          * specific period, and then filters based on the actual values that
          * are filled in. Drivers can optimize this behavior if they have the
          * ability. */
-        $results = array();
+        $results = [];
 
         $events = $this->listEvents(
             (!empty($query->start) ? $query->start : null),
-            (!empty($query->end) ? $query->end : null));
+            (!empty($query->end) ? $query->end : null)
+        );
         foreach ($events as $day_events) {
             foreach ($day_events as $event) {
                 if ((((!isset($query->start) ||
@@ -294,18 +296,19 @@ class Kronolith_Driver
      *
      * @throws Kronolith_Exception
      */
-    public function listEvents(Horde_Date $startDate = null,
-                               Horde_Date $endDate = null,
-                               array $options = array())
-    {
+    public function listEvents(
+        ?Horde_Date $startDate = null,
+        ?Horde_Date $endDate = null,
+        array $options = []
+    ) {
         // Defaults
-        $options = array_merge(array(
+        $options = array_merge([
             'show_recurrence' => false,
             'has_alarm' => false,
             'json' => false,
             'cover_dates' => true,
             'hide_exceptions' => false,
-            'fetch_tags' => false), $options);
+            'fetch_tags' => false], $options);
 
         return $this->_listEvents($startDate, $endDate, $options);
     }
@@ -334,8 +337,10 @@ class Kronolith_Driver
      * @throws Kronolith_Exception
      */
     protected function _listEvents(
-        Horde_Date $startDate = null, Horde_Date $endDate = null, array $options = array())
-    {
+        ?Horde_Date $startDate = null,
+        ?Horde_Date $endDate = null,
+        array $options = []
+    ) {
         throw new Kronolith_Exception($this->_errormsg);
     }
 
@@ -416,8 +421,8 @@ class Kronolith_Driver
         if ($uid) {
             $history = $GLOBALS['injector']->getInstance('Horde_History');
             try {
-                $history->log('kronolith:' . $event->calendar . ':' . $uid, array('action' => 'delete'), true);
-                $history->log('kronolith:' . $newCalendar . ':' . $uid, array('action' => 'add'), true);
+                $history->log('kronolith:' . $event->calendar . ':' . $uid, ['action' => 'delete'], true);
+                $history->log('kronolith:' . $newCalendar . ':' . $uid, ['action' => 'add'], true);
             } catch (Exception $e) {
                 Horde::log($e, 'ERR');
             }
@@ -473,7 +478,7 @@ class Kronolith_Driver
             try {
                 $injector->getInstance('Horde_History')->log(
                     'kronolith:' . $this->calendar . ':' . $event->uid,
-                    array('action' => 'delete'),
+                    ['action' => 'delete'],
                     true
                 );
             } catch (Exception $e) {
@@ -504,12 +509,15 @@ class Kronolith_Driver
         /* Remove any tags */
         $tagger = Kronolith::getTagger();
         $tagger->replaceTags(
-            $event->uid, array(), $event->creator, Kronolith_Tagger::TYPE_EVENT
+            $event->uid,
+            [],
+            $event->creator,
+            Kronolith_Tagger::TYPE_EVENT
         );
 
         /* Tell content we removed the object */
         $injector->getInstance('Content_Objects_Manager')
-            ->delete(array($event->uid), Kronolith_Tagger::TYPE_EVENT);
+            ->delete([$event->uid], Kronolith_Tagger::TYPE_EVENT);
 
         /* Remove any geolocation data. */
         try {
@@ -544,7 +552,7 @@ class Kronolith_Driver
             try {
                 $injector->getInstance('Horde_History')->log(
                     'kronolith:' . $this->calendar . ':' . $event->baseid,
-                    array('action' => 'modify'),
+                    ['action' => 'modify'],
                     true
                 );
             } catch (Exception $e) {
@@ -566,9 +574,7 @@ class Kronolith_Driver
      * @throws Horde_Exception_NotFound
      * @throws Horde_Mime_Exception
      */
-    protected function _deleteEvent($eventId)
-    {
-    }
+    protected function _deleteEvent($eventId) {}
 
     /**
      * Wrapper for sending notifications, so that we can overwrite this action

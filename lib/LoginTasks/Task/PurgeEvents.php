@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Login tasks module that purges old events.
  *
@@ -51,7 +52,7 @@ class Kronolith_LoginTasks_Task_PurgeEvents extends Horde_LoginTasks_Task
         $query->start = null;
         $query->end = $del_time;
         $query->status = null;
-        $query->calendars = array(Horde_String::ucfirst($GLOBALS['conf']['calendar']['driver']) => array_keys($calendars));
+        $query->calendars = [Horde_String::ucfirst($GLOBALS['conf']['calendar']['driver']) => array_keys($calendars)];
         $query->creator = $GLOBALS['registry']->getAuth();
 
         /* Perform the search */
@@ -88,8 +89,10 @@ class Kronolith_LoginTasks_Task_PurgeEvents extends Horde_LoginTasks_Task
      */
     public function describe()
     {
-        return sprintf(_("All of your events older than %d days will be permanently deleted."),
-                       $GLOBALS['prefs']->getValue('purge_events_keep'));
+        return sprintf(
+            _("All of your events older than %d days will be permanently deleted."),
+            $GLOBALS['prefs']->getValue('purge_events_keep')
+        );
     }
 
 }

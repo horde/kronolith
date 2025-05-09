@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith_Calendar_Resource defines an API for single internal resource
  * calendars.
@@ -28,7 +29,7 @@ class Kronolith_Calendar_Resource extends Kronolith_Calendar
      *                       Required parameters:
      *                       - share: The share of this calendar.
      */
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
         if (!isset($params['resource'])) {
             throw new BadMethodCallException('resource parameter is missing.');

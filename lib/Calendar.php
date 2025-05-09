@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith_Calendar defines an API for single calendars.
  *
@@ -25,7 +26,7 @@ abstract class Kronolith_Calendar
      * @param array $params  A hash with any parameters that this calendar
      *                       might need.
      */
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
         foreach ($params as $param => $value) {
             $this->{'_' . $param} = $value;
@@ -66,7 +67,7 @@ abstract class Kronolith_Calendar
      */
     public function background()
     {
-        return isset($this->_background) ? $this->_background : '#dddddd';
+        return $this->_background ?? '#dddddd';
     }
 
     /**
@@ -110,12 +111,12 @@ abstract class Kronolith_Calendar
     public function hasPermission($permission, $user = null, $creator = null)
     {
         switch ($permission) {
-        case Horde_Perms::SHOW:
-        case Horde_Perms::READ:
-            return true;
+            case Horde_Perms::SHOW:
+            case Horde_Perms::READ:
+                return true;
 
-        default:
-            return false;
+            default:
+                return false;
         }
     }
 
@@ -151,7 +152,7 @@ abstract class Kronolith_Calendar
         $user = $registry->convertUsername($registry->getAuth(), false);
         try {
             $user = $injector->getInstance('Horde_Core_Hooks')
-                ->callHook('davusername', 'horde', array($user, false));
+                ->callHook('davusername', 'horde', [$user, false]);
         } catch (Horde_Exception_HookNotSet $e) {
         }
         try {
@@ -180,13 +181,13 @@ abstract class Kronolith_Calendar
      */
     public function toHash()
     {
-        return array(
+        return [
             'name'  => $this->name(),
             'desc'  => $this->description(),
             'owner' => true,
-            'users' => array(),
+            'users' => [],
             'fg'    => $this->foreground(),
             'bg'    => $this->background(),
-        );
+        ];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class represent a view of multiple free busy information sets.
  *
@@ -12,11 +13,11 @@
  */
 abstract class Kronolith_FreeBusy_View
 {
-    protected $_requiredMembers = array();
-    protected $_optionalMembers = array();
-    protected $_requiredResourceMembers = array();
-    protected $_optionalResourceMembers = array();
-    protected $_timeBlocks = array();
+    protected $_requiredMembers = [];
+    protected $_optionalMembers = [];
+    protected $_requiredResourceMembers = [];
+    protected $_optionalResourceMembers = [];
+    protected $_timeBlocks = [];
 
     protected $_startHour;
     protected $_endHour;
@@ -72,7 +73,7 @@ abstract class Kronolith_FreeBusy_View
      *
      * @return string  The html of the rendered fb view.
      */
-    public function render(Horde_Date $day = null)
+    public function render(?Horde_Date $day = null)
     {
         global $prefs;
 
@@ -190,9 +191,12 @@ abstract class Kronolith_FreeBusy_View
 
         // Possible meeting times.
         $optimal->setAttribute('ORGANIZER', _("All Attendees"));
-        $blocks = $this->_getBlocks($optimal,
-                                    $optimal->getFreePeriods($this->_start->timestamp(), $this->_end->timestamp()),
-                                    'meetingblock.html', _("All Attendees"));
+        $blocks = $this->_getBlocks(
+            $optimal,
+            $optimal->getFreePeriods($this->_start->timestamp(), $this->_end->timestamp()),
+            'meetingblock.html',
+            _("All Attendees")
+        );
 
         $template = $GLOBALS['injector']->createInstance('Horde_Template');
         $template->set('name', _("All Attendees"));
@@ -201,9 +205,12 @@ abstract class Kronolith_FreeBusy_View
 
         // Possible meeting times.
         $required->setAttribute('ORGANIZER', _("Required Attendees"));
-        $blocks = $this->_getBlocks($required,
-                                    $required->getFreePeriods($this->_start->timestamp(), $this->_end->timestamp()),
-                                    'meetingblock.html', _("Required Attendees"));
+        $blocks = $this->_getBlocks(
+            $required,
+            $required->getFreePeriods($this->_start->timestamp(), $this->_end->timestamp()),
+            'meetingblock.html',
+            _("Required Attendees")
+        );
 
         $template = $GLOBALS['injector']->createInstance('Horde_Template');
         $template->set('name', _("Required Attendees"));
@@ -271,7 +278,7 @@ abstract class Kronolith_FreeBusy_View
      */
     public static function &singleton($view)
     {
-        static $instances = array();
+        static $instances = [];
 
         if (!isset($instances[$view])) {
             $instances[$view] = Kronolith_FreeBusy_View::factory($view);
@@ -296,7 +303,7 @@ abstract class Kronolith_FreeBusy_View
         $template->set('label', $label);
 
         reset($periods);
-        list($periodStart, $periodEnd) = each($periods);
+        [$periodStart, $periodEnd] = each($periods);
 
         $blocks = '';
         foreach ($this->_timeBlocks as $span) {
@@ -311,7 +318,7 @@ abstract class Kronolith_FreeBusy_View
             }
 
             while ($start > $periodEnd &&
-                   list($periodStart, $periodEnd) = each($periods));
+                   [$periodStart, $periodEnd] = each($periods));
 
             if (($periodStart <= $start && $periodEnd >= $start) ||
                 ($periodStart <= $end && $periodEnd >= $end) ||
@@ -339,6 +346,6 @@ abstract class Kronolith_FreeBusy_View
 
     abstract protected function _title();
     abstract protected function _hours();
-    abstract protected function _render(Horde_Date $day = null);
+    abstract protected function _render(?Horde_Date $day = null);
 
 }

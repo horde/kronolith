@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The default calendars handler.
  *

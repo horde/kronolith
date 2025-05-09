@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_View_Year:: class provides an API for viewing years.
  *
@@ -9,7 +10,7 @@
 class Kronolith_View_Year
 {
     public $year;
-    protected $_events = array();
+    protected $_events = [];
 
     /**
      *
@@ -20,21 +21,21 @@ class Kronolith_View_Year
     public function __construct(Horde_Date $date)
     {
         $this->year = $date->year;
-        $startDate = new Horde_Date(array('year' => $this->year,
-                                          'month' => 1,
-                                          'mday' => 1));
-        $endDate = new Horde_Date(array('year' => $this->year,
-                                        'month' => 12,
-                                        'mday' => 31));
+        $startDate = new Horde_Date(['year' => $this->year,
+            'month' => 1,
+            'mday' => 1]);
+        $endDate = new Horde_Date(['year' => $this->year,
+            'month' => 12,
+            'mday' => 31]);
 
         try {
             $this->_events = Kronolith::listEvents($startDate, $endDate, $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_CALENDARS));
         } catch (Exception $e) {
             $GLOBALS['notification']->push($e, 'horde.error');
-            $this->_events = array();
+            $this->_events = [];
         }
         if (!is_array($this->_events)) {
-            $this->_events = array();
+            $this->_events = [];
         }
     }
 
@@ -53,7 +54,7 @@ class Kronolith_View_Year
                 . $date->strftime('%B')
                 . '</a></th></tr><tr><th class="kronolith-minical-empty">&nbsp;</th>';
             if (!$prefs->getValue('week_start_monday')) {
-                $html .= '<th>' . _("Su"). '</th>';
+                $html .= '<th>' . _("Su") . '</th>';
             }
             $html .= '<th>' . _("Mo") . '</th>' .
                 '<th>' . _("Tu") . '</th>' .
@@ -66,16 +67,16 @@ class Kronolith_View_Year
             }
             $html .= '</tr></thead><tbody><tr><td class="kronolith-minical-week">';
 
-            $startday = new Horde_Date(array('mday' => 1,
-                                             'month' => $month,
-                                             'year' => $this->year));
+            $startday = new Horde_Date(['mday' => 1,
+                'month' => $month,
+                'year' => $this->year]);
             $startday = $startday->dayOfWeek();
 
             if (!$prefs->getValue('week_start_monday')) {
                 $startOfView = 1 - $startday;
-                $endday = new Horde_Date(array('mday' => Horde_Date_Utils::daysInMonth($month, $this->year),
-                                               'month' => $month,
-                                               'year' => $this->year));
+                $endday = new Horde_Date(['mday' => Horde_Date_Utils::daysInMonth($month, $this->year),
+                    'month' => $month,
+                    'year' => $this->year]);
                 $endday = $endday->dayOfWeek();
             } else {
                 if ($startday == Horde_Date::DATE_SUNDAY) {
@@ -85,7 +86,7 @@ class Kronolith_View_Year
                 }
             }
 
-            $currentCalendars = array(true);
+            $currentCalendars = [true];
             foreach ($currentCalendars as $id => $cal) {
                 $cell = 0;
                 for ($day = $startOfView; $day < $startOfView + 42; ++$day) {
@@ -97,7 +98,7 @@ class Kronolith_View_Year
                         if ($cell != 0) {
                             $html .= "</tr>\n<tr><td class=\"kronolith-minical-week\">";
                         }
-                        $html .= (int)$date->weekOfYear() . '</td>';
+                        $html .= (int) $date->weekOfYear() . '</td>';
                     }
                     if ($date->month != $month) {
                         $style = 'kronolith-other-month';

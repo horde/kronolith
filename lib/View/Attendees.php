@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
  *
@@ -26,7 +27,7 @@ class Kronolith_View_Attendees extends Horde_View
      *
      * @param array $config  Configuration key-value pairs.
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         global $conf, $injector, $registry, $session;
 
@@ -48,11 +49,11 @@ class Kronolith_View_Attendees extends Horde_View
         $this->resourcesEnabled = !empty($conf['resources']['enabled']);
         if ($registry->hasMethod('contacts/search')) {
             $this->addressbookLink = Horde::url('#')
-                ->link(array(
+                ->link([
                     'class' => 'widget',
                     'onclick' => 'window.open(\'' . Horde::url('contacts.php')
-                        . '\', \'contacts\', \'toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=550,height=270,left=100,top=100\'); return false;'
-                ))
+                        . '\', \'contacts\', \'toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=550,height=270,left=100,top=100\'); return false;',
+                ])
                 . Horde::img('addressbook_browse.png') . '<br />'
                 . _("Address Book") . '</a>';
         }
@@ -83,81 +84,85 @@ class Kronolith_View_Attendees extends Horde_View
 
         $attendees = $session->get('kronolith', 'attendees');
         if ($attendees) {
-            $roles = array(
+            $roles = [
                 Kronolith::PART_REQUIRED,
                 Kronolith::PART_OPTIONAL,
-                Kronolith::PART_NONE
-            );
-            $responses = array(
+                Kronolith::PART_NONE,
+            ];
+            $responses = [
                 Kronolith::RESPONSE_ACCEPTED,
                 Kronolith::RESPONSE_DECLINED,
                 Kronolith::RESPONSE_TENTATIVE,
-                Kronolith::RESPONSE_NONE
-            );
-            $this->attendees = array();
+                Kronolith::RESPONSE_NONE,
+            ];
+            $this->attendees = [];
             foreach ($attendees as $attendee) {
-                $viewAttendee = array(
+                $viewAttendee = [
                     'id' => $attendee->id,
                     'name' => strval($attendee),
                     'deleteLink' => Horde::url('#')
-                        ->link(array(
+                        ->link([
                             'title' => sprintf(
-                                _("Remove %s"), $attendee->displayName
+                                _("Remove %s"),
+                                $attendee->displayName
                             ),
-                            'onclick' => "performAction('remove', decodeURIComponent('" . rawurlencode($attendee->id) . "')); return false;"
-                        ))
+                            'onclick' => "performAction('remove', decodeURIComponent('" . rawurlencode($attendee->id) . "')); return false;",
+                        ])
                         . Horde::img('delete.png') . '</a>',
-                );
+                ];
                 if ($attendee->user) {
                     unset($this->userList[$attendee->user]);
                 } else {
                     $viewAttendee['editLink'] = Horde::url('#')
-                        ->link(array(
+                        ->link([
                             'title' => sprintf(
-                                _("Edit %s"), $attendee->displayName
+                                _("Edit %s"),
+                                $attendee->displayName
                             ),
-                            'onclick' => "performAction('edit', decodeURIComponent('" . rawurlencode($attendee->id) . "')); return false;"
-                        ))
+                            'onclick' => "performAction('edit', decodeURIComponent('" . rawurlencode($attendee->id) . "')); return false;",
+                        ])
                         . Horde::img('edit.png') . '</a>';
                 }
                 foreach ($roles as $role) {
-                    $viewAttendee['roles'][$role] = array(
+                    $viewAttendee['roles'][$role] = [
                         'selected' => $attendee->role == $role,
                         'label' => Kronolith::partToString($role),
-                    );
+                    ];
                 }
                 foreach ($responses as $response) {
-                    $viewAttendee['responses'][$response] = array(
+                    $viewAttendee['responses'][$response] = [
                         'selected' => $attendee->response == $response,
                         'label' => Kronolith::responseToString($response),
-                    );
+                    ];
                 }
                 $this->attendees[] = $viewAttendee;
             }
         }
 
         $this->resources = $session->get(
-            'kronolith', 'resources', Horde_Session::TYPE_ARRAY
+            'kronolith',
+            'resources',
+            Horde_Session::TYPE_ARRAY
         );
         foreach ($this->resources as $id => &$resource) {
             $resource['id'] = $id;
             $resource['deleteLink'] = Horde::url('#')
-                ->link(array(
+                ->link([
                     'title' => sprintf(_("Remove %s"), $resource['name']),
-                    'onclick' => "performAction('removeResource', decodeURIComponent('" . $id . "')); return false;"
-                ))
+                    'onclick' => "performAction('removeResource', decodeURIComponent('" . $id . "')); return false;",
+                ])
                 . Horde::img('delete.png') . '</a>';
             foreach ($roles as $role) {
-                $resource['roles'][$role] = array(
+                $resource['roles'][$role] = [
                     'selected' => $resource['attendance'] == $role,
                     'label' => Kronolith::partToString($role),
-                );
+                ];
             }
             foreach ($responses as $response) {
-                $resource['responses'][$response] = array(
+                $resource['responses'][$response] = [
                     'selected' => $resource['response'] == $response,
                     'label' => Kronolith::responseToString($response),
-                );
+                ];
             }
         }
 
@@ -166,7 +171,7 @@ class Kronolith_View_Attendees extends Horde_View
         if ($this->resourcesEnabled) {
             $this->allResources = array_diff_key(
                 Kronolith::getDriver('Resource')
-                    ->listResources(Horde_Perms::READ, array(), 'name'),
+                    ->listResources(Horde_Perms::READ, [], 'name'),
                 $this->resources
             );
         }

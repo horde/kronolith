@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith_Calendar_External defines an API for single timeobject calendars.
  *
@@ -47,7 +48,7 @@ class Kronolith_Calendar_External extends Kronolith_Calendar
      * @param array $params  A hash with any parameters that this calendar
      *                       might need.
      */
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
         if (!isset($params['name'])) {
             throw new BadMethodCallException('name parameter is missing');

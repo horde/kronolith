@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2001-2017 Horde LLC (http://www.horde.org/)
  *
@@ -18,15 +19,15 @@ if ((Kronolith::showAjaxView() && !(Horde_Util::getPost('import_ajax'))) ||
 }
 
 /* Importable file types. */
-$file_types = array('csv'       => _("Comma separated values"),
-                    'icalendar' => _("vCalendar/iCalendar"));
+$file_types = ['csv'       => _("Comma separated values"),
+    'icalendar' => _("vCalendar/iCalendar")];
 
 /* Templates for the different import steps. */
-$templates = array(
-    Horde_Data::IMPORT_CSV => array($registry->get('templates', 'horde') . '/data/csvinfo.inc'),
-    Horde_Data::IMPORT_MAPPED => array($registry->get('templates', 'horde') . '/data/csvmap.inc'),
-    Horde_Data::IMPORT_DATETIME => array($registry->get('templates', 'horde') . '/data/datemap.inc')
-);
+$templates = [
+    Horde_Data::IMPORT_CSV => [$registry->get('templates', 'horde') . '/data/csvinfo.inc'],
+    Horde_Data::IMPORT_MAPPED => [$registry->get('templates', 'horde') . '/data/csvmap.inc'],
+    Horde_Data::IMPORT_DATETIME => [$registry->get('templates', 'horde') . '/data/datemap.inc'],
+];
 
 $perms = $GLOBALS['injector']->getInstance('Horde_Core_Perms');
 if ($perms->hasAppPermission('max_events') !== true &&
@@ -36,45 +37,45 @@ if ($perms->hasAppPermission('max_events') !== true &&
         'max_events',
         sprintf(_("You are not allowed to create more than %d events."), $perms->hasAppPermission('max_events'))
     );
-    $templates[Horde_Data::IMPORT_FILE] = array(KRONOLITH_TEMPLATES . '/data/export.inc');
+    $templates[Horde_Data::IMPORT_FILE] = [KRONOLITH_TEMPLATES . '/data/export.inc'];
 } else {
-    $templates[Horde_Data::IMPORT_FILE] = array(KRONOLITH_TEMPLATES . '/data/import.inc', KRONOLITH_TEMPLATES . '/data/export.inc');
+    $templates[Horde_Data::IMPORT_FILE] = [KRONOLITH_TEMPLATES . '/data/import.inc', KRONOLITH_TEMPLATES . '/data/export.inc'];
 }
 
 /* Initial values. */
 $import_step   = Horde_Util::getFormData('import_step', 0) + 1;
 $actionID      = Horde_Util::getFormData('actionID');
 $next_step     = Horde_Data::IMPORT_FILE;
-$app_fields    = array('title' => _("Title"),
-                       'start_date' => _("Start Date"),
-                       'start_time' => _("Start Time"),
-                       'end_date' => _("End Date"),
-                       'end_time' => _("End Time"),
-                       'alarm' => _("Alarm Span (minutes)"),
-                       'alarm_date' => _("Alarm Date"),
-                       'alarm_time' => _("Alarm Time"),
-                       'description' => _("Description"),
-                       'location' => _("Location"),
-                       'recur_type' => _("Recurrence Type"),
-                       'recur_end_date' => _("Recurrence End Date"),
-                       'recur_interval' => _("Recurrence Interval"),
-                       'recur_data' => _("Recurrence Data"));
-$time_fields   = array('start_date'     => 'date',
-                       'start_time'     => 'time',
-                       'end_date'       => 'date',
-                       'end_time'       => 'time',
-                       'recur_end_date' => 'date');
-$param         = array('time_fields' => $time_fields,
-                       'file_types'  => $file_types);
+$app_fields    = ['title' => _("Title"),
+    'start_date' => _("Start Date"),
+    'start_time' => _("Start Time"),
+    'end_date' => _("End Date"),
+    'end_time' => _("End Time"),
+    'alarm' => _("Alarm Span (minutes)"),
+    'alarm_date' => _("Alarm Date"),
+    'alarm_time' => _("Alarm Time"),
+    'description' => _("Description"),
+    'location' => _("Location"),
+    'recur_type' => _("Recurrence Type"),
+    'recur_end_date' => _("Recurrence End Date"),
+    'recur_interval' => _("Recurrence Interval"),
+    'recur_data' => _("Recurrence Data")];
+$time_fields   = ['start_date'     => 'date',
+    'start_time'     => 'time',
+    'end_date'       => 'date',
+    'end_time'       => 'time',
+    'recur_end_date' => 'date'];
+$param         = ['time_fields' => $time_fields,
+    'file_types'  => $file_types];
 $import_format = Horde_Util::getFormData('import_format', '');
 $storage = $injector->getInstance('Horde_Core_Data_Storage');
 
 switch ($actionID) {
-case Horde_Data::IMPORT_FILE:
-case Horde_Data::IMPORT_URL:
-    $storage->set('import_cal', Horde_Util::getFormData('importCal'));
-    $storage->set('purge', Horde_Util::getFormData('purge'));
-    break;
+    case Horde_Data::IMPORT_FILE:
+    case Horde_Data::IMPORT_URL:
+        $storage->set('import_cal', Horde_Util::getFormData('importCal'));
+        $storage->set('purge', Horde_Util::getFormData('purge'));
+        break;
 }
 
 if ($import_format) {
@@ -84,7 +85,7 @@ if ($import_format) {
             ->getInstance('Horde_Core_Factory_Data')
             ->create(
                 $import_format,
-                array('cleanup' => array($app_ob, 'cleanupData'))
+                ['cleanup' => [$app_ob, 'cleanupData']]
             );
 
         if ($actionID == Horde_Data::IMPORT_FILE ||
@@ -115,7 +116,7 @@ if ($import_format) {
             $notification->push(_("This file format is not supported."), 'horde.error');
             $next_step = in_array(
                 $actionID,
-                array(Horde_Data::IMPORT_FILE, Horde_Data::IMPORT_URL)
+                [Horde_Data::IMPORT_FILE, Horde_Data::IMPORT_URL]
             )
                 ? $actionID
                 : Horde_Data::IMPORT_FILE;
@@ -130,18 +131,20 @@ if (Horde_Util::getFormData('import_ajax')) {
 
 /* We have a final result set. */
 if (is_array($next_step)) {
-    $events = array();
+    $events = [];
     $error = false;
     $max_events = $perms->hasAppPermission('max_events');
     if ($max_events !== true) {
         $num_events = Kronolith::countEvents();
     }
-    list($type, $calendar) = explode('_', $storage->get('import_cal'), 2);
+    [$type, $calendar] = explode('_', $storage->get('import_cal'), 2);
     $kronolith_driver = Kronolith::getDriver($type, $calendar);
 
     if (!count($next_step)) {
-        $notification->push(sprintf(_("The %s file didn't contain any events."),
-                                    $file_types[$storage->get('format')]), 'horde.error');
+        $notification->push(sprintf(
+            _("The %s file didn't contain any events."),
+            $file_types[$storage->get('format')]
+        ), 'horde.error');
         $error = true;
     } else {
         /* Purge old calendar if requested. */
@@ -155,7 +158,7 @@ if (is_array($next_step)) {
         }
     }
 
-    $recurrences = array();
+    $recurrences = [];
     $ical = null;
 
     foreach ($next_step as $row) {
@@ -227,8 +230,10 @@ if (is_array($next_step)) {
     }
 
     if (!$error) {
-        $notification->push(sprintf(_("%s file successfully imported"),
-                                    $file_types[$storage->get('format')]), 'horde.success');
+        $notification->push(sprintf(
+            _("%s file successfully imported"),
+            $file_types[$storage->get('format')]
+        ), 'horde.success');
     }
     if (Horde_Util::getFormData('import_ajax')) {
         $page_output->addInlineScript('(function(window){window.KronolithCore.loadCalendar(\'' . $type . '\', \'' . $calendar . '\');})(window.parent)');
@@ -242,17 +247,17 @@ if (Horde_Util::getFormData('import_ajax')) {
     exit;
 }
 
-$import_calendars = $export_calendars = array();
+$import_calendars = $export_calendars = [];
 if ($GLOBALS['registry']->getAuth()) {
     $import_calendars = Kronolith::listCalendars(Horde_Perms::EDIT, true);
 }
 $export_calendars = Kronolith::listCalendars(Horde_Perms::READ, true);
 
-$page_output->header(array(
-    'title' => _("Import/Export Calendar")
-));
+$page_output->header([
+    'title' => _("Import/Export Calendar"),
+]);
 require KRONOLITH_TEMPLATES . '/javascript_defs.php';
-$notification->notify(array('listeners' => 'status'));
+$notification->notify(['listeners' => 'status']);
 
 foreach ($templates[$next_step] as $template) {
     require $template;

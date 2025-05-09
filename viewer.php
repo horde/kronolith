@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith Mime viewer.
  *
@@ -19,7 +20,7 @@ $key = Horde_Util::getFormData('key');
 $filename = Horde_Util::getFormData('file');
 $type = Horde_Util::getFormData('type');
 
-list($driver_type, $calendar) = explode('|', $source);
+[$driver_type, $calendar] = explode('|', $source);
 if ($driver_type == 'internal' &&
     !Kronolith::hasPermission($calendar, Horde_Perms::SHOW)) {
     $GLOBALS['notification']->push(_("Permission Denied"), 'horde.error');

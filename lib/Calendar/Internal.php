@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith_Calendar_Internal defines an API for single internal (share)
  * calendars.
@@ -28,7 +29,7 @@ class Kronolith_Calendar_Internal extends Kronolith_Calendar
      *                       Required parameters:
      *                       - share: The share of this calendar.
      */
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
         if (!isset($params['share'])) {
             throw new BadMethodCallException('share parameter is missing');
@@ -181,7 +182,7 @@ class Kronolith_Calendar_Internal extends Kronolith_Calendar
         )
             . ($this->owner() ? $registry->convertUsername($this->owner(), false) : '-system-') . '/'
             . $id . '.ics';
-        $hash['feed']  = (string)Kronolith::feedUrl($id);
+        $hash['feed']  = (string) Kronolith::feedUrl($id);
         $hash['embed'] = Kronolith::embedCode($id);
         $hash['tg']    = array_values(Kronolith::getTagger()->getTags($id, Kronolith_Tagger::TYPE_CALENDAR));
         if ($owner) {

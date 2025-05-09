@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_View_WorkWeek:: class provides a shortcut for a week
  * view that is only Monday through Friday.

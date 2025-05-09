@@ -8,7 +8,7 @@ class Kronolith_Factory_Storage extends Horde_Core_Factory_Base
      * @return Kronolith_Storage
      * @throws Kronolith_Exception
      */
-    public function create($params = array())
+    public function create($params = [])
     {
         if (empty($params['user'])) {
             $user = $GLOBALS['registry']->getAuth();

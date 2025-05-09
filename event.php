@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
  *
@@ -24,34 +25,34 @@ if (Kronolith::showAjaxView()) {
 }
 
 switch ($viewName) {
-case 'DeleteEvent':
-    /* Shortcut when we're deleting events and don't want confirmation. */
-    if (!$view->event->recurs() &&
-        !($prefs->getValue('confirm_delete') ||
-          Horde_Util::getFormData('confirm'))) {
-        Horde::url('delete.php?' . $_SERVER['QUERY_STRING'], true)->redirect();
-    }
-    break;
-
-case 'EditEvent':
-    if ($view->event->private &&
-        $view->event->creator != $GLOBALS['registry']->getAuth()) {
-        if ($url = Horde::verifySignedUrl(Horde_Util::getFormData('url'))) {
-            $url = new Horde_Url($url, true);
-        } else {
-            $url = Horde::url($prefs->getValue('defaultview') . '.php', true);
+    case 'DeleteEvent':
+        /* Shortcut when we're deleting events and don't want confirmation. */
+        if (!$view->event->recurs() &&
+            !($prefs->getValue('confirm_delete') ||
+              Horde_Util::getFormData('confirm'))) {
+            Horde::url('delete.php?' . $_SERVER['QUERY_STRING'], true)->redirect();
         }
-        $url->unique()->redirect();
-    }
-    break;
+        break;
+
+    case 'EditEvent':
+        if ($view->event->private &&
+            $view->event->creator != $GLOBALS['registry']->getAuth()) {
+            if ($url = Horde::verifySignedUrl(Horde_Util::getFormData('url'))) {
+                $url = new Horde_Url($url, true);
+            } else {
+                $url = Horde::url($prefs->getValue('defaultview') . '.php', true);
+            }
+            $url->unique()->redirect();
+        }
+        break;
 }
 
-$page_output->header(array(
+$page_output->header([
     'body_class' => $prefs->getValue('show_panel') ? 'rightPanel' : null,
-    'title' => $view->getTitle()
-));
+    'title' => $view->getTitle(),
+]);
 require KRONOLITH_TEMPLATES . '/javascript_defs.php';
-$notification->notify(array('listeners' => 'status'));
+$notification->notify(['listeners' => 'status']);
 
 echo '<div id="page">';
 Kronolith::eventTabs($viewName, $view->event);

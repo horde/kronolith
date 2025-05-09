@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Login system task for automated upgrade tasks.
  *
@@ -20,18 +21,18 @@ class Kronolith_LoginTasks_SystemTask_Upgrade extends Horde_Core_LoginTasks_Syst
 
     /**
      */
-    protected $_versions = array(
-        '3.0'
-    );
+    protected $_versions = [
+        '3.0',
+    ];
 
     /**
      */
     protected function _upgrade($version)
     {
         switch ($version) {
-        case '3.0':
-            $this->_upgradeAbookPrefs();
-            break;
+            case '3.0':
+                $this->_upgradeAbookPrefs();
+                break;
         }
     }
 
@@ -52,7 +53,7 @@ class Kronolith_LoginTasks_SystemTask_Upgrade extends Horde_Core_LoginTasks_Syst
         if (!$prefs->isDefault('search_fields')) {
             $val = $prefs->getValue('search_fields');
             if (!is_array(json_decode($val, true))) {
-                $fields = array();
+                $fields = [];
                 foreach (explode("\n", $val) as $field) {
                     $field = trim($field);
                     if (!empty($field)) {

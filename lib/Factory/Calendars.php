@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The factory for the calendars handler.
  *
@@ -15,7 +16,7 @@ class Kronolith_Factory_Calendars
      *
      * @var array
      */
-    private $_instances = array();
+    private $_instances = [];
 
     /**
      * The injector.
@@ -44,23 +45,23 @@ class Kronolith_Factory_Calendars
         global $conf, $injector, $registry;
 
         switch ($conf['calendar']['driver']) {
-        case 'sql':
-            $driver = 'Default';
-            break;
-        default:
-            $driver = Horde_String::ucfirst($conf['calendar']['driver']);
-            break;
+            case 'sql':
+                $driver = 'Default';
+                break;
+            default:
+                $driver = Horde_String::ucfirst($conf['calendar']['driver']);
+                break;
         }
         if (empty($this->_instances[$driver])) {
             $class = 'Kronolith_Calendars_' . $driver;
             if (class_exists($class)) {
-                $params = array();
+                $params = [];
                 switch ($driver) {
-                case 'Default':
-                    $params['identity'] = $this->_injector
-                        ->getInstance('Horde_Core_Factory_Identity')
-                        ->create();
-                    break;
+                    case 'Default':
+                        $params['identity'] = $this->_injector
+                            ->getInstance('Horde_Core_Factory_Identity')
+                            ->create();
+                        break;
                 }
                 $this->_instances[$driver] = new $class(
                     $injector->getInstance('Kronolith_Shares'),

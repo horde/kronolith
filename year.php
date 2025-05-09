@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
  *
@@ -22,12 +23,12 @@ $view = Kronolith::getView('Year');
 $page_output->addScriptFile('tooltips.js', 'horde');
 $page_output->addScriptFile('views.js');
 
-$page_output->header(array(
+$page_output->header([
     'body_class' => $prefs->getValue('show_panel') ? 'rightPanel' : null,
-    'title' => $view->year
-));
+    'title' => $view->year,
+]);
 require KRONOLITH_TEMPLATES . '/javascript_defs.php';
-$notification->notify(array('listeners' => 'status'));
+$notification->notify(['listeners' => 'status']);
 Kronolith::tabs($view);
 $view->html();
 require KRONOLITH_TEMPLATES . '/calendar_titles.inc';

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2004-2017 Horde LLC (http://www.horde.org/)
  *
@@ -78,7 +79,7 @@ class Kronolith_Event_Ical extends Kronolith_Event
      *
      * @return Horde_Url
      */
-    public function getViewUrl($params = array(), $full = false, $encoded = true)
+    public function getViewUrl($params = [], $full = false, $encoded = true)
     {
         if ($this->url) {
             return new Horde_Url($this->url, !$encoded);
@@ -111,14 +112,17 @@ class Kronolith_Event_Ical extends Kronolith_Event
                 if (is_array($exdates)) {
                     foreach ($exdates as $exdate) {
                         if (is_array($exdate)) {
-                            $this->recurrence->addException((int)$exdate['year'],
-                                                            (int)$exdate['month'],
-                                                            (int)$exdate['mday']);
+                            $this->recurrence->addException(
+                                (int) $exdate['year'],
+                                (int) $exdate['month'],
+                                (int) $exdate['mday']
+                            );
                         }
                     }
                 }
             }
-        } catch (Horde_Icalendar_Exception $e) {}
+        } catch (Horde_Icalendar_Exception $e) {
+        }
     }
 
 }

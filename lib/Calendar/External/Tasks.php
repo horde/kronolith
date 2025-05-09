@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith_Calendar_External_Tasks defines an API for single task lists.
  *
@@ -27,7 +28,7 @@ class Kronolith_Calendar_External_Tasks extends Kronolith_Calendar_External
      *                       Required parameters:
      *                       - share: The share of this calendar.
      */
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
         if (!isset($params['share'])) {
             throw new BadMethodCallException('share parameter is missing');
@@ -59,7 +60,7 @@ class Kronolith_Calendar_External_Tasks extends Kronolith_Calendar_External
 
         $hash = parent::toHash();
         $hash['name']  = Kronolith::getLabel($this->_share);
-        $hash['desc']  = (string)$this->_share->get('desc');
+        $hash['desc']  = (string) $this->_share->get('desc');
         $hash['owner'] = $owner;
         $hash['users'] = Kronolith::listShareUsers($this->_share);
         $hash['fg']    = Kronolith::foregroundColor($this->_share);

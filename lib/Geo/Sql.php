@@ -1,4 +1,5 @@
 <?php
+
 /**
  * General SQL implementation for storing/searching geo location data for
  * events.
@@ -30,7 +31,7 @@ class Kronolith_Geo_Sql extends Kronolith_Geo_Base
         /* First make sure it doesn't already exist */
         $sql = 'SELECT COUNT(*) FROM kronolith_events_geo WHERE event_id = ?';
         try {
-            $count = $this->_db->selectValue($sql, array($event_id));
+            $count = $this->_db->selectValue($sql, [$event_id]);
         } catch (Horde_Db_Exception $e) {
             throw new Kronolith_Exception($e);
         }
@@ -50,7 +51,7 @@ class Kronolith_Geo_Sql extends Kronolith_Geo_Base
         }
 
         /* INSERT or UPDATE */
-        $params = array($point['lat'], $point['lon'], $point['zoom'], $event_id);
+        $params = [$point['lat'], $point['lon'], $point['zoom'], $event_id];
         try {
             if ($count) {
                 $sql = 'UPDATE kronolith_events_geo SET event_lat = ?, event_lon = ?, event_zoom = ? WHERE event_id = ?';
@@ -74,7 +75,7 @@ class Kronolith_Geo_Sql extends Kronolith_Geo_Base
     {
         $sql = 'SELECT event_lat as lat, event_lon as lon, event_zoom as zoom FROM kronolith_events_geo WHERE event_id = ?';
         try {
-            return $this->_db->selectOne($sql, array($event_id));
+            return $this->_db->selectOne($sql, [$event_id]);
         } catch (Horde_Db_Exception $e) {
             throw new Kronolith_Exception($e);
         }
@@ -93,7 +94,7 @@ class Kronolith_Geo_Sql extends Kronolith_Geo_Base
     {
         $sql = 'DELETE FROM kronolith_events_geo WHERE event_id = ?';
         try {
-            $this->_db->delete($sql, array($event_id));
+            $this->_db->delete($sql, [$event_id]);
         } catch (Horde_Db_Exception $e) {
             throw new Horde_Exception($e);
         }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
  *
@@ -81,13 +82,13 @@ class Kronolith_Attendee implements Serializable
     public function __construct($params)
     {
         $params = array_merge(
-            array(
+            [
                 'user'     => null,
                 'email'    => null,
                 'role'     => Kronolith::PART_REQUIRED,
                 'response' => Kronolith::RESPONSE_NONE,
-                'name'     => null
-            ),
+                'name'     => null,
+            ],
             $params
         );
         $this->user     = $params['user'];
@@ -119,12 +120,12 @@ class Kronolith_Attendee implements Serializable
             $data['name'] = $email;
             $email = null;
         }
-        return new self(array(
+        return new self([
             'email'    => $email,
-            'name'     => isset($data['name']) ? $data['name'] : null,
+            'name'     => $data['name'] ?? null,
             'role'     => $data['attendance'],
-            'response' => $data['response']
-        ));
+            'response' => $data['response'],
+        ]);
     }
 
     /**
@@ -132,30 +133,30 @@ class Kronolith_Attendee implements Serializable
     public function __get($what)
     {
         switch ($what) {
-        case 'addressObject':
-            $address = new Horde_Mail_Rfc822_Address($this->email);
-            if (!empty($this->name)) {
-                $address->personal = $this->name;
-            }
-            return $address;
+            case 'addressObject':
+                $address = new Horde_Mail_Rfc822_Address($this->email);
+                if (!empty($this->name)) {
+                    $address->personal = $this->name;
+                }
+                return $address;
 
-        case 'displayName':
-            if (strlen($this->name)) {
-                return $this->name;
-            }
-            if (strlen($this->user)) {
-                return $this->user;
-            }
-            return $this->email;
+            case 'displayName':
+                if (strlen($this->name)) {
+                    return $this->name;
+                }
+                if (strlen($this->user)) {
+                    return $this->user;
+                }
+                return $this->email;
 
-        case 'id':
-            if (strlen($this->user)) {
-                return 'user:' . $this->user;
-            }
-            if (strlen($this->email)) {
-                return 'email:' . $this->email;
-            }
-            return 'name:' . $this->name;
+            case 'id':
+                if (strlen($this->user)) {
+                    return 'user:' . $this->user;
+                }
+                if (strlen($this->email)) {
+                    return 'email:' . $this->email;
+                }
+                return 'name:' . $this->name;
         }
     }
 
@@ -198,13 +199,13 @@ class Kronolith_Attendee implements Serializable
      */
     public function toHash()
     {
-        return array(
+        return [
             'user' => $this->user,
             'email' => $this->email,
             'name' => $this->name,
             'role' => $this->role,
             'response' => $this->response,
-        );
+        ];
     }
 
     /**
@@ -215,14 +216,14 @@ class Kronolith_Attendee implements Serializable
      */
     public function toJson()
     {
-        return (object)array(
+        return (object) [
             'a' => intval($this->role),
             'e' => $this->addressObject->bare_address,
             'i' => $this->id,
             'l' => strval($this->displayName),
             'r' => intval($this->response),
             'u' => $this->user,
-        );
+        ];
     }
 
     /* Serializable methods. */
@@ -233,7 +234,7 @@ class Kronolith_Attendee implements Serializable
     {
         return array_shift($this->__serialize());
     }
-    public function __serialize(): array 
+    public function __serialize(): array
     {
         return [
             'u' => $this->user,
@@ -251,7 +252,7 @@ class Kronolith_Attendee implements Serializable
         $this->__unserialize([$data]);
 
     }
-    public function __unserialize(array $data): void 
+    public function __unserialize(array $data): void
     {
         $this->user     = $data['u'];
         $this->email    = $data['e'];
@@ -259,4 +260,4 @@ class Kronolith_Attendee implements Serializable
         $this->response = $data['r'];
         $this->name     = $data['n'];
     }
-}   
+}

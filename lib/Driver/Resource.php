@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_Driver_Resource class implements the Kronolith_Driver API for
  * storing resource calendars.
@@ -73,14 +74,15 @@ class Kronolith_Driver_Resource extends Kronolith_Driver
      *
      * @throws Kronolith_Exception
      */
-    public function listEvents(Horde_Date $startDate = null,
-                               Horde_Date $endDate = null,
-                               array $options = array())
-    {
+    public function listEvents(
+        ?Horde_Date $startDate = null,
+        ?Horde_Date $endDate = null,
+        array $options = []
+    ) {
         $json = !empty($options['json']);
         $options['json'] = false;
         $events = $this->_driver->listEvents($startDate, $endDate, $options);
-        $results = array();
+        $results = [];
 
         foreach ($events as $period_key => $period) {
             foreach ($period as $event_id => $event) {
@@ -116,11 +118,11 @@ class Kronolith_Driver_Resource extends Kronolith_Driver
      */
     public function getByUID($uid, $calendars = null, $getAll = false)
     {
-       $event = new $this->_eventClass($this);
-       $driver_event = $this->_driver->getByUID($uid, $calendars, $getAll);
-       $event->fromDriver($driver_event->toProperties(true));
-       $event->calendar = $this->calendar;
-       return $event;
+        $event = new $this->_eventClass($this);
+        $driver_event = $this->_driver->getByUID($uid, $calendars, $getAll);
+        $event->fromDriver($driver_event->toProperties(true));
+        $event->calendar = $this->calendar;
+        return $event;
     }
 
     /**
@@ -284,7 +286,7 @@ class Kronolith_Driver_Resource extends Kronolith_Driver
             ? 'Group'
             : 'Single');
 
-        return new $class(array('share' => $share));
+        return new $class(['share' => $share]);
     }
 
     /**
@@ -340,24 +342,25 @@ class Kronolith_Driver_Resource extends Kronolith_Driver
      * @throws Kronolith_Exception
      */
     public function listResources(
-        $perms = Horde_Perms::READ, array $filter = array(), $orderby = null
-    )
-    {
+        $perms = Horde_Perms::READ,
+        array $filter = [],
+        $orderby = null
+    ) {
         global $injector, $registry;
 
         $attributes = array_merge(
-            array('calendar_type' => Kronolith::SHARE_TYPE_RESOURCE),
+            ['calendar_type' => Kronolith::SHARE_TYPE_RESOURCE],
             $filter
         );
         $shares = $injector->getInstance('Kronolith_Shares')->listShares(
             $registry->getAuth(),
-            array('perm' => $perms, 'attributes' => $attributes)
+            ['perm' => $perms, 'attributes' => $attributes]
         );
-        $return = array();
+        $return = [];
         foreach ($shares as $share) {
             $class = 'Kronolith_Resource_'
                 . ($share->get('isgroup') ? 'Group' : 'Single');
-            $return[$share->getName()] = new $class(array('share' => $share));
+            $return[$share->getName()] = new $class(['share' => $share]);
         }
 
         return $return;
@@ -373,8 +376,8 @@ class Kronolith_Driver_Resource extends Kronolith_Driver
      */
     public function getGroupMemberships($resource_id)
     {
-        $groups = $this->listResources(Horde_Perms::READ, array('isgroup' => 1));
-        $in = array();
+        $groups = $this->listResources(Horde_Perms::READ, ['isgroup' => 1]);
+        $in = [];
         foreach ($groups as $group) {
             $members = $group->get('members');
             if (array_search($resource_id, $members) !== false) {
@@ -419,7 +422,7 @@ class Kronolith_Driver_Resource extends Kronolith_Driver
     public function _deleteResourceCalendar($calendar)
     {
         $this->open($calendar);
-        $events = $this->listEvents(null, null, array('cover_dates' => false));
+        $events = $this->listEvents(null, null, ['cover_dates' => false]);
         foreach ($events as $dayevents) {
             foreach ($dayevents as $event) {
                 $this->deleteEvent($event, true);

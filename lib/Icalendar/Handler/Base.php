@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2015-2017 Horde LLC (http://www.horde.org/)
  *
@@ -37,7 +38,7 @@ class Kronolith_Icalendar_Handler_Base
     /**
      * @var array
      */
-    protected $_exceptions = array();
+    protected $_exceptions = [];
 
     protected array $_params;
 
@@ -49,8 +50,10 @@ class Kronolith_Icalendar_Handler_Base
      *                                  the importer.
      */
     public function __construct(
-        Horde_Icalendar $iCal, Kronolith_Driver $driver, $params = array())
-    {
+        Horde_Icalendar $iCal,
+        Kronolith_Driver $driver,
+        $params = []
+    ) {
         $this->_iCal = $iCal;
         $this->_driver = $driver;
         $this->_params = $params;
@@ -74,7 +77,7 @@ class Kronolith_Icalendar_Handler_Base
      */
     protected function _process()
     {
-        $ids = array();
+        $ids = [];
         $components = $this->_iCal->getComponents();
         if (count($components) == 0) {
             throw new Kronolith_Exception(_("No iCalendar data was found."));

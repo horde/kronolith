@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_View_Month:: class provides an API for viewing
  * months.
@@ -27,12 +28,12 @@ class Kronolith_View_Month
     /**
      * @var array
      */
-    protected $_events = array();
+    protected $_events = [];
 
     /**
      * @var array
      */
-    protected $_currentCalendars = array();
+    protected $_currentCalendars = [];
 
     /**
      * @var integer
@@ -78,7 +79,9 @@ class Kronolith_View_Month
         }
 
         $startDate = new Horde_Date(
-            $this->year, $this->month, $this->_startOfView
+            $this->year,
+            $this->month,
+            $this->_startOfView
         );
         $this->_endDate = new Horde_Date(
             $this->year,
@@ -90,21 +93,21 @@ class Kronolith_View_Month
             % 7;
         if ($prefs->getValue('show_shared_side_by_side')) {
             $allCalendars = Kronolith::listInternalCalendars();
-            $this->_currentCalendars = array();
+            $this->_currentCalendars = [];
             foreach ($GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_CALENDARS) as $id) {
                 $this->_currentCalendars[$id] = $allCalendars[$id];
             }
         } else {
-            $this->_currentCalendars = array('internal_0' => true);
+            $this->_currentCalendars = ['internal_0' => true];
         }
         try {
             $this->_events = Kronolith::listEvents($startDate, $this->_endDate);
         } catch (Exception $e) {
             $GLOBALS['notification']->push($e, 'horde.error');
-            $this->_events = array();
+            $this->_events = [];
         }
         if (!is_array($this->_events)) {
-            $this->_events = array();
+            $this->_events = [];
         }
     }
 
@@ -148,16 +151,18 @@ class Kronolith_View_Month
             $date->hour = $twentyFour ? 12 : 6;
             for (;$date->compareDate($this->_endDate) < 0; $date->mday++) {
                 if ($cell % 7 == 0) {
-                    $week = $date->add(array('day' => $weekOffset))->weekOfYear();
+                    $week = $date->add(['day' => $weekOffset])->weekOfYear();
                     $weeklink = Horde::url('week.php')
                         ->add('date', $date->dateString())
-                        ->link(array('class' => 'kronolith-weeklink'))
+                        ->link(['class' => 'kronolith-weeklink'])
                         . ($sidebyside ? sprintf(_("Week %d"), $week) : $week)
                         . '</a>';
                     if ($sidebyside) {
-                        $html .= sprintf('<td class="kronolith-first-col">%s<br />%s</td>',
-                                         $weeklink,
-                                         htmlspecialchars(Kronolith::getLabel($cal)));
+                        $html .= sprintf(
+                            '<td class="kronolith-first-col">%s<br />%s</td>',
+                            $weeklink,
+                            htmlspecialchars(Kronolith::getLabel($cal))
+                        );
                     } else {
                         if ($cell != 0) {
                             $html .= "</tr>\n<tr>";
@@ -186,7 +191,7 @@ class Kronolith_View_Month
                     if ($sidebyside) {
                         $new_url->add('calendar', $id);
                     }
-                    $html .= $new_url->link(array('title' => _("Create a New Event"), 'class' => 'newEvent'))
+                    $html .= $new_url->link(['title' => _("Create a New Event"), 'class' => 'newEvent'])
                         . $new_img . '</a>';
                 }
 

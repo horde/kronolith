@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Special prefs handling for the 'sourceselect' preference.
  *
@@ -16,9 +17,7 @@ class Kronolith_Prefs_Special_Sourceselect implements Horde_Core_Prefs_Ui_Specia
 {
     /**
      */
-    public function init(Horde_Core_Prefs_Ui $ui)
-    {
-    }
+    public function init(Horde_Core_Prefs_Ui $ui) {}
 
     /**
      */
@@ -26,10 +25,10 @@ class Kronolith_Prefs_Special_Sourceselect implements Horde_Core_Prefs_Ui_Specia
     {
         Horde_Core_Prefs_Ui_Widgets::addressbooksInit();
         $search = Kronolith::getAddressbookSearchParams();
-        return Horde_Core_Prefs_Ui_Widgets::addressbooks(array(
+        return Horde_Core_Prefs_Ui_Widgets::addressbooks([
             'fields' => $search['fields'],
-            'sources' => $search['sources']
-        ));
+            'sources' => $search['sources'],
+        ]);
     }
 
     /**

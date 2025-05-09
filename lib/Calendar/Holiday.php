@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith_Calendar_Holiday defines an API for single holiday calendars.
  *
@@ -27,7 +28,7 @@ class Kronolith_Calendar_Holiday extends Kronolith_Calendar
      *                       Required parameters:
      *                       - share: The share of this calendar.
      */
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
         if (!isset($params['driver'])) {
             throw new BadMethodCallException('driver parameter is missing');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
  *
@@ -15,22 +16,21 @@
  * @author  Jan Schneider <jan@horde.org>
  * @package Kronolith
  */
-class Kronolith_Attendee_List
-implements ArrayAccess, Countable, IteratorAggregate, Serializable
+class Kronolith_Attendee_List implements ArrayAccess, Countable, IteratorAggregate, Serializable
 {
     /**
      * A list of Kronolith_Attendee objects.
      *
      * @var array
      */
-    protected $_list = array();
+    protected $_list = [];
 
     /**
      * Constructor.
      *
      * @param array $attendees  A list of Kronolith_Attendee objects.
      */
-    public function __construct(array $attendees = array())
+    public function __construct(array $attendees = [])
     {
         foreach ($attendees as $attendee) {
             $this->_list[$attendee->id] = $attendee;
@@ -48,9 +48,9 @@ implements ArrayAccess, Countable, IteratorAggregate, Serializable
      * @return Kronolith_Attendee_List  The parsed attendee list.
      */
     public static function parse(
-        $newAttendees, Horde_Notification_Handler $notification
-    )
-    {
+        $newAttendees,
+        Horde_Notification_Handler $notification
+    ) {
         $attendees = new self();
 
         if (empty($newAttendees)) {
@@ -97,12 +97,12 @@ implements ArrayAccess, Countable, IteratorAggregate, Serializable
                     : '';
             }
 
-            $attendees->add(new Kronolith_Attendee(array(
+            $attendees->add(new Kronolith_Attendee([
                 'email'    => $email,
                 'role'     => Kronolith::PART_REQUIRED,
                 'response' => Kronolith::RESPONSE_NONE,
-                'name'     => $name
-            )));
+                'name'     => $name,
+            ]));
         }
 
         return $attendees;
@@ -185,7 +185,7 @@ implements ArrayAccess, Countable, IteratorAggregate, Serializable
      */
     public function __toString()
     {
-        $list = array();
+        $list = [];
         foreach ($this as $attendee) {
             if (strlen($attendee->email)) {
                 $list[] = strval($attendee->addressObject);

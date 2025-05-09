@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Block to display a summary of calendar items.
  */
@@ -6,7 +7,7 @@ class Kronolith_Block_Summary extends Horde_Core_Block
 {
     /**
      */
-    public function __construct($app, $params = array())
+    public function __construct($app, $params = [])
     {
         parent::__construct($app, $params);
 
@@ -21,17 +22,17 @@ class Kronolith_Block_Summary extends Horde_Core_Block
      */
     protected function _params()
     {
-        $params = array(
-            'calendar' => array(
+        $params = [
+            'calendar' => [
                 'name' => _("Calendar"),
                 'type' => 'enum',
-                'default' => '__all'
-            ),
-            'days' => array(
+                'default' => '__all',
+            ],
+            'days' => [
                 'name' => _("The time span to show"),
                 'type' => 'enum',
                 'default' => 7,
-                'values' => array(
+                'values' => [
                     1 => '1 ' . _("day"),
                     2 => '2 ' . _("days"),
                     3 => '3 ' . _("days"),
@@ -41,20 +42,20 @@ class Kronolith_Block_Summary extends Horde_Core_Block
                     7 => '1 ' . _("week"),
                     14 => '2 ' . _("weeks"),
                     21 => '3 ' . _("weeks"),
-                    28 => '4 ' . _("weeks")
-                )
-            ),
-            'maxevents' => array(
+                    28 => '4 ' . _("weeks"),
+                ],
+            ],
+            'maxevents' => [
                 'name' => _("Maximum number of events to display (0 = no limit)"),
                 'type' => 'int',
-                'default' => 0
-            ),
-            'alarms' => array(
+                'default' => 0,
+            ],
+            'alarms' => [
                 'name' => _("Show only events that have an alarm set?"),
                 'type' => 'checkbox',
-                'default' => 0
-            )
-        );
+                'default' => 0,
+            ],
+        ];
 
         $params['calendar']['values']['__all'] = _("All Visible");
         foreach (Kronolith::listCalendars(Horde_Perms::SHOW, true) as $id => $cal) {
@@ -86,8 +87,8 @@ class Kronolith_Block_Summary extends Horde_Core_Block
         $now = new Horde_Date($_SERVER['REQUEST_TIME']);
         $today = date('j');
 
-        $startDate = new Horde_Date(array('year' => date('Y'), 'month' => date('n'), 'mday' => date('j')));
-        $endDate = new Horde_Date(array('year' => date('Y'), 'month' => date('n'), 'mday' => date('j') + $this->_params['days']));
+        $startDate = new Horde_Date(['year' => date('Y'), 'month' => date('n'), 'mday' => date('j')]);
+        $endDate = new Horde_Date(['year' => date('Y'), 'month' => date('n'), 'mday' => date('j') + $this->_params['days']]);
 
         try {
             if (isset($this->_params['calendar']) &&
@@ -99,15 +100,21 @@ class Kronolith_Block_Summary extends Horde_Core_Block
                 if (!$calendars[$this->_params['calendar']]->hasPermission(Horde_Perms::READ)) {
                     return _("Permission Denied");
                 }
-                list($type, $calendar) = explode('_', $this->_params['calendar'], 2);
+                [$type, $calendar] = explode('_', $this->_params['calendar'], 2);
                 $driver = Kronolith::getDriver($type, $calendar);
                 $all_events = Kronolith::sortEvents(
                     $driver->listEvents(
-                        $startDate, $endDate, array('show_recurrence' => true))
+                        $startDate,
+                        $endDate,
+                        ['show_recurrence' => true]
+                    )
                 );
             } else {
                 $all_events = Kronolith::listEvents(
-                    $startDate, $endDate, $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_CALENDARS));
+                    $startDate,
+                    $endDate,
+                    $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_CALENDARS)
+                );
             }
         } catch (Exception $e) {
             return '<em>' . $e->getMessage() . '</em>';
@@ -166,7 +173,7 @@ class Kronolith_Block_Summary extends Horde_Core_Block
                         $this->_params['calendar'] != '__all') {
                         $url->add('display_cal', $this->_params['calendar']);
                     }
-                    $html .= $url->link(array('title' => sprintf(_("Goto %s"), $dayname)))
+                    $html .= $url->link(['title' => sprintf(_("Goto %s"), $dayname)])
                         . $dayname . '</a></strong></td></tr>';
                     $firstevent = false;
                     $firstday = false;

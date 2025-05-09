@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kolab specific calendars handler.
  *
@@ -17,18 +18,19 @@ class Kronolith_Calendars_Kolab extends Kronolith_Calendars_Base
      */
     public function setDefaultShare($share)
     {
-           $calendars = $this->_shares
-               ->listShares(
-                   $this->_user,
-                   array('perm' => Horde_Perms::SHOW,
-                         'attributes' => $this->_user));
-           foreach ($calendars as $id => $calendar) {
-               if ($id == $share) {
-                   $calendar->set('default', true);
-                   $calendar->save();
-                   break;
-               }
-           }
+        $calendars = $this->_shares
+            ->listShares(
+                $this->_user,
+                ['perm' => Horde_Perms::SHOW,
+                    'attributes' => $this->_user]
+            );
+        foreach ($calendars as $id => $calendar) {
+            if ($id == $share) {
+                $calendar->set('default', true);
+                $calendar->save();
+                break;
+            }
+        }
     }
 
     /**

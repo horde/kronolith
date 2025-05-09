@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith_Resource implementation to represent a group of similar resources.
  *
@@ -108,7 +109,7 @@ class Kronolith_Resource_Group extends Kronolith_Resource_Base
                 continue;
             }
             $busy = Kronolith::getDriver('Resource', $resource->get('calendar'))
-                ->listEvents($start, $end, array('show_recurrence' => true));
+                ->listEvents($start, $end, ['show_recurrence' => true]);
 
             /* No events at all during time period for requested event */
             if (!count($busy)) {
@@ -130,13 +131,13 @@ class Kronolith_Resource_Group extends Kronolith_Resource_Base
                           $e->status == Kronolith::STATUS_FREE) &&
                          $e->uid !== $uid) {
 
-                         if (!($e->start->compareDateTime($end) >= 0) &&
-                             !($e->end->compareDateTime($start) <= 0)) {
+                        if (!($e->start->compareDateTime($end) >= 0) &&
+                            !($e->end->compareDateTime($start) <= 0)) {
 
                             // Not free, continue to the next resource
                             $conflict = true;
                             break 2;
-                         }
+                        }
                     }
                 }
             }

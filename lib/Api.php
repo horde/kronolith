@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith external API interface.
  *
@@ -14,9 +15,9 @@ class Kronolith_Api extends Horde_Registry_Api
      *
      * @var array
      */
-    protected $_links = array(
-        'show' => '%application%/event.php?calendar=|calendar|&eventID=|event|&uid=|uid|'
-    );
+    protected $_links = [
+        'show' => '%application%/event.php?calendar=|calendar|&eventID=|event|&uid=|uid|',
+    ];
 
     /**
      * Returns the share helper prefix
@@ -55,13 +56,13 @@ class Kronolith_Api extends Horde_Registry_Api
      * @return array  The contents of $path
      * @throws Kronolith_Exception
      */
-    public function browse($path = '', $properties = array())
+    public function browse($path = '', $properties = [])
     {
         global $injector, $registry;
 
         // Default properties.
         if (!$properties) {
-            $properties = array('name', 'icon', 'browseable');
+            $properties = ['name', 'icon', 'browseable'];
         }
 
         if (substr($path, 0, 9) == 'kronolith') {
@@ -75,12 +76,12 @@ class Kronolith_Api extends Horde_Registry_Api
             // This request is for a list of all users who have calendars
             // visible to the requesting user.
             $calendars = Kronolith::listInternalCalendars(false, Horde_Perms::READ);
-            $owners = array();
+            $owners = [];
             foreach ($calendars as $calendar) {
                 $owners[$calendar->get('owner') ? $calendar->get('owner') : '-system-'] = true;
             }
 
-            $results = array();
+            $results = [];
             foreach (array_keys($owners) as $owner) {
                 $path = 'kronolith/' . $registry->convertUsername($owner, false);
                 if (in_array('name', $properties)) {
@@ -107,10 +108,10 @@ class Kronolith_Api extends Horde_Registry_Api
             $calendars = $injector->getInstance('Kronolith_Shares')
                 ->listShares(
                     $currentUser,
-                    array('perm' => Horde_Perms::SHOW,
-                          'attributes' => $owner)
+                    ['perm' => Horde_Perms::SHOW,
+                        'attributes' => $owner]
                 );
-            $results = array();
+            $results = [];
             foreach ($calendars as $calendarId => $calendar) {
                 if ($parts[0] == '-system-' && $calendar->get('owner')) {
                     continue;
@@ -166,7 +167,7 @@ class Kronolith_Api extends Horde_Registry_Api
                 ? $registry->convertUsername($calendar->get('owner'), false)
                 : '-system-';
             $dav = $injector->getInstance('Horde_Dav_Storage');
-            $results = array();
+            $results = [];
             foreach ($events as $dayevents) {
                 foreach ($dayevents as $event) {
                     $id = $event->id;
@@ -224,9 +225,9 @@ class Kronolith_Api extends Horde_Registry_Api
                 }
                 $event = Kronolith::getDriver(null, $parts[1])->getEvent($object);
 
-                $result = array(
+                $result = [
                     'data' => $this->export($event->uid, 'text/calendar'),
-                    'mimetype' => 'text/calendar');
+                    'mimetype' => 'text/calendar'];
                 $modified = $this->modified($event->uid, $parts[1]);
                 if (!empty($modified)) {
                     $result['mtime'] = $modified;
@@ -237,12 +238,12 @@ class Kronolith_Api extends Horde_Registry_Api
                       array_key_exists(substr($parts[1], 0, -4), Kronolith::listInternalCalendars(false, Horde_Perms::READ))) {
                 // This request is for an entire calendar (calendar.ics).
                 $ical_data = $this->exportCalendar(substr($parts[1], 0, -4), 'text/calendar');
-                return array(
+                return [
                     'data'          => $ical_data,
                     'mimetype'      => 'text/calendar',
                     'contentlength' => strlen($ical_data),
-                    'mtime'         => $_SERVER['REQUEST_TIME']
-                );
+                    'mtime'         => $_SERVER['REQUEST_TIME'],
+                ];
             } else {
                 // All other requests are a 404: Not Found
                 return false;
@@ -298,118 +299,119 @@ class Kronolith_Api extends Horde_Registry_Api
 
         // Store all currently existings UIDs. Use this info to delete UIDs not
         // present in $content after processing.
-        $ids = array();
+        $ids = [];
         if ($complete_list) {
             $uids_remove = array_flip($this->listUids($calendar));
         } else {
-            $uids_remove = array();
+            $uids_remove = [];
         }
 
         switch ($content_type) {
-        case 'text/calendar':
-        case 'text/x-vcalendar':
-            $iCal = new Horde_Icalendar();
-            if (!($content instanceof Horde_Icalendar_Vevent)) {
-                if (!$iCal->parsevCalendar($content)) {
-                    throw new Kronolith_Exception(_("There was an error importing the iCalendar data."));
-                }
-            } else {
-                $iCal->addComponent($content);
-            }
-
-            $kronolith_driver = Kronolith::getDriver();
-            $kronolith_driver->open($calendar);
-            $history = $injector->getInstance('Horde_History');
-            foreach ($iCal->getComponents() as $content) {
+            case 'text/calendar':
+            case 'text/x-vcalendar':
+                $iCal = new Horde_Icalendar();
                 if (!($content instanceof Horde_Icalendar_Vevent)) {
-                    continue;
-                }
-                $event = $kronolith_driver->getEvent();
-                $event->fromiCalendar($content);
-                $uid = $event->uid;
-                if ($uid) {
-                    // Remove from uids_remove list so we won't delete in the
-                    // end.
-                    unset($uids_remove[$uid]);
-                }
-                $existing_event = null;
-                if (!$complete_list) {
-                    try {
-                        $existing_id = $dav->getInternalObjectId($file, $calendar)
-                            ?: $file;
-                    } catch (Horde_Dav_Exception $e) {
-                        $existing_id = $file;
+                    if (!$iCal->parsevCalendar($content)) {
+                        throw new Kronolith_Exception(_("There was an error importing the iCalendar data."));
                     }
-                    try {
-                        $existing_event = $kronolith_driver
-                            ->getEvent($existing_id);
-                    } catch (Horde_Exception_NotFound $e) {
-                        if (isset($uid)) {
-                            try {
-                                $existing = $kronolith_driver->getByUID($uid, array($calendar));
-                            } catch (Horde_Exception_NotFound $e) {
+                } else {
+                    $iCal->addComponent($content);
+                }
+
+                $kronolith_driver = Kronolith::getDriver();
+                $kronolith_driver->open($calendar);
+                $history = $injector->getInstance('Horde_History');
+                foreach ($iCal->getComponents() as $content) {
+                    if (!($content instanceof Horde_Icalendar_Vevent)) {
+                        continue;
+                    }
+                    $event = $kronolith_driver->getEvent();
+                    $event->fromiCalendar($content);
+                    $uid = $event->uid;
+                    if ($uid) {
+                        // Remove from uids_remove list so we won't delete in the
+                        // end.
+                        unset($uids_remove[$uid]);
+                    }
+                    $existing_event = null;
+                    if (!$complete_list) {
+                        try {
+                            $existing_id = $dav->getInternalObjectId($file, $calendar)
+                                ?: $file;
+                        } catch (Horde_Dav_Exception $e) {
+                            $existing_id = $file;
+                        }
+                        try {
+                            $existing_event = $kronolith_driver
+                                ->getEvent($existing_id);
+                        } catch (Horde_Exception_NotFound $e) {
+                            if (isset($uid)) {
+                                try {
+                                    $existing = $kronolith_driver->getByUID($uid, [$calendar]);
+                                } catch (Horde_Exception_NotFound $e) {
+                                }
                             }
                         }
-                    }
-                } elseif ($uid) {
-                    try {
-                        $existing_event = $kronolith_driver->getByUID(
-                            $uid, array($calendar)
-                        );
-                    } catch (Horde_Exception_NotFound $e) {
-                    }
-                }
-                if ($existing_event) {
-                    // Check if our event is newer then the existing - get the
-                    // event's history.
-                    $created = $modified = null;
-                    try {
-                        $created = $history->getActionTimestamp(
-                            'kronolith:' . $calendar . ':' . $uid,
-                            'add'
-                        );
-                        $modified = $history->getActionTimestamp(
-                            'kronolith:' . $calendar . ':' . $uid,
-                            'modify'
-                        );
-                        /* The history driver returns 0 for not found. If 0
-                         * or null does not matter, strip this */
-                        if ($created == 0) {
-                            $created = null;
+                    } elseif ($uid) {
+                        try {
+                            $existing_event = $kronolith_driver->getByUID(
+                                $uid,
+                                [$calendar]
+                            );
+                        } catch (Horde_Exception_NotFound $e) {
                         }
-                        if ($modified == 0) {
-                            $modified = null;
-                        }
-                    } catch (Horde_Exception $e) {
                     }
-                    if (empty($modified) && !empty($created)) {
-                        $modified = $created;
-                    }
-                    try {
-                        if (!empty($modified) &&
-                            $modified >= $content->getAttribute('LAST-MODIFIED')) {
-                            // LAST-MODIFIED timestamp of existing
-                            // entry is newer: don't replace it.
-                            continue;
+                    if ($existing_event) {
+                        // Check if our event is newer then the existing - get the
+                        // event's history.
+                        $created = $modified = null;
+                        try {
+                            $created = $history->getActionTimestamp(
+                                'kronolith:' . $calendar . ':' . $uid,
+                                'add'
+                            );
+                            $modified = $history->getActionTimestamp(
+                                'kronolith:' . $calendar . ':' . $uid,
+                                'modify'
+                            );
+                            /* The history driver returns 0 for not found. If 0
+                             * or null does not matter, strip this */
+                            if ($created == 0) {
+                                $created = null;
+                            }
+                            if ($modified == 0) {
+                                $modified = null;
+                            }
+                        } catch (Horde_Exception $e) {
                         }
-                    } catch (Horde_Icalendar_Exception $e) {
+                        if (empty($modified) && !empty($created)) {
+                            $modified = $created;
+                        }
+                        try {
+                            if (!empty($modified) &&
+                                $modified >= $content->getAttribute('LAST-MODIFIED')) {
+                                // LAST-MODIFIED timestamp of existing
+                                // entry is newer: don't replace it.
+                                continue;
+                            }
+                        } catch (Horde_Icalendar_Exception $e) {
+                        }
+
+                        // Don't change creator/owner.
+                        $event->creator = $existing_event->creator;
                     }
 
-                    // Don't change creator/owner.
-                    $event->creator = $existing_event->creator;
+                    // Save entry.
+                    $id = $event->save();
+                    if (!$existing_event) {
+                        $dav->addObjectMap($id, $file, $calendar);
+                    }
+                    $ids[] = $event->uid;
                 }
+                break;
 
-                // Save entry.
-                $id = $event->save();
-                if (!$existing_event) {
-                    $dav->addObjectMap($id, $file, $calendar);
-                }
-                $ids[] = $event->uid;
-            }
-            break;
-
-        default:
-            throw new Kronolith_Exception(sprintf(_("Unsupported Content-Type: %s"), $content_type));
+            default:
+                throw new Kronolith_Exception(sprintf(_("Unsupported Content-Type: %s"), $content_type));
         }
 
         if (Kronolith::hasPermission($calendar, Horde_Perms::DELETE)) {
@@ -446,10 +448,10 @@ class Kronolith_Api extends Horde_Registry_Api
 
         if (!(count($parts) == 2 || count($parts) == 3) ||
             !Kronolith::hasPermission($calendarId, Horde_Perms::DELETE)) {
-                throw new Kronolith_Exception(
-                    _("Calendar does not exist or no permission to delete")
-                );
-            }
+            throw new Kronolith_Exception(
+                _("Calendar does not exist or no permission to delete")
+            );
+        }
 
         if (count($parts) == 3) {
             // Delete just a single entry
@@ -504,7 +506,7 @@ class Kronolith_Api extends Horde_Registry_Api
      */
     public function sources($writeable = false, $sync_only = false)
     {
-        $out = array();
+        $out = [];
 
         foreach (Kronolith::listInternalCalendars(false, $writeable ? Horde_Perms::EDIT : Horde_Perms::READ) as $id => $data) {
             $out[$id] = $data->get('name');
@@ -547,32 +549,33 @@ class Kronolith_Api extends Horde_Registry_Api
         if (empty($calendars)) {
             $calendars = Kronolith::getSyncCalendars();
         } elseif (!is_array($calendars)) {
-            $calendars = array($calendars);
+            $calendars = [$calendars];
         }
 
         $driver = Kronolith::getDriver();
-        $results = array();
+        $results = [];
         foreach ($calendars as $calendar) {
             if (!Kronolith::hasPermission($calendar, Horde_Perms::READ)) {
                 Horde::log(sprintf(
                     _("Permission Denied or Calendar Not Found: %s - skipping."),
-                    $calendar));
+                    $calendar
+                ));
                 continue;
             }
             try {
                 $driver->open($calendar);
                 $events = $driver->listEvents(
                     $startstamp ? new Horde_Date($startstamp) : null,
-                    $endstamp   ? new Horde_Date($endstamp)   : null,
-                    array('cover_dates' => false,
-                          'hide_exceptions' => true)
+                    $endstamp ? new Horde_Date($endstamp) : null,
+                    ['cover_dates' => false,
+                        'hide_exceptions' => true]
                 );
                 Kronolith::mergeEvents($results, $events);
             } catch (Kronolith_Exception $e) {
                 Horde::log($e);
             }
         }
-        $uids = array();
+        $uids = [];
         foreach ($results as $dayevents) {
             foreach ($dayevents as $event) {
                 $uids[] = $event->uid;
@@ -603,16 +606,18 @@ class Kronolith_Api extends Horde_Registry_Api
     {
         if (empty($calendar)) {
             $cs = Kronolith::getSyncCalendars($action == 'delete');
-            $results = array();
+            $results = [];
             foreach ($cs as $c) {
                 $results = array_merge(
-                    $results, $this->listBy($action, $timestamp, $c, $end, $isModSeq));
+                    $results,
+                    $this->listBy($action, $timestamp, $c, $end, $isModSeq)
+                );
             }
             return $results;
         }
-        $filter = array(array('op' => '=', 'field' => 'action', 'value' => $action));
+        $filter = [['op' => '=', 'field' => 'action', 'value' => $action]];
         if (!empty($end) && !$isModSeq) {
-            $filter[] = array('op' => '<', 'field' => 'ts', 'value' => $end);
+            $filter[] = ['op' => '<', 'field' => 'ts', 'value' => $end];
         }
 
         if (!$isModSeq) {
@@ -648,32 +653,36 @@ class Kronolith_Api extends Horde_Registry_Api
      * @throws Kronolith_Exception
      */
     public function getChanges(
-        $start, $end, $ignoreExceptions = true, $isModSeq = false, $calendars = null)
-    {
+        $start,
+        $end,
+        $ignoreExceptions = true,
+        $isModSeq = false,
+        $calendars = null
+    ) {
         // Only get the calendar once
         if (is_null($calendars)) {
             $cs = Kronolith::getSyncCalendars();
         } else {
             if (!is_array($calendars)) {
-                $calendars = array($calendars);
+                $calendars = [$calendars];
             }
             $cs = $calendars;
         }
 
-        $changes = array(
-            'add' => array(),
-            'modify' => array(),
-            'delete' => array());
+        $changes = [
+            'add' => [],
+            'modify' => [],
+            'delete' => []];
 
         foreach ($cs as $c) {
-             // New events
+            // New events
             $driver = Kronolith::getDriver(null, $c);
             $driver->synchronize(true);
             $uids = $this->listBy('add', $start, $c, $end, $isModSeq);
             if ($ignoreExceptions) {
                 foreach ($uids as $uid) {
                     try {
-                        $event = Kronolith::getDriver()->getByUID($uid, array($c));
+                        $event = Kronolith::getDriver()->getByUID($uid, [$c]);
                     } catch (Exception $e) {
                         continue;
                     }
@@ -690,7 +699,7 @@ class Kronolith_Api extends Horde_Registry_Api
             if ($ignoreExceptions) {
                 foreach ($uids as $uid) {
                     try {
-                        $event = Kronolith::getDriver()->getByUID($uid, array($c));
+                        $event = Kronolith::getDriver()->getByUID($uid, [$c]);
                     } catch (Exception $e) {
                         continue;
                     }
@@ -703,7 +712,8 @@ class Kronolith_Api extends Horde_Registry_Api
             }
             // No way to figure out if this was an exception, so we must include all
             $changes['delete'] = array_keys(
-                array_flip(array_merge($changes['delete'], $this->listBy('delete', $start, $c, $end, $isModSeq))));
+                array_flip(array_merge($changes['delete'], $this->listBy('delete', $start, $c, $end, $isModSeq)))
+            );
         }
 
         return $changes;
@@ -802,40 +812,40 @@ class Kronolith_Api extends Horde_Registry_Api
         $kronolith_driver = Kronolith::getDriver(null, $calendar);
 
         switch ($contentType) {
-        case 'text/calendar':
-        case 'text/x-vcalendar':
-            $iCal = new Horde_Icalendar();
-            if (!($content instanceof Horde_Icalendar_Vevent)) {
-                if (!$iCal->parsevCalendar($content)) {
-                    throw new Kronolith_Exception(_("There was an error importing the iCalendar data."));
+            case 'text/calendar':
+            case 'text/x-vcalendar':
+                $iCal = new Horde_Icalendar();
+                if (!($content instanceof Horde_Icalendar_Vevent)) {
+                    if (!$iCal->parsevCalendar($content)) {
+                        throw new Kronolith_Exception(_("There was an error importing the iCalendar data."));
+                    }
+                } else {
+                    $iCal->addComponent($content);
                 }
-            } else {
-                $iCal->addComponent($content);
-            }
 
-            $ical_importer = new Kronolith_Icalendar_Handler_Base($iCal, $kronolith_driver);
-            $result = array_flip($ical_importer->process());
-            return current($result);
+                $ical_importer = new Kronolith_Icalendar_Handler_Base($iCal, $kronolith_driver);
+                $result = array_flip($ical_importer->process());
+                return current($result);
 
-        case 'activesync':
-            $event = $kronolith_driver->getEvent();
-            $event->fromASAppointment($content);
-            $event->save();
-            // Handle attachment data after we commit changes since we
-            // are required to have a saved event to attach files. Also,
-            // we can only handle files if we are returning a hash since EAS
-            // needs the information returned to attach filereferences to
-            // the attachments.
-            if (!$hash) {
-                return $event->uid;
-            }
-            $atc_hash = $event->addEASFiles($content);
-            return array(
-                'uid' => $event->uid,
-                'atchash' => $atc_hash,
-                // See Bug #12567
-                //'syncstamp' => $stamp
-            );
+            case 'activesync':
+                $event = $kronolith_driver->getEvent();
+                $event->fromASAppointment($content);
+                $event->save();
+                // Handle attachment data after we commit changes since we
+                // are required to have a saved event to attach files. Also,
+                // we can only handle files if we are returning a hash since EAS
+                // needs the information returned to attach filereferences to
+                // the attachments.
+                if (!$hash) {
+                    return $event->uid;
+                }
+                $atc_hash = $event->addEASFiles($content);
+                return [
+                    'uid' => $event->uid,
+                    'atchash' => $atc_hash,
+                    // See Bug #12567
+                    //'syncstamp' => $stamp
+                ];
         }
 
         throw new Kronolith_Exception(sprintf(_("Unsupported Content-Type: %s"), $contentType));
@@ -858,9 +868,10 @@ class Kronolith_Api extends Horde_Registry_Api
         // Check if the entry already exists in the data source, first by UID.
         if (!$exception) {
             try {
-                $driver->getByUID($event->uid, array($driver->calendar));
+                $driver->getByUID($event->uid, [$driver->calendar]);
                 throw new Kronolith_Exception(sprintf(_("%s Already Exists"), $event->uid));
-            } catch (Horde_Exception $e) {}
+            } catch (Horde_Exception $e) {
+            }
         }
 
         $result = $driver->search($event);
@@ -872,8 +883,8 @@ class Kronolith_Api extends Horde_Registry_Api
                     $match->title == $event->title &&
                     $match->location == $event->location &&
                     $match->hasPermission(Horde_Perms::EDIT)) {
-                        throw new Kronolith_Exception(sprintf(_("%s Already Exists"), $match->uid));
-                    }
+                    throw new Kronolith_Exception(sprintf(_("%s Already Exists"), $match->uid));
+                }
             }
         }
         $event->save();
@@ -925,7 +936,7 @@ class Kronolith_Api extends Horde_Registry_Api
      * @throws Kronolith_Exception
      * @throws Horde_Exception_NotFound
      */
-    public function export($uid, $contentType, array $options = array(), array $calendars = null)
+    public function export($uid, $contentType, array $options = [], ?array $calendars = null)
     {
         $event = Kronolith::getDriver()->getByUID($uid, $calendars);
         if (!$event->hasPermission(Horde_Perms::READ)) {
@@ -934,21 +945,22 @@ class Kronolith_Api extends Horde_Registry_Api
 
         $version = '2.0';
         switch ($contentType) {
-        case 'text/x-vcalendar':
-            $version = '1.0';
-        case 'text/calendar':
-            $share = $GLOBALS['injector']->getInstance('Kronolith_Shares')->getShare($event->calendar);
+            case 'text/x-vcalendar':
+                $version = '1.0';
+                // no break
+            case 'text/calendar':
+                $share = $GLOBALS['injector']->getInstance('Kronolith_Shares')->getShare($event->calendar);
 
-            $iCal = new Horde_Icalendar($version);
-            $iCal->setAttribute('X-WR-CALNAME', $share->get('name'));
+                $iCal = new Horde_Icalendar($version);
+                $iCal->setAttribute('X-WR-CALNAME', $share->get('name'));
 
-            // Create a new vEvent.
-            $iCal->addComponent($event->toiCalendar($iCal));
+                // Create a new vEvent.
+                $iCal->addComponent($event->toiCalendar($iCal));
 
-            return $iCal->exportvCalendar();
+                return $iCal->exportvCalendar();
 
-        case 'activesync':
-            return $event->toASAppointment($options);
+            case 'activesync':
+                return $event->toASAppointment($options);
         }
 
         throw new Kronolith_Exception(sprintf(_("Unsupported Content-Type: %s"), $contentType));
@@ -977,36 +989,42 @@ class Kronolith_Api extends Horde_Registry_Api
         }
 
         $kronolith_driver = Kronolith::getDriver(null, $calendar);
-        $events = $kronolith_driver->listEvents(null, null, array(
-            'cover_dates' => false,
-            'hide_exceptions' => true)
+        $events = $kronolith_driver->listEvents(
+            null,
+            null,
+            [
+                'cover_dates' => false,
+                'hide_exceptions' => true]
         );
         $version = '2.0';
         switch ($contentType) {
-        case 'text/x-vcalendar':
-            $version = '1.0';
-        case 'text/calendar':
-            $share = $GLOBALS['injector']
-                ->getInstance('Kronolith_Shares')
-                ->getShare($calendar);
-            $iCal = new Horde_Icalendar($version);
-            $iCal->setAttribute('X-WR-CALNAME', $share->get('name'));
-            if (strlen($share->get('desc'))) {
-                $iCal->setAttribute('X-WR-CALDESC', $share->get('desc'));
-            }
-
-            foreach ($events as $dayevents) {
-                foreach ($dayevents as $event) {
-                    $iCal->addComponent($event->toiCalendar($iCal));
+            case 'text/x-vcalendar':
+                $version = '1.0';
+                // no break
+            case 'text/calendar':
+                $share = $GLOBALS['injector']
+                    ->getInstance('Kronolith_Shares')
+                    ->getShare($calendar);
+                $iCal = new Horde_Icalendar($version);
+                $iCal->setAttribute('X-WR-CALNAME', $share->get('name'));
+                if (strlen($share->get('desc'))) {
+                    $iCal->setAttribute('X-WR-CALDESC', $share->get('desc'));
                 }
-            }
 
-            return $iCal->exportvCalendar();
+                foreach ($events as $dayevents) {
+                    foreach ($dayevents as $event) {
+                        $iCal->addComponent($event->toiCalendar($iCal));
+                    }
+                }
+
+                return $iCal->exportvCalendar();
         }
 
-        throw new Kronolith_Exception(sprintf(
-            _("Unsupported Content-Type: %s"),
-            $contentType)
+        throw new Kronolith_Exception(
+            sprintf(
+                _("Unsupported Content-Type: %s"),
+                $contentType
+            )
         );
     }
 
@@ -1041,10 +1059,10 @@ class Kronolith_Api extends Horde_Registry_Api
         }
 
         // Try to determine type.
-        return array(
+        return [
             'data' => $fp,
-            'content-type' => Horde_Mime_Magic::filenameToMime($filename, false)
-        );
+            'content-type' => Horde_Mime_Magic::filenameToMime($filename, false),
+        ];
     }
 
     /**
@@ -1128,10 +1146,10 @@ class Kronolith_Api extends Horde_Registry_Api
             $recurEnd = clone($instance);
             $recurEnd->mday--;
             if ($event->end->compareDate($recurEnd) > 0) {
-                 $kronolith_driver->deleteEvent($event->id);
+                $kronolith_driver->deleteEvent($event->id);
             } else {
-                 $event->recurrence->setRecurEnd($recurEnd);
-                 $result = $event->save();
+                $event->recurrence->setRecurEnd($recurEnd);
+                $result = $event->save();
             }
         } elseif ($recurrenceId) {
             throw new Kronolith_Exception(_("Unable to delete event. An exception date was provided but the event does not seem to be recurring."));
@@ -1162,7 +1180,7 @@ class Kronolith_Api extends Horde_Registry_Api
 
         // Check for delegate users.
         if (strpos($target, '\\')) {
-            list($target, $user) = explode('\\', $target, 2);
+            [$target, $user] = explode('\\', $target, 2);
         } else {
             $user = $registry->getAuth();
         }
@@ -1213,42 +1231,42 @@ class Kronolith_Api extends Horde_Registry_Api
             $atc_hash = $event->addEASFiles($content);
             $event->save();
             $event->uid = $uid;
-            return array(
+            return [
                 'uid' => $event->uid,
                 'atchash' => $atc_hash,
                 // See Bug #12567
                 //'syncstamp' => $stamp
-            );
+            ];
             return;
         } else {
             switch ($contentType) {
-            case 'text/calendar':
-            case 'text/x-vcalendar':
-                if (!($content instanceof Horde_Icalendar_Vevent)) {
-                    $iCal = new Horde_Icalendar();
-                    if (!$iCal->parsevCalendar($content)) {
-                        throw new Kronolith_Exception(_("There was an error importing the iCalendar data."));
-                    }
-
-                    $components = $iCal->getComponents();
-                    $component = null;
-                    foreach ($components as $content) {
-                        if ($content instanceof Horde_Icalendar_Vevent) {
-                            if ($component !== null) {
-                                throw new Kronolith_Exception(_("Multiple iCalendar components found; only one vEvent is supported."));
-                            }
-                            $component = $content;
+                case 'text/calendar':
+                case 'text/x-vcalendar':
+                    if (!($content instanceof Horde_Icalendar_Vevent)) {
+                        $iCal = new Horde_Icalendar();
+                        if (!$iCal->parsevCalendar($content)) {
+                            throw new Kronolith_Exception(_("There was an error importing the iCalendar data."));
                         }
 
-                    }
-                    if ($component === null) {
-                        throw new Kronolith_Exception(_("No iCalendar data was found."));
-                    }
-                }
-                break;
+                        $components = $iCal->getComponents();
+                        $component = null;
+                        foreach ($components as $content) {
+                            if ($content instanceof Horde_Icalendar_Vevent) {
+                                if ($component !== null) {
+                                    throw new Kronolith_Exception(_("Multiple iCalendar components found; only one vEvent is supported."));
+                                }
+                                $component = $content;
+                            }
 
-            default:
-                throw new Kronolith_Exception(sprintf(_("Unsupported Content-Type: %s"), $contentType));
+                        }
+                        if ($component === null) {
+                            throw new Kronolith_Exception(_("No iCalendar data was found."));
+                        }
+                    }
+                    break;
+
+                default:
+                    throw new Kronolith_Exception(sprintf(_("Unsupported Content-Type: %s"), $contentType));
             }
         }
 
@@ -1276,9 +1294,11 @@ class Kronolith_Api extends Horde_Registry_Api
      *                                    specified time period.
      * @throws Kronolith_Exception
      */
-    public function getFreeBusy($startstamp = null, $endstamp = null,
-                                $calendar = null)
-    {
+    public function getFreeBusy(
+        $startstamp = null,
+        $endstamp = null,
+        $calendar = null
+    ) {
         if (is_null($calendar)) {
             $calendar = Kronolith::getDefaultCalendar();
         }
@@ -1312,7 +1332,7 @@ class Kronolith_Api extends Horde_Registry_Api
     public function eventFromUID($uid, $calendar = null)
     {
         if (!empty($calendar)) {
-            $calendar = array($calendar);
+            $calendar = [$calendar];
         }
         $event = Kronolith::getDriver()->getByUID($uid, $calendar);
         if (!$event->hasPermission(Horde_Perms::SHOW)) {
@@ -1380,7 +1400,7 @@ class Kronolith_Api extends Horde_Registry_Api
 
         $atnames = $response->getAttribute('ATTENDEE');
         if (!is_array($atnames)) {
-            $atnames = array($atnames);
+            $atnames = [$atnames];
         }
         $atparms = $response->getAttribute('ATTENDEE', true);
 
@@ -1398,7 +1418,7 @@ class Kronolith_Api extends Horde_Registry_Api
                 $name = $addr_ob->personal;
             } else {
                 $attendee = str_ireplace('mailto:', '', $attendee);
-                $name = isset($atparms[$index]['CN']) ? $atparms[$index]['CN'] : null;
+                $name = $atparms[$index]['CN'] ?? null;
             }
             if ($event->hasAttendee($attendee)) {
                 if (is_null($sender) || $sender == $attendee) {
@@ -1441,16 +1461,21 @@ class Kronolith_Api extends Horde_Registry_Api
      * @return array  A list of event hashes.
      * @throws Kronolith_Exception
      */
-    public function listEvents($startstamp = null, $endstamp = null,
-                               $calendars = null, $showRecurrence = true,
-                               $alarmsOnly = false, $showRemote = true,
-                               $hideExceptions = false, $coverDates = true,
-                               $fetchTags = false)
-    {
+    public function listEvents(
+        $startstamp = null,
+        $endstamp = null,
+        $calendars = null,
+        $showRecurrence = true,
+        $alarmsOnly = false,
+        $showRemote = true,
+        $hideExceptions = false,
+        $coverDates = true,
+        $fetchTags = false
+    ) {
         if (!isset($calendars)) {
-            $calendars = array($GLOBALS['prefs']->getValue('default_share'));
+            $calendars = [$GLOBALS['prefs']->getValue('default_share')];
         } elseif (!is_array($calendars)) {
-            $calendars = array($calendars);
+            $calendars = [$calendars];
         }
         foreach ($calendars as &$calendar) {
             $calendar = str_replace('internal_', '', $calendar);
@@ -1462,13 +1487,14 @@ class Kronolith_Api extends Horde_Registry_Api
         return Kronolith::listEvents(
             new Horde_Date($startstamp),
             new Horde_Date($endstamp),
-            $calendars, array(
+            $calendars,
+            [
                 'show_recurrence' => $showRecurrence,
                 'has_alarm' => $alarmsOnly,
                 'show_remote' => $showRemote,
                 'hide_exceptions' => $hideExceptions,
                 'cover_dates' => $coverDates,
-                'fetch_tags' => $fetchTags)
+                'fetch_tags' => $fetchTags]
         );
     }
 
@@ -1488,20 +1514,21 @@ class Kronolith_Api extends Horde_Registry_Api
         }
 
         switch ($calendar['type']) {
-        case 'http':
-        case 'webcal':
-            Kronolith::subscribeRemoteCalendar($calendar);
-            break;
+            case 'http':
+            case 'webcal':
+                Kronolith::subscribeRemoteCalendar($calendar);
+                break;
 
-        case 'external':
-            $cals = unserialize($GLOBALS['prefs']->getValue('display_external_cals'));
-            if (array_search($calendar['name'], $cals) === false) {
-                $cals[] = $calendar['name'];
-                $GLOBALS['prefs']->setValue('display_external_cals', serialize($cals));
-            }
+            case 'external':
+                $cals = unserialize($GLOBALS['prefs']->getValue('display_external_cals'));
+                if (array_search($calendar['name'], $cals) === false) {
+                    $cals[] = $calendar['name'];
+                    $GLOBALS['prefs']->setValue('display_external_cals', serialize($cals));
+                }
 
-        default:
-            throw new Kronolith_Exception(_("Unknown calendar protocol"));
+                // no break
+            default:
+                throw new Kronolith_Exception(_("Unknown calendar protocol"));
         }
     }
 
@@ -1521,20 +1548,21 @@ class Kronolith_Api extends Horde_Registry_Api
         }
 
         switch ($calendar['type']) {
-        case 'http':
-        case 'webcal':
-            Kronolith::subscribeRemoteCalendar($calendar['url']);
-            break;
+            case 'http':
+            case 'webcal':
+                Kronolith::subscribeRemoteCalendar($calendar['url']);
+                break;
 
-        case 'external':
-            $cals = unserialize($GLOBALS['prefs']->getValue('display_external_cals'));
-            if (($key = array_search($calendar['name'], $cals)) !== false) {
-                unset($cals[$key]);
-                $GLOBALS['prefs']->setValue('display_external_cals', serialize($cals));
-            }
+            case 'external':
+                $cals = unserialize($GLOBALS['prefs']->getValue('display_external_cals'));
+                if (($key = array_search($calendar['name'], $cals)) !== false) {
+                    unset($cals[$key]);
+                    $GLOBALS['prefs']->setValue('display_external_cals', serialize($cals));
+                }
 
-        default:
-            throw new Kronolith_Exception('Unknown calendar specification');
+                // no break
+            default:
+                throw new Kronolith_Exception('Unknown calendar specification');
         }
     }
 
@@ -1647,34 +1675,40 @@ class Kronolith_Api extends Horde_Registry_Api
      *  'app'      - The Horde application this resource belongs to.
      * </pre>
      */
-    public function searchTags($names, $max = 10, $from = 0,
-                               $resource_type = '', $user = null, $raw = false)
-    {
+    public function searchTags(
+        $names,
+        $max = 10,
+        $from = 0,
+        $resource_type = '',
+        $user = null,
+        $raw = false
+    ) {
         // TODO: $max, $from, $resource_type not honored
 
         $results = $GLOBALS['injector']
             ->getInstance('Kronolith_Tagger')
             ->search(
                 $names,
-                array('type' => 'event', 'user' => $user));
+                ['type' => 'event', 'user' => $user]
+            );
 
         // Check for error or if we requested the raw data array.
         if ($raw) {
             return $results;
         }
 
-        $return = array();
+        $return = [];
         if (!empty($results['events'])) {
             foreach ($results['events'] as $event_id) {
                 $driver = Kronolith::getDriver();
                 $event = $driver->getByUid($event_id);
                 $view_url = $event->getViewUrl();
-                $return[] = array(
+                $return[] = [
                     'title' => $event->title,
-                    'desc'=> $event->start->strftime($GLOBALS['prefs']->getValue('date_format_mini')) . ' ' . $event->start->strftime($GLOBALS['prefs']->getValue('time_format')),
+                    'desc' => $event->start->strftime($GLOBALS['prefs']->getValue('date_format_mini')) . ' ' . $event->start->strftime($GLOBALS['prefs']->getValue('time_format')),
                     'view_url' => $view_url,
-                    'app' => 'kronolith'
-                );
+                    'app' => 'kronolith',
+                ];
             }
         }
 
@@ -1698,16 +1732,16 @@ class Kronolith_Api extends Horde_Registry_Api
      * @return string  The new calendar's UID.
      * @since 4.2.0
      */
-    public function addCalendar($name, array $params = array())
+    public function addCalendar($name, array $params = [])
     {
         global $prefs;
 
-        $info = array(
+        $info = [
             'name' => $name,
             'color' => empty($params['color']) ? null : $params['color'],
             'description' => empty($params['description']) ? null : $params['description'],
-            'tags' => empty($params['tags']) ? null : $params['tags']
-        );
+            'tags' => empty($params['tags']) ? null : $params['tags'],
+        ];
 
         $share = Kronolith::addShare($info);
 
@@ -1748,8 +1782,8 @@ class Kronolith_Api extends Horde_Registry_Api
      */
     public function getCalendar($id = null)
     {
-       $driver = Kronolith::getDriver(null, $id);
-       return Kronolith::getCalendar($driver);
+        $driver = Kronolith::getDriver(null, $id);
+        return Kronolith::getCalendar($driver);
     }
 
     /**

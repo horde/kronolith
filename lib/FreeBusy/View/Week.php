@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class represent a week of free busy information sets.
  *
@@ -36,12 +37,12 @@ class Kronolith_FreeBusy_View_Week extends Kronolith_FreeBusy_View
         $next->mday += 7;
         $end = new Horde_Date($this->_start);
         $end->mday += $this->_days - 1;
-        return Horde::url('#')->link(array('title' => _("Previous Week"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'))
+        return Horde::url('#')->link(['title' => _("Previous Week"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'])
             . Horde::img('nav/left.png', '<')
             . '</a>'
             . $this->_start->strftime($prefs->getValue('date_format')) . ' - '
             . $end->strftime($prefs->getValue('date_format'))
-            . Horde::url('#')->link(array('title' => _("Next Week"), 'onclick' => 'return switchDate(' . $next->dateString() . ');'))
+            . Horde::url('#')->link(['title' => _("Next Week"), 'onclick' => 'return switchDate(' . $next->dateString() . ');'])
             . Horde::img('nav/right.png', '>')
             . '</a>';
     }
@@ -58,32 +59,36 @@ class Kronolith_FreeBusy_View_Week extends Kronolith_FreeBusy_View
         }
         $date_format = $prefs->getValue('date_format');
         for ($i = 0; $i < $this->_days; $i++) {
-            $t = new Horde_Date(array('month' => $this->_start->month,
-                                      'mday' => $this->_start->mday + $i,
-                                      'year' => $this->_start->year));
-            $day_label = Horde::url('#')->link(array('onclick' => 'return switchDateView(\'Day\',' . $t->dateString() . ');'))
+            $t = new Horde_Date(['month' => $this->_start->month,
+                'mday' => $this->_start->mday + $i,
+                'year' => $this->_start->year]);
+            $day_label = Horde::url('#')->link(['onclick' => 'return switchDateView(\'Day\',' . $t->dateString() . ');'])
                 . $t->strftime($date_format) . '</a>';
-            $hours_html .= sprintf('<th colspan="%d" width="%s%%">%s</th>',
-                                   $span, $dayWidth, $day_label);
+            $hours_html .= sprintf(
+                '<th colspan="%d" width="%s%%">%s</th>',
+                $span,
+                $dayWidth,
+                $day_label
+            );
         }
         $hours_html .= '</tr><tr><td width="100" class="label">&nbsp;</td>';
 
         $width = round(100 / ($span * $this->_days));
         for ($i = 0; $i < $this->_days; $i++) {
             for ($h = $this->_startHour; $h < $this->_endHour; $h += 3) {
-                $start = new Horde_Date(array(
+                $start = new Horde_Date([
                     'hour' => $h,
                     'month' => $this->_start->month,
                     'mday' => $this->_start->mday + $i,
                     'year' => $this->_start->year,
-                ));
+                ]);
                 $end = new Horde_Date($start);
                 $end->hour += 2;
                 $end->min = 59;
                 if ($end->mday != $start->mday) {
                     $end->hour = $end->min = 0;
                 }
-                $this->_timeBlocks[] = array($start, $end);
+                $this->_timeBlocks[] = [$start, $end];
 
                 $hour = $start->strftime($prefs->getValue('twentyFour') ? '%H:00' : '%I:00');
                 $hours_html .= sprintf('<th width="%d%%">%s</th>', $width, $hour);
@@ -93,7 +98,7 @@ class Kronolith_FreeBusy_View_Week extends Kronolith_FreeBusy_View
         return $hours_html;
     }
 
-    protected function _render(Horde_Date $day = null)
+    protected function _render(?Horde_Date $day = null)
     {
         $this->_start = clone $day;
         $this->_end = new Horde_Date($this->_start);

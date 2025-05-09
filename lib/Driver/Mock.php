@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_Driver_Mock class provides a Kronolith dummy driver.
  *
@@ -12,7 +13,6 @@
  */
 class Kronolith_Driver_Mock extends Kronolith_Driver
 {
-
     /**
      * List all alarms.
      *
@@ -24,7 +24,7 @@ class Kronolith_Driver_Mock extends Kronolith_Driver
      */
     public function listAlarms($date, $fullevent = false)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -54,10 +54,11 @@ class Kronolith_Driver_Mock extends Kronolith_Driver
      *
      * @throws Kronolith_Exception
      */
-    protected function _listEvents(Horde_Date $startDate = null,
-                                   Horde_Date $endDate = null,
-                                   array $options = array())
-    {
-        return array();
+    protected function _listEvents(
+        ?Horde_Date $startDate = null,
+        ?Horde_Date $endDate = null,
+        array $options = []
+    ) {
+        return [];
     }
 }

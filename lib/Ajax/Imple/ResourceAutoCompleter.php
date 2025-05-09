@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Imple to attach the resource autocompleter to a HTML element.
  *
@@ -18,9 +19,9 @@ class Kronolith_Ajax_Imple_ResourceAutoCompleter extends Horde_Core_Ajax_Imple_A
      */
     protected function _getAutoCompleter()
     {
-        $opts = array();
+        $opts = [];
 
-        foreach (array('box', 'onAdd', 'onRemove', 'triggerContainer') as $val) {
+        foreach (['box', 'onAdd', 'onRemove', 'triggerContainer'] as $val) {
             if (isset($this->_params[$val])) {
                 $opts[$val] = $this->_params[$val];
             }
@@ -31,19 +32,19 @@ class Kronolith_Ajax_Imple_ResourceAutoCompleter extends Horde_Core_Ajax_Imple_A
         }
 
         $opts['filterCallback'] = <<<EOT
-function(c) {
-   if (!c) {
-       return [];
-   }
+            function(c) {
+               if (!c) {
+                   return [];
+               }
 
-   var r = [];
-   KronolithCore.resourceACCache.choices = c;
-   c.each(function(i) {
-       r.push(i.name);
-   });
-   return r;
-}
-EOT;
+               var r = [];
+               KronolithCore.resourceACCache.choices = c;
+               c.each(function(i) {
+                   r.push(i.name);
+               });
+               return r;
+            }
+            EOT;
         $opts['requireSelection'] = true;
 
         return new Horde_Core_Ajax_Imple_AutoCompleter_Pretty($opts);
@@ -53,15 +54,15 @@ EOT;
      */
     protected function _handleAutoCompleter($input)
     {
-        $ret = array();
+        $ret = [];
 
         // For now, return all resources.
-        $resources = Kronolith::getDriver('Resource')->listResources(Horde_Perms::READ, array(), 'name');
+        $resources = Kronolith::getDriver('Resource')->listResources(Horde_Perms::READ, [], 'name');
         foreach ($resources as $r) {
             if (strpos(Horde_String::lower($r->get('name')), Horde_String::lower($input)) !== false) {
-                $ret[] = array(
+                $ret[] = [
                     'name' => $r->get('name'),
-                    'code' => $r->getId());
+                    'code' => $r->getId()];
             }
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This is a view of Kronolith's sidebar.
  *
@@ -22,7 +23,7 @@ class Kronolith_View_Sidebar extends Horde_View_Sidebar
      *
      * @param array $config  Configuration key-value pairs.
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         global $prefs, $registry;
 
@@ -32,11 +33,11 @@ class Kronolith_View_Sidebar extends Horde_View_Sidebar
         $this->addNewButton(
             _("_New Event"),
             $blank,
-            array('id' => 'kronolithNewEvent')
+            ['id' => 'kronolithNewEvent']
         );
         $this->newExtra = $blank->link(
             array_merge(
-                array('id' => 'kronolithQuickEvent'),
+                ['id' => 'kronolithQuickEvent'],
                 Horde::getAccessKeyAndTitle(_("Quick _insert"), false, true)
             )
         );
@@ -47,10 +48,10 @@ class Kronolith_View_Sidebar extends Horde_View_Sidebar
         $today = new Horde_Date($_SERVER['REQUEST_TIME']);
         $sidebar->today = $today->format('F Y');
 
-        $sidebar->weekdays = array();
+        $sidebar->weekdays = [];
         for ($i = $prefs->getValue('week_start_monday'), $c = $i + 7;
-             $i < $c;
-             $i++) {
+            $i < $c;
+            $i++) {
             $weekday = Horde_Nls::getLangInfo(constant('DAY_' . ($i % 7 + 1)));
             $sidebar->weekdays[$weekday] = Horde_String::substr($weekday, 0, 2);
         }

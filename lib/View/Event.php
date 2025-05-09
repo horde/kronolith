@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_View_Event:: class provides an API for viewing events.
  *
@@ -25,10 +26,10 @@ class Kronolith_View_Event
     public function __get($property)
     {
         switch ($property) {
-        case 'event':
-            return $this->_event;
-        default:
-            throw new LogicException('Property does not exist.');
+            case 'event':
+                return $this->_event;
+            default:
+                throw new LogicException('Property does not exist.');
         }
     }
 
@@ -77,8 +78,8 @@ class Kronolith_View_Event
             $month = $datetime->month;
             $year = $datetime->year;
         } else {
-            $month = (int)Horde_Util::getFormData('month', date('n'));
-            $year = (int)Horde_Util::getFormData('year', date('Y'));
+            $month = (int) Horde_Util::getFormData('month', date('n'));
+            $year = (int) Horde_Util::getFormData('year', date('Y'));
         }
 
         $dateFormat = $prefs->getValue('date_format');

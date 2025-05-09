@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2013-2017 Horde LLC (http://www.horde.org/)
  *
@@ -26,7 +27,7 @@ class Kronolith_CalendarsManager
      *
      * @var array
      */
-    protected $_allCalendars = array();
+    protected $_allCalendars = [];
 
     /**
      * List of all available remote calendars.
@@ -68,7 +69,7 @@ class Kronolith_CalendarsManager
      *
      * @var array
      */
-    protected $_displayResource = array();
+    protected $_displayResource = [];
 
     /**
      * Lazy loaded list of all resource calendars.
@@ -84,7 +85,7 @@ class Kronolith_CalendarsManager
      *
      * @var array
      */
-    protected $_displayHolidaysInternal = array();
+    protected $_displayHolidaysInternal = [];
 
     /**
      * List of all holidays selected for display.
@@ -134,7 +135,7 @@ class Kronolith_CalendarsManager
 
         // Check that all selected shares still exist.
         foreach (Kronolith::listInternalCalendars(false, Horde_Perms::SHOW, $user) as $id => $calendar) {
-            $this->_allCalendars[$id] = new Kronolith_Calendar_Internal(array('share' => $calendar));
+            $this->_allCalendars[$id] = new Kronolith_Calendar_Internal(['share' => $calendar]);
         }
         $this->_displayCalendars = array_intersect($this->_displayCalendars, array_keys($this->_allCalendars));
 
@@ -155,56 +156,56 @@ class Kronolith_CalendarsManager
     public function get($list)
     {
         switch ($list) {
-        case Kronolith::ALL_CALENDARS:
-        case Kronolith::DISPLAY_CALENDARS:
-        case Kronolith::DISPLAY_RESOURCE_CALENDARS:
-            $property = '_' . $list;
-            return $this->$property;
+            case Kronolith::ALL_CALENDARS:
+            case Kronolith::DISPLAY_CALENDARS:
+            case Kronolith::DISPLAY_RESOURCE_CALENDARS:
+                $property = '_' . $list;
+                return $this->$property;
 
-        //Lazy loaded
-        case Kronolith::ALL_RESOURCE_CALENDARS:
-            if ($this->_allResource !== false) {
-                return $this->_allResource;
-            }
-            return $this->_getAllResource();
+                //Lazy loaded
+            case Kronolith::ALL_RESOURCE_CALENDARS:
+                if ($this->_allResource !== false) {
+                    return $this->_allResource;
+                }
+                return $this->_getAllResource();
 
-        case Kronolith::ALL_REMOTE_CALENDARS:
-            if ($this->_allRemote !== false) {
-                return $this->_allRemote;
-            }
-            return $this->_getRemoteCalendars();
+            case Kronolith::ALL_REMOTE_CALENDARS:
+                if ($this->_allRemote !== false) {
+                    return $this->_allRemote;
+                }
+                return $this->_getRemoteCalendars();
 
-        case Kronolith::DISPLAY_REMOTE_CALENDARS:
-            // Need to run this at least once to validate remote calendars
-            // still exist in prefs.
-            if ($this->_allRemote === false) {
-                $this->_getRemoteCalendars();
-            }
-            return $this->_displayRemote;
+            case Kronolith::DISPLAY_REMOTE_CALENDARS:
+                // Need to run this at least once to validate remote calendars
+                // still exist in prefs.
+                if ($this->_allRemote === false) {
+                    $this->_getRemoteCalendars();
+                }
+                return $this->_displayRemote;
 
-        case Kronolith::ALL_EXTERNAL_CALENDARS:
-            if ($this->_allExternal !== false) {
-                return $this->_allExternal;
-            }
-            return $this->_getAllExternal();
+            case Kronolith::ALL_EXTERNAL_CALENDARS:
+                if ($this->_allExternal !== false) {
+                    return $this->_allExternal;
+                }
+                return $this->_getAllExternal();
 
-        case Kronolith::DISPLAY_EXTERNAL_CALENDARS:
-            if ($this->_displayExternal !== false) {
-                return $this->_displayExternal;
-            }
-            return $this->_getDisplayExternal();
+            case Kronolith::DISPLAY_EXTERNAL_CALENDARS:
+                if ($this->_displayExternal !== false) {
+                    return $this->_displayExternal;
+                }
+                return $this->_getDisplayExternal();
 
-        case Kronolith::ALL_HOLIDAYS:
-            if ($this->_allHolidays !== false) {
-                return $this->_allHolidays;
-            }
-            return $this->_getAllHolidays();
+            case Kronolith::ALL_HOLIDAYS:
+                if ($this->_allHolidays !== false) {
+                    return $this->_allHolidays;
+                }
+                return $this->_getAllHolidays();
 
-        case Kronolith::DISPLAY_HOLIDAYS:
-            if ($this->_displayHolidays !== false) {
-                return $this->_displayHolidays;
-            }
-            return $this->_getDisplayHolidays();
+            case Kronolith::DISPLAY_HOLIDAYS:
+                if ($this->_displayHolidays !== false) {
+                    return $this->_displayHolidays;
+                }
+                return $this->_getDisplayHolidays();
         }
     }
 
@@ -260,11 +261,11 @@ class Kronolith_CalendarsManager
             // that only the specified calendars are shown. Use the
             // "toggle_calendar" argument to toggle the state of a single
             // calendar.
-            $this->_displayCalendars = array();
-            $this->_displayRemote = array();
-            $this->_displayExternal = array();
-            $this->_displayResource = array();
-            $this->_displayHolidaysInternal = array();
+            $this->_displayCalendars = [];
+            $this->_displayRemote = [];
+            $this->_displayExternal = [];
+            $this->_displayResource = [];
+            $this->_displayHolidaysInternal = [];
 
             if (strncmp($calId, 'remote_', 7) === 0) {
                 $this->_displayRemote[] = substr($calId, 7);
@@ -281,11 +282,11 @@ class Kronolith_CalendarsManager
             }
         } else {
             // Fetch display preferences.
-            $display_prefs = array(
+            $display_prefs = [
                 'display_cals' => 'displayCalendars',
                 'display_remote_cals' => 'displayRemote',
                 'display_external_cals' => 'displayExternal',
-                'holiday_drivers' => 'displayHolidaysInternal');
+                'holiday_drivers' => 'displayHolidaysInternal'];
 
             if (!empty($GLOBALS['conf']['resource']['driver'])) {
                 $display_prefs['display_resource_cals'] = 'displayResource';
@@ -296,15 +297,15 @@ class Kronolith_CalendarsManager
                 $val = '_' . $val;
                 $this->$val = is_array($pref_val)
                     ? $pref_val
-                    : array();
+                    : [];
             }
 
             // Run through getDisplayExternal to trim any that no longer exist.
             $this->_getDisplayExternal();
 
             if (empty($conf['holidays']['enable'])) {
-                $this->_displayHolidays = array();
-                $this->_displayHolidaysInternal = array();
+                $this->_displayHolidays = [];
+                $this->_displayHolidaysInternal = [];
             }
         }
     }
@@ -338,7 +339,7 @@ class Kronolith_CalendarsManager
                 $prefs->setValue('display_external_cals', serialize($this->_displayExternal));
 
                 if (strpos($calId, 'tasks/') === 0) {
-                    $tasklists = array();
+                    $tasklists = [];
                     foreach ($this->_displayExternal as $id) {
                         if (strpos($id, 'tasks/') === 0) {
                             $tasklists[] = substr($id, 6);
@@ -346,7 +347,8 @@ class Kronolith_CalendarsManager
                     }
                     try {
                         $registry->tasks->setDisplayedTasklists($tasklists);
-                    } catch (Horde_Exception $e) {}
+                    } catch (Horde_Exception $e) {
+                    }
                 }
             } elseif (strncmp($calId, 'holiday_', 8) === 0) {
                 $calId = substr($calId, 8);
@@ -389,7 +391,7 @@ class Kronolith_CalendarsManager
                 ->create();
 
             $share = $calendars->createDefaultShare();
-            $this->_allCalendars[$share->getName()] = new Kronolith_Calendar_Internal(array('share' => $share));
+            $this->_allCalendars[$share->getName()] = new Kronolith_Calendar_Internal(['share' => $share]);
             $this->_displayCalendars[] = $share->getName();
             $prefs->setValue('default_share', $share->getName());
 
@@ -397,15 +399,15 @@ class Kronolith_CalendarsManager
             if ($conf['autoshare']['shareperms'] != 'none') {
                 $perm_value = 0;
                 switch ($conf['autoshare']['shareperms']) {
-                case 'read':
-                    $perm_value = Horde_Perms::READ | Horde_Perms::SHOW;
-                    break;
-                case 'edit':
-                    $perm_value = Horde_Perms::READ | Horde_Perms::SHOW | Horde_Perms::EDIT;
-                    break;
-                case 'full':
-                    $perm_value = Horde_Perms::READ | Horde_Perms::SHOW | Horde_Perms::EDIT | Horde_Perms::DELETE;
-                    break;
+                    case 'read':
+                        $perm_value = Horde_Perms::READ | Horde_Perms::SHOW;
+                        break;
+                    case 'edit':
+                        $perm_value = Horde_Perms::READ | Horde_Perms::SHOW | Horde_Perms::EDIT;
+                        break;
+                    case 'full':
+                        $perm_value = Horde_Perms::READ | Horde_Perms::SHOW | Horde_Perms::EDIT | Horde_Perms::DELETE;
+                        break;
                 }
 
                 try {
@@ -421,7 +423,8 @@ class Kronolith_CalendarsManager
                         $share->setPermission($perm);
                         $GLOBALS['notification']->push(sprintf(_("New calendar created and automatically shared with the following group(s): %s."), implode(', ', $group_list)), 'horde.success');
                     }
-                } catch (Horde_Group_Exception $e) {}
+                } catch (Horde_Group_Exception $e) {
+                }
             }
 
             $prefs->setValue('display_cals', serialize($this->_displayCalendars));
@@ -437,9 +440,9 @@ class Kronolith_CalendarsManager
     {
         global $registry, $session;
 
-        $this->_allExternal = array();
+        $this->_allExternal = [];
 
-       // Make sure all task lists exist.
+        // Make sure all task lists exist.
         if (Kronolith::hasApiPermission('tasks') &&
             $registry->hasMethod('tasks/listTimeObjects')) {
             try {
@@ -449,7 +452,7 @@ class Kronolith_CalendarsManager
                     if (!isset($tasklists[$name])) {
                         continue;
                     }
-                    $this->_allExternal['tasks/' . $name] = new Kronolith_Calendar_External_Tasks(array('api' => 'tasks', 'name' => $description['title'], 'share' => $tasklists[$name], 'type' => 'share'));
+                    $this->_allExternal['tasks/' . $name] = new Kronolith_Calendar_External_Tasks(['api' => 'tasks', 'name' => $description['title'], 'share' => $tasklists[$name], 'type' => 'share']);
                 }
             } catch (Horde_Exception $e) {
                 Horde::log($e, 'DEBUG');
@@ -462,11 +465,11 @@ class Kronolith_CalendarsManager
                     $calendar['a'] == 'tasks') {
                     continue;
                 }
-                $this->_allExternal[$calendar['a'] . '/' . $calendar['n']] = new Kronolith_Calendar_External(array('api' => $calendar['a'], 'name' => $calendar['d'], 'id' => $calendar['n'], 'type' => $calendar['t'], 'background' => $calendar['b']));
+                $this->_allExternal[$calendar['a'] . '/' . $calendar['n']] = new Kronolith_Calendar_External(['api' => $calendar['a'], 'name' => $calendar['d'], 'id' => $calendar['n'], 'type' => $calendar['t'], 'background' => $calendar['b']]);
             }
         } else {
             $apis = array_unique($registry->listAPIs());
-            $ext_cals = array();
+            $ext_cals = [];
 
             foreach ($apis as $api) {
                 if ($api == 'tasks' ||
@@ -485,19 +488,19 @@ class Kronolith_CalendarsManager
                     if (empty($description['background'])) {
                         $description['background'] = '#dddddd';
                     }
-                    $this->_allExternal[$api . '/' . $name] = new Kronolith_Calendar_External(array(
+                    $this->_allExternal[$api . '/' . $name] = new Kronolith_Calendar_External([
                         'api' => $api,
                         'name' => $description['title'],
                         'id' => $name,
                         'type' => $description['type'],
-                        'background' => $description['background']));
-                    $ext_cals[] = array(
+                        'background' => $description['background']]);
+                    $ext_cals[] = [
                         'a' => $api,
                         'n' => $name,
                         'd' => $description['title'],
                         't' => $description['type'],
-                        'b' => $description['background']
-                    );
+                        'b' => $description['background'],
+                    ];
                 }
             }
 
@@ -516,7 +519,7 @@ class Kronolith_CalendarsManager
     {
         global $registry, $prefs;
 
-       // Make sure all the external calendars still exist.
+        // Make sure all the external calendars still exist.
         $_tasklists = $_temp = $this->_displayExternal;
         if (Kronolith::hasApiPermission('tasks')) {
             try {
@@ -524,7 +527,7 @@ class Kronolith_CalendarsManager
             } catch (Horde_Exception $e) {
             }
         }
-        $this->_displayExternal = array();
+        $this->_displayExternal = [];
         foreach ($this->get(Kronolith::ALL_EXTERNAL_CALENDARS) as $id => $calendar) {
             if ((substr($id, 0, 6) == 'tasks/' &&
                  in_array(substr($id, 6), $_tasklists)) ||
@@ -544,7 +547,7 @@ class Kronolith_CalendarsManager
      */
     protected function _getAllHolidays()
     {
-        $this->_allHolidays = array();
+        $this->_allHolidays = [];
         if (!empty($GLOBALS['conf']['holidays']['enable'])) {
             if (class_exists('Date_Holidays')) {
                 $dh = new Date_Holidays();
@@ -552,7 +555,7 @@ class Kronolith_CalendarsManager
                     if ($driver['id'] == 'Composite') {
                         continue;
                     }
-                    $this->_allHolidays[$driver['id']] = new Kronolith_Calendar_Holiday(array('driver' => $driver));
+                    $this->_allHolidays[$driver['id']] = new Kronolith_Calendar_Holiday(['driver' => $driver]);
                     ksort($this->_allHolidays);
                 }
             }
@@ -568,7 +571,7 @@ class Kronolith_CalendarsManager
      */
     protected function _getDisplayHolidays()
     {
-        $this->_displayHolidays = array();
+        $this->_displayHolidays = [];
         foreach (array_keys($this->get(Kronolith::ALL_HOLIDAYS)) as $id) {
             if (in_array($id, $this->_displayHolidaysInternal)) {
                 $this->_displayHolidays[] = $id;
@@ -586,12 +589,12 @@ class Kronolith_CalendarsManager
      */
     protected function _getAllResource()
     {
-        $this->_allResource = array();
+        $this->_allResource = [];
         if (!empty($GLOBALS['conf']['resources']['enabled'])) {
-            foreach (Kronolith::getDriver('Resource')->listResources(Horde_Perms::READ, array('isgroup' => 0)) as $resource) {
-                $rcal = new Kronolith_Calendar_Resource(array(
-                    'resource' => $resource
-                ));
+            foreach (Kronolith::getDriver('Resource')->listResources(Horde_Perms::READ, ['isgroup' => 0]) as $resource) {
+                $rcal = new Kronolith_Calendar_Resource([
+                    'resource' => $resource,
+                ]);
                 $this->_allResource[$resource->get('calendar')] = $rcal;
             }
         }
@@ -604,10 +607,10 @@ class Kronolith_CalendarsManager
         if ($this->_allRemote === false) {
             // Check that all selected remote calendars are still configured.
             $tmp = $this->_displayRemote;
-            $this->_allRemote = $this->_displayRemote = array();
+            $this->_allRemote = $this->_displayRemote = [];
             $calendars = @unserialize($GLOBALS['prefs']->getValue('remote_cals'));
             if (!is_array($calendars)) {
-                $calendars = array();
+                $calendars = [];
             }
             foreach ($calendars as $calendar) {
                 $this->_allRemote[$calendar['url']] = new Kronolith_Calendar_Remote($calendar);

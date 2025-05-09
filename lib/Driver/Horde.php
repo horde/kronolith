@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_Driver_Horde class implements the Kronolith_Driver API for
  * time objects retrieved from other Horde applications.
@@ -25,12 +26,12 @@ class Kronolith_Driver_Horde extends Kronolith_Driver
     public function open($calendar)
     {
         parent::open($calendar);
-        list($this->api,) = explode('/', $this->calendar, 2);
+        [$this->api, ] = explode('/', $this->calendar, 2);
     }
 
     public function listAlarms($date, $fullevent = false)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -60,22 +61,25 @@ class Kronolith_Driver_Horde extends Kronolith_Driver
      *
      * @throws Kronolith_Exception
      */
-    protected function _listEvents(Horde_Date $startDate = null,
-                                   Horde_Date $endDate = null,
-                                   array $options = array())
-    {
-        list($this->api, $category) = explode('/', $this->calendar, 2);
+    protected function _listEvents(
+        ?Horde_Date $startDate = null,
+        ?Horde_Date $endDate = null,
+        array $options = []
+    ) {
+        [$this->api, $category] = explode('/', $this->calendar, 2);
         if (!$this->_params['registry']->hasMethod($this->api . '/listTimeObjects')) {
-            return array();
+            return [];
         }
 
         if (is_null($startDate)) {
             $startDate = new Horde_Date(
-                array('mday' => 1, 'month' => 1, 'year' => 0000));
+                ['mday' => 1, 'month' => 1, 'year' => 0o000]
+            );
         }
         if (is_null($endDate)) {
             $endDate = new Horde_Date(
-                array('mday' => 31, 'month' => 12, 'year' => 9999));
+                ['mday' => 31, 'month' => 12, 'year' => 9999]
+            );
         }
 
         $startDate = clone $startDate;
@@ -87,12 +91,13 @@ class Kronolith_Driver_Horde extends Kronolith_Driver
         try {
             $eventsList = $this->_params['registry']->call(
                 $this->api . '/listTimeObjects',
-                array(array($category), $startDate, $endDate));
+                [[$category], $startDate, $endDate]
+            );
         } catch (Horde_Exception $e) {
             throw new Kronolith_Exception($e);
         }
 
-        $results = array();
+        $results = [];
         foreach ($eventsList as $eventsListItem) {
             try {
                 $event = new Kronolith_Event_Horde($this, $eventsListItem);
@@ -126,8 +131,14 @@ class Kronolith_Driver_Horde extends Kronolith_Driver
             }
 
             Kronolith::addEvents(
-                $results, $event, $startDate, $endDate,
-                $options['show_recurrence'], $options['json'], $options['cover_dates']);
+                $results,
+                $event,
+                $startDate,
+                $endDate,
+                $options['show_recurrence'],
+                $options['json'],
+                $options['cover_dates']
+            );
         }
 
         return $results;
@@ -144,10 +155,10 @@ class Kronolith_Driver_Horde extends Kronolith_Driver
     protected function _updateEvent(Kronolith_Event $event)
     {
         if (!isset($this->api)) {
-            list($this->api,) = explode('/', $this->calendar, 2);
+            [$this->api, ] = explode('/', $this->calendar, 2);
         }
         try {
-            $this->_params['registry']->call($this->api . '/saveTimeObject', array($event->toTimeobject()));
+            $this->_params['registry']->call($this->api . '/saveTimeObject', [$event->toTimeobject()]);
         } catch (Horde_Exception $e) {
             throw new Kronolith_Exception($e);
         }
@@ -172,7 +183,8 @@ class Kronolith_Driver_Horde extends Kronolith_Driver
         $events = $this->listEvents(
             $start,
             $end,
-            array('show_recurrence' => (bool)$start));
+            ['show_recurrence' => (bool) $start]
+        );
         foreach ($events as $day) {
             if (isset($day[$eventId])) {
                 return $day[$eventId];

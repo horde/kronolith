@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class provides the Kronolith configuration for the test script.
  *
@@ -9,6 +10,7 @@
  *
  * @author  Michael Slusarz <slusarz@horde.org>
  * @package Kronolith
+ * @coversNothing
  */
 class Kronolith_Test extends Horde_Test
 {
@@ -17,33 +19,33 @@ class Kronolith_Test extends Horde_Test
      *
      * @var array
      */
-    protected $_moduleList = array();
+    protected $_moduleList = [];
 
     /**
      * PHP settings list.
      *
      * @var array
      */
-    protected $_settingsList = array();
+    protected $_settingsList = [];
 
     /**
      * PEAR modules list.
      *
      * @var array
      */
-    protected $_pearList = array(
-        'Date_Holidays' => array(
+    protected $_pearList = [
+        'Date_Holidays' => [
             'error' => 'Date_Holidays can be used to calculate and display national and/or religious holidays.',
             'required' => false,
-        ),
-    );
+        ],
+    ];
 
     /**
      * Inter-Horde application dependencies.
      *
      * @var array
      */
-    protected $_appList = array();
+    protected $_appList = [];
 
     /**
      */
@@ -51,9 +53,9 @@ class Kronolith_Test extends Horde_Test
     {
         parent::__construct();
 
-        $this->_fileList += array(
-            'config/prefs.php' => null
-        );
+        $this->_fileList += [
+            'config/prefs.php' => null,
+        ];
     }
 
     /**
@@ -61,8 +63,6 @@ class Kronolith_Test extends Horde_Test
      *
      * @return string  HTML output.
      */
-    public function appTests()
-    {
-    }
+    public function appTests() {}
 
 }

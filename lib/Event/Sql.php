@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
  *
@@ -58,7 +59,7 @@ class Kronolith_Event_Sql extends Kronolith_Event
         }
 
         $tz_local = date_default_timezone_get();
-        $this->allday = (bool)$SQLEvent['event_allday'];
+        $this->allday = (bool) $SQLEvent['event_allday'];
         if (!$this->allday && $driver->getParam('utc')) {
             $this->start = new Horde_Date($SQLEvent['event_start'], 'UTC');
             $this->start->setTimezone($tz_local);
@@ -83,8 +84,8 @@ class Kronolith_Event_Sql extends Kronolith_Event
 
         if (!empty($SQLEvent['event_recurtype'])) {
             $this->recurrence = new Horde_Date_Recurrence($this->start);
-            $this->recurrence->setRecurType((int)$SQLEvent['event_recurtype']);
-            $this->recurrence->setRecurInterval((int)$SQLEvent['event_recurinterval']);
+            $this->recurrence->setRecurType((int) $SQLEvent['event_recurtype']);
+            $this->recurrence->setRecurInterval((int) $SQLEvent['event_recurinterval']);
             if (isset($SQLEvent['event_recurenddate']) &&
                 $SQLEvent['event_recurenddate'] != '9999-12-31 23:59:59') {
                 if ($driver->getParam('utc')) {
@@ -107,10 +108,10 @@ class Kronolith_Event_Sql extends Kronolith_Event
                 $this->recurrence->setRecurEnd($recur_end);
             }
             if (isset($SQLEvent['event_recurcount'])) {
-                $this->recurrence->setRecurCount((int)$SQLEvent['event_recurcount']);
+                $this->recurrence->setRecurCount((int) $SQLEvent['event_recurcount']);
             }
             if (isset($SQLEvent['event_recurdays'])) {
-                $this->recurrence->recurData = (int)$SQLEvent['event_recurdays'];
+                $this->recurrence->recurData = (int) $SQLEvent['event_recurdays'];
             }
             if (!empty($SQLEvent['event_exceptions'])) {
                 $this->recurrence->exceptions = explode(',', $SQLEvent['event_exceptions']);
@@ -124,10 +125,10 @@ class Kronolith_Event_Sql extends Kronolith_Event
             $this->url = $SQLEvent['event_url'];
         }
         if (isset($SQLEvent['event_private'])) {
-            $this->private = (bool)($SQLEvent['event_private']);
+            $this->private = (bool) ($SQLEvent['event_private']);
         }
         if (isset($SQLEvent['event_status'])) {
-            $this->status = (int)$SQLEvent['event_status'];
+            $this->status = (int) $SQLEvent['event_status'];
         }
         if (isset($SQLEvent['event_attendees'])) {
             $attendees = unserialize($SQLEvent['event_attendees']);
@@ -136,7 +137,8 @@ class Kronolith_Event_Sql extends Kronolith_Event
                     $this->attendees = new Kronolith_Attendee_List();
                     foreach ($attendees as $email => $attendee) {
                         $this->attendees->add(Kronolith_Attendee::migrate(
-                            $email, $driver->convertFromDriver($attendee)
+                            $email,
+                            $driver->convertFromDriver($attendee)
                         ));
                     }
                 } else {
@@ -154,7 +156,7 @@ class Kronolith_Event_Sql extends Kronolith_Event
             $this->description = $driver->convertFromDriver($SQLEvent['event_description']);
         }
         if (isset($SQLEvent['event_alarm'])) {
-            $this->alarm = (int)$SQLEvent['event_alarm'];
+            $this->alarm = (int) $SQLEvent['event_alarm'];
         }
         if (isset($SQLEvent['event_alarm_methods'])) {
             $methods = unserialize($SQLEvent['event_alarm_methods']);
@@ -167,8 +169,8 @@ class Kronolith_Event_Sql extends Kronolith_Event
         }
         if (isset($SQLEvent['event_exceptionoriginaldate'])) {
             if ($driver->getParam('utc')) {
-               $this->exceptionoriginaldate = new Horde_Date($SQLEvent['event_exceptionoriginaldate'], 'UTC');
-               $this->exceptionoriginaldate->setTimezone($tz_local);
+                $this->exceptionoriginaldate = new Horde_Date($SQLEvent['event_exceptionoriginaldate'], 'UTC');
+                $this->exceptionoriginaldate->setTimezone($tz_local);
             } else {
                 $this->exceptionoriginaldate = new Horde_Date($SQLEvent['event_exceptionoriginaldate']);
             }
@@ -193,7 +195,7 @@ class Kronolith_Event_Sql extends Kronolith_Event
     public function toProperties($full = false)
     {
         $driver = $this->getDriver();
-        $properties = array();
+        $properties = [];
 
         if ($full) {
             $properties['event_id'] = $this->id;
@@ -206,8 +208,8 @@ class Kronolith_Event_Sql extends Kronolith_Event
         $properties['event_description'] = $driver->convertToDriver($this->description);
         $properties['event_location'] = $driver->convertToDriver($this->location);
         $properties['event_timezone'] = $this->timezone;
-        $properties['event_url'] = (string)$this->url;
-        $properties['event_private'] = (int)$this->private;
+        $properties['event_url'] = (string) $this->url;
+        $properties['event_private'] = (int) $this->private;
         $properties['event_status'] = $this->status;
         $properties['event_attendees'] = serialize($this->attendees);
         $properties['event_resources'] = serialize($driver->convertToDriver($this->getResources()));
@@ -234,7 +236,7 @@ class Kronolith_Event_Sql extends Kronolith_Event
         }
 
         /* Alarm. */
-        $properties['event_alarm'] = (int)$this->alarm;
+        $properties['event_alarm'] = (int) $this->alarm;
 
         /* Alarm Notification Methods. */
         $properties['event_alarm_methods'] = serialize($driver->convertToDriver($this->methods));
@@ -252,7 +254,7 @@ class Kronolith_Event_Sql extends Kronolith_Event
                     $recur_end = $this->recurrence->recurEnd;
                 }
             } else {
-                $recur_end = new Horde_Date(array('year' => 9999, 'month' => 12, 'mday' => 31, 'hour' => 23, 'min' => 59, 'sec' => 59));
+                $recur_end = new Horde_Date(['year' => 9999, 'month' => 12, 'mday' => 31, 'hour' => 23, 'min' => 59, 'sec' => 59]);
             }
 
             $properties['event_recurtype'] = $recur;
@@ -261,9 +263,9 @@ class Kronolith_Event_Sql extends Kronolith_Event
             $properties['event_recurcount'] = $this->recurrence->getRecurCount();
 
             switch ($recur) {
-            case Horde_Date_Recurrence::RECUR_WEEKLY:
-                $properties['event_recurdays'] = $this->recurrence->getRecurOnDays();
-                break;
+                case Horde_Date_Recurrence::RECUR_WEEKLY:
+                    $properties['event_recurdays'] = $this->recurrence->getRecurOnDays();
+                    break;
             }
             $properties['event_exceptions'] = implode(',', $this->recurrence->getExceptions());
         }
@@ -283,7 +285,7 @@ class Kronolith_Event_Sql extends Kronolith_Event
             $properties['event_baseid'] = '';
             $properties['event_exceptionoriginaldate'] = null;
         }
-        
+
         $properties['other_attributes'] = json_encode($this->otherAttributes);
 
         return $properties;

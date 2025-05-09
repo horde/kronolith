@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith interface to the Horde_Content tagger
  *
@@ -10,11 +11,11 @@
  */
 class Kronolith_Tagger extends Horde_Core_Tagger
 {
-    const TYPE_CALENDAR = 'calendar';
-    const TYPE_EVENT = 'event';
+    public const TYPE_CALENDAR = 'calendar';
+    public const TYPE_EVENT = 'event';
 
     protected $_app = 'kronolith';
-    protected $_types = array(self::TYPE_EVENT, self::TYPE_CALENDAR);
+    protected $_types = [self::TYPE_EVENT, self::TYPE_CALENDAR];
 
     /**
      * Searches for resources that are tagged with all of the requested tags.
@@ -31,9 +32,9 @@ class Kronolith_Tagger extends Horde_Core_Tagger
      * @return  A hash of 'calendars' and 'events' that each contain an array
      *          of calendar_ids and event_uids respectively.
      */
-    public function search($tags, $filter = array())
+    public function search($tags, $filter = [])
     {
-        $args = array();
+        $args = [];
 
         /* These filters are mutually exclusive */
         if (array_key_exists('user', $filter)) {
@@ -44,7 +45,7 @@ class Kronolith_Tagger extends Horde_Core_Tagger
                 // @TODO: No way to get only the system shares the current
                 // user can see?
                 $calendars = $GLOBALS['injector']->getInstance('Kronolith_Shares')->listSystemShares();
-                $args['calendarId'] = array();
+                $args['calendarId'] = [];
                 foreach ($calendars as $name => $share) {
                     if ($share->hasPermission($GLOBALS['registry']->getAuth(), Horde_Perms::READ)) {
                         $args['calendarId'][] = $name;
@@ -57,7 +58,7 @@ class Kronolith_Tagger extends Horde_Core_Tagger
         } elseif (!empty($filter[self::TYPE_CALENDAR])) {
             // Only events located in specific calendar(s)
             if (!is_array($filter[self::TYPE_CALENDAR])) {
-                $filter[self::TYPE_CALENDAR] = array($filter[self::TYPE_CALENDAR]);
+                $filter[self::TYPE_CALENDAR] = [$filter[self::TYPE_CALENDAR]];
             }
             $args['calendarId'] = $filter[self::TYPE_CALENDAR];
         }
@@ -66,7 +67,7 @@ class Kronolith_Tagger extends Horde_Core_Tagger
         $args['tagId'] = $GLOBALS['injector']->getInstance('Content_Tagger')->getTagIds($tags);
 
         /* Restrict to events or calendars? */
-        $cal_results = $event_results = array();
+        $cal_results = $event_results = [];
         if (empty($filter['type']) || $filter['type'] == self::TYPE_CALENDAR) {
             $args['typeId'] = $this->_type_ids[self::TYPE_CALENDAR];
             $cal_results = $GLOBALS['injector']->getInstance('Content_Tagger')->getObjects($args);
@@ -77,10 +78,10 @@ class Kronolith_Tagger extends Horde_Core_Tagger
             $event_results = $GLOBALS['injector']->getInstance('Content_Tagger')->getObjects($args);
         }
 
-        $results = array('calendars' => array_values($cal_results),
-                         'events' => (!empty($args['calendarId']) && count($event_results))
-                                     ? Kronolith::getDriver()->filterEventsByCalendar(array_values($event_results), $args['calendarId'])
-                                     : array_values($event_results));
+        $results = ['calendars' => array_values($cal_results),
+            'events' => (!empty($args['calendarId']) && count($event_results))
+                        ? Kronolith::getDriver()->filterEventsByCalendar(array_values($event_results), $args['calendarId'])
+                        : array_values($event_results)];
 
         return $results;
     }

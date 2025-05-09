@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
  *
@@ -7,23 +8,23 @@
  */
 
 require_once __DIR__ . '/lib/Application.php';
-Horde_Registry::appInit('kronolith', array('nodynamicinit' => true));
+Horde_Registry::appInit('kronolith', ['nodynamicinit' => true]);
 
 /* Determine View */
 switch ($registry->getView()) {
-case Horde_Registry::VIEW_MINIMAL:
-case Horde_Registry::VIEW_SMARTMOBILE:
-    include KRONOLITH_BASE . '/smartmobile.php';
-    exit;
+    case Horde_Registry::VIEW_MINIMAL:
+    case Horde_Registry::VIEW_SMARTMOBILE:
+        include KRONOLITH_BASE . '/smartmobile.php';
+        exit;
 
-case Horde_Registry::VIEW_BASIC:
-case Horde_Registry::VIEW_DYNAMIC:
-    if ($registry->getView() == Horde_Registry::VIEW_DYNAMIC &&
-        $prefs->getValue('dynamic_view')) {
-        break;
-    }
-    include KRONOLITH_BASE . '/' . $prefs->getValue('defaultview') . '.php';
-    exit;
+    case Horde_Registry::VIEW_BASIC:
+    case Horde_Registry::VIEW_DYNAMIC:
+        if ($registry->getView() == Horde_Registry::VIEW_DYNAMIC &&
+            $prefs->getValue('dynamic_view')) {
+            break;
+        }
+        include KRONOLITH_BASE . '/' . $prefs->getValue('defaultview') . '.php';
+        exit;
 }
 
 /* Load Ajax interface. */
@@ -52,38 +53,44 @@ foreach ($injector->getInstance('Horde_Alarm')->handlers() as $method => $handle
         $taskNameAtt = 'name="task[methods][' . $method . '][' . $name . ']"';
         $taskAtt = 'id="kronolithTaskAlarmParam' . $name . '" ' . $taskNameAtt;
         switch ($param['type']) {
-        case 'text':
-            $eventAlarmParams .= '<input type="text" ' . $eventAtt . ' />';
-            $taskAlarmParams .= '<input type="text" ' . $taskAtt . ' />';
-            break;
-        case 'boolean':
-            $eventAlarmParams .= '<input type="checkbox" ' . $eventAtt . ' />';
-            $taskAlarmParams .= '<input type="checkbox" ' . $taskAtt . ' />';
-            break;
-        case 'sound':
-            $eventAlarmParams .= '<ul class="sound-list"><li><input type="radio" ' . $eventAtt
-                . ' value="" checked="checked" /> ' . _("No Sound") . '</li>';
-            $taskAlarmParams .= '<ul class="sound-list"><li><input type="radio" ' . $taskAtt
-                . ' value="" checked="checked" /> ' . _("No Sound") . '</li>';
-            foreach (Horde_Themes::soundList() as $key => $val) {
-                $sound = htmlspecialchars($key);
-                $value = sprintf('<li><input type="radio" id="%s%s" %s value="%s" /> <embed autostart="false" src="%s" /> %s</li>',
-                                 '%s',
-                                 $name . str_replace('.wav', '', $sound),
-                                 '%s',
-                                 $sound,
-                                 htmlspecialchars($val->uri),
-                                 $sound);
-                $eventAlarmParams .= sprintf($value,
-                                             'kronolithEventAlarmParam',
-                                             $eventNameAtt);
-                $taskAlarmParams .= sprintf($value,
-                                             'kronolithTaskAlarmParam',
-                                             $taskNameAtt);
-            }
-            $eventAlarmParams .= '</ul>';
-            $taskAlarmParams .= '</ul>';
-            break;
+            case 'text':
+                $eventAlarmParams .= '<input type="text" ' . $eventAtt . ' />';
+                $taskAlarmParams .= '<input type="text" ' . $taskAtt . ' />';
+                break;
+            case 'boolean':
+                $eventAlarmParams .= '<input type="checkbox" ' . $eventAtt . ' />';
+                $taskAlarmParams .= '<input type="checkbox" ' . $taskAtt . ' />';
+                break;
+            case 'sound':
+                $eventAlarmParams .= '<ul class="sound-list"><li><input type="radio" ' . $eventAtt
+                    . ' value="" checked="checked" /> ' . _("No Sound") . '</li>';
+                $taskAlarmParams .= '<ul class="sound-list"><li><input type="radio" ' . $taskAtt
+                    . ' value="" checked="checked" /> ' . _("No Sound") . '</li>';
+                foreach (Horde_Themes::soundList() as $key => $val) {
+                    $sound = htmlspecialchars($key);
+                    $value = sprintf(
+                        '<li><input type="radio" id="%s%s" %s value="%s" /> <embed autostart="false" src="%s" /> %s</li>',
+                        '%s',
+                        $name . str_replace('.wav', '', $sound),
+                        '%s',
+                        $sound,
+                        htmlspecialchars($val->uri),
+                        $sound
+                    );
+                    $eventAlarmParams .= sprintf(
+                        $value,
+                        'kronolithEventAlarmParam',
+                        $eventNameAtt
+                    );
+                    $taskAlarmParams .= sprintf(
+                        $value,
+                        'kronolithTaskAlarmParam',
+                        $taskNameAtt
+                    );
+                }
+                $eventAlarmParams .= '</ul>';
+                $taskAlarmParams .= '</ul>';
+                break;
         }
         $eventAlarmParams .= '<br />';
         $taskAlarmParams .= '<br />';
@@ -93,52 +100,52 @@ foreach ($injector->getInstance('Horde_Alarm')->handlers() as $method => $handle
 }
 
 $impleFactory = $injector->getInstance('Horde_Core_Factory_Imple');
-$impleFactory->create('Kronolith_Ajax_Imple_TagAutoCompleter', array(
+$impleFactory->create('Kronolith_Ajax_Imple_TagAutoCompleter', [
     'box' => 'kronolithEventACBox',
     'id' => 'kronolithEventTags',
-    'pretty' => true
-));
+    'pretty' => true,
+]);
 
-$impleFactory->create('Kronolith_Ajax_Imple_TagAutoCompleter', array(
+$impleFactory->create('Kronolith_Ajax_Imple_TagAutoCompleter', [
     'box' => 'kronolithCalendarinternalACBox',
     'id' => 'kronolithCalendarinternalTags',
     'pretty' => true,
-    'triggerContainer' => 'kronolithACCalendarTriggerContainer'
-));
+    'triggerContainer' => 'kronolithACCalendarTriggerContainer',
+]);
 
-$impleFactory->create('Kronolith_Ajax_Imple_TagAutoCompleter', array(
+$impleFactory->create('Kronolith_Ajax_Imple_TagAutoCompleter', [
     'box' => 'kronolithTaskACBox',
     'id' => 'kronolithTaskTags',
-    'pretty' => true
-));
+    'pretty' => true,
+]);
 
-$impleFactory->create('Kronolith_Ajax_Imple_UserAutoCompleter', array(
+$impleFactory->create('Kronolith_Ajax_Imple_UserAutoCompleter', [
     'box' => 'kronolithUsersACBox',
     'displayFilter' => 'function(u) { return KronolithCore.parseUser(u).name; }',
     'id' => 'kronolithEventUsers',
     'onAdd' => 'function(u) { KronolithCore.addUser(u); KronolithCore.checkOrganizerAsAttendee(); }',
     'onRemove' => 'KronolithCore.removeUser.bind(KronolithCore)',
     'pretty' => true,
-));
+]);
 
-$impleFactory->create('Kronolith_Ajax_Imple_ContactAutoCompleter', array(
+$impleFactory->create('Kronolith_Ajax_Imple_ContactAutoCompleter', [
     'box' => 'kronolithAttendeesACBox',
     'id' => 'kronolithEventAttendees',
     'onAdd' => 'function(a) { KronolithCore.addAttendee(a); KronolithCore.checkOrganizerAsAttendee(); }',
     'onRemove' => 'KronolithCore.removeAttendee.bind(KronolithCore)',
     'pretty' => true,
     'triggerContainer' => 'kronolithAttendeesACTriggerContainer',
-    'beforeUpdate' => 'function(a) { return KronolithCore.normalizeAttendee(a); }'
-));
+    'beforeUpdate' => 'function(a) { return KronolithCore.normalizeAttendee(a); }',
+]);
 
-$impleFactory->create('Kronolith_Ajax_Imple_ResourceAutoCompleter', array(
+$impleFactory->create('Kronolith_Ajax_Imple_ResourceAutoCompleter', [
     'box' => 'kronolithResourceACBox',
     'id' => 'kronolithEventResources',
     'onAdd' => 'KronolithCore.addResource.bind(KronolithCore)',
     'onRemove' => 'KronolithCore.removeResource.bind(KronolithCore)',
     'pretty' => true,
-    'triggerContainer' => 'kronolithResourceACTriggerContainer'
-));
+    'triggerContainer' => 'kronolithResourceACTriggerContainer',
+]);
 
 if ($conf['maps']['driver']) {
     Horde::initMap();
@@ -147,7 +154,7 @@ if ($conf['maps']['driver']) {
 $time_jobs = $time_clients = false;
 if ($registry->hasMethod('time/listJobTypes')) {
     try {
-        $time_jobs = $registry->time->listJobTypes(array('enabled' => true));
+        $time_jobs = $registry->time->listJobTypes(['enabled' => true]);
         $time_clients = $registry->time->listClients();
     } catch (Horde_Exception_PushApp $e) {
     }

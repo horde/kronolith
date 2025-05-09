@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Horde_Form for creating calendars.
  *
@@ -27,10 +28,10 @@ class Kronolith_Form_CreateCalendar extends Horde_Form
         if ($GLOBALS['registry']->isAdmin()) {
             $this->addVariable(_("System Calendar"), 'system', 'boolean', false, false, _("System calendars don't have an owner. Only administrators can change the calendar settings and permissions."));
         }
-        $this->addVariable(_("Description"), 'description', 'longtext', false, false, null, array(4, 60));
+        $this->addVariable(_("Description"), 'description', 'longtext', false, false, null, [4, 60]);
         $this->addVariable(_("Tags"), 'tags', 'kronolith:KronolithTags', false);
 
-        $this->setButtons(array(_("Create")));
+        $this->setButtons([_("Create")]);
     }
 
     /**
@@ -38,18 +39,23 @@ class Kronolith_Form_CreateCalendar extends Horde_Form
      */
     public function execute()
     {
-        $info = array();
-        foreach (array('name', 'color', 'description', 'tags', 'system') as $key) {
+        $info = [];
+        foreach (['name', 'color', 'description', 'tags', 'system'] as $key) {
             $info[$key] = $this->_vars->get($key);
         }
         return Kronolith::addShare($info);
     }
 
-    public function renderActive($renderer = null, $vars = null, $action = '',
-                          $method = 'get', $enctype = null, $focus = true)
-    {
+    public function renderActive(
+        $renderer = null,
+        $vars = null,
+        $action = '',
+        $method = 'get',
+        $enctype = null,
+        $focus = true
+    ) {
         return parent::renderActive(
-            $this->getRenderer(array('varrenderer_driver' => array('kronolith', 'kronolith'))),
+            $this->getRenderer(['varrenderer_driver' => ['kronolith', 'kronolith']]),
             $this->_vars,
             $action,
             $method,

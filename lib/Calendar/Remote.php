@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith_Calendar_Remote defines an API for single external WebDAV or
  * CalDAV calendars.
@@ -63,7 +64,7 @@ class Kronolith_Calendar_Remote extends Kronolith_Calendar
      *                       Required parameters:
      *                       - share: The share of this calendar.
      */
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
         if (!isset($params['url'])) {
             throw new BadMethodCallException('url parameter is missing');
@@ -127,7 +128,7 @@ class Kronolith_Calendar_Remote extends Kronolith_Calendar
      */
     public function hasPermission($permission, $user = null, $creator = null)
     {
-        return (boolean)(Kronolith::getDriver('Ical', $this->_url)->getPermission() & $permission);
+        return (bool) (Kronolith::getDriver('Ical', $this->_url)->getPermission() & $permission);
     }
 
     /**
@@ -158,9 +159,9 @@ class Kronolith_Calendar_Remote extends Kronolith_Calendar
     public function credentials()
     {
         if (!empty($this->_user)) {
-            return array('user' => $this->_user, 'password' => $this->_password);
+            return ['user' => $this->_user, 'password' => $this->_password];
         }
-        return array();
+        return [];
     }
 
     /**
@@ -172,8 +173,8 @@ class Kronolith_Calendar_Remote extends Kronolith_Calendar
     {
         return array_merge(
             parent::toHash(),
-            array('show' => in_array($this->_url, $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_REMOTE_CALENDARS)),
-                  'edit' => $this->hasPermission(Horde_Perms::EDIT)),
+            ['show' => in_array($this->_url, $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_REMOTE_CALENDARS)),
+                'edit' => $this->hasPermission(Horde_Perms::EDIT)],
             $this->credentials()
         );
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class represent a single day of free busy information sets.
  *
@@ -22,11 +23,11 @@ class Kronolith_FreeBusy_View_Day extends Kronolith_FreeBusy_View
         $prev->mday--;
         $next = new Horde_Date($this->_start);
         $next->mday++;
-        return Horde::url('#')->link(array('title' => _("Previous Day"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'))
+        return Horde::url('#')->link(['title' => _("Previous Day"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'])
             . Horde::img('nav/left.png', '<')
             . '</a>'
             . $this->_start->strftime($prefs->getValue('date_format'))
-            . Horde::url('#')->link(array('title' => _("Next Day"), 'onclick' => 'return switchDate(' . $next->dateString() . ');'))
+            . Horde::url('#')->link(['title' => _("Next Day"), 'onclick' => 'return switchDate(' . $next->dateString() . ');'])
             . Horde::img('nav/right.png', '>')
             . '</a>';
     }
@@ -42,14 +43,14 @@ class Kronolith_FreeBusy_View_Day extends Kronolith_FreeBusy_View
         $end->min = 59;
         for ($i = $this->_startHour; $i < $this->_endHour; $i++) {
             $start->hour = $end->hour = $i;
-            $this->_timeBlocks[] = array(clone $start, clone $end);
+            $this->_timeBlocks[] = [clone $start, clone $end];
             $hours_html .= '<th width="' . $width . '%">' . $start->strftime($prefs->getValue('twentyFour') ? '%H:00' : '%I:00') . '</th>';
         }
 
         return $hours_html;
     }
 
-    protected function _render(Horde_Date $day = null)
+    protected function _render(?Horde_Date $day = null)
     {
         $this->_start = new Horde_Date($day);
         $this->_start->hour = $this->_startHour;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Horde_Form for creating resources.
  *
@@ -25,28 +26,30 @@ class Kronolith_Form_CreateResource extends Horde_Form
     {
         parent::__construct($vars, _("Create Resource"));
 
-        $responses =  array(Kronolith_Resource::RESPONSETYPE_ALWAYS_ACCEPT => _("Always Accept"),
-                            Kronolith_Resource::RESPONSETYPE_ALWAYS_DECLINE => _("Always Decline"),
-                            Kronolith_Resource::RESPONSETYPE_AUTO => _("Automatically"),
-                            Kronolith_Resource::RESPONSETYPE_MANUAL => _("Manual"),
-                            Kronolith_Resource::RESPONSETYPE_NONE => _("None"));
+        $responses =  [Kronolith_Resource::RESPONSETYPE_ALWAYS_ACCEPT => _("Always Accept"),
+            Kronolith_Resource::RESPONSETYPE_ALWAYS_DECLINE => _("Always Decline"),
+            Kronolith_Resource::RESPONSETYPE_AUTO => _("Automatically"),
+            Kronolith_Resource::RESPONSETYPE_MANUAL => _("Manual"),
+            Kronolith_Resource::RESPONSETYPE_NONE => _("None")];
 
         /* Get a list of available resource groups */
         $groups = Kronolith::getDriver('Resource')
-            ->listResources(Horde_Perms::READ,
-                            array('isgroup' => 1));
-        $enum = array();
+            ->listResources(
+                Horde_Perms::READ,
+                ['isgroup' => 1]
+            );
+        $enum = [];
         foreach ($groups as $id => $group) {
             $enum[$id] = $group->get('name');
         }
 
         $this->addVariable(_("Name"), 'name', 'text', true);
-        $this->addVariable(_("Description"), 'description', 'longtext', false, false, null, array(4, 60));
+        $this->addVariable(_("Description"), 'description', 'longtext', false, false, null, [4, 60]);
         $this->addVariable(_("Email"), 'email', 'email', false);
-        $v = $this->addVariable(_("Response type"), 'responsetype', 'enum', true, false, null, array('enum' => $responses));
+        $v = $this->addVariable(_("Response type"), 'responsetype', 'enum', true, false, null, ['enum' => $responses]);
         $v->setDefault(Kronolith_Resource::RESPONSETYPE_AUTO);
-        $this->addVariable(_("Groups"), 'category', 'multienum', false, false, null, array('enum' => $enum));
-        $this->setButtons(array(_("Create")));
+        $this->addVariable(_("Groups"), 'category', 'multienum', false, false, null, ['enum' => $enum]);
+        $this->setButtons([_("Create")]);
     }
 
     /**
@@ -54,10 +57,10 @@ class Kronolith_Form_CreateResource extends Horde_Form
      */
     public function execute()
     {
-        $new = array('name' => $this->_vars->get('name'),
-                     'description' => $this->_vars->get('description'),
-                     'response_type' => $this->_vars->get('responsetype'),
-                     'email' => $this->_vars->get('email'));
+        $new = ['name' => $this->_vars->get('name'),
+            'description' => $this->_vars->get('description'),
+            'response_type' => $this->_vars->get('responsetype'),
+            'email' => $this->_vars->get('email')];
         $resource = Kronolith_Resource::addResource(new Kronolith_Resource_Single($new));
 
         /* Do we need to add this to any groups? */

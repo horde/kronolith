@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Horde_Injector based factory for the Kronolith share driver.
  *

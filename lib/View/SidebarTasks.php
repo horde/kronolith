@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This is a dummy view of Kronolith's sidebar while in tasks mode.
  *
@@ -21,14 +22,14 @@ class Kronolith_View_SidebarTasks extends Horde_View_Sidebar
      *
      * @param array $config  Configuration key-value pairs.
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         parent::__construct($config);
         $blank = new Horde_Url();
         $this->addNewButton(
             _("_New Task"),
             $blank,
-            array('id' => 'kronolithNewTask')
+            ['id' => 'kronolithNewTask']
         );
     }
 }

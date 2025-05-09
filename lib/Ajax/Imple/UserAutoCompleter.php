@@ -20,16 +20,15 @@
  * @license  http://www.horde.org/licenses/gpl GPL
  * @package  Kronolith
  */
-class Kronolith_Ajax_Imple_UserAutoCompleter
-extends Horde_Core_Ajax_Imple_UserAutoCompleter
+class Kronolith_Ajax_Imple_UserAutoCompleter extends Horde_Core_Ajax_Imple_UserAutoCompleter
 {
     /**
      */
     protected function _getAutoCompleter()
     {
-        $opts = array();
+        $opts = [];
 
-        foreach (array('beforeUpdate', 'box', 'displayFilter', 'onAdd', 'onRemove', 'triggerContainer') as $val) {
+        foreach (['beforeUpdate', 'box', 'displayFilter', 'onAdd', 'onRemove', 'triggerContainer'] as $val) {
             if (isset($this->_params[$val])) {
                 $opts[$val] = $this->_params[$val];
             }
@@ -47,7 +46,7 @@ extends Horde_Core_Ajax_Imple_UserAutoCompleter
         global $injector;
 
         $identFactory = $injector->getInstance('Horde_Core_Factory_Identity');
-        $users = array();
+        $users = [];
         foreach (parent::_handleAutoCompleter($input) as $user) {
             $name = $identFactory->create($user)->getName();
             if ($name) {

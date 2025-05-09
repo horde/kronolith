@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Simple storage for icalendar objects
  */
 declare (strict_types=1);
 //use \InvalidArgumentException;
-use \Kronolith_Icalendar_Storage_Entity as Entity;
+use Kronolith_Icalendar_Storage_Entity as Entity;
+
 /**
  * Simple storage for caldav related data
  */
 class Kronolith_Icalendar_Storage_Sql extends \Horde_Rdo_Mapper implements Kronolith_Icalendar_Storage
 {
-
     protected $_classname = Entity::class;
     protected $_table = 'kronolith_icalendar_storage';
 
@@ -52,7 +53,7 @@ class Kronolith_Icalendar_Storage_Sql extends \Horde_Rdo_Mapper implements Krono
             $entity = new Entity([
                 'calendar_id' => $calendarId,
                 'event_uid' => $eventUid,
-                'event_data' => $data
+                'event_data' => $data,
             ]);
             $entity->setMapper($this);
         } else {
@@ -85,7 +86,7 @@ class Kronolith_Icalendar_Storage_Sql extends \Horde_Rdo_Mapper implements Krono
         $this->_noNullString($calendarId, $eventUid);
         return $this->findOne([
             'calendar_id' => $calendarId,
-            'event_uid' => $eventUid
+            'event_uid' => $eventUid,
         ]);
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith_Resource implementation to represent a single resource.
  *
@@ -45,7 +46,7 @@ class Kronolith_Resource_Single extends Kronolith_Resource_Base
     {
         /* Fetch Events */
         $busy = Kronolith::getDriver('Resource', $this->get('calendar'))
-            ->listEvents($event->start, $event->end, array('show_recurrence' => true));
+            ->listEvents($event->start, $event->end, ['show_recurrence' => true]);
 
         /* No events at all during time period for requested event */
         if (!count($busy)) {
@@ -60,13 +61,13 @@ class Kronolith_Resource_Single extends Kronolith_Resource_Base
                       $e->status == Kronolith::STATUS_FREE) &&
                      $e->uid !== $event->uid) {
 
-                     // Comparing to zero allows the events to start at the same
-                     // the previous event ends.
-                     if (!($e->start->compareDateTime($event->end) >= 0) &&
-                         !($e->end->compareDateTime($event->start) <= 0)) {
+                    // Comparing to zero allows the events to start at the same
+                    // the previous event ends.
+                    if (!($e->start->compareDateTime($event->end) >= 0) &&
+                        !($e->end->compareDateTime($event->start) <= 0)) {
 
                         return false;
-                     }
+                    }
                 }
             }
         }
@@ -90,7 +91,7 @@ class Kronolith_Resource_Single extends Kronolith_Resource_Base
         $uid = $event->uid;
         // Ensure it's not already attached.
         try {
-            $resource_event = $resource_driver->getByUID($uid, array($this->get('calendar')));
+            $resource_event = $resource_driver->getByUID($uid, [$this->get('calendar')]);
             $this->_copyEvent($event, $resource_event);
             $resource_event->save();
         } catch (Horde_Exception_NotFound $ex) {
@@ -114,7 +115,7 @@ class Kronolith_Resource_Single extends Kronolith_Resource_Base
     public function removeEvent(Kronolith_Event $event)
     {
         $resource_driver = $this->getDriver();
-        $resource_event = $resource_driver->getByUID($event->uid, array($this->get('calendar')));
+        $resource_event = $resource_driver->getByUID($event->uid, [$this->get('calendar')]);
         $resource_driver->deleteEvent($resource_event->id);
     }
 

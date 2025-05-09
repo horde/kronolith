@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class represent a work week of free busy information sets.
  *
@@ -12,18 +13,18 @@
  */
 class Kronolith_FreeBusy_View_Workweek extends Kronolith_FreeBusy_View_Week
 {
-   /**
-     * This view type
-     *
-     * @var string
-     */
-    var $view = 'workweek';
+    /**
+      * This view type
+      *
+      * @var string
+      */
+    public $view = 'workweek';
 
     /**
      * Number of days
      *
      * @var integer
      */
-    var $_days = 5;
+    public $_days = 5;
 
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Noop storage driver for CalDAV data
  *

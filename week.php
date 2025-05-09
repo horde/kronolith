@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
  *
@@ -21,12 +22,12 @@ $view = Kronolith::getView('Week');
 $page_output->addScriptFile('tooltips.js', 'horde');
 Kronolith::addCalendarLinks();
 
-$page_output->header(array(
+$page_output->header([
     'body_class' => $prefs->getValue('show_panel') ? 'rightPanel' : null,
-    'title' => sprintf(_("Week %d"), $view->week)
-));
+    'title' => sprintf(_("Week %d"), $view->week),
+]);
 require KRONOLITH_TEMPLATES . '/javascript_defs.php';
-$notification->notify(array('listeners' => 'status'));
+$notification->notify(['listeners' => 'status']);
 Kronolith::tabs($view);
 $view->html(KRONOLITH_TEMPLATES);
 require KRONOLITH_TEMPLATES . '/calendar_titles.inc';

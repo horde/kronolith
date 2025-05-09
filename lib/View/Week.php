@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_View_Week:: class provides an API for viewing weeks.
  *
@@ -9,7 +10,7 @@
 class Kronolith_View_Week
 {
     public $parsed = false;
-    public $days = array();
+    public $days = [];
     public $week = null;
     public $year = null;
     public $startDay = null;
@@ -17,7 +18,7 @@ class Kronolith_View_Week
     public $startDate = null;
     protected $_controller = 'week.php';
     public $sidebyside = false;
-    public $_currentCalendars = array();
+    public $_currentCalendars = [];
     public $first;
     public $last;
     public $slotLength;
@@ -25,7 +26,7 @@ class Kronolith_View_Week
     public $slotsPerHour;
     public $totalspan;
     public $span;
-    
+
 
     /**
      * How many time slots are we dividing each hour into?
@@ -73,7 +74,7 @@ class Kronolith_View_Week
 
         $this->startDate = new Horde_Date($day);
         for ($i = $this->startDay; $i <= $this->endDay; ++$i) {
-            $this->days[$i] = new Kronolith_View_Day($day, array());
+            $this->days[$i] = new Kronolith_View_Day($day, []);
             $day->mday++;
         }
         $endDate = new Horde_Date($day);
@@ -81,13 +82,12 @@ class Kronolith_View_Week
             $allevents = Kronolith::listEvents($this->startDate, $endDate);
         } catch (Exception $e) {
             $GLOBALS['notification']->push($e, 'horde.error');
-            $allevents = array();
+            $allevents = [];
         }
         for ($i = $this->startDay; $i <= $this->endDay; ++$i) {
             $date_stamp = $this->days[$i]->dateString();
-            $this->days[$i]->events = isset($allevents[$date_stamp])
-                ? $allevents[$date_stamp]
-                : array();
+            $this->days[$i]->events = $allevents[$date_stamp]
+                ?? [];
         }
         $this->sidebyside = $this->days[$this->startDay]->sidebyside;
         $this->_currentCalendars = $this->days[$this->startDay]->currentCalendars;
@@ -159,8 +159,8 @@ class Kronolith_View_Week
         $day_hour_force = $prefs->getValue('day_hour_force');
         $day_hour_start = $prefs->getValue('day_hour_start') / 2 * $this->slotsPerHour;
         $day_hour_end = $prefs->getValue('day_hour_end') / 2 * $this->slotsPerHour;
-        $rows = array();
-        $covered = array();
+        $rows = [];
+        $covered = [];
 
         for ($i = 0; $i < $this->slotsPerDay; ++$i) {
             if ($i >= $day_hour_end && $i > $this->last) {
@@ -184,10 +184,10 @@ class Kronolith_View_Week
                 }
 
                 foreach (array_keys($this->_currentCalendars) as $cid) {
-                     // Width (sum of colspans) of events for the current time
-                     // slot.
+                    // Width (sum of colspans) of events for the current time
+                    // slot.
                     $hspan = 0;
-                     // $hspan + count of empty TDs in the current timeslot.
+                    // $hspan + count of empty TDs in the current timeslot.
                     $current_indent = 0;
 
                     // $current_indent is initialized to the position of the
@@ -248,12 +248,12 @@ class Kronolith_View_Week
                             $hspan          += $event->span;
                             $current_indent += $event->span;
 
-                            $start = new Horde_Date(array(
+                            $start = new Horde_Date([
                                 'hour'  => floor($i / $this->slotsPerHour),
                                 'min'   => ($i % $this->slotsPerHour) * $this->slotLength,
                                 'month' => $this->days[$j]->month,
                                 'mday'  => $this->days[$j]->mday,
-                                'year'  => $this->days[$j]->year));
+                                'year'  => $this->days[$j]->year]);
                             $slot_end = new Horde_Date($start);
                             $slot_end->min += $this->slotLength;
                             if (((!$day_hour_force || $i >= $day_hour_start) &&
@@ -303,7 +303,7 @@ class Kronolith_View_Week
                 }
             }
 
-            $rows[] = array('row' => $row, 'slot' => $time);
+            $rows[] = ['row' => $row, 'slot' => $time];
         }
 
         $template = $GLOBALS['injector']->createInstance('Horde_Template');
@@ -325,7 +325,7 @@ class Kronolith_View_Week
         }
 
         $this->totalspan = 0;
-        $this->span = array();
+        $this->span = [];
         for ($i = $this->startDay; $i <= $this->endDay; ++$i) {
             $this->totalspan += $this->days[$i]->totalspan;
             foreach (array_keys($this->_currentCalendars) as $cid) {

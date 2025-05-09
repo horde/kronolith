@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Free/Busy functionality.
  *
@@ -20,12 +21,15 @@ class Kronolith_FreeBusy
      * @return string  The free/busy text.
      * @throws Horde_Exception, Kronolith_Exception
      */
-    public static function generate($calendars, $startstamp = null,
-                                    $endstamp = null, $returnObj = false,
-                                    $user = null)
-    {
+    public static function generate(
+        $calendars,
+        $startstamp = null,
+        $endstamp = null,
+        $returnObj = false,
+        $user = null
+    ) {
         if (!is_array($calendars)) {
-            $calendars = array($calendars);
+            $calendars = [$calendars];
         }
 
         if (!$user) {
@@ -69,10 +73,10 @@ class Kronolith_FreeBusy
         }
 
         /* Fetch events. */
-        $busy = array();
+        $busy = [];
         foreach ($calendars as $calendar) {
             if (strpos($calendar, '_')) {
-                @list($type, $calendar) = explode('_', $calendar, 2);
+                @[$type, $calendar] = explode('_', $calendar, 2);
             } else {
                 $type = 'internal';
             }
@@ -86,7 +90,8 @@ class Kronolith_FreeBusy
                 $events = $driver->listEvents(
                     new Horde_Date($startstamp),
                     $enddate,
-                    array('show_recurrence' => true));
+                    ['show_recurrence' => true]
+                );
                 Kronolith::mergeEvents($busy, $events);
             } catch (Exception $e) {
             }
@@ -99,7 +104,7 @@ class Kronolith_FreeBusy
 
         /* Create new vFreebusy. */
         $vFb = Horde_Icalendar::newComponent('vfreebusy', $vCal);
-        $params = array();
+        $params = [];
         if (!empty($cn)) {
             $params['CN'] = $cn;
         }
@@ -126,8 +131,12 @@ class Kronolith_FreeBusy
 
                 /* Horde_Icalendar_Vfreebusy only supports timestamps at the
                  * moment. */
-                $vFb->addBusyPeriod('BUSY', $event->start->timestamp(), null,
-                                    $event->end->timestamp() - $event->start->timestamp());
+                $vFb->addBusyPeriod(
+                    'BUSY',
+                    $event->start->timestamp(),
+                    null,
+                    $event->end->timestamp() - $event->start->timestamp()
+                );
             }
         }
 
@@ -162,16 +171,16 @@ class Kronolith_FreeBusy
      * @return Horde_Icalendar_Vfreebusy|object  Free/busy component.
      * @throws Kronolith_Exception
      */
-    public static function getForUser($user, $opts = array())
+    public static function getForUser($user, $opts = [])
     {
         global $injector, $registry;
 
         $opts = array_merge(
-            array('json' => false, 'start' => null, 'end' => null),
+            ['json' => false, 'start' => null, 'end' => null],
             $opts
         );
         $prefs = $injector->getInstance('Horde_Core_Factory_Prefs')
-            ->create('kronolith', array('cache' => false, 'user' => $user));
+            ->create('kronolith', ['cache' => false, 'user' => $user]);
         $registry->setTimeZone();
         $cals = @unserialize($prefs->getValue('fb_cals'));
 
@@ -183,13 +192,13 @@ class Kronolith_FreeBusy
             if (!$cal) {
                 $cal = $user;
             }
-            $cals = array('internal_' . $cal);
+            $cals = ['internal_' . $cal];
         }
 
         try {
             $fb = self::generate($cals, $opts['start'], $opts['end'], true, $user);
         } catch (Kronolith_Exception $e) {
-           throw new Kronolith_Exception(sprintf(_("The free/busy data for %s cannot be retrieved."), $user));
+            throw new Kronolith_Exception(sprintf(_("The free/busy data for %s cannot be retrieved."), $user));
         }
 
         return $opts['json'] ? self::toJson($fb) : $fb;
@@ -212,9 +221,9 @@ class Kronolith_FreeBusy
         $rfc822 = new Horde_Mail_Rfc822();
 
         try {
-            $res = $rfc822->parseAddressList($email, array(
-                'default_domain' => $default_domain
-            ));
+            $res = $rfc822->parseAddressList($email, [
+                'default_domain' => $default_domain,
+            ]);
         } catch (Horde_Mail_Exception $e) {
             throw new Kronolith_Exception($e);
         }
@@ -232,7 +241,7 @@ class Kronolith_FreeBusy
             $url = trim($url);
             $http = $GLOBALS['injector']
                 ->getInstance('Horde_Core_Factory_HttpClient')
-                ->create(array('request.verifyPeer' => false));
+                ->create(['request.verifyPeer' => false]);
             try {
                 $response = $http->get($url);
             } catch (Horde_Http_Exception $e) {
@@ -242,7 +251,7 @@ class Kronolith_FreeBusy
                 // Detect the charset of the iCalendar data.
                 $contentType = $response->getHeader('Content-Type');
                 if ($contentType && strpos($contentType, ';') !== false) {
-                    list(,$charset,) = explode(';', $contentType);
+                    [, $charset, ] = explode(';', $contentType);
                     $data = Horde_String::convertCharset($data, trim(str_replace('charset=', '', $charset)), 'UTF-8');
                 }
 
@@ -296,12 +305,14 @@ class Kronolith_FreeBusy
     {
         $sources = json_decode($GLOBALS['prefs']->getValue('search_sources'));
         if (empty($sources)) {
-            $sources = array();
+            $sources = [];
         }
 
         try {
-            $result = $GLOBALS['registry']->call('contacts/getField',
-                                                 array($email, 'freebusyUrl', $sources, true, true));
+            $result = $GLOBALS['registry']->call(
+                'contacts/getField',
+                [$email, 'freebusyUrl', $sources, true, true]
+            );
         } catch (Horde_Exception $e) {
             return false;
         }
@@ -322,7 +333,7 @@ class Kronolith_FreeBusy
      */
     public static function toJson(Horde_Icalendar_Vfreebusy $fb)
     {
-        $json = new stdClass;
+        $json = new stdClass();
         $start = $fb->getStart();
         if ($start) {
             $start = new Horde_Date($start);

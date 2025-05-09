@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2015-2017 Horde LLC (http://www.horde.org/)
  *
@@ -37,7 +38,7 @@ class Kronolith_Shares
 
     public function __call($method, $args)
     {
-        return call_user_func_array(array($this->_shares, $method), $args);
+        return call_user_func_array([$this->_shares, $method], $args);
     }
 
     /**
@@ -60,16 +61,16 @@ class Kronolith_Shares
      *
      * @return array  The shares the user has access to.
      */
-    public function listShares($userid, array $params = array())
+    public function listShares($userid, array $params = [])
     {
-        $attributes = array('calendar_type' => Kronolith::SHARE_TYPE_USER);
+        $attributes = ['calendar_type' => Kronolith::SHARE_TYPE_USER];
         $ownerOnly = !empty($params['attributes']) &&
             !is_array($params['attributes']);
         if ($ownerOnly) {
             $attributes['owner'] = $params['attributes'];
-            $params['attributes'] = array();
+            $params['attributes'] = [];
         } elseif (empty($params['attributes'])) {
-            $params['attributes'] = array();
+            $params['attributes'] = [];
         }
         $attributes = array_merge($attributes, $params['attributes']);
         $params['attributes'] = $attributes;
@@ -95,7 +96,7 @@ class Kronolith_Shares
      */
     public function listSystemShares()
     {
-        $shares = array();
+        $shares = [];
         foreach ($this->_shares->listSystemShares() as $id => $calendar) {
             if ($calendar->get('calendar_type') == Kronolith::SHARE_TYPE_USER) {
                 $shares[$id] = $calendar;

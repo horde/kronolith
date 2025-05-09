@@ -19,9 +19,9 @@ class Kronolith_Ajax_Imple_ContactAutoCompleter extends Horde_Core_Ajax_Imple_Co
      */
     protected function _getAutoCompleter()
     {
-        $opts = array();
+        $opts = [];
 
-        foreach (array('box', 'onAdd', 'onRemove', 'triggerContainer', 'beforeUpdate') as $val) {
+        foreach (['box', 'onAdd', 'onRemove', 'triggerContainer', 'beforeUpdate'] as $val) {
             if (isset($this->_params[$val])) {
                 $opts[$val] = $this->_params[$val];
             }

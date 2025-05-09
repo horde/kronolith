@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class represent a month of free busy information sets.
  *
@@ -35,11 +36,11 @@ class Kronolith_FreeBusy_View_Month extends Kronolith_FreeBusy_View
         $prev->month--;
         $next = new Horde_Date($this->_start);
         $next->month++;
-        return Horde::url('#')->link(array('title' => _("Previous Month"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'))
+        return Horde::url('#')->link(['title' => _("Previous Month"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'])
             . Horde::img('nav/left.png', '<')
             . '</a>'
             . $this->_start->strftime('%B %Y')
-            . Horde::url('#')->link(array('title' => _("Next Month"), 'onclick' => 'return switchDate(' . $next->dateString() . ');'))
+            . Horde::url('#')->link(['title' => _("Next Month"), 'onclick' => 'return switchDate(' . $next->dateString() . ');'])
             . Horde::img('nav/right.png', '>')
             . '</a>';
     }
@@ -55,10 +56,14 @@ class Kronolith_FreeBusy_View_Month extends Kronolith_FreeBusy_View
         $t = new Horde_Date($this->_start);
         while ($span_left > 0) {
             $span_left -= $span;
-            $week_label = Horde::url('#')->link(array('onclick' => 'return switchDateView(\'Week\',' . $t->dateString() . ');'))
+            $week_label = Horde::url('#')->link(['onclick' => 'return switchDateView(\'Week\',' . $t->dateString() . ');'])
                 . ("Week") . ' ' . $week . '</a>';
-            $hours_html .= sprintf('<th colspan="%d" width="%s%%">%s</th>',
-                                   $span, $dayWidth, $week_label);
+            $hours_html .= sprintf(
+                '<th colspan="%d" width="%s%%">%s</th>',
+                $span,
+                $dayWidth,
+                $week_label
+            );
             $week++;
             $t->mday += 7;
             $span = min($span_left, 7);
@@ -66,31 +71,34 @@ class Kronolith_FreeBusy_View_Month extends Kronolith_FreeBusy_View
         $hours_html .= '</tr><tr><td width="100" class="label">&nbsp;</td>';
 
         for ($i = 0; $i < $this->_days; $i++) {
-            $t = new Horde_Date(array('month' => $this->_start->month,
-                                      'mday' => $this->_start->mday + $i,
-                                      'year' => $this->_start->year));
-            $day_label = Horde::url('#')->link(array('onclick' => 'return switchDateView(\'Day\',' . $t->dateString() . ');'))
+            $t = new Horde_Date(['month' => $this->_start->month,
+                'mday' => $this->_start->mday + $i,
+                'year' => $this->_start->year]);
+            $day_label = Horde::url('#')->link(['onclick' => 'return switchDateView(\'Day\',' . $t->dateString() . ');'])
                 . ($i + 1) . '.</a>';
-            $hours_html .= sprintf('<th width="%s%%">%s</th>',
-                                   $dayWidth, $day_label);
+            $hours_html .= sprintf(
+                '<th width="%s%%">%s</th>',
+                $dayWidth,
+                $day_label
+            );
         }
 
         for ($i = 0; $i < $this->_days; $i++) {
-            $start = new Horde_Date(array('hour' => $this->_startHour,
-                                          'month' => $this->_start->month,
-                                          'mday' => $this->_start->mday + $i,
-                                          'year' => $this->_start->year));
-            $end = new Horde_Date(array('hour' => $this->_endHour,
-                                        'month' => $this->_start->month,
-                                        'mday' => $this->_start->mday + $i,
-                                        'year' => $this->_start->year));
-            $this->_timeBlocks[] = array($start, $end);
+            $start = new Horde_Date(['hour' => $this->_startHour,
+                'month' => $this->_start->month,
+                'mday' => $this->_start->mday + $i,
+                'year' => $this->_start->year]);
+            $end = new Horde_Date(['hour' => $this->_endHour,
+                'month' => $this->_start->month,
+                'mday' => $this->_start->mday + $i,
+                'year' => $this->_start->year]);
+            $this->_timeBlocks[] = [$start, $end];
         }
 
         return $hours_html;
     }
 
-    protected function _render(Horde_Date $day = null)
+    protected function _render(?Horde_Date $day = null)
     {
         $this->_start = new Horde_Date($day);
         $this->_start->mday = 1;

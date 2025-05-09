@@ -1,4 +1,5 @@
 <?php
+
 /**
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -58,20 +59,25 @@ class Kronolith_Form_EditCalendar extends Horde_Form
         if ($registry->isAdmin()) {
             $this->addVariable(_("System Calendar"), 'system', 'boolean', false, false, _("System calendars don't have an owner. Only administrators can change the calendar settings and permissions."));
         }
-        $this->addVariable(_("Description"), 'description', 'longtext', false, false, null, array(4, 60));
+        $this->addVariable(_("Description"), 'description', 'longtext', false, false, null, [4, 60]);
         $this->addVariable(_("Tags"), 'tags', 'Kronolith:KronolithTags', false);
 
         /* Display URL. */
         $url = Horde::url('month.php', true, -1)
             ->add('display_cal', $calendar->getName());
         $this->addVariable(
-             _("Display URL"), '', 'link', false, false, null,
-             array(array(
-                 'url' => $url,
-                 'text' => $url,
-                 'title' => _("Click or copy this URL to display this calendar"),
-                 'target' => '_blank')
-             )
+            _("Display URL"),
+            '',
+            'link',
+            false,
+            false,
+            null,
+            [[
+                'url' => $url,
+                'text' => $url,
+                'title' => _("Click or copy this URL to display this calendar"),
+                'target' => '_blank'],
+            ]
         );
 
         /* Subscription URLs. */
@@ -98,28 +104,38 @@ class Kronolith_Form_EditCalendar extends Horde_Form
             $user = $registry->convertUsername($registry->getAuth(), false);
             try {
                 $user = $injector->getInstance('Horde_Core_Hooks')
-                    ->callHook('davusername', 'horde', array($user, false));
+                    ->callHook('davusername', 'horde', [$user, false]);
             } catch (Horde_Exception_HookNotSet $e) {
             }
             $accountUrl = Horde::url($accountUrl, true, -1)
                 . 'principals/' . $user;
             $this->addVariable(
-                 _("CalDAV Subscription URL"), '', 'link', false, false, null,
-                 array(array(
-                     'url' => $caldavUrl,
-                     'text' => $caldavUrl,
-                     'title' => _("Copy this URL to a CalDAV client to subscribe to this calendar"),
-                     'target' => '_blank')
-                 )
+                _("CalDAV Subscription URL"),
+                '',
+                'link',
+                false,
+                false,
+                null,
+                [[
+                    'url' => $caldavUrl,
+                    'text' => $caldavUrl,
+                    'title' => _("Copy this URL to a CalDAV client to subscribe to this calendar"),
+                    'target' => '_blank'],
+                ]
             );
             $this->addVariable(
-                 _("CalDAV Account URL"), '', 'link', false, false, null,
-                 array(array(
-                     'url' => $accountUrl,
-                     'text' => $accountUrl,
-                     'title' => _("Copy this URL to a CalDAV client to subscribe to all your calendars"),
-                     'target' => '_blank')
-                 )
+                _("CalDAV Account URL"),
+                '',
+                'link',
+                false,
+                false,
+                null,
+                [[
+                    'url' => $accountUrl,
+                    'text' => $accountUrl,
+                    'title' => _("Copy this URL to a CalDAV client to subscribe to all your calendars"),
+                    'target' => '_blank'],
+                ]
             );
         }
         $webdavUrl = Horde::url($webdavUrl, true, -1);
@@ -127,7 +143,7 @@ class Kronolith_Form_EditCalendar extends Horde_Form
             $user = $registry->convertUsername($calendar->get('owner'), false);
             try {
                 $user = $injector->getInstance('Horde_Core_Hooks')
-                    ->callHook('davusername', 'horde', array($user, false));
+                    ->callHook('davusername', 'horde', [$user, false]);
             } catch (Horde_Exception_HookNotSet $e) {
             }
         } else {
@@ -135,32 +151,47 @@ class Kronolith_Form_EditCalendar extends Horde_Form
         }
         $webdavUrl .= '/' . $calendar->getName() . '.ics';
         $this->addVariable(
-             _("WebDAV/ICS Subscription URL"), '', 'link', false, false, null,
-             array(array(
-                 'url' => $webdavUrl,
-                 'text' => $webdavUrl,
-                 'title' => _("Copy this URL to a WebDAV or ICS client to subscribe to this calendar"),
-                 'target' => '_blank')
-             )
+            _("WebDAV/ICS Subscription URL"),
+            '',
+            'link',
+            false,
+            false,
+            null,
+            [[
+                'url' => $webdavUrl,
+                'text' => $webdavUrl,
+                'title' => _("Copy this URL to a WebDAV or ICS client to subscribe to this calendar"),
+                'target' => '_blank'],
+            ]
         );
 
         /* Feed URL. */
         $url = Kronolith::feedUrl($calendar->getName());
         $this->addVariable(
-             _("Feed URL"), '', 'link', false, false, null,
-             array(array(
-                 'url' => $url,
-                 'text' => $url,
-             'title' => _("Copy this URL to a news feed reader to subscribe to this calendar"),
-                 'target' => '_blank')
-             )
+            _("Feed URL"),
+            '',
+            'link',
+            false,
+            false,
+            null,
+            [[
+                'url' => $url,
+                'text' => $url,
+                'title' => _("Copy this URL to a news feed reader to subscribe to this calendar"),
+                'target' => '_blank'],
+            ]
         );
 
         /* Embed code. */
         $v = $this->addVariable(
-            _("Embed code"), '', 'longtext', false, false,
+            _("Embed code"),
+            '',
+            'longtext',
+            false,
+            false,
             _("To embed this calendar in another website, use the code above."),
-            array(4, 60));
+            [4, 60]
+        );
         $v->setHelp('embed');
         $v->setDefault(Kronolith::embedCode($calendar->getName()));
 
@@ -168,25 +199,31 @@ class Kronolith_Form_EditCalendar extends Horde_Form
         if (empty($conf['share']['no_sharing']) && $owner) {
             $url = Horde::url('perms.php')->add('share', $calendar->getName());
             $this->addVariable(
-                 '', '', 'link', false, false, null,
-                 array(array(
-                     'url' => $url,
-                     'text' => _("Change Permissions"),
-                     'onclick' => Horde::popupJs(
-                          $url,
-                          array('params' => array('urlencode' => true)))
-                          . 'return false;',
-                     'class' => 'horde-button',
-                     'target' => '_blank')
-                 )
+                '',
+                '',
+                'link',
+                false,
+                false,
+                null,
+                [[
+                    'url' => $url,
+                    'text' => _("Change Permissions"),
+                    'onclick' => Horde::popupJs(
+                        $url,
+                        ['params' => ['urlencode' => true]]
+                    )
+                         . 'return false;',
+                    'class' => 'horde-button',
+                    'target' => '_blank'],
+                ]
             );
         }
 
-        $this->setButtons(array(
+        $this->setButtons([
             _("Save"),
-            array('class' => 'horde-delete', 'value' => _("Delete")),
-            array('class' => 'horde-cancel', 'value' => _("Cancel"))
-        ));
+            ['class' => 'horde-delete', 'value' => _("Delete")],
+            ['class' => 'horde-cancel', 'value' => _("Cancel")],
+        ]);
     }
 
     /**
@@ -195,30 +232,35 @@ class Kronolith_Form_EditCalendar extends Horde_Form
     public function execute()
     {
         switch ($this->_vars->submitbutton) {
-        case _("Save"):
-            $info = array();
-            foreach (array('name', 'color', 'description', 'tags', 'system') as $key) {
-                $info[$key] = $this->_vars->get($key);
-            }
-            Kronolith::updateShare($this->_calendar, $info);
-            break;
-        case _("Delete"):
-            Horde::url('calendars/delete.php')
-                ->add('c', $this->_vars->c)
-                ->redirect();
-            break;
-        case _("Cancel"):
-            Horde::url($GLOBALS['prefs']->getValue('defaultview') . '.php', true)
-                ->redirect();
-            break;
+            case _("Save"):
+                $info = [];
+                foreach (['name', 'color', 'description', 'tags', 'system'] as $key) {
+                    $info[$key] = $this->_vars->get($key);
+                }
+                Kronolith::updateShare($this->_calendar, $info);
+                break;
+            case _("Delete"):
+                Horde::url('calendars/delete.php')
+                    ->add('c', $this->_vars->c)
+                    ->redirect();
+                break;
+            case _("Cancel"):
+                Horde::url($GLOBALS['prefs']->getValue('defaultview') . '.php', true)
+                    ->redirect();
+                break;
         }
     }
 
-    public function renderActive($renderer = null, $vars = null, $action = '',
-                          $method = 'get', $enctype = null, $focus = true)
-    {
+    public function renderActive(
+        $renderer = null,
+        $vars = null,
+        $action = '',
+        $method = 'get',
+        $enctype = null,
+        $focus = true
+    ) {
         return parent::renderActive(
-            $this->getRenderer(array('varrenderer_driver' => array('kronolith', 'kronolith'))),
+            $this->getRenderer(['varrenderer_driver' => ['kronolith', 'kronolith']]),
             $this->_vars,
             $action,
             $method,

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Special prefs handling for the 'event_alarms_select' preference.
  *
@@ -25,10 +26,10 @@ class Kronolith_Prefs_Special_EventAlarms implements Horde_Core_Prefs_Ui_Special
      */
     public function display(Horde_Core_Prefs_Ui $ui)
     {
-        return Horde_Core_Prefs_Ui_Widgets::alarm(array(
+        return Horde_Core_Prefs_Ui_Widgets::alarm([
             'label' => _("Choose how you want to receive reminders for events with alarms:"),
-            'pref' => 'event_alarms'
-        ));
+            'pref' => 'event_alarms',
+        ]);
     }
 
     /**
@@ -37,7 +38,7 @@ class Kronolith_Prefs_Special_EventAlarms implements Horde_Core_Prefs_Ui_Special
     {
         global $injector, $prefs, $registry;
 
-        $data = Horde_Core_Prefs_Ui_Widgets::alarmUpdate($ui, array('pref' => 'event_alarms'));
+        $data = Horde_Core_Prefs_Ui_Widgets::alarmUpdate($ui, ['pref' => 'event_alarms']);
         if (is_null($data)) {
             return false;
         }
@@ -45,7 +46,7 @@ class Kronolith_Prefs_Special_EventAlarms implements Horde_Core_Prefs_Ui_Special
         $prefs->setValue('event_alarms', serialize($data));
 
         try {
-            $alarms = $registry->callAppMethod('kronolith', 'listAlarms', array('args' => array($_SERVER['REQUEST_TIME'])));
+            $alarms = $registry->callAppMethod('kronolith', 'listAlarms', ['args' => [$_SERVER['REQUEST_TIME']]]);
             if (!empty($alarms)) {
                 $horde_alarm = $injector->getInstance('Horde_Alarm');
                 foreach ($alarms as $alarm) {
@@ -54,7 +55,8 @@ class Kronolith_Prefs_Special_EventAlarms implements Horde_Core_Prefs_Ui_Special
                     $horde_alarm->set($alarm);
                 }
             }
-        } catch (Exception $e) {}
+        } catch (Exception $e) {
+        }
 
         return true;
     }

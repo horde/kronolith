@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith_Storage defines an API for storing free/busy information.
  *
@@ -18,7 +19,7 @@ abstract class Kronolith_Storage
      * Stub to initiate a driver.
      * @throws Kronolith_Exception
      */
-    function initialize()
+    public function initialize()
     {
         return true;
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Horde_Form for deleting resource groups.
  *
@@ -33,12 +34,15 @@ class Kronolith_Form_DeleteResourceGroup extends Horde_Form
         $this->addHidden('', 'c', 'text', true);
         $this->addVariable(
             sprintf(_("Really delete the resource \"%s\"? This cannot be undone and all data on this resource will be permanently removed."), htmlspecialchars($this->_resource->get('name'))),
-            'desc', 'description', false);
+            'desc',
+            'description',
+            false
+        );
 
-        $this->setButtons(array(
-            array('class' => 'horde-delete', 'value' => _("Delete")),
-            array('class' => 'horde-cancel', 'value' => _("Cancel")),
-        ));
+        $this->setButtons([
+            ['class' => 'horde-delete', 'value' => _("Delete")],
+            ['class' => 'horde-cancel', 'value' => _("Cancel")],
+        ]);
     }
 
     /**

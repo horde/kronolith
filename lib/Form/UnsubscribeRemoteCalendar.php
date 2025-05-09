@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Horde_Form for unsubscribing from remote calendars.
  *
@@ -24,10 +25,10 @@ class Kronolith_Form_UnsubscribeRemoteCalendar extends Horde_Form
         $this->addHidden('', 'url', 'text', true);
         $this->addVariable(sprintf(_("Really unsubscribe from the calendar \"%s\" (%s)?"), htmlspecialchars($calendar['name']), htmlspecialchars($calendar['url'])), 'desc', 'description', false);
 
-        $this->setButtons(array(
-            array('class' => 'horde-delete', 'value' => _("Unsubscribe")),
-            array('class' => 'horde-cancel', 'value' => _("Cancel"))
-        ));
+        $this->setButtons([
+            ['class' => 'horde-delete', 'value' => _("Unsubscribe")],
+            ['class' => 'horde-cancel', 'value' => _("Cancel")],
+        ]);
     }
 
     /**

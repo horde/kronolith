@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2004-2017 Horde LLC (http://www.horde.org/)
  *
@@ -35,7 +36,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
      *
      * @var array
      */
-    protected $_cache = array();
+    protected $_cache = [];
 
     /**
      * DAV client object.
@@ -85,7 +86,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
 
     public function listAlarms($date, $fullevent = false)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -115,16 +116,22 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
      *
      * @throws Kronolith_Exception
      */
-    protected function _listEvents(Horde_Date $startDate = null,
-                                   Horde_Date $endDate = null,
-                                   array $options = array())
-    {
+    protected function _listEvents(
+        ?Horde_Date $startDate = null,
+        ?Horde_Date $endDate = null,
+        array $options = []
+    ) {
         if ($this->isCalDAV()) {
             try {
                 return $this->_listCalDAVEvents(
-                    $startDate, $endDate, $options['show_recurrence'],
-                    $options['has_alarm'], $options['json'],
-                    $options['cover_dates'], $options['hide_exceptions']);
+                    $startDate,
+                    $endDate,
+                    $options['show_recurrence'],
+                    $options['has_alarm'],
+                    $options['json'],
+                    $options['cover_dates'],
+                    $options['hide_exceptions']
+                );
             } catch (Kronolith_Exception $e) {
                 // Fall back to regular ICS downloads. At least Nextcloud
                 // advertises calendars as CalDAV capable, but then denying
@@ -133,9 +140,14 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             }
         }
         return $this->_listWebDAVEvents(
-            $startDate, $endDate, $options['show_recurrence'],
-            $options['has_alarm'], $options['json'],
-            $options['cover_dates'], $options['hide_exceptions']);
+            $startDate,
+            $endDate,
+            $options['show_recurrence'],
+            $options['has_alarm'],
+            $options['json'],
+            $options['cover_dates'],
+            $options['hide_exceptions']
+        );
     }
 
     /**
@@ -160,22 +172,25 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
      * @throws Kronolith_Exception
      */
     protected function _listWebDAVEvents(
-        $startDate = null, $endDate = null, $showRecurrence = false,
-        $hasAlarm = false, $json = false, $coverDates = true,
+        $startDate = null,
+        $endDate = null,
+        $showRecurrence = false,
+        $hasAlarm = false,
+        $json = false,
+        $coverDates = true,
         $hideExceptions = false
-    )
-    {
+    ) {
         $events = $this->_getRemoteEvents();
 
         if (is_null($startDate)) {
-            $startDate = new Horde_Date(array('mday' => 1,
-                                              'month' => 1,
-                                              'year' => 0000));
+            $startDate = new Horde_Date(['mday' => 1,
+                'month' => 1,
+                'year' => 0o000]);
         }
         if (is_null($endDate)) {
-            $endDate = new Horde_Date(array('mday' => 31,
-                                            'month' => 12,
-                                            'year' => 9999));
+            $endDate = new Horde_Date(['mday' => 31,
+                'month' => 12,
+                'year' => 9999]);
         }
 
         $startDate = clone $startDate;
@@ -184,10 +199,16 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         $endDate->hour = 23;
         $endDate->min = $endDate->sec = 59;
 
-        $results = array();
+        $results = [];
         $this->_processComponents(
-            $results, $events, $startDate, $endDate, $showRecurrence, $json,
-            $coverDates, $hideExceptions
+            $results,
+            $events,
+            $startDate,
+            $endDate,
+            $showRecurrence,
+            $json,
+            $coverDates,
+            $hideExceptions
         );
 
         return $results;
@@ -215,11 +236,14 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
      * @throws Kronolith_Exception
      */
     protected function _listCalDAVEvents(
-        $startDate = null, $endDate = null, $showRecurrence = false,
-        $hasAlarm = false, $json = false, $coverDates = true,
+        $startDate = null,
+        $endDate = null,
+        $showRecurrence = false,
+        $hasAlarm = false,
+        $json = false,
+        $coverDates = true,
         $hideExceptions = false
-    )
-    {
+    ) {
         if (!is_null($startDate)) {
             $startDate = clone $startDate;
             $startDate->hour = $startDate->min = $startDate->sec = 0;
@@ -266,10 +290,14 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         $xml->endDocument();
 
         $url = $this->_getUrl();
-        list($response, $events) = $this->_request('REPORT', $url, $xml,
-                                                   array('Depth' => 1));
+        [$response, $events] = $this->_request(
+            'REPORT',
+            $url,
+            $xml,
+            ['Depth' => 1]
+        );
         if (!$events->children('DAV:')->response) {
-            return array();
+            return [];
         }
         if (isset($response['headers']['content-location'])) {
             $path = $response['headers']['content-location'];
@@ -278,7 +306,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             $path = $parsedUrl['path'];
         }
 
-        $results = array();
+        $results = [];
         foreach ($events->children('DAV:')->response as $response) {
             if (!$response->children('DAV:')->propstat) {
                 continue;
@@ -290,8 +318,14 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
                 throw new Kronolith_Exception($e);
             }
             $this->_processComponents(
-                $results, $this->_convertEvents($ical), $startDate, $endDate,
-                $showRecurrence, $json, $coverDates, $hideExceptions,
+                $results,
+                $this->_convertEvents($ical),
+                $startDate,
+                $endDate,
+                $showRecurrence,
+                $json,
+                $coverDates,
+                $hideExceptions,
                 trim(str_replace($path, '', $response->href), '/')
             );
         }
@@ -310,7 +344,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
      */
     protected function _convertEvents($ical)
     {
-        $events = array();
+        $events = [];
         foreach ($ical->getComponents() as $component) {
             if ($component->getType() == 'vEvent') {
                 try {
@@ -353,11 +387,17 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
      * @throws Kronolith_Exception
      */
     protected function _processComponents(
-        &$results, $events, $startDate, $endDate, $showRecurrence, $json,
-        $coverDates, $hideExceptions, $id = null
-    )
-    {
-        $processed = array();
+        &$results,
+        $events,
+        $startDate,
+        $endDate,
+        $showRecurrence,
+        $json,
+        $coverDates,
+        $hideExceptions,
+        $id = null
+    ) {
+        $processed = [];
         foreach (array_values($events) as $i => $event) {
             $event->permission = $this->getPermission();
             // Force string so JSON encoding is consistent across drivers.
@@ -410,8 +450,15 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
                 $timestamp = $exceptions[$event->uid][$event->sequence];
                 $processed[$key]->recurrence->addException(date('Y', $timestamp), date('m', $timestamp), date('d', $timestamp));
             }
-            Kronolith::addEvents($results, $event, $startDate, $endDate,
-                                 $showRecurrence, $json, $coverDates);
+            Kronolith::addEvents(
+                $results,
+                $event,
+                $startDate,
+                $endDate,
+                $showRecurrence,
+                $json,
+                $coverDates
+            );
         }
     }
 
@@ -447,10 +494,17 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
                 } catch (Horde_Icalendar_Exception $e) {
                     throw new Kronolith_Exception($e);
                 }
-                $results = array();
+                $results = [];
                 $this->_processComponents(
-                    $results, $this->_convertEvents($ical), null, null, false,
-                    false, false, false, $eventId
+                    $results,
+                    $this->_convertEvents($ical),
+                    null,
+                    null,
+                    false,
+                    false,
+                    false,
+                    false,
+                    $eventId
                 );
                 $event = reset(reset($results));
                 if (!$event) {
@@ -484,14 +538,15 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
     protected function _updateEvent(Kronolith_Event $event)
     {
         $response = $this->_saveEvent($event);
-        if (!in_array($response['statusCode'], array(200, 204))) {
+        if (!in_array($response['statusCode'], [200, 204])) {
             // To find out if $response still contains the final URL after the refactoring
             Horde::debug($response);
             Horde::log(
                 sprintf(
                     'Failed to update event on remote calendar: url = "%s", status = %s',
                     // TODO need response text here.
-                    ''/*$response['url']*/, $response['body']
+                    ''/*$response['url']*/,
+                    $response['body']
                 ),
                 'INFO'
             );
@@ -512,14 +567,14 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
     protected function _addEvent(Kronolith_Event $event)
     {
         if (!$event->uid) {
-            $event->uid = (string)new Horde_Support_Uuid;
+            $event->uid = (string) new Horde_Support_Uuid();
         }
         if (!$event->id) {
             $event->id = $event->uid . '.ics';
         }
 
         $response = $this->_saveEvent($event);
-        if (!in_array($response['statusCode'], array(200, 201, 204))) {
+        if (!in_array($response['statusCode'], [200, 201, 204])) {
             Horde::log(
                 sprintf(
                     'Failed to create event on remote calendar: status = %s',
@@ -554,7 +609,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
                     'PUT',
                     '',
                     $ical->exportvCalendar(),
-                    array('Content-Type' => 'text/calendar')
+                    ['Content-Type' => 'text/calendar']
                 );
         } catch (\Sabre\HTTP\ClientException $e) {
             Horde::log($e, 'INFO');
@@ -604,12 +659,13 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             Horde::log($e, 'INFO');
             throw new Kronolith_Exception($e);
         }
-        if (!in_array($response['statusCode'], array(200, 202, 204))) {
+        if (!in_array($response['statusCode'], [200, 202, 204])) {
             Horde::log(
                 sprintf(
                     'Failed to delete event from remote calendar: url = "%s", status = %s',
                     // TODO need response text here.
-                    $url, $response['body']
+                    $url,
+                    $response['body']
                 ),
                 'INFO'
             );
@@ -632,7 +688,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         $url = $this->_getUrl();
         $cacheOb = $GLOBALS['injector']->getInstance('Horde_Cache');
         $cacheVersion = 2;
-        $signature = 'kronolith_remote_'  . $cacheVersion . '_' . $url . '_' . serialize($this->_params);
+        $signature = 'kronolith_remote_' . $cacheVersion . '_' . $url . '_' . serialize($this->_params);
         if ($cache) {
             $calendar = $cacheOb->get($signature, 3600);
             if ($calendar) {
@@ -654,8 +710,11 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             throw new Kronolith_Exception($e);
         } catch (\Sabre\DAV\Exception $e) {
             Horde::log(
-                sprintf('Failed to retrieve remote calendar: url = "%s", status = %s',
-                        $url, $e->getHttpStatus()),
+                sprintf(
+                    'Failed to retrieve remote calendar: url = "%s", status = %s',
+                    $url,
+                    $e->getHttpStatus()
+                ),
                 'INFO'
             );
             $error .= ': ' . $e->getResponse()->getStatusText();
@@ -667,8 +726,11 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
 
         /* Log fetch at DEBUG level. */
         Horde::log(
-            sprintf('Retrieved remote calendar for %s: url = "%s"',
-                    $GLOBALS['registry']->getAuth(), $url),
+            sprintf(
+                'Retrieved remote calendar for %s: url = "%s"',
+                $GLOBALS['registry']->getAuth(),
+                $url
+            ),
             'DEBUG'
         );
 
@@ -701,7 +763,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
     {
         $cacheOb = $GLOBALS['injector']->getInstance('Horde_Cache');
         $cacheVersion = 1;
-        $signature = 'kronolith_remote_events_'  . $cacheVersion . '_' . $this->_getUrl() . '_' . serialize($this->_params);
+        $signature = 'kronolith_remote_events_' . $cacheVersion . '_' . $this->_getUrl() . '_' . serialize($this->_params);
         $events = $cacheOb->get($signature, 3600);
         if ($events) {
             $events = unserialize($events);
@@ -757,7 +819,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             $properties = $client->propfind(
                 '',
                 ['{DAV:}resourcetype', '{DAV:}current-user-privilege-set']
-             );
+            );
         } catch (\Sabre\HTTP\ClientException $e) {
             Horde::log($e, 'INFO');
             return false;
@@ -777,24 +839,23 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         if (!empty($properties['{DAV:}current-user-privilege-set'])) {
             $privileges = $properties['{DAV:}current-user-privilege-set'];
             // TODO: Move this to a helper/iterator
-            foreach ($privileges as $id => $privilege)
-            {
+            foreach ($privileges as $id => $privilege) {
                 if (empty($privilege['value'][0]['name'])) {
                     continue;
                 }
                 $privilegeName = $privilege['value'][0]['name'];
                 if ($privilegeName == '{DAV:}read') {
-                /* GET access. */
+                    /* GET access. */
                     $this->_permission |= Horde_Perms::SHOW;
                     $this->_permission |= Horde_Perms::READ;
                 }
                 if ($privilegeName == '{DAV:}write' ||
                     $privilegeName == '{DAV:}write-content') {
-                /* PUT access. */
+                    /* PUT access. */
                     $this->_permission |= Horde_Perms::EDIT;
                 }
                 if ($privilegeName == '{DAV:}unbind') {
-                /* DELETE access. */
+                    /* DELETE access. */
                     $this->_permission |= Horde_Perms::DELETE;
                 }
             }
@@ -811,17 +872,17 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
      */
     public function getCalendarInfo()
     {
-        $result = array('name' => '', 'desc' => '', 'color' => '');
+        $result = ['name' => '', 'desc' => '', 'color' => ''];
         if ($this->isCalDAV()) {
             $client = $this->_getClient($this->_getUrl());
             try {
                 $properties = $client->propfind(
                     '',
-                    array(
+                    [
                         '{DAV:}displayname',
                         '{' . CalDAV\Plugin::NS_CALDAV . '}calendar-description',
-                        '{http://apple.com/ns/ical/}calendar-color'
-                    )
+                        '{http://apple.com/ns/ical/}calendar-color',
+                    ]
                 );
                 if (isset($properties['{DAV:}displayname'])) {
                     $result['name'] = $properties['{DAV:}displayname'];
@@ -879,18 +940,25 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
      *                SimpleXMLElement results.
      * @throws Kronolith_Exception
      */
-    protected function _request($method, $url, XMLWriter $xml = null,
-                                array $headers = array())
-    {
+    protected function _request(
+        $method,
+        $url,
+        ?XMLWriter $xml = null,
+        array $headers = []
+    ) {
         try {
             $response = $this->_getClient($url)
-                ->request($method,
-                          '',
-                          $xml ? $xml->outputMemory() : null,
-                          array_merge(array('Cache-Control' => 'no-cache',
-                                            'Pragma' => 'no-cache',
-                                            'Content-Type' => 'application/xml'),
-                                      $headers));
+                ->request(
+                    $method,
+                    '',
+                    $xml ? $xml->outputMemory() : null,
+                    array_merge(
+                        ['Cache-Control' => 'no-cache',
+                            'Pragma' => 'no-cache',
+                            'Content-Type' => 'application/xml'],
+                        $headers
+                    )
+                );
         } catch (\Sabre\HTTP\ClientException $e) {
             Horde::log($e, 'INFO');
             throw new Kronolith_Exception($e);
@@ -907,7 +975,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         } catch (Exception $e) {
             throw new Kronolith_Exception($e);
         }
-        return array($response, $xml);
+        return [$response, $xml];
     }
 
     /**
@@ -922,9 +990,11 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
     {
         $url = trim($this->calendar);
         if (strpos($url, 'http') !== 0) {
-            $url = str_replace(array('webcal://', 'webdav://', 'webdavs://'),
-                               array('http://', 'http://', 'https://'),
-                               $url);
+            $url = str_replace(
+                ['webcal://', 'webdav://', 'webdavs://'],
+                ['http://', 'http://', 'https://'],
+                $url
+            );
         }
         return $url;
     }
@@ -942,7 +1012,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
     {
         global $conf;
 
-        $options = array('baseUri' => $uri);
+        $options = ['baseUri' => $uri];
         if (!empty($this->_params['user'])) {
             $options['userName'] = $this->_params['user'];
             $options['password'] = $this->_params['password'];
@@ -952,7 +1022,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
 
         $this->_client->addCurlSetting(
             CURLOPT_TIMEOUT,
-            isset($this->_params['timeout']) ? $this->_params['timeout'] : 5
+            $this->_params['timeout'] ?? 5
         );
         if (!empty($conf['http']['proxy']['proxy_host'])) {
             $this->_client->addCurlSetting(

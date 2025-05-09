@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Storage driver for Kronolith's Geo location data.
  *

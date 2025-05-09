@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2009-2017 Horde LLC (http://www.horde.org/)
  *
@@ -105,7 +106,7 @@ class Kronolith_Event_Horde extends Kronolith_Event
         $this->id = '_' . $this->_api . $event['id'];
         $this->icon = !empty($event['icon']) ? $event['icon'] : null;
         $this->title = $event['title'];
-        $this->description = isset($event['description']) ? $event['description'] : '';
+        $this->description = $event['description'] ?? '';
         if (isset($event['location'])) {
             $this->location = $event['location'];
         }
@@ -117,14 +118,14 @@ class Kronolith_Event_Horde extends Kronolith_Event
         }
         if (isset($event['status'])) {
             switch ($event['status']) {
-            case 'confirmed':
-                $this->status = Kronolith::STATUS_CONFIRMED;
-                break;
-            case 'tentative':
-                $this->status = Kronolith::STATUS_TENTATIVE;
-                break;
-            default:
-                $this->status = Kronolith::STATUS_FREE;
+                case 'confirmed':
+                    $this->status = Kronolith::STATUS_CONFIRMED;
+                    break;
+                case 'tentative':
+                    $this->status = Kronolith::STATUS_TENTATIVE;
+                    break;
+                default:
+                    $this->status = Kronolith::STATUS_FREE;
             }
         } else {
             $this->status = Kronolith::STATUS_FREE;
@@ -134,7 +135,7 @@ class Kronolith_Event_Horde extends Kronolith_Event
         }
         $this->_params = $event['params'];
         $this->_link = !empty($event['link']) ? $event['link'] : null;
-        $this->url = !empty($event['url']) ? (string)$event['url'] : null;
+        $this->url = !empty($event['url']) ? (string) $event['url'] : null;
         $this->_editLink = !empty($event['edit_link']) ? $event['edit_link'] : null;
         $this->_deleteLink = !empty($event['delete_link']) ? $event['delete_link'] : null;
         $this->_ajaxLink = !empty($event['ajax_link']) ? $event['ajax_link'] : null;
@@ -159,16 +160,20 @@ class Kronolith_Event_Horde extends Kronolith_Event
             }
             if (isset($event['recurrence']['exceptions'])) {
                 foreach ($event['recurrence']['exceptions'] as $exception) {
-                    $recurrence->addException(substr($exception, 0, 4),
-                                              substr($exception, 4, 2),
-                                              substr($exception, 6, 2));
+                    $recurrence->addException(
+                        substr($exception, 0, 4),
+                        substr($exception, 4, 2),
+                        substr($exception, 6, 2)
+                    );
                 }
             }
             if (isset($event['recurrence']['completions'])) {
                 foreach ($event['recurrence']['completions'] as $completion) {
-                    $recurrence->addCompletion(substr($completion, 0, 4),
-                                               substr($completion, 4, 2),
-                                               substr($completion, 6, 2));
+                    $recurrence->addCompletion(
+                        substr($completion, 0, 4),
+                        substr($completion, 4, 2),
+                        substr($completion, 6, 2)
+                    );
                 }
             }
             $this->recurrence = $recurrence;
@@ -193,7 +198,7 @@ class Kronolith_Event_Horde extends Kronolith_Event
      */
     public function toTimeobject()
     {
-        $timeobject = array(
+        $timeobject = [
             'id' => substr($this->id, strlen($this->_api) + 1),
             'icon' => $this->icon,
             'title' => $this->title,
@@ -205,10 +210,10 @@ class Kronolith_Event_Horde extends Kronolith_Event
             'link' => $this->_link,
             'ajax_link' => $this->_ajaxLink,
             'permissions' => $this->_permissions,
-            'variable_length' => $this->_variableLength);
+            'variable_length' => $this->_variableLength];
 
         if ($this->recurs()) {
-            $timeobject['recurrence'] = array('type' => $this->recurrence->getRecurType());
+            $timeobject['recurrence'] = ['type' => $this->recurrence->getRecurType()];
             if ($end = $this->recurrence->getRecurEnd()) {
                 $timeobject['recurrence']['end'] = $end->format('Y-m-d\TH:i:s');
             }
@@ -251,16 +256,16 @@ class Kronolith_Event_Horde extends Kronolith_Event
         }
 
         if (isset($this->_permissions)) {
-            return (bool)($this->_permissions & $permission);
+            return (bool) ($this->_permissions & $permission);
         }
 
         switch ($permission) {
-        case Horde_Perms::SHOW:
-        case Horde_Perms::READ:
-            return true;
+            case Horde_Perms::SHOW:
+            case Horde_Perms::READ:
+                return true;
 
-        default:
-            return false;
+            default:
+                return false;
         }
     }
 
@@ -281,7 +286,7 @@ class Kronolith_Event_Horde extends Kronolith_Event
      *
      * @return Horde_Url
      */
-    public function getViewUrl($params = array(), $full = false, $encoded = true)
+    public function getViewUrl($params = [], $full = false, $encoded = true)
     {
         if (empty($this->_link)) {
             return null;
@@ -295,7 +300,7 @@ class Kronolith_Event_Horde extends Kronolith_Event
      *
      * @return Horde_Url
      */
-    public function getEditUrl($params = array(), $full = false)
+    public function getEditUrl($params = [], $full = false)
     {
         if (empty($this->_editLink)) {
             return null;
@@ -312,7 +317,7 @@ class Kronolith_Event_Horde extends Kronolith_Event
      *
      * @return Horde_Url
      */
-    public function getDeleteUrl($params = array(), $full = false)
+    public function getDeleteUrl($params = [], $full = false)
     {
         if (empty($this->_deleteLink)) {
             return null;
@@ -343,19 +348,20 @@ class Kronolith_Event_Horde extends Kronolith_Event
      *
      * @return stdClass  A simple object.
      */
-    public function toJson(array $options = array())
+    public function toJson(array $options = [])
     {
-        $options = array_merge(array(
-            'all_day' => null,
-            'full' => false,
-            'time_format' => 'H:i',
-            'history' => false),
+        $options = array_merge(
+            [
+                'all_day' => null,
+                'full' => false,
+                'time_format' => 'H:i',
+                'history' => false],
             $options
         );
         $json = parent::toJson($options);
         if ($this->_ajaxLink) {
             $json->aj = $this->_ajaxLink;
-        } elseif ($link = (string)$this->getViewUrl(array(), true, false)) {
+        } elseif ($link = (string) $this->getViewUrl([], true, false)) {
             $json->ln = $link;
         }
         if (isset($this->_variableLength)) {

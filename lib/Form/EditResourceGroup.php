@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Horde_Form for editing resource groups.
  *
@@ -33,22 +34,22 @@ class Kronolith_Form_EditResourceGroup extends Horde_Form
         $this->_resource = $resource;
         parent::__construct($vars, sprintf(_("Edit %s"), $resource->get('name')));
 
-        $resources = Kronolith::getDriver('Resource')->listResources(Horde_Perms::READ, array('isgroup' =>0));
-        $enum = array();
+        $resources = Kronolith::getDriver('Resource')->listResources(Horde_Perms::READ, ['isgroup' => 0]);
+        $enum = [];
         foreach ($resources as $r) {
             $enum[$r->getId()] = htmlspecialchars($r->get('name'));
         }
 
         $this->addHidden('', 'c', 'text', true);
         $this->addVariable(_("Name"), 'name', 'text', true);
-        $this->addVariable(_("Description"), 'description', 'longtext', false, false, null, array(4, 60));
-        $this->addVariable(_("Resources"), 'members', 'multienum', false, false, null, array('enum' => $enum));
+        $this->addVariable(_("Description"), 'description', 'longtext', false, false, null, [4, 60]);
+        $this->addVariable(_("Resources"), 'members', 'multienum', false, false, null, ['enum' => $enum]);
 
-        $this->setButtons(array(
+        $this->setButtons([
             _("Save"),
-            array('class' => 'horde-delete', 'value' => _("Delete")),
-            array('class' => 'horde-cancel', 'value' => _("Cancel"))
-        ));
+            ['class' => 'horde-delete', 'value' => _("Delete")],
+            ['class' => 'horde-cancel', 'value' => _("Cancel")],
+        ]);
     }
 
     /**
@@ -57,30 +58,30 @@ class Kronolith_Form_EditResourceGroup extends Horde_Form
     public function execute()
     {
         switch ($this->_vars->submitbutton) {
-        case _("Save"):
-            $new_name = $this->_vars->get('name');
-            $this->_resource->set('name', $new_name);
-            $this->_resource->set('description', $this->_vars->get('description'));
-            $this->_resource->set('members', $this->_vars->get('members'));
+            case _("Save"):
+                $new_name = $this->_vars->get('name');
+                $this->_resource->set('name', $new_name);
+                $this->_resource->set('description', $this->_vars->get('description'));
+                $this->_resource->set('members', $this->_vars->get('members'));
 
-            try {
-                $this->_resource->save();
-            } catch (Exception $e) {
-                throw new Kronolith_Exception(sprintf(_("Unable to save resource \"%s\": %s"), $new_name, $e->getMessage()));
-            }
+                try {
+                    $this->_resource->save();
+                } catch (Exception $e) {
+                    throw new Kronolith_Exception(sprintf(_("Unable to save resource \"%s\": %s"), $new_name, $e->getMessage()));
+                }
 
-            return $this->_resource;
+                return $this->_resource;
 
-        case _("Delete"):
-            Horde::url('resources/groups/delete.php')
-                ->add('c', $this->_vars->c)
-                ->redirect();
-            break;
+            case _("Delete"):
+                Horde::url('resources/groups/delete.php')
+                    ->add('c', $this->_vars->c)
+                    ->redirect();
+                break;
 
-        case _("Cancel"):
-            Horde::url($GLOBALS['prefs']->getValue('defaultview') . '.php', true)
-                ->redirect();
-            break;
+            case _("Cancel"):
+                Horde::url($GLOBALS['prefs']->getValue('defaultview') . '.php', true)
+                    ->redirect();
+                break;
         }
     }
 }

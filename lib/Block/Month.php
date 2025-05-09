@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display a mini month view of calendar items.
  */
@@ -6,7 +7,7 @@ class Kronolith_Block_Month extends Horde_Core_Block
 {
     /**
      */
-    public function __construct($app, $params = array())
+    public function __construct($app, $params = [])
     {
         parent::__construct($app, $params);
 
@@ -17,13 +18,13 @@ class Kronolith_Block_Month extends Horde_Core_Block
      */
     protected function _params()
     {
-        $params = array(
-            'calendar' => array(
+        $params = [
+            'calendar' => [
                 'name' => _("Calendar"),
                 'type' => 'enum',
-                'default' => '__all'
-            )
-        );
+                'default' => '__all',
+            ],
+        ];
 
         $params['calendar']['values']['__all'] = _("All Visible");
         foreach (Kronolith::listCalendars(Horde_Perms::SHOW, true) as $id => $cal) {
@@ -73,15 +74,15 @@ class Kronolith_Block_Month extends Horde_Core_Block
 
         $year = date('Y');
         $month = date('m');
-        $startday = new Horde_Date(array('mday' => 1,
-                                         'month' => $month,
-                                         'year' => $year));
+        $startday = new Horde_Date(['mday' => 1,
+            'month' => $month,
+            'year' => $year]);
         $startday = $startday->dayOfWeek();
         if (!$prefs->getValue('week_start_monday')) {
             $startOfView = 1 - $startday;
-            $endday = new Horde_Date(array('mday' => Horde_Date_Utils::daysInMonth($month, $year),
-                                           'month' => $month,
-                                           'year' => $year));
+            $endday = new Horde_Date(['mday' => Horde_Date_Utils::daysInMonth($month, $year),
+                'month' => $month,
+                'year' => $year]);
         } else {
             if ($startday == Horde_Date::DATE_SUNDAY) {
                 $startOfView = -5;
@@ -104,7 +105,7 @@ class Kronolith_Block_Month extends Horde_Core_Block
         $html = '<table cellspacing="1" class="monthgrid" width="100%"><tr>';
 
         /* Set up the weekdays. */
-        $weekdays = array(_("Mo"), _("Tu"), _("We"), _("Th"), _("Fr"), _("Sa"));
+        $weekdays = [_("Mo"), _("Tu"), _("We"), _("Th"), _("Fr"), _("Sa")];
         if (!$prefs->getValue('week_start_monday')) {
             array_unshift($weekdays, _("Su"));
         } else {
@@ -117,10 +118,10 @@ class Kronolith_Block_Month extends Horde_Core_Block
         try {
             if (isset($this->_params['calendar']) &&
                 $this->_params['calendar'] != '__all') {
-                list($type, $calendar) = explode('_', $this->_params['calendar'], 2);
+                [$type, $calendar] = explode('_', $this->_params['calendar'], 2);
                 $driver = Kronolith::getDriver($type, $calendar);
-                $all_events = $driver->listEvents($startDate, $endDate, array(
-                    'show_recurrence' => true));
+                $all_events = $driver->listEvents($startDate, $endDate, [
+                    'show_recurrence' => true]);
             } else {
                 $all_events = Kronolith::listEvents($startDate, $endDate, $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_CALENDARS));
             }
@@ -132,8 +133,8 @@ class Kronolith_Block_Month extends Horde_Core_Block
         $week = -1;
         $weekStart = $prefs->getValue('week_start_monday');
         for ($date_ob = new Kronolith_Day($month, $startOfView, $year);
-             $date_ob->compareDate($endDate) < 0;
-             $date_ob->mday++) {
+            $date_ob->compareDate($endDate) < 0;
+            $date_ob->mday++) {
             if ($weekday == 7) {
                 $weekday = 0;
             }

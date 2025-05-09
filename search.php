@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2004-2017 Horde LLC (http://www.horde.org/)
  *
@@ -69,7 +70,7 @@ if ($search_mode == 'basic') {
 
     $optgroup = $GLOBALS['browser']->hasFeature('optgroup');
     $current_user = $GLOBALS['registry']->getAuth();
-    $calendars = array();
+    $calendars = [];
     foreach (Kronolith::listInternalCalendars(false, Horde_Perms::READ) as $id => $cal) {
         if ($cal->get('owner') && $cal->get('owner') == $current_user) {
             $calendars[_("My Calendars:")]['|' . $id] = $cal->get('name');
@@ -93,23 +94,23 @@ if ($search_mode == 'basic') {
 }
 
 if ($search_mode == 'basic') {
-    $page_output->addInlineScript(array(
-        '$("pattern_title").focus()'
-    ), true);
+    $page_output->addInlineScript([
+        '$("pattern_title").focus()',
+    ], true);
 } else {
-    $page_output->addInlineScript(array(
-        '$("title").focus()'
-    ), true);
-    Horde_Core_Ui_JsCalendar::init(array('full_weekdays' => true));
+    $page_output->addInlineScript([
+        '$("title").focus()',
+    ], true);
+    Horde_Core_Ui_JsCalendar::init(['full_weekdays' => true]);
     $page_output->addScriptFile('edit.js');
 }
 
 $page_output->addScriptFile('tooltips.js', 'horde');
-$page_output->header(array(
-    'title' => _("Search")
-));
+$page_output->header([
+    'title' => _("Search"),
+]);
 require KRONOLITH_TEMPLATES . '/javascript_defs.php';
-$notification->notify(array('listeners' => 'status'));
+$notification->notify(['listeners' => 'status']);
 
 echo '<div id="page">';
 

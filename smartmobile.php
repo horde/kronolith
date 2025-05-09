@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kronolith smartmobile view.
  *
@@ -17,7 +18,7 @@ Horde_Registry::appInit('kronolith');
 
 $title = _("My Calendar");
 
-$view = new Horde_View(array('templatePath' => KRONOLITH_TEMPLATES . '/smartmobile'));
+$view = new Horde_View(['templatePath' => KRONOLITH_TEMPLATES . '/smartmobile']);
 $view->addHelper('Horde_Core_Smartmobile_View_Helper');
 $view->today = new Horde_Date($_SERVER['REQUEST_TIME']);
 $view->registry = $registry;
@@ -31,10 +32,10 @@ $page_output->addScriptFile('date/date.js', 'horde');
 $page_output->addScriptFile('smartmobile.js');
 require KRONOLITH_TEMPLATES . '/smartmobile/javascript_defs.php';
 
-$page_output->header(array(
+$page_output->header([
     'title' => $title,
-    'view' => $registry::VIEW_SMARTMOBILE
-));
+    'view' => $registry::VIEW_SMARTMOBILE,
+]);
 
 echo $view->render('day');
 echo $view->render('event');

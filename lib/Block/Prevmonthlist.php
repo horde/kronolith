@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display a list of previous calendar items grouped by month.
  */
@@ -6,7 +7,7 @@ class Kronolith_Block_Prevmonthlist extends Horde_Core_Block
 {
     /**
      */
-    public function __construct($app, $params = array())
+    public function __construct($app, $params = [])
     {
         parent::__construct($app, $params);
 
@@ -17,23 +18,23 @@ class Kronolith_Block_Prevmonthlist extends Horde_Core_Block
      */
     protected function _params()
     {
-        $params = array(
-            'calendar' => array(
+        $params = [
+            'calendar' => [
                 'name' => _("Calendar"),
                 'type' => 'enum',
-                'default' => '__all'
-            ),
-            'months' => array(
+                'default' => '__all',
+            ],
+            'months' => [
                 'name' => _("Months Before"),
                 'type' => 'int',
-                'default' => 2
-            ),
-            'alarms' => array(
+                'default' => 2,
+            ],
+            'alarms' => [
                 'name' => _("Show only events that have an alarm set?"),
                 'type' => 'checkbox',
-                'default' => 0
-            )
-        );
+                'default' => 0,
+            ],
+        ];
 
         $params['calendar']['values']['__all'] = _("All Visible");
         foreach (Kronolith::listCalendars(Horde_Perms::SHOW, true) as $id => $cal) {
@@ -66,16 +67,16 @@ class Kronolith_Block_Prevmonthlist extends Horde_Core_Block
 
         $page_output->addScriptFile('tooltips.js', 'horde');
 
-        $startDate = new Horde_Date(array(
+        $startDate = new Horde_Date([
             'year' => date('Y'),
             'month' => date('n') - $this->_params['months'],
-            'mday' => date('j')
-        ));
-        $endDate = new Horde_Date(array(
+            'mday' => date('j'),
+        ]);
+        $endDate = new Horde_Date([
             'year' => date('Y'),
             'month' => date('n'),
-            'mday' => date('j') - 1
-        ));
+            'mday' => date('j') - 1,
+        ]);
 
         $current_month = '';
 
@@ -89,10 +90,13 @@ class Kronolith_Block_Prevmonthlist extends Horde_Core_Block
                 if (!$calendars[$this->_params['calendar']]->hasPermission(Horde_Perms::READ)) {
                     return _("Permission Denied");
                 }
-                list($type, $calendar) = explode('_', $this->_params['calendar']);
+                [$type, $calendar] = explode('_', $this->_params['calendar']);
                 $driver = Kronolith::getDriver($type, $calendar);
                 $all_events = $driver->listEvents(
-                    $startDate, $endDate, array('show_recurrence' => true));
+                    $startDate,
+                    $endDate,
+                    ['show_recurrence' => true]
+                );
             } else {
                 $all_events = Kronolith::listEvents(
                     $startDate,
@@ -112,7 +116,9 @@ class Kronolith_Block_Prevmonthlist extends Horde_Core_Block
         /* Loop through the days. */
         for ($i = 0; $i <= $days; ++$i) {
             $day = new Kronolith_Day(
-                $startDate->month, $startDate->mday + $i, $startDate->year
+                $startDate->month,
+                $startDate->mday + $i,
+                $startDate->year
             );
             if (empty($all_events[$day->dateString()])) {
                 continue;

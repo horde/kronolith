@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Utility class for dealing with Kronolith_Resource objects
  *
@@ -14,26 +15,26 @@
 class Kronolith_Resource
 {
     /* ResponseType constants */
-    const RESPONSETYPE_NONE = 0;
-    const RESPONSETYPE_AUTO = 1;
-    const RESPONSETYPE_ALWAYS_ACCEPT = 2;
-    const RESPONSETYPE_ALWAYS_DECLINE = 3;
-    const RESPONSETYPE_MANUAL = 4;
+    public const RESPONSETYPE_NONE = 0;
+    public const RESPONSETYPE_AUTO = 1;
+    public const RESPONSETYPE_ALWAYS_ACCEPT = 2;
+    public const RESPONSETYPE_ALWAYS_DECLINE = 3;
+    public const RESPONSETYPE_MANUAL = 4;
 
-   /**
-    * Adds a new resource to storage
-    *
-    * @param array $info            The resource array.
-    *   - name: (string)            The resource name.
-    *   - desc: (string)            The resource description.
-    *   - email: (string)           An email address for the resource, if
-    *                               needed.
-    *   - response_type: (integer)  The RESPONSETYPE_* constant.
-    *   - group: (boolean)          Flag resource as a group.
-    *   - members: (array)          An array of resource ids if this is a group.
-    *
-    * @return Kronolith_Resource_Single
-    */
+    /**
+     * Adds a new resource to storage
+     *
+     * @param array $info            The resource array.
+     *   - name: (string)            The resource name.
+     *   - desc: (string)            The resource description.
+     *   - email: (string)           An email address for the resource, if
+     *                               needed.
+     *   - response_type: (integer)  The RESPONSETYPE_* constant.
+     *   - group: (boolean)          Flag resource as a group.
+     *   - members: (array)          An array of resource ids if this is a group.
+     *
+     * @return Kronolith_Resource_Single
+     */
     public static function addResource(array $info)
     {
         global $injector, $registry;
@@ -59,9 +60,9 @@ class Kronolith_Resource
         if (!empty($info['group'])) {
             $share->set('isgroup', true);
             $share->set('members', serialize($info['members']));
-            $resource = new Kronolith_Resource_Group(array('share' => $share));
+            $resource = new Kronolith_Resource_Group(['share' => $share]);
         } else {
-            $resource = new Kronolith_Resource_Single(array('share' => $share));
+            $resource = new Kronolith_Resource_Single(['share' => $share]);
         }
 
         $driver = Kronolith::getDriver('Resource');
@@ -78,7 +79,7 @@ class Kronolith_Resource
      */
     public static function checkResources($event)
     {
-        $accepted_resources = array();
+        $accepted_resources = [];
 
         // Don't waste time with resource acceptance if the status is cancelled,
         // the event will be removed from the resource calendar anyway.
@@ -115,7 +116,7 @@ class Kronolith_Resource
 
                 if ($response == Kronolith::RESPONSE_DECLINED && $event->uid) {
                     $r_driver = Kronolith::getDriver('Resource');
-                    $r_event = $r_driver->getByUID($event->uid, array($resource->get('calendar')));
+                    $r_event = $r_driver->getByUID($event->uid, [$resource->get('calendar')]);
                     $r_driver->deleteEvent($r_event, true, true);
                 }
 
@@ -147,7 +148,7 @@ class Kronolith_Resource
         global $injector;
 
         $r_share = $injector->getInstance('Kronolith_Shares')->getShare($id);
-        return new Kronolith_Resource_Single(array('share' => $r_share));
+        return new Kronolith_Resource_Single(['share' => $r_share]);
     }
 
 }

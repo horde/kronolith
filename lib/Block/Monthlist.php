@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display a list of calendar items grouped by month.
  */
@@ -6,7 +7,7 @@ class Kronolith_Block_Monthlist extends Horde_Core_Block
 {
     /**
      */
-    public function __construct($app, $params = array())
+    public function __construct($app, $params = [])
     {
         parent::__construct($app, $params);
 
@@ -17,25 +18,25 @@ class Kronolith_Block_Monthlist extends Horde_Core_Block
      */
     protected function _params()
     {
-        $params = array(
-            'calendar' => array(
+        $params = [
+            'calendar' => [
                 'name' => _("Calendar"),
                 'type' => 'enum',
-                'default' => '__all'),
-            'months' => array(
+                'default' => '__all'],
+            'months' => [
                 'name' => _("Months Ahead"),
                 'type' => 'int',
-                'default' => 2),
-            'maxevents' => array(
+                'default' => 2],
+            'maxevents' => [
                 'name' => _("Maximum number of events to display (0 = no limit)"),
                 'type' => 'int',
-                'default' => 0),
-            'alarms' => array(
+                'default' => 0],
+            'alarms' => [
                 'name' => _("Show only events that have an alarm set?"),
                 'type' => 'checkbox',
-                'default' => 0
-            )
-        );
+                'default' => 0,
+            ],
+        ];
 
         $params['calendar']['values']['__all'] = _("All Visible");
         foreach (Kronolith::listCalendars(Horde_Perms::SHOW, true) as $id => $cal) {
@@ -69,14 +70,14 @@ class Kronolith_Block_Monthlist extends Horde_Core_Block
         $today = date('j');
         $current_month = '';
 
-        $startDate = new Horde_Date(array(
+        $startDate = new Horde_Date([
             'year' => date('Y'),
             'month' => date('n'),
-            'mday' => date('j')));
-        $endDate = new Horde_Date(array(
+            'mday' => date('j')]);
+        $endDate = new Horde_Date([
             'year' => date('Y'),
             'month' => date('n') + $this->_params['months'],
-            'mday' => date('j') - 1));
+            'mday' => date('j') - 1]);
 
         try {
             if (isset($this->_params['calendar']) &&
@@ -88,24 +89,24 @@ class Kronolith_Block_Monthlist extends Horde_Core_Block
                 if (!$calendars[$this->_params['calendar']]->hasPermission(Horde_Perms::READ)) {
                     return _("Permission Denied");
                 }
-                list($type, $calendar) = explode('_', $this->_params['calendar'], 2);
+                [$type, $calendar] = explode('_', $this->_params['calendar'], 2);
                 $driver = Kronolith::getDriver($type, $calendar);
                 $all_events = $driver->listEvents(
                     $startDate,
                     $endDate,
-                    array('show_recurrence' => true,
-                          'has_alarm' => !empty($this->_params['alarms']),
-                          'cover_dates' => false)
+                    ['show_recurrence' => true,
+                        'has_alarm' => !empty($this->_params['alarms']),
+                        'cover_dates' => false]
                 );
             } else {
                 $all_events = Kronolith::listEvents(
                     $startDate,
                     $endDate,
                     $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_CALENDARS),
-                    array(
+                    [
                         'has_alarm' => !empty($this->_params['alarms']),
-                        'cover_dates' => false
-                    )
+                        'cover_dates' => false,
+                    ]
                 );
             }
         } catch (Exception $e) {

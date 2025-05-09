@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Horde_Injector based factory for Kronolith_Driver.
  */
@@ -9,7 +10,7 @@ class Kronolith_Factory_Driver extends Horde_Core_Factory_Base
      *
      * @var array
      */
-    private $_instances = array();
+    private $_instances = [];
 
     /**
      * Return the driver instance.
@@ -20,32 +21,32 @@ class Kronolith_Factory_Driver extends Horde_Core_Factory_Base
      * @return Kronolith_Driver
      * @throws Kronolith_Exception
      */
-    public function create($driver, array $params = array())
+    public function create($driver, array $params = [])
     {
         $driver = basename($driver ?? '');
 
         switch ($driver) {
-        case 'external':
-        case 'tasklists':
-            $driver = 'Horde';
-            break;
+            case 'external':
+            case 'tasklists':
+                $driver = 'Horde';
+                break;
 
-        case 'holiday':
-            $driver = 'Holidays';
-            break;
+            case 'holiday':
+                $driver = 'Holidays';
+                break;
 
-        case 'internal':
-            $driver = '';
-            break;
+            case 'internal':
+                $driver = '';
+                break;
 
-        case 'remote':
-            $driver = 'Ical';
-            break;
+            case 'remote':
+                $driver = 'Ical';
+                break;
 
-        case 'resource':
-        case 'Resource':
-            $driver = 'Resource';
-            break;
+            case 'resource':
+            case 'Resource':
+                $driver = 'Resource';
+                break;
         }
 
         if (empty($driver)) {
@@ -57,50 +58,50 @@ class Kronolith_Factory_Driver extends Horde_Core_Factory_Base
         }
 
         switch ($driver) {
-        case 'Sql':
-            $params = array_merge(Horde::getDriverConfig('calendar', 'sql'), $params);
-            if (isset($params['driverconfig']) &&
-                $params['driverconfig'] != 'horde') {
-                $customParams = $params;
-                unset($customParams['driverconfig'], $customParams['table'], $customParams['utc']);
-                $params['db'] = $this->_injector->getInstance('Horde_Core_Factory_Db')->create('kronolith', $customParams);
-            } else {
-                $params['db'] = $this->_injector->getInstance('Horde_Db_Adapter');
-            }
-            break;
+            case 'Sql':
+                $params = array_merge(Horde::getDriverConfig('calendar', 'sql'), $params);
+                if (isset($params['driverconfig']) &&
+                    $params['driverconfig'] != 'horde') {
+                    $customParams = $params;
+                    unset($customParams['driverconfig'], $customParams['table'], $customParams['utc']);
+                    $params['db'] = $this->_injector->getInstance('Horde_Core_Factory_Db')->create('kronolith', $customParams);
+                } else {
+                    $params['db'] = $this->_injector->getInstance('Horde_Db_Adapter');
+                }
+                break;
 
-        case 'Resource':
-            if (!isset($GLOBALS['conf']['calendar']['driver']) ||
-                !isset($GLOBALS['conf']['resources']['enabled'])) {
-                throw new Kronolith_Exception(_("Resources are disabled"));
-            }
-            // Need the 'utc' param here since we no longer extend the sql driver.
-            $sqlparams = array_merge(Horde::getDriverConfig('calendar', 'sql'), $params);
-            $params['utc'] = $sqlparams['utc'];
-            break;
+            case 'Resource':
+                if (!isset($GLOBALS['conf']['calendar']['driver']) ||
+                    !isset($GLOBALS['conf']['resources']['enabled'])) {
+                    throw new Kronolith_Exception(_("Resources are disabled"));
+                }
+                // Need the 'utc' param here since we no longer extend the sql driver.
+                $sqlparams = array_merge(Horde::getDriverConfig('calendar', 'sql'), $params);
+                $params['utc'] = $sqlparams['utc'];
+                break;
 
-        case 'Kolab':
-            $params['storage'] = $GLOBALS['injector']->getInstance('Horde_Kolab_Storage');
-            break;
+            case 'Kolab':
+                $params['storage'] = $GLOBALS['injector']->getInstance('Horde_Kolab_Storage');
+                break;
 
-        case 'Ical':
-        case 'Mock':
-            break;
+            case 'Ical':
+            case 'Mock':
+                break;
 
-        case 'Horde':
-            $params['registry'] = $GLOBALS['registry'];
-            break;
+            case 'Horde':
+                $params['registry'] = $GLOBALS['registry'];
+                break;
 
-        case 'Holidays':
-            if (empty($GLOBALS['conf']['holidays']['enable'])) {
-                throw new Kronolith_Exception(_("Holidays are disabled"));
-            }
-            $params['language'] = $GLOBALS['language'];
-            break;
+            case 'Holidays':
+                if (empty($GLOBALS['conf']['holidays']['enable'])) {
+                    throw new Kronolith_Exception(_("Holidays are disabled"));
+                }
+                $params['language'] = $GLOBALS['language'];
+                break;
 
-        default:
-            throw new InvalidArgumentException('No calendar driver specified');
-            break;
+            default:
+                throw new InvalidArgumentException('No calendar driver specified');
+                break;
         }
 
         $class = 'Kronolith_Driver_' . $driver;

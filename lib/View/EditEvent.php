@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_View_EditEvent:: class provides an API for viewing
  * event edit forms.
@@ -26,10 +27,10 @@ class Kronolith_View_EditEvent
     public function __get($property)
     {
         switch ($property) {
-        case 'event':
-            return $this->_event;
-        default:
-            throw new LogicException('Property does not exist.');
+            case 'event':
+                return $this->_event;
+            default:
+                throw new LogicException('Property does not exist.');
         }
     }
 
@@ -91,7 +92,7 @@ class Kronolith_View_EditEvent
         }
         $calendars = Kronolith::listCalendars($perms, true);
 
-        $buttons = array();
+        $buttons = [];
         if (!$this->_event->hasPermission(Horde_Perms::EDIT) &&
             ($GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('max_events') === true ||
              $GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('max_events') > Kronolith::countEvents())) {
@@ -113,15 +114,15 @@ class Kronolith_View_EditEvent
             $cancelurl = new Horde_Url($url);
         } else {
             $cancelurl = Horde::url('month.php', true)
-                ->add(array('month' => $month, 'year' => $year));
+                ->add(['month' => $month, 'year' => $year]);
         }
 
         $event = &$this->_event;
         $tags = implode(',', array_values($event->tags));
 
-        Horde_Core_Ui_JsCalendar::init(array(
-            'full_weekdays' => true
-        ));
+        Horde_Core_Ui_JsCalendar::init([
+            'full_weekdays' => true,
+        ]);
 
         global $page_output;
         $page_output->addScriptFile('hordecore.js', 'horde');

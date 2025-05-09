@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Special prefs handling for the 'default_alarm_management' preference.
  *
@@ -16,9 +17,7 @@ class Kronolith_Prefs_Special_DefaultAlarm implements Horde_Core_Prefs_Ui_Specia
 {
     /**
      */
-    public function init(Horde_Core_Prefs_Ui $ui)
-    {
-    }
+    public function init(Horde_Core_Prefs_Ui $ui) {}
 
     /**
      */

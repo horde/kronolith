@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file contains all Horde_Core_Ui_VarRenderer extensions required for
  * editing calendars.
@@ -28,14 +29,17 @@ class Horde_Core_Ui_VarRenderer_Kronolith extends Horde_Core_Ui_VarRenderer_Html
         $value = $var->getValue($vars);
 
         $html = sprintf('<input id="%s" type="text" name="%s" value="%s" />', $varname, $varname, $value);
-        $html .= sprintf('<span id="%s_loading_img" style="display:none;">%s</span>',
+        $html .= sprintf(
+            '<span id="%s_loading_img" style="display:none;">%s</span>',
             $varname,
-            Horde::img('loading.gif', _("Loading...")));
+            Horde::img('loading.gif', _("Loading..."))
+        );
 
         $GLOBALS['injector']->getInstance('Horde_Core_Factory_Imple')
             ->create(
                 'Kronolith_Ajax_Imple_TagAutoCompleter',
-                array('id' => $varname));
+                ['id' => $varname]
+            );
         return $html;
     }
 

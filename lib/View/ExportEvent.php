@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_View_ExportEvent:: class provides an API for exporting
  * events.
@@ -39,7 +40,9 @@ class Kronolith_View_ExportEvent
         $GLOBALS['browser']->downloadHeaders(
             $event->getTitle() . '.ics',
             'text/calendar; charset=UTF-8',
-            true, strlen($content));
+            true,
+            strlen($content)
+        );
         echo $content;
         exit;
     }

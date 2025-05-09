@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2017 Horde LLC (http://www.horde.org/)
  *
@@ -86,7 +87,7 @@ class Events implements Iterator
     {
         global $registry;
 
-        $pushed = $registry->pushApp('kronolith', array('check_perms' => false));
+        $pushed = $registry->pushApp('kronolith', ['check_perms' => false]);
         $event = $this->_events->current();
         if (!$event) {
             return false;
@@ -98,13 +99,13 @@ class Events implements Iterator
         return $event;
         return array_intersect_key(
             $this->_iterator->current(),
-            array(
+            [
                 'memolist_id' => true,
                 'uid' => true,
                 'desc' => true,
                 'body' => true,
                 'tags' => true,
-            )
+            ]
         );
     }
 
@@ -150,7 +151,9 @@ class Events implements Iterator
         $this->_driver->open($this->_calendar);
         $this->_iterator = new ArrayIterator(
             $this->_driver->listEvents(
-                null, null, array('cover_dates' => false, 'fetch_tags' => true)
+                null,
+                null,
+                ['cover_dates' => false, 'fetch_tags' => true]
             )
         );
         if ($current = $this->_iterator->current()) {

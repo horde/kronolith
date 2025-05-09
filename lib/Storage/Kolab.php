@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Horde Kronolith free/busy driver for the Kolab IMAP Server.
  * Copyright 2004-2017 Horde LLC (http://www.horde.org/)
@@ -11,9 +12,9 @@
  */
 class Kronolith_Storage_Kolab extends Kronolith_Storage
 {
-    protected $_params = array();
+    protected $_params = [];
 
-    public function __construct($user, array $params = array())
+    public function __construct($user, array $params = [])
     {
         $this->_user = $user;
         $this->_params = $params;
@@ -32,10 +33,10 @@ class Kronolith_Storage_Kolab extends Kronolith_Storage
 
         $http = $GLOBALS['injector']
             ->getInstance('Horde_Core_Factory_HttpClient')
-            ->create(array(
+            ->create([
                 'request.username' => $GLOBALS['registry']->getAuth(),
-                'request.password' => $GLOBALS['registry']->getAuthCredential('password')
-            ));
+                'request.password' => $GLOBALS['registry']->getAuthCredential('password'),
+            ]);
 
         try {
             $response = $http->get(sprintf('%s/%s.xfb', $server, $email));
@@ -47,7 +48,7 @@ class Kronolith_Storage_Kolab extends Kronolith_Storage
         }
         $vfb_text = $response->getBody();
 
-        $iCal = new Horde_Icalendar;
+        $iCal = new Horde_Icalendar();
         $iCal->parsevCalendar($vfb_text);
 
         $vfb = $iCal->findComponent('VFREEBUSY');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Horde_Form for creating resource groups.
  *
@@ -25,22 +26,22 @@ class Kronolith_Form_CreateResourceGroup extends Horde_Form
     {
         parent::__construct($vars, _("Create Resource Group"));
 
-        $resources = Kronolith::getDriver('Resource')->listResources(Horde_Perms::READ, array('isgroup' => 0));
-        $enum = array();
+        $resources = Kronolith::getDriver('Resource')->listResources(Horde_Perms::READ, ['isgroup' => 0]);
+        $enum = [];
         foreach ($resources as $resource) {
             $enum[$resource->getId()] = htmlspecialchars($resource->get('name'));
         }
         $this->addVariable(_("Name"), 'name', 'text', true);
-        $this->addVariable(_("Description"), 'description', 'longtext', false, false, null, array(4, 60));
-        $this->addVariable(_("Resources"), 'members', 'multienum', false, false, null, array('enum' => $enum));
-        $this->setButtons(array(_("Create")));
+        $this->addVariable(_("Description"), 'description', 'longtext', false, false, null, [4, 60]);
+        $this->addVariable(_("Resources"), 'members', 'multienum', false, false, null, ['enum' => $enum]);
+        $this->setButtons([_("Create")]);
     }
 
     public function execute()
     {
-        $new = array('name' => $this->_vars->get('name'),
-                     'description' => $this->_vars->get('description'),
-                     'members' => $this->_vars->get('members'));
+        $new = ['name' => $this->_vars->get('name'),
+            'description' => $this->_vars->get('description'),
+            'members' => $this->_vars->get('members')];
         Kronolith_Resource::addResource(new Kronolith_Resource_Group($new));
     }
 }

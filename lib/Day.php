@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_Day:: class provides an API for dealing with days.
  *
@@ -36,7 +37,7 @@ class Kronolith_Day extends Horde_Date
      *
      * @var array
      */
-    public $slots = array();
+    public $slots = [];
 
     /**
      * Constructor.
@@ -56,7 +57,7 @@ class Kronolith_Day extends Horde_Date
         if (is_null($day)) {
             $day = date('j');
         }
-        parent::__construct(array('year' => $year, 'month' => $month, 'mday' => $day));
+        parent::__construct(['year' => $year, 'month' => $month, 'mday' => $day]);
 
         $this->slotsPerHour = $GLOBALS['prefs']->getValue('slots_per_hour');
         if (!$this->slotsPerHour) {
@@ -67,32 +68,32 @@ class Kronolith_Day extends Horde_Date
 
         for ($i = 0; $i < $this->slotsPerDay; $i++) {
             $minutes = $i * $this->slotLength;
-            $this->slots[$i]['hour'] = (int)($minutes / 60);
+            $this->slots[$i]['hour'] = (int) ($minutes / 60);
             $this->slots[$i]['min'] = $minutes % 60;
         }
     }
 
     public function getTime($format, $offset = 0)
     {
-        $date = new Horde_Date(array('month' => $this->month,
-                                     'mday' => $this->mday + $offset,
-                                     'year' => $this->year));
+        $date = new Horde_Date(['month' => $this->month,
+            'mday' => $this->mday + $offset,
+            'year' => $this->year]);
         return $date->strftime($format);
     }
 
     public function getTomorrow()
     {
-        $date = new Horde_Date(array('month' => $this->month,
-                                     'mday' => $this->mday + 1,
-                                     'year' => $this->year));
+        $date = new Horde_Date(['month' => $this->month,
+            'mday' => $this->mday + 1,
+            'year' => $this->year]);
         return $date;
     }
 
     public function getYesterday()
     {
-        $date = new Horde_Date(array('month' => $this->month,
-                                     'mday' => $this->mday - 1,
-                                     'year' => $this->year));
+        $date = new Horde_Date(['month' => $this->month,
+            'mday' => $this->mday - 1,
+            'year' => $this->year]);
         return $date;
     }
 
@@ -103,9 +104,9 @@ class Kronolith_Day extends Horde_Date
 
     public function isTomorrow()
     {
-        $date = new Horde_Date(array('month' => $this->month,
-                                     'mday' => $this->mday - 1,
-                                     'year' => $this->year));
+        $date = new Horde_Date(['month' => $this->month,
+            'mday' => $this->mday - 1,
+            'year' => $this->year]);
         return $date->compareDate(new Horde_Date(mktime(0, 0, 0))) == 0;
     }
 

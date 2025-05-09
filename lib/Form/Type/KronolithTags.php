@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_Form_Type_KronolithTags:: class provides a form field for
  * autocompleting tags.

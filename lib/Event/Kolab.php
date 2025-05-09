@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2004-2017 Horde LLC (http://www.horde.org/)
  *
@@ -44,9 +45,7 @@ class Kronolith_Event_Kolab extends Kronolith_Event
     /**
      * Retrieves history information for this event from the history backend.
      */
-    public function loadHistory()
-    {
-    }
+    public function loadHistory() {}
 
     /**
      * Imports a backend specific event object.
@@ -126,8 +125,8 @@ class Kronolith_Event_Kolab extends Kronolith_Event
         // Recurrence
         if (isset($event['recurrence'])) {
             if (isset($event['recurrence']['exclusion'])) {
-                $exceptions = array();
-                foreach($event['recurrence']['exclusion'] as $exclusion) {
+                $exceptions = [];
+                foreach ($event['recurrence']['exclusion'] as $exclusion) {
                     if (!empty($exclusion)) {
                         $exceptions[] = $exclusion->format('Ymd');
                     }
@@ -135,8 +134,8 @@ class Kronolith_Event_Kolab extends Kronolith_Event
                 $event['recurrence']['exceptions'] = $exceptions;
             }
             if (isset($event['recurrence']['complete'])) {
-                $completions = array();
-                foreach($event['recurrence']['complete'] as $complete) {
+                $completions = [];
+                foreach ($event['recurrence']['complete'] as $complete) {
                     if (!empty($complete)) {
                         $completions[] = $complete->format('Ymd');
                     }
@@ -150,44 +149,44 @@ class Kronolith_Event_Kolab extends Kronolith_Event
         // Attendees
         $attendee_count = 0;
         if (!empty($event['attendee'])) {
-            foreach($event['attendee'] as $attendee) {
+            foreach ($event['attendee'] as $attendee) {
                 $name = $attendee['display-name'];
                 $email = $attendee['smtp-address'];
 
                 $role = $attendee['role'];
                 switch ($role) {
-                case 'optional':
-                    $role = Kronolith::PART_OPTIONAL;
-                    break;
+                    case 'optional':
+                        $role = Kronolith::PART_OPTIONAL;
+                        break;
 
-                case 'resource':
-                    $role = Kronolith::PART_NONE;
-                    break;
+                    case 'resource':
+                        $role = Kronolith::PART_NONE;
+                        break;
 
-                case 'required':
-                default:
-                    $role = Kronolith::PART_REQUIRED;
-                break;
+                    case 'required':
+                    default:
+                        $role = Kronolith::PART_REQUIRED;
+                        break;
                 }
 
                 $status = $attendee['status'];
                 switch ($status) {
-                case 'accepted':
-                    $status = Kronolith::RESPONSE_ACCEPTED;
-                    break;
+                    case 'accepted':
+                        $status = Kronolith::RESPONSE_ACCEPTED;
+                        break;
 
-                case 'declined':
-                    $status = Kronolith::RESPONSE_DECLINED;
-                    break;
+                    case 'declined':
+                        $status = Kronolith::RESPONSE_DECLINED;
+                        break;
 
-                case 'tentative':
-                    $status = Kronolith::RESPONSE_TENTATIVE;
-                    break;
+                    case 'tentative':
+                        $status = Kronolith::RESPONSE_TENTATIVE;
+                        break;
 
-                case 'none':
-                default:
-                    $status = Kronolith::RESPONSE_NONE;
-                    break;
+                    case 'none':
+                    default:
+                        $status = Kronolith::RESPONSE_NONE;
+                        break;
                 }
 
                 $this->addAttendee($email, $role, $status, $name);
@@ -208,7 +207,7 @@ class Kronolith_Event_Kolab extends Kronolith_Event
      */
     public function toKolab()
     {
-        $event = array();
+        $event = [];
         $event['uid'] = $this->uid;
         $event['summary'] = $this->title;
         $event['body']  = $this->description;
@@ -217,10 +216,10 @@ class Kronolith_Event_Kolab extends Kronolith_Event
 
         // Only set organizer if this is a new event
         if ($this->_id == null) {
-            $organizer = array(
+            $organizer = [
                 'display-name' => Kronolith::getUserName($this->creator),
-                'smtp-address' => Kronolith::getUserEmail($this->creator)
-            );
+                'smtp-address' => Kronolith::getUserEmail($this->creator),
+            ];
             $event['organizer'] = $organizer;
         }
 
@@ -236,19 +235,19 @@ class Kronolith_Event_Kolab extends Kronolith_Event
         $event['_is_all_day'] = $this->isAllDay();
 
         switch ($this->status) {
-        case Kronolith::STATUS_FREE:
-        case Kronolith::STATUS_CANCELLED:
-            $event['show-time-as'] = 'free';
-            break;
+            case Kronolith::STATUS_FREE:
+            case Kronolith::STATUS_CANCELLED:
+                $event['show-time-as'] = 'free';
+                break;
 
-        case Kronolith::STATUS_TENTATIVE:
-            $event['show-time-as'] = 'tentative';
-            break;
+            case Kronolith::STATUS_TENTATIVE:
+                $event['show-time-as'] = 'tentative';
+                break;
 
-        // No mapping for outofoffice
-        case Kronolith::STATUS_CONFIRMED:
-        default:
-            $event['show-time-as'] = 'busy';
+                // No mapping for outofoffice
+            case Kronolith::STATUS_CONFIRMED:
+            default:
+                $event['show-time-as'] = 'busy';
         }
 
         // Recurrence
@@ -257,9 +256,9 @@ class Kronolith_Event_Kolab extends Kronolith_Event
         }
 
         // Attendees
-        $event['attendee'] = array();
+        $event['attendee'] = [];
         foreach ($this->attendees as $attendee) {
-            $new_attendee = array();
+            $new_attendee = [];
             $new_attendee['display-name'] = $attendee->name;
 
             // Attendee without an email address
@@ -270,39 +269,39 @@ class Kronolith_Event_Kolab extends Kronolith_Event
             }
 
             switch ($attendee->role) {
-            case Kronolith::PART_OPTIONAL:
-                $new_attendee['role'] = 'optional';
-                break;
+                case Kronolith::PART_OPTIONAL:
+                    $new_attendee['role'] = 'optional';
+                    break;
 
-            case Kronolith::PART_NONE:
-                $new_attendee['role'] = 'resource';
-                break;
+                case Kronolith::PART_NONE:
+                    $new_attendee['role'] = 'resource';
+                    break;
 
-            case Kronolith::PART_REQUIRED:
-            default:
-                $new_attendee['role'] = 'required';
-                break;
+                case Kronolith::PART_REQUIRED:
+                default:
+                    $new_attendee['role'] = 'required';
+                    break;
             }
 
             $new_attendee['request-response'] = 'false';
 
             switch ($attendee->response) {
-            case Kronolith::RESPONSE_ACCEPTED:
-                $new_attendee['status'] = 'accepted';
-                break;
+                case Kronolith::RESPONSE_ACCEPTED:
+                    $new_attendee['status'] = 'accepted';
+                    break;
 
-            case Kronolith::RESPONSE_DECLINED:
-                $new_attendee['status'] = 'declined';
-                break;
+                case Kronolith::RESPONSE_DECLINED:
+                    $new_attendee['status'] = 'declined';
+                    break;
 
-            case Kronolith::RESPONSE_TENTATIVE:
-                $new_attendee['status'] = 'tentative';
-                break;
+                case Kronolith::RESPONSE_TENTATIVE:
+                    $new_attendee['status'] = 'tentative';
+                    break;
 
-            case Kronolith::RESPONSE_NONE:
-            default:
-                $new_attendee['status'] = 'none';
-                break;
+                case Kronolith::RESPONSE_NONE:
+                default:
+                    $new_attendee['status'] = 'none';
+                    break;
             }
 
             $event['attendee'][] = $new_attendee;

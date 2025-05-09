@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2006-2017 Horde LLC (http://www.horde.org/)
  *
@@ -60,12 +61,12 @@ class Kronolith_Event_Holidays extends Kronolith_Event
     public function hasPermission($permission, $user = null)
     {
         switch ($permission) {
-        case Horde_Perms::SHOW:
-        case Horde_Perms::READ:
-            return true;
+            case Horde_Perms::SHOW:
+            case Horde_Perms::READ:
+                return true;
 
-        default:
-            return false;
+            default:
+                return false;
         }
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Base exception class for Kronolith.
  *
@@ -10,6 +11,4 @@
  * @author  Jan Schneider <jan@horde.org>
  * @package Kronolith
  */
-class Kronolith_Exception extends Horde_Exception_Wrapped
-{
-}
+class Kronolith_Exception extends Horde_Exception_Wrapped {}

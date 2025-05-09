@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Kronolith_Driver_Sql class implements the Kronolith_Driver API for a
  * SQL backend.
@@ -27,7 +28,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
      *
      * @var array
      */
-    protected $_columns = array();
+    protected $_columns = [];
 
     /**
      * Cache events as we fetch them to avoid fetching the same event from the
@@ -35,7 +36,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
      *
      * @var array
      */
-    protected $_cache = array();
+    protected $_cache = [];
 
     /**
      * The class name of the event object to instantiate.
@@ -79,8 +80,8 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
      */
     public function listAlarms($date, $fullevent = false)
     {
-        $allevents = $this->listEvents($date, null, array('has_alarm' => true));
-        $events = array();
+        $allevents = $this->listEvents($date, null, ['has_alarm' => true]);
+        $events = [];
         foreach ($allevents as $dayevents) {
             foreach ($dayevents as $event) {
                 if (!$event->recurs()) {
@@ -106,13 +107,14 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
                         $start = new Horde_Date($next);
                         $start->min -= $event->alarm;
                         $diff = $event->start->diff($event->end);
-                        $end = new Horde_Date(array(
-                            'year' => $next->year,
-                            'month' => $next->month,
-                            'mday' => $next->mday + $diff,
-                            'hour' => $event->end->hour,
-                            'min' => $event->end->min,
-                            'sec' => $event->end->sec)
+                        $end = new Horde_Date(
+                            [
+                                'year' => $next->year,
+                                'month' => $next->month,
+                                'mday' => $next->mday + $diff,
+                                'hour' => $event->end->hour,
+                                'min' => $event->end->min,
+                                'sec' => $event->end->sec]
                         );
                         if ($start->compareDateTime($date) <= 0 &&
                             $date->compareDateTime($end) <= -1) {
@@ -145,9 +147,9 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
     {
         /* Build SQL conditions based on the query string. */
         $cond = '((';
-        $values = array();
+        $values = [];
 
-        foreach (array('title', 'location', 'url', 'description') as $field) {
+        foreach (['title', 'location', 'url', 'description'] as $field) {
             if (!empty($query->$field)) {
                 $binds = $this->_db->buildClause('event_' . $field, 'LIKE', $this->convertToDriver($query->$field), true);
                 if (is_array($binds)) {
@@ -194,11 +196,13 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
             $cond = substr($cond, 0, strlen($cond) - 5) . '))';
         }
 
-        $eventIds = $this->_listEventsConditional(empty($query->start) ? null : $query->start,
-                                                  empty($query->end) ? null : $query->end,
-                                                  $cond,
-                                                  $values);
-        $events = array();
+        $eventIds = $this->_listEventsConditional(
+            empty($query->start) ? null : $query->start,
+            empty($query->end) ? null : $query->end,
+            $cond,
+            $values
+        );
+        $events = [];
         foreach ($eventIds as $eventId) {
             Kronolith::addSearchEvents($events, $this->getEvent($eventId), $query, $json);
         }
@@ -220,7 +224,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
     public function exists($uid, $calendar_id = null)
     {
         $query = 'SELECT event_id  FROM kronolith_events WHERE event_uid = ?';
-        $values = array($uid);
+        $values = [$uid];
 
         if (!is_null($calendar_id)) {
             $query .= ' AND calendar_id = ?';
@@ -263,10 +267,11 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
      *
      * @throws Kronolith_Exception
      */
-    protected function _listEvents(Horde_Date $startDate = null,
-                                   Horde_Date $endDate = null,
-                                   array $options = array())
-    {
+    protected function _listEvents(
+        ?Horde_Date $startDate = null,
+        ?Horde_Date $endDate = null,
+        array $options = []
+    ) {
         if (!is_null($startDate)) {
             $startDate = clone $startDate;
             $startDate->hour = $startDate->min = $startDate->sec = 0;
@@ -278,7 +283,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
         }
 
         $conditions =  $options['has_alarm'] ? 'event_alarm > ?' : '';
-        $values = $options['has_alarm'] ? array(0) : array();
+        $values = $options['has_alarm'] ? [0] : [];
         if ($options['hide_exceptions']) {
             if (!empty($conditions)) {
                 $conditions .= ' AND ';
@@ -287,7 +292,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
         }
 
         $events = $this->_listEventsConditional($startDate, $endDate, $conditions, $values);
-        $results = array();
+        $results = [];
         $tags = null;
         if ($options['fetch_tags'] && count($events)) {
             $tags = Kronolith::getTagger()->getTags(array_keys($events));
@@ -298,8 +303,14 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
                 $event->tags = $tags[$event->uid];
             }
             Kronolith::addEvents(
-                $results, $event, $startDate, $endDate, $options['show_recurrence'],
-                $options['json'], $options['cover_dates']);
+                $results,
+                $event,
+                $startDate,
+                $endDate,
+                $options['show_recurrence'],
+                $options['json'],
+                $options['cover_dates']
+            );
         }
 
         return $results;
@@ -318,10 +329,12 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
      *                conditions.
      * @throws Kronolith_Exception
      */
-    private function _listEventsConditional(Horde_Date $startInterval = null,
-                                            Horde_Date $endInterval = null,
-                                            $conditions = '', array $vals = array())
-    {
+    private function _listEventsConditional(
+        ?Horde_Date $startInterval = null,
+        ?Horde_Date $endInterval = null,
+        $conditions = '',
+        array $vals = []
+    ) {
         if ($this->getParam('utc')) {
             if (!is_null($startInterval)) {
                 $startInterval = clone $startInterval;
@@ -341,7 +354,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
             ' event_exceptions, event_creator_id, event_resources, event_baseid,' .
             ' event_exceptionoriginaldate, other_attributes FROM kronolith_events' .
             ' WHERE calendar_id = ?';
-        $values = array($this->calendar);
+        $values = [$this->calendar];
 
         if ($conditions) {
             $q .= ' AND ' . $conditions;
@@ -369,16 +382,16 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
             throw new Kronolith_Exception($e);
         }
 
-        $events = array();
+        $events = [];
         foreach ($qr as $row) {
             /* If the event did not have a UID before, we need to give it
              * one. */
             if (empty($row['event_uid'])) {
-                $row['event_uid'] = (string)new Horde_Support_Guid;
+                $row['event_uid'] = (string) new Horde_Support_Guid();
 
                 /* Save the new UID for data integrity. */
                 $query = 'UPDATE kronolith_events SET event_uid = ? WHERE event_id = ?';
-                $values = array($row['event_uid'], $row['event_id']);
+                $values = [$row['event_uid'], $row['event_id']];
                 try {
                     $this->_db->update($query, $values);
                 } catch (Horde_Db_Exception $e) {
@@ -419,7 +432,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
 
         /* Run the query. */
         try {
-            $result = $this->_db->selectValue($query, array($this->calendar));
+            $result = $this->_db->selectValue($query, [$this->calendar]);
         } catch (Horde_Db_Exception $e) {
             throw new Kronolith_Exception($e);
         }
@@ -451,7 +464,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
             ' event_baseid, event_exceptionoriginaldate, event_organizer, other_attributes FROM ' .
             'kronolith_events WHERE event_id = ? AND calendar_id = ?';
 
-        $values = array($eventId, $this->calendar);
+        $values = [$eventId, $this->calendar];
 
         try {
             $event = $this->_db->selectOne($query, $values);
@@ -489,10 +502,10 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
             ' event_recurdays, event_start, event_end, event_allday,' .
             ' event_alarm, event_alarm_methods, event_modified,' .
             ' event_exceptions, event_creator_id, event_resources, event_baseid,' .
-            ' event_exceptionoriginaldate, event_organizer, other_attributes' . 
+            ' event_exceptionoriginaldate, event_organizer, other_attributes' .
             ' FROM kronolith_events' .
             ' WHERE event_uid = ?';
-        $values = array((string)$uid);
+        $values = [(string) $uid];
 
         /* Optionally filter by calendar */
         if (!empty($calendars)) {
@@ -512,7 +525,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
             throw new Horde_Exception_NotFound(sprintf(_("%s not found"), $uid));
         }
 
-        $eventArray = array();
+        $eventArray = [];
         foreach ($events as $event) {
             /* Convert TEXT/CLOB fields. */
             $event = $this->convertBlobs($event);
@@ -568,12 +581,13 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
      */
     protected function _buildEventHistory(Kronolith_Event $event)
     {
-        $changes = array('action' => 'modify');
+        $changes = ['action' => 'modify'];
 
         /* We cannot use getEvent() because of caching. */
         $oldProperties = $this->getbyUID(
             $event->uid,
-            array($event->calendar))->toProperties();
+            [$event->calendar]
+        )->toProperties();
         $newProperties = $event->toProperties();
         if (empty($oldProperties)) {
             return $changes;
@@ -601,7 +615,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
      */
     protected function _updateEvent(Kronolith_Event $event)
     {
-        $values = array();
+        $values = [];
         $query = 'UPDATE kronolith_events SET ';
         foreach ($event->toProperties() as $key => $val) {
             $query .= " $key = ?,";
@@ -665,16 +679,16 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
     protected function _addEvent(Kronolith_Event $event)
     {
         if (!$event->id) {
-            $event->id = (string)new Horde_Support_Randomid;
+            $event->id = (string) new Horde_Support_Randomid();
         }
         if (!$event->uid) {
-            $event->uid = (string)new Horde_Support_Guid;
+            $event->uid = (string) new Horde_Support_Guid();
         }
 
         $query = 'INSERT INTO kronolith_events';
         $cols_name = ' (event_id, event_uid,';
         $cols_values = ' VALUES (?, ?,';
-        $values = array($event->id, $event->uid);
+        $values = [$event->id, $event->uid];
         foreach ($event->toProperties() as $key => $val) {
             $cols_name .= " $key,";
             $cols_values .= ' ?,';
@@ -692,7 +706,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
         }
         /* Log the creation of this item in the history log. */
         try {
-            $GLOBALS['injector']->getInstance('Horde_History')->log('kronolith:' . $this->calendar . ':' . $event->uid, array('action' => 'add'), true);
+            $GLOBALS['injector']->getInstance('Horde_History')->log('kronolith:' . $this->calendar . ':' . $event->uid, ['action' => 'add'], true);
         } catch (Exception $e) {
             Horde::log($e, 'ERR');
         }
@@ -730,7 +744,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
         $event = $this->getEvent($eventId);
 
         $query = 'UPDATE kronolith_events SET calendar_id = ? WHERE calendar_id = ? AND event_id = ?';
-        $values = array($newCalendar, $this->calendar, $eventId);
+        $values = [$newCalendar, $this->calendar, $eventId];
 
         /* Attempt the move query. */
         try {
@@ -753,15 +767,15 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
     {
         $oldCalendar = $this->calendar;
         $this->open($calendar);
-        $events = $this->listEvents(null, null, array('cover_dates' => false, 'hide_exceptions' => true));
-        $uids = array();
+        $events = $this->listEvents(null, null, ['cover_dates' => false, 'hide_exceptions' => true]);
+        $uids = [];
         foreach ($events as $dayevents) {
             foreach ($dayevents as $event) {
                 $uids[] = $event->uid;
             }
         }
         foreach ($uids as $uid) {
-            $event = $this->getByUID($uid, array($calendar));
+            $event = $this->getByUID($uid, [$calendar]);
             $this->deleteEvent($event->id);
         }
 
@@ -795,7 +809,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
 
         $query = 'DELETE FROM kronolith_events WHERE event_id = ? AND calendar_id = ?';
         try {
-            $this->_db->delete($query, array($eventId, $this->calendar));
+            $this->_db->delete($query, [$eventId, $this->calendar]);
         } catch (Horde_Db_Exception $e) {
             throw new Kronolith_Exception($e);
         }
@@ -808,7 +822,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
         /* Now check for any exceptions that THIS event may have */
         if ($isRecurring) {
             $query = 'SELECT event_id FROM kronolith_events WHERE event_baseid = ? AND calendar_id = ?';
-            $values = array($original_uid, $this->calendar);
+            $values = [$original_uid, $this->calendar];
 
             try {
                 $result = $this->_db->selectValues($query, $values);
@@ -823,7 +837,8 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
         /* Delete Geolocation */
         try {
             $injector->getInstance('Kronolith_Geo')->deleteLocation($eventId);
-        } catch (Kronolith_Exception $e) { }
+        } catch (Kronolith_Exception $e) {
+        }
 
         return $event;
     }
@@ -906,10 +921,10 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
      */
     public function convertBlobs($event)
     {
-        $clobs = array(
+        $clobs = [
             'alarm_methods', 'attendees', 'description', 'exceptions',
-            'location', 'resources'
-        );
+            'location', 'resources',
+        ];
         foreach ($clobs as $clob) {
             $event['event_' . $clob] = $this->_columns['event_' . $clob]
                 ->binaryToString($event['event_' . $clob]);
