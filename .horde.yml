@@ -102,3 +102,8 @@ dependencies:
       horde/openxchange: ^2
       horde/test: ^3
       pear/date_holidays: '*'
+autoload:
+  classmap:
+    - lib/
+  psr-4:
+    Horde\Kronolith\: /src
