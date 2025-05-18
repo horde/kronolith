@@ -1475,10 +1475,12 @@ class Kronolith
         if (count($groups)) {
             $horde_group = $injector->getInstance('Horde_Group');
             foreach ($groups as $group) {
-                $users = array_merge(
-                    $users,
-                    $horde_group->listUsers($group)
-                );
+                if ($horde_group->exists($group)) {
+                   $users = array_merge(
+                       $users,
+                       $horde_group->listUsers($group)
+		   );
+                }
             }
         }
 
