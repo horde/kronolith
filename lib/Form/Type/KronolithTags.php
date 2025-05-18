@@ -11,12 +11,12 @@
  */
 class Kronolith_Form_Type_KronolithTags extends Horde_Form_Type
 {
-    public function getInfo(&$vars, &$var, &$info)
+    public function getInfo($vars, $var, $info)
     {
         $info = $var->getValue($vars);
     }
 
-    public function isValid(&$var, &$vars, $value, &$message)
+    public function isValid($var, $vars, $value, $message)
     {
         return true;
     }
