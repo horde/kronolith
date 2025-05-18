@@ -21,7 +21,7 @@
             "role": "lead"
         }
     ],
-    "time": "2025-05-09",
+    "time": "2025-05-18",
     "repositories": [],
     "require": {
         "horde/horde-installer-plugin": "dev-FRAMEWORK_6_0 || ^2",
@@ -84,11 +84,11 @@
         "ext-xmlwriter": "*"
     },
     "autoload": {
-        "psr-0": {
-            "Kronolith": "lib/"
-        },
+        "classmap": [
+            "lib/"
+        ],
         "psr-4": {
-            "Horde\\Kronolith\\": "src/"
+            "Horde\\Kronolith\\": "/src"
         }
     },
     "autoload-dev": {

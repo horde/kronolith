@@ -1,4 +1,16 @@
 ---
+5.0.0-alpha8:
+  api: 5.0.0-alpha1
+  state:
+    release: alpha
+    api: alpha
+  date: 2025-05-18
+  license:
+    identifier: GPL-2.0-only
+    uri: http://www.horde.org/licenses/gpl
+  notes: |
+    fix: Use classmap autoloader for lib/ dir
+    fix: Preliminary patch to address externally removed ldap groups related to shared calendard (Jean Charles Delépine <delepine@u-picardie.fr>)
 5.0.0-alpha7:
   api: 5.0.0-alpha1
   state:
@@ -1409,8 +1421,9 @@
     [jan] Fix user name conversion with user hooks in the calendar panel (Bug #7366).
     [gwr] Fixed handling of free events in the Kolab driver (noethen@uni-paderborn.de, Bug #7192).
     [jan] Differentiate between days with events and days with busy events in the year view.
-2.2.0-alpha:
+2.2.0-alpha1:
   notes: |
+    Original version string was 2.2.0-alpha
     Original version string was 2.2.0alpha
     [cjh] Add vCalendar 2.0 alarm export (munzli@olmero.ch, Bug #4851).
     [jan] Add Ukrainian translation (Andriy Kopystyansky <anri@polynet.lviv.ua>).
@@ -1703,8 +1716,9 @@
     [cjh] Fix an off-by-one error in the work week view when the user views weeks starts on Sunday (Bug #1046).
     [cjh] Add PostgreSQL version of 2004-12-21_add_event_uid (Bug #1028).
     [cjh] Fix typo that prevented attendees from being saved (Bug #1019).
-2.0.0-beta:
+2.0.0-beta1:
   notes: |
+    Original version string was 2.0.0-beta
     Original version string was 2.0.0beta
     [cjh] The guts of Kronolith_Event objects are now based on Horde_Date objects instead of timestamps.
     [cjh] Lots of date-related functions moved to the Horde_Date class.
@@ -1715,8 +1729,9 @@
     [cjh] Add search functionality (Meilof <meilof@gmail.com>).
     [jan] Add access keys.
     [cjh] Add Kolab drivers (Stuart Bingë <s.binge@codefusion.co.za>).
-2.0.0-alpha:
+2.0.0-alpha1:
   notes: |
+    Original version string was 2.0.0-alpha
     Original version string was 2.0.0alpha
     [cjh] Remote calendars are now parsed with the Horde_iCalendar library, which allows for much better iCalendar support, better handling of timezones, etc.
     [cjh] The month view no longer shows blank boxes for days in the grid that are outside of the current month - instead, it goes back into the previous month and forward into the next month however many days are showable.
