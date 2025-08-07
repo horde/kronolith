@@ -36,6 +36,12 @@ if (!defined('HORDE_BASE')) {
  * Horde_Registry_Application::). */
 require_once HORDE_BASE . '/lib/core.php';
 
+/* Prevent redeclaration if this file gets included twice by different
+ * autoloaders/paths. */
+if (class_exists('Kronolith_Application', false)) {
+    return;
+}
+
 class Kronolith_Application extends Horde_Registry_Application
 {
     /**
