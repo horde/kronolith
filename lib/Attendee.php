@@ -21,6 +21,7 @@
  * @property-read string $displayName A simple label to identify the attendee.
  * @property-read string $id An ID for this attendee.
  */
+// TODO: Serializable interface is deprecated
 class Kronolith_Attendee implements Serializable
 {
     /**
@@ -230,10 +231,13 @@ class Kronolith_Attendee implements Serializable
 
     /**
      */
+
+    // TODO: Remove serialize() - Serializable interface is deprecated
     public function serialize()
     {
         return array_shift($this->__serialize());
     }
+
     public function __serialize(): array
     {
         return [
@@ -247,11 +251,13 @@ class Kronolith_Attendee implements Serializable
 
     /**
      */
-    public function unserialize($data)
+    // TODO: Remove unserialize() - Serializable interface is deprecated
+    public function unserialize(string $data)
     {
-        $this->__unserialize([$data]);
-
+        $data = unserialize($data);
+        $this->__unserialize($data);
     }
+
     public function __unserialize(array $data): void
     {
         $this->user     = $data['u'];
