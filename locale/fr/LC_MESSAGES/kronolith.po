@@ -8,7 +8,7 @@
 # Laurent Foucher <laurent.foucher@iut-tlse3.fr>, 2011.
 # Yannick SEBASTIA <yannick.sebastia@ecole-navale.fr>, 2011.
 # Paul De Vlieger <paul.de_vlieger@moniut.univ-bpclermont.fr>, 2013
-# Jean Charles Delépine <deleoine@u-picardie.fr>, 2025
+# Jean Charles Delépine <delepine@u-picardie.fr>, 2025
 # Kronolith 2.2-cvs French translation
 # Copyright 2001 Mikhaël Janson.
 # Copyright 2002, 2003, 2005, 2006, 2007 Thierry Thomas.
