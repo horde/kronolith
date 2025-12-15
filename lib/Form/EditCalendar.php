@@ -260,7 +260,7 @@ class Kronolith_Form_EditCalendar extends Horde_Form
         $focus = true
     ) {
         return parent::renderActive(
-            $this->getRenderer(['varrenderer_driver' => ['kronolith', 'kronolith']]),
+            $this->getRenderer(['varrenderer_driver' => ['kronolith', 'html']]),
             $this->_vars,
             $action,
             $method,

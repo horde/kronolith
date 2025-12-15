@@ -11,14 +11,14 @@
  */
 
 /**
- * The Horde_Core_Ui_VarRenderer_Kronolith class provides additional methods for
+ * The Kronolith_Ui_VarRenderer_Html class provides additional methods for
  * rendering Kronolith specific fields.
  *
  * @todo    Clean this hack up with Horde_Form/H6
  * @author  Michael J Rubinsky <mrubinsk@horde.org>
  * @package Kronolith
  */
-class Horde_Core_Ui_VarRenderer_Kronolith extends Horde_Core_Ui_VarRenderer_Html
+class Kronolith_Ui_VarRenderer_Html extends Horde_Core_Ui_VarRenderer_Html
 {
     /**
      * Render tag field.
