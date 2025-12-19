@@ -23,7 +23,7 @@ class Kronolith_Factory_IcalendarStorage
      */
     public function create(Horde_Injector $injector): Kronolith_Icalendar_Storage
     {
-        $driver = Horde_String::ucfirst($GLOBALS['conf']['icalendar']['driver']);
+        $driver = Horde_String::ucfirst($GLOBALS['conf']['caldav']['driver']);
 
         if (!empty($this->_instances[$driver])) {
             return $this->_instances[$driver];
@@ -31,7 +31,7 @@ class Kronolith_Factory_IcalendarStorage
 
         switch ($driver) {
             case 'Sql':
-                $params = Horde::getDriverConfig('icalendar', 'Sql');
+                $params = Horde::getDriverConfig('caldav', 'Sql');
                 if (isset($params['driverconfig']) &&
                     $params['driverconfig'] != 'horde') {
                     $customParams = $params;
