@@ -1010,12 +1010,12 @@ abstract class Kronolith_Event
                 try {
                     $data = $vfs->read(Kronolith::VFS_PATH . '/' . $this->getVfsUid(), $file['name']);
                 } catch (Horde_Vfs_Exception $e) {
-                    Horde::log($e->getMessage, 'ERR');
+                    Horde::log($e->getMessage(), 'ERR');
                 }
                 if ($data) {
                     try {
                         // We should have filename and type information.
-                        $filename = empty($file['name']) ? 'attachment' . $cnt . '.' . '$file[type]' : $file['name'] ;
+                        $filename = empty($file['name']) ? 'attachment' . $cnt . '.' . $file['type'] : $file['name'];
                         // At least recent MS clients implementing MS-OXCMSG 23.1 understand X-FILENAME
                         $vEvent->setAttribute(
                             'ATTACH',
@@ -1437,8 +1437,8 @@ abstract class Kronolith_Event
                         $dir = Kronolith::VFS_PATH . '/' . $this->getVfsUid();
                         // Some clients use X-FILENAME to convey filename.
                         // Otherwise, we can only generate a standin filename from type
-                        if (!empty($attachment_params[$key]['X-FILENAME'])) {
-                            $filename = $attachment_params[$key]['X-FILENAME'];
+                        if (!empty($attach_params[$key]['X-FILENAME'])) {
+                            $filename = $attach_params[$key]['X-FILENAME'];
                         } else {
                             $filename = sprintf(_("File %d.%s"), $key, Horde_Mime_Magic::mimeToExt($mime_type));
                         }
@@ -1762,7 +1762,7 @@ abstract class Kronolith_Event
         // are not using EAS 16.0 (16 sends a ClientUID value, but it's only
         // purpose is to prevent duplicate events. We currently don't store
         // this value.
-        if ($message->getProtocolVersion < Horde_ActiveSync::VERSION_SIXTEEN) {
+        if ($message->getProtocolVersion() < Horde_ActiveSync::VERSION_SIXTEEN) {
             $client_uid = $message->getUid();
             if (empty($this->uid) && !empty($client_uid)) {
                 $this->uid = $message->getUid();
@@ -2007,8 +2007,9 @@ abstract class Kronolith_Event
         if (!$message->isGhosted('attendees')) {
             $attendees = $message->getAttendees();
             foreach ($attendees as $attendee) {
-                $response_code == false;
-                if ($message->getProtocolVersion < Horde_ActiveSync::VERSION_SIXTEEN) {
+                $response_code = Kronolith::RESPONSE_NONE;
+                $part_type = Kronolith::PART_NONE;
+                if ($message->getProtocolVersion() < Horde_ActiveSync::VERSION_SIXTEEN) {
                     switch ($attendee->status) {
                         case Horde_ActiveSync_Message_Attendee::STATUS_ACCEPT:
                             $response_code = Kronolith::RESPONSE_ACCEPTED;
@@ -2019,8 +2020,6 @@ abstract class Kronolith_Event
                         case Horde_ActiveSync_Message_Attendee::STATUS_TENTATIVE:
                             $response_code = Kronolith::RESPONSE_TENTATIVE;
                             break;
-                        default:
-                            $response_code = Kronolith::RESPONSE_NONE;
                     }
                     switch ($attendee->type) {
                         case Horde_ActiveSync_Message_Attendee::TYPE_REQUIRED:
@@ -2034,12 +2033,7 @@ abstract class Kronolith_Event
                     }
                 }
 
-                $this->addAttendee(
-                    $attendee->email,
-                    $part_type,
-                    $response_code,
-                    $attendee->name
-                );
+                $this->addAttendee($attendee->email, $part_type, $response_code, $attendee->name);
             }
         }
 
@@ -2524,7 +2518,7 @@ abstract class Kronolith_Event
                         $file['name']
                     );
                 } catch (Horde_Vfs_Exception $e) {
-                    Horde::log($e->getMessage, 'ERR');
+                    Horde::log($e->getMessage(), 'ERR');
                 }
                 if ($data) {
                     $file['data'] = base64_encode($data);
@@ -4000,14 +3994,14 @@ abstract class Kronolith_Event
         }
         $this->_resources = $resources;
 
-
         // Have the base event, and this is an exception so we must
         // match the recurrence in the resource's copy of the base event.
+        // TODO: This part never worked before, needs testing
         if (!empty($existing) && $existing->recurs() && !$this->recurs()) {
             foreach ($existing->getResources() as $rid => $data) {
-                $resource = Kronolith::getDriver('Resource')->getResource($key);
+                $resource = Kronolith::getDriver('Resource')->getResource($rid);
                 $r_event = Kronolith::getDriver('Resource')->getByUID($existing->uid, $resource->calendar);
-                $r_event->recurrence = $event->recurrence;
+                $r_event->recurrence = $existing->recurrence;
                 $r_event->save();
             }
         }
@@ -4022,9 +4016,7 @@ abstract class Kronolith_Event
                 // on it's calendar.
                 if ($merged[$key]['response'] != Kronolith::RESPONSE_DECLINED) {
                     try {
-                        Kronolith::getDriver('Resource')
-                            ->getResource($key)
-                            ->removeEvent($this);
+                        Kronolith::getDriver('Resource')->getResource($key)->removeEvent($this);
                     } catch (Kronolith_Exception $e) {
                         $notification->push('foo', 'horde.error');
                     }
