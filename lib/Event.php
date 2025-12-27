@@ -1748,9 +1748,11 @@ abstract class Kronolith_Event
             $this->creator = $GLOBALS['registry']->getAuth();
         }
 
+        $version = $message->getProtocolVersion();
+
         // EAS 16.0 sends new/changed exceptions as "orphaned" instances so
         // they need to be handled separately.
-        if ($message->getProtocolVersion() >= Horde_ActiveSync::VERSION_SIXTEEN &&
+        if ($version >= Horde_ActiveSync::VERSION_SIXTEEN &&
             !empty($message->instanceid)) {
             if (!$this->_handleEas16Exception($message)) {
                 throw new Kronolith_Exception('Error handling EAS 16 exceptions.');
@@ -1762,7 +1764,7 @@ abstract class Kronolith_Event
         // are not using EAS 16.0 (16 sends a ClientUID value, but it's only
         // purpose is to prevent duplicate events. We currently don't store
         // this value.
-        if ($message->getProtocolVersion() < Horde_ActiveSync::VERSION_SIXTEEN) {
+        if ($version < Horde_ActiveSync::VERSION_SIXTEEN) {
             $client_uid = $message->getUid();
             if (empty($this->uid) && !empty($client_uid)) {
                 $this->uid = $message->getUid();
@@ -1774,28 +1776,28 @@ abstract class Kronolith_Event
         // be changed by the client.
         if (!$message->isGhosted('organizer')) {
             $organizer = $message->getOrganizer();
-            if ($message->getProtocolVersion() < Horde_ActiveSync::VERSION_SIXTEEN) {
+            if ($version < Horde_ActiveSync::VERSION_SIXTEEN) {
                 if ($organizer['email'] && empty($this->organizer)) {
                     $this->organizer =  $organizer['email'];
                 }
             }
         }
 
-        if (!$message->isGhosted('subject') &&
-            strlen($title = $message->getSubject())) {
+        if (!$message->isGhosted('subject') && strlen($title = $message->getSubject())) {
             $this->title = $title;
         }
 
-        if ($message->getProtocolVersion() == Horde_ActiveSync::VERSION_TWOFIVE &&
-            !$message->isGhosted('body') &&
-            strlen($description = $message->getBody())) {
-            $this->description = $description;
-        } elseif ($message->getProtocolVersion() > Horde_ActiveSync::VERSION_TWOFIVE && !$message->isGhosted('airsyncbasebody')) {
-            if ($message->airsyncbasebody->type == Horde_ActiveSync::BODYPREF_TYPE_HTML) {
-                $this->description = Horde_Text_Filter::filter($message->airsyncbasebody->data, 'Html2text');
-            } else {
-                $this->description = $message->airsyncbasebody->data;
+        if ($version > Horde_ActiveSync::VERSION_TWOFIVE && !$message->isGhosted('airsyncbasebody')) {
+            $body = $message->getProperty('airsyncbasebody');
+            if ($body) {
+                $description = $body->data;
+                if ($body->type == Horde_ActiveSync::BODYPREF_TYPE_HTML) {
+                    $description = Horde_Text_Filter::filter($description, 'Html2text');
+                }
+                $this->description = $description;
             }
+        } elseif ($version == Horde_ActiveSync::VERSION_TWOFIVE && !$message->isGhosted('body')) {
+            $this->description = $message->getBody();
         }
 
         // EAS 16 location property is an AirSyncBaseLocation object, not
@@ -1817,7 +1819,7 @@ abstract class Kronolith_Event
 
         if (!empty($this->id) &&
             $dates['allday'] &&
-            $message->getProtocolVersion() == Horde_ActiveSync::VERSION_SIXTEEN) {
+            $version == Horde_ActiveSync::VERSION_SIXTEEN) {
             // allday events are handled differently when updating vs creating
             // new when using EAS 16.0
             $this->start = new Horde_Date(
@@ -1898,7 +1900,7 @@ abstract class Kronolith_Event
             if ($alarm === 0 || $alarm === "0") {
                 // "At time of event"
                 $this->alarm = 1;
-            } elseif ($message->getProtocolVersion() >= Horde_ActiveSync::VERSION_SIXTEEN) {
+            } elseif ($version >= Horde_ActiveSync::VERSION_SIXTEEN) {
                 if (empty($alarm)) {
                     // Client sent an empty reminder tag meaning no alarm.
                     $this->alarm = 0;
@@ -1925,7 +1927,7 @@ abstract class Kronolith_Event
             // but still sends the recurrence rule. We need to replace the
             // recurrence rule if it changed (and overwrite any exceptions),
             // otherwise leave it alone.
-            if ($message->getProtocolVersion() >= Horde_ActiveSync::VERSION_SIXTEEN) {
+            if ($version >= Horde_ActiveSync::VERSION_SIXTEEN) {
                 if (!empty($this->uid) &&
                     !empty($this->recurrence) &&
                     !$this->recurrence->isEqual($rrule)) {
@@ -1935,7 +1937,7 @@ abstract class Kronolith_Event
             }
 
             if (!empty($this->uid) &&
-                $message->getProtocolVersion() < Horde_ActiveSync::VERSION_SIXTEEN) {
+                $version < Horde_ActiveSync::VERSION_SIXTEEN) {
                 // EAS 16.0 NEVER adds exceptions from withing the base event,
                 // so we can't delete the existing exceptions - we don't have
                 // the current list to replace them with.
@@ -1954,7 +1956,7 @@ abstract class Kronolith_Event
                     if (!$rule->deleted) {
                         $event = $kronolith_driver->getEvent();
                         $times = $rule->getDatetime();
-                        if ($message->getProtocolVersion() < Horde_ActiveSync::VERSION_SIXTEEN) {
+                        if ($version < Horde_ActiveSync::VERSION_SIXTEEN) {
                             $original = $rule->getExceptionStartTime();
                         } else {
                             $original = $rule->instanceid;
@@ -1985,7 +1987,7 @@ abstract class Kronolith_Event
                         $event->save();
                     } else {
                         /* For exceptions that are deletions, just add the exception */
-                        if ($message->getProtocolVersion() < Horde_ActiveSync::VERSION_SIXTEEN) {
+                        if ($version < Horde_ActiveSync::VERSION_SIXTEEN) {
                             $exceptiondt = $rule->getExceptionStartTime();
                         } else {
                             $exceptiondt = $rule->instanceid;
@@ -2009,7 +2011,7 @@ abstract class Kronolith_Event
             foreach ($attendees as $attendee) {
                 $response_code = Kronolith::RESPONSE_NONE;
                 $part_type = Kronolith::PART_NONE;
-                if ($message->getProtocolVersion() < Horde_ActiveSync::VERSION_SIXTEEN) {
+                if ($version < Horde_ActiveSync::VERSION_SIXTEEN) {
                     switch ($attendee->status) {
                         case Horde_ActiveSync_Message_Attendee::STATUS_ACCEPT:
                             $response_code = Kronolith::RESPONSE_ACCEPTED;
@@ -2043,7 +2045,7 @@ abstract class Kronolith_Event
         }
 
         // 14.1
-        if ($message->getProtocolVersion() >= Horde_ActiveSync::VERSION_FOURTEENONE &&
+        if ($version >= Horde_ActiveSync::VERSION_FOURTEENONE &&
             !$message->isGhosted('onlinemeetingexternallink')) {
             $this->url = $message->onlinemeetingexternallink;
         }
@@ -2058,34 +2060,34 @@ abstract class Kronolith_Event
     public function addEASFiles($message)
     {
         $results = [
-            'add' => [],
+            'add'    => [],
             'delete' => [],
         ];
-        // EAS 16.0
-        $supported = true;
-        if ($message->getProtocolVersion() < Horde_ActiveSync::VERSION_SIXTEEN ||
-            !$this->id) {
-            $not_supported = true;
-        }
 
-        foreach ($message->airsyncbaseattachments as $atc) {
-            switch (get_class($atc)) {
-                case 'Horde_ActiveSync_Message_AirSyncBaseAdd':
-                    if (!$supported) {
-                        $results['add'][$atc->clientid] = false;
-                        continue 2;
-                    }
-                    $info = $this->_addEASFile($atc);
-                    $results['add'][$atc->clientid] = $this->_getEASFileReference($info['name']);
-                    break;
-                case 'Horde_ActiveSync_Message_AirSyncBaseDelete':
-                    $file_parts = explode(':', $atc->filereference, 4);
-                    try {
-                        $this->deleteFile($file_parts[3]);
-                        $results['delete'][] = $atc->filereference;
-                    } catch (Kronolith_Exception $e) {
-                        Horde::log('Unable to remove VFS file.', 'ERR');
-                    }
+        // EAS 16.0
+        $supported = $message->getProtocolVersion() >= Horde_ActiveSync::VERSION_SIXTEEN && $this->id;
+
+        $attachments = $message->getProperty('airsyncbaseattachments');
+        if ($attachments) {
+            foreach ($attachments as $atc) {
+                switch (get_class($atc)) {
+                    case 'Horde_ActiveSync_Message_AirSyncBaseAdd':
+                        if ($supported) {
+                            $info = $this->_addEASFile($atc);
+                            $results['add'][$atc->clientid] = $this->_getEASFileReference($info['name']);
+                        } else {
+                            $results['add'][$atc->clientid] = false;
+                        }
+                        break;
+                    case 'Horde_ActiveSync_Message_AirSyncBaseDelete':
+                        $file_parts = explode(':', $atc->filereference, 4);
+                        try {
+                            $this->deleteFile($file_parts[3]);
+                            $results['delete'][] = $atc->filereference;
+                        } catch (Kronolith_Exception $e) {
+                            Horde::log('Unable to remove VFS file.', 'ERR');
+                        }
+                }
             }
         }
 
