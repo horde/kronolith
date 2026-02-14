@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Kronolith Hooks configuration file.
  *
@@ -11,26 +10,25 @@
  *
  * $Id$
  */
-if (!class_exists('Kronolith_Hooks')) {
-    class Kronolith_Hooks
-    {
-        /**
-         * Adds user-defined AJAX action handlers.
-         *
-         * @param string $action         The AJAX action.
-         * @param Horde_Variables $vars  The URL parameters.
-         *
-         * @return mixed  The data to send to the browser (will be JSON encoded).
-         * @throws Horde_Exception
-         */
-        //     public function ajaxaction($action, $vars)
-        //     {
-        //        switch ($action) {
-        //        case 'Foo':
-        //            return 'bar';
-        //        }
-        //
-        //        throw new Horde_Exception('Unknown action');
-        //     }
-    }
+
+class Kronolith_Hooks
+{
+    /**
+     * Adds user-defined AJAX action handlers.
+     *
+     * @param string $action         The AJAX action.
+     * @param Horde_Variables $vars  The URL parameters.
+     *
+     * @return mixed  The data to send to the browser (will be JSON encoded).
+     * @throws Horde_Exception
+     */
+//     public function ajaxaction($action, $vars)
+//     {
+//        switch ($action) {
+//        case 'Foo':
+//            return 'bar';
+//        }
+//
+//        throw new Horde_Exception('Unknown action');
+//     }
 }
