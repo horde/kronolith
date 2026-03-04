@@ -157,7 +157,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
      *                                   toJson() method?
      * @param boolean $coverDates        Whether to add the events to all days
      *                                   that they cover.
-     * $param boolean $hideExceptions    Hide events that represent exceptions
+     * @param boolean $hideExceptions    Hide events that represent exceptions
      *                                   to a recurring event.
      *
      * @return array  Events in the given time range.
@@ -177,7 +177,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         if (is_null($startDate)) {
             $startDate = new Horde_Date(['mday' => 1,
                 'month' => 1,
-                'year' => 0o000]);
+                'year' => 0000]);
         }
         if (is_null($endDate)) {
             $endDate = new Horde_Date(['mday' => 31,
@@ -221,7 +221,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
      *                                   toJson() method?
      * @param boolean $coverDates        Whether to add the events to all days
      *                                   that they cover.
-     * $param boolean $hideExceptions    Hide events that represent exceptions
+     * @param boolean $hideExceptions    Hide events that represent exceptions
      *                                   to a recurring event.
      *
      * @return array  Events in the given time range.
@@ -471,7 +471,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
                 $eventId = $matches[1];
                 //$recurrenceId = $matches[2];
             }
-            $url = trim($this->_getUrl(), '/') . '/' . $eventId;
+            $url = $this->_getUrl($eventId);
             try {
                 $response = $this->_getClient($url)->request('GET');
             } catch (\Sabre\HTTP\ClientException $e) {
@@ -596,7 +596,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         $ical = new Horde_Icalendar();
         $ical->addComponent($event->toiCalendar($ical));
 
-        $url = trim($this->_getUrl(), '/') . '/' . $event->id;
+        $url = $this->_getUrl($event->id);
         try {
             return $this->_getClient($url)
                 ->request(
@@ -643,7 +643,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             throw new Kronolith_Exception(_("Cannot delete exceptions (yet)."));
         }
 
-        $url = trim($this->_getUrl(), '/') . '/' . $eventId;
+        $url = $this->_getUrl($eventId);
         try {
             $response = $this->_getClient($url)->request('DELETE');
         } catch (\Sabre\HTTP\ClientException $e) {
@@ -772,7 +772,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
 
     /**
      * Returns whether the remote calendar is a CalDAV server, and propagates
-     * the $_davSupport propery with the server's DAV capabilities.
+     * the $_davSupport property with the server's DAV capabilities.
      *
      * @return boolean  True if the remote calendar is a CalDAV server.
      * @throws Kronolith_Exception
@@ -978,9 +978,11 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
      * Does any necessary trimming and URL scheme fixes on the user-provided
      * calendar URL.
      *
+     * @param string|null $eventId  Optional event ID.
+     *
      * @return string  The URL of this calendar.
      */
-    protected function _getUrl()
+    protected function _getUrl(?string $eventId = null)
     {
         $url = trim($this->calendar);
         if (strpos($url, 'http') !== 0) {
@@ -990,6 +992,13 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
                 $url
             );
         }
+
+        if (!is_null($eventId)) {
+            $hurl = new Horde_Url($url, true);
+            $hurl->pathInfo = $eventId;
+            $url = (string) $hurl;
+        }
+
         return $url;
     }
 
