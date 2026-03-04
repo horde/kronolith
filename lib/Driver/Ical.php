@@ -506,7 +506,9 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
                     false,
                     $eventId
                 );
-                $event = reset(reset($results));
+
+                $first = reset($results);
+                $event = $first ? reset($first) : false;
                 if (!$event) {
                     throw new Horde_Exception_NotFound(_("Event not found"));
                 }
