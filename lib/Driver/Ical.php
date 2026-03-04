@@ -39,13 +39,6 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
     protected $_cache = [];
 
     /**
-     * DAV client object.
-     *
-     * @var \Sabre\DAV\Client
-     */
-    protected $_client;
-
-    /**
      * A list of DAV support levels.
      *
      * @var array
@@ -67,7 +60,6 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
     public function open($calendar)
     {
         parent::open($calendar);
-        $this->_client = null;
         $this->_permission = 0;
         unset($this->_davSupport);
     }
@@ -1020,24 +1012,24 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             $options['password'] = $this->_params['password'];
         }
 
-        $this->_client = new Client($options);
+        $client = new Client($options);
 
-        $this->_client->addCurlSetting(
+        $client->addCurlSetting(
             CURLOPT_TIMEOUT,
             $this->_params['timeout'] ?? 5
         );
         if (!empty($conf['http']['proxy']['proxy_host'])) {
-            $this->_client->addCurlSetting(
+            $client->addCurlSetting(
                 CURLOPT_PROXY,
                 $conf['http']['proxy']['proxy_host']
             );
-            $this->_client->addCurlSetting(
+            $client->addCurlSetting(
                 CURLOPT_PROXYPORT,
                 $conf['http']['proxy']['proxy_port']
             );
             if (!empty($conf['http']['proxy']['proxy_user']) &&
                 !empty($conf['http']['proxy']['proxy_pass'])) {
-                $this->_client->addCurlSetting(
+                $client->addCurlSetting(
                     CURLOPT_PROXYUSERPWD,
                     $conf['http']['proxy']['proxy_user'] . ':' .
                     $conf['http']['proxy']['proxy_pass']
@@ -1045,7 +1037,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             }
         }
 
-        return $this->_client;
+        return $client;
     }
 
 }
