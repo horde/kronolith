@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2002-2017 Horde LLC (http://www.horde.org/)
  *
@@ -14,7 +15,7 @@ if (Kronolith::showAjaxView()) {
 }
 
 if (!$GLOBALS['registry']->getAuth()) {
-    echo Horde::wrapInlineScript(array('window.close();'));
+    echo Horde::wrapInlineScript(['window.close();']);
     exit;
 }
 
@@ -36,31 +37,31 @@ $search = Horde_Util::getFormData('search');
 if ($search || $prefs->getValue('display_contact')) {
     $searchpref = Kronolith::getAddressbookSearchParams();
     $fields = isset($searchpref[$source])
-        ? array($source => $searchpref[$source])
-        : array();
+        ? [$source => $searchpref[$source]]
+        : [];
 
     try {
-        $results = $registry->call('contacts/search', array($search, array(
+        $results = $registry->call('contacts/search', [$search, [
             'fields' => $fields,
-            'sources' => array($source)
-        )));
+            'sources' => [$source],
+        ]]);
     } catch (Exception $e) {
-        $results = array();
+        $results = [];
     }
 } else {
-    $results = array();
+    $results = [];
 }
 
 /* The results list returns an array for each source searched - at least
    that's how it looks to me. Make it all one array instead. */
-$addresses = array();
+$addresses = [];
 foreach ($results as $r) {
     $addresses = array_merge($addresses, $r);
 }
 
 /* If self-submitted, preserve the currently selected users encoded by
    javascript to pass as value|text. */
-$selected_addresses = array();
+$selected_addresses = [];
 $sa = explode('|', Horde_Util::getFormData('sa'));
 for ($i = 0; $i < count($sa) - 1; $i += 2) {
     $selected_addresses[$sa[$i]] = $sa[$i + 1];
@@ -70,9 +71,9 @@ for ($i = 0; $i < count($sa) - 1; $i += 2) {
 $display = Horde_Util::getFormData('display', 'name');
 
 /* Display the form. */
-$page_output->header(array(
-    'title' => _("Address Book")
-));
+$page_output->header([
+    'title' => _("Address Book"),
+]);
 require KRONOLITH_TEMPLATES . '/javascript_defs.php';
 require KRONOLITH_TEMPLATES . '/contacts/contacts.inc';
 $page_output->footer();

@@ -327,10 +327,10 @@ class Kronolith_CalendarsManager
                     unset($this->_displayRemote[$key]);
                 }
                 $prefs->setValue('display_remote_cals', serialize($this->_displayRemote));
-            } elseif ((strncmp($calId, 'external_', 9) === 0 &&
-                       ($calId = substr($calId, 9))) ||
-                      (strncmp($calId, 'tasklists_', 10) === 0 &&
-                       ($calId = substr($calId, 10)))) {
+            } elseif ((strncmp($calId, 'external_', 9) === 0
+                       && ($calId = substr($calId, 9)))
+                      || (strncmp($calId, 'tasklists_', 10) === 0
+                       && ($calId = substr($calId, 10)))) {
                 if (($key = array_search($calId, $this->_displayExternal)) === false) {
                     $this->_displayExternal[] = $calId;
                 } else {
@@ -383,9 +383,9 @@ class Kronolith_CalendarsManager
     {
         global $prefs, $registry, $conf;
 
-        if (!empty($conf['share']['auto_create']) &&
-            $registry->getAuth() &&
-            !count(Kronolith::listInternalCalendars(true))) {
+        if (!empty($conf['share']['auto_create'])
+            && $registry->getAuth()
+            && !count(Kronolith::listInternalCalendars(true))) {
             $calendars = $GLOBALS['injector']
                 ->getInstance('Kronolith_Factory_Calendars')
                 ->create();
@@ -443,8 +443,8 @@ class Kronolith_CalendarsManager
         $this->_allExternal = [];
 
         // Make sure all task lists exist.
-        if (Kronolith::hasApiPermission('tasks') &&
-            $registry->hasMethod('tasks/listTimeObjects')) {
+        if (Kronolith::hasApiPermission('tasks')
+            && $registry->hasMethod('tasks/listTimeObjects')) {
             try {
                 $tasklists = $registry->tasks->listTasklists();
                 $categories = $registry->call('tasks/listTimeObjectCategories');
@@ -461,8 +461,8 @@ class Kronolith_CalendarsManager
 
         if ($session->exists('kronolith', 'all_external_calendars')) {
             foreach ($session->get('kronolith', 'all_external_calendars') as $calendar) {
-                if (!Kronolith::hasApiPermission($calendar['a']) ||
-                    $calendar['a'] == 'tasks') {
+                if (!Kronolith::hasApiPermission($calendar['a'])
+                    || $calendar['a'] == 'tasks') {
                     continue;
                 }
                 $this->_allExternal[$calendar['a'] . '/' . $calendar['n']] = new Kronolith_Calendar_External(['api' => $calendar['a'], 'name' => $calendar['d'], 'id' => $calendar['n'], 'type' => $calendar['t'], 'background' => $calendar['b']]);
@@ -472,9 +472,9 @@ class Kronolith_CalendarsManager
             $ext_cals = [];
 
             foreach ($apis as $api) {
-                if ($api == 'tasks' ||
-                    !Kronolith::hasApiPermission($api) ||
-                    !$registry->hasMethod($api . '/listTimeObjects')) {
+                if ($api == 'tasks'
+                    || !Kronolith::hasApiPermission($api)
+                    || !$registry->hasMethod($api . '/listTimeObjects')) {
                     continue;
                 }
                 try {
@@ -529,9 +529,9 @@ class Kronolith_CalendarsManager
         }
         $this->_displayExternal = [];
         foreach ($this->get(Kronolith::ALL_EXTERNAL_CALENDARS) as $id => $calendar) {
-            if ((substr($id, 0, 6) == 'tasks/' &&
-                 in_array(substr($id, 6), $_tasklists)) ||
-                in_array($id, $_temp)) {
+            if ((substr($id, 0, 6) == 'tasks/'
+                 && in_array(substr($id, 6), $_tasklists))
+                || in_array($id, $_temp)) {
                 $this->_displayExternal[] = $id;
             }
         }

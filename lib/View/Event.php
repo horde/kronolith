@@ -96,8 +96,8 @@ class Kronolith_View_Event
         if ($active && $GLOBALS['browser']->hasFeature('dom')) {
             /* We check for read permissions, because we can always save a
              * copy if we can read the event. */
-            if ($this->_event->hasPermission(Horde_Perms::READ) &&
-                Kronolith::getDefaultCalendar(Horde_Perms::EDIT)) {
+            if ($this->_event->hasPermission(Horde_Perms::READ)
+                && Kronolith::getDefaultCalendar(Horde_Perms::EDIT)) {
                 $edit = new Kronolith_View_EditEvent($this->_event);
                 $edit->html(false);
             }

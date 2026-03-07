@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
  *
@@ -17,12 +18,12 @@ if (Kronolith::showAjaxView()) {
 
 /* Check permissions. */
 $url = Horde::url($prefs->getValue('defaultview') . '.php', true)
-      ->add(array('month' => Horde_Util::getFormData('month'),
-                  'year' => Horde_Util::getFormData('year')));
+      ->add(['month' => Horde_Util::getFormData('month'),
+          'year' => Horde_Util::getFormData('year')]);
 
 $perms = $GLOBALS['injector']->getInstance('Horde_Core_Perms');
-if ($perms->hasAppPermission('max_events') !== true &&
-    $perms->hasAppPermission('max_events') <= Kronolith::countEvents()) {
+if ($perms->hasAppPermission('max_events') !== true
+    && $perms->hasAppPermission('max_events') <= Kronolith::countEvents()) {
     Horde::permissionDeniedError(
         'kronolith',
         'max_events',
@@ -34,9 +35,9 @@ if ($perms->hasAppPermission('max_events') !== true &&
 $display_resource = $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_RESOURCE_CALENDARS);
 $calendar_id = Horde_Util::getFormData(
     'calendar',
-    empty($display_resource) ?
-        'internal_' . Kronolith::getDefaultCalendar(Horde_Perms::EDIT) :
-        'resource_' . $display_resource[0]
+    empty($display_resource)
+        ? 'internal_' . Kronolith::getDefaultCalendar(Horde_Perms::EDIT)
+        : 'resource_' . $display_resource[0]
 );
 if ($calendar_id == 'internal_' || $calendar_id == 'resource_') {
     $url->redirect();
@@ -66,7 +67,7 @@ if (Horde_Util::getFormData('allday')) {
 $month = $event->start->month;
 $year = $event->start->year;
 
-$buttons = array('<input type="submit" class="horde-default" name="save" value="' . _("Save Event") . '" />');
+$buttons = ['<input type="submit" class="horde-default" name="save" value="' . _("Save Event") . '" />'];
 $url = Horde_Util::getFormData('url');
 if (isset($url)) {
     $cancelurl = new Horde_Url($url);
@@ -76,17 +77,17 @@ if (isset($url)) {
 
 $calendars = Kronolith::listCalendars(Horde_Perms::EDIT | Kronolith::PERMS_DELEGATE, true);
 
-Horde_Core_Ui_JsCalendar::init(array(
-    'full_weekdays' => true
-));
+Horde_Core_Ui_JsCalendar::init([
+    'full_weekdays' => true,
+]);
 
 $page_output->addScriptFile('edit.js');
 $page_output->addScriptFile('popup.js', 'horde');
 
-$page_output->header(array(
-    'title' => _("Add a new event")
-));
+$page_output->header([
+    'title' => _("Add a new event"),
+]);
 require KRONOLITH_TEMPLATES . '/javascript_defs.php';
-$notification->notify(array('listeners' => 'status'));
+$notification->notify(['listeners' => 'status']);
 require KRONOLITH_TEMPLATES . '/edit/edit.inc';
 $page_output->footer();

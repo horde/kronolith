@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2014-2017 Horde LLC (http://www.horde.org/)
  *
@@ -26,7 +27,7 @@ class KronolithEventOrganizer extends Horde_Db_Migration_Base
      */
     public function up()
     {
-        $this->addColumn('kronolith_events', 'event_organizer', 'string', array('limit' => 255));
+        $this->addColumn('kronolith_events', 'event_organizer', 'string', ['limit' => 255]);
     }
 
     /**

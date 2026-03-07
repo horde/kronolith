@@ -51,8 +51,8 @@ class Kronolith_Block_Monthlist extends Horde_Core_Block
     protected function _title()
     {
         $url = Horde::url($GLOBALS['registry']->getInitialPage(), true);
-        if (isset($this->_params['calendar']) &&
-            $this->_params['calendar'] != '__all') {
+        if (isset($this->_params['calendar'])
+            && $this->_params['calendar'] != '__all') {
             $url->add('display_cal', $this->_params['calendar']);
         }
         return $url->link() . _("Upcoming Events") . '</a>';
@@ -80,8 +80,8 @@ class Kronolith_Block_Monthlist extends Horde_Core_Block
             'mday' => date('j') - 1]);
 
         try {
-            if (isset($this->_params['calendar']) &&
-                $this->_params['calendar'] != '__all') {
+            if (isset($this->_params['calendar'])
+                && $this->_params['calendar'] != '__all') {
                 $calendars = Kronolith::listCalendars();
                 if (!isset($calendars[$this->_params['calendar']])) {
                     return _("Calendar not found");
@@ -127,8 +127,8 @@ class Kronolith_Block_Monthlist extends Horde_Core_Block
                 continue;
             }
 
-            if (!empty($this->_params['maxevents']) &&
-                $totalevents >= $this->_params['maxevents']) {
+            if (!empty($this->_params['maxevents'])
+                && $totalevents >= $this->_params['maxevents']) {
                 break;
             }
 
@@ -147,8 +147,8 @@ class Kronolith_Block_Monthlist extends Horde_Core_Block
                 if ($event->end->compareDate($tomorrow) >= 1) {
                     $isMultiDay = true;
                 }
-                if (($event->end->compareDate($now) < 0 && !$event->isAllDay()) ||
-                    (!empty($this->_params['alarms']) && !$event->alarm)) {
+                if (($event->end->compareDate($now) < 0 && !$event->isAllDay())
+                    || (!empty($this->_params['alarms']) && !$event->alarm)) {
                     continue;
                 }
 
@@ -181,19 +181,19 @@ class Kronolith_Block_Monthlist extends Horde_Core_Block
                 }
 
                 $html .= '<td class="text" nowrap="nowrap" valign="top">';
-                if ($event->start->compareDate($now) < 0 &&
-                    $event->end->compareDate($now) > 0) {
+                if ($event->start->compareDate($now) < 0
+                    && $event->end->compareDate($now) > 0) {
                     $html .= '<strong>' . htmlspecialchars($event->getLocation()) . '</strong>';
                 } else {
                     $html .= htmlspecialchars($event->getLocation());
                 }
-                if ($event->start->compareDate($now) < 0 &&
-                    $event->end->compareDate($now) > 0) {
+                if ($event->start->compareDate($now) < 0
+                    && $event->end->compareDate($now) > 0) {
                     $html .= '<strong>';
                 }
                 $html .= $event->getLink(null, true, null, true);
-                if ($event->start->compareDate($now) < 0 &&
-                    $event->end->compareDate($now) > 0) {
+                if ($event->start->compareDate($now) < 0
+                    && $event->end->compareDate($now) > 0) {
                     $html .= '</strong>';
                 }
                 $html .= '</td></tr>';

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
  *
@@ -22,7 +23,7 @@ $kronolith_driver = Kronolith::getDriver($driver, $c);
 if ($eventID = Horde_Util::getFormData('eventID')) {
     try {
         $event = $kronolith_driver->getEvent($eventID);
-    } catch(Exception $e) {
+    } catch (Exception $e) {
         if ($url = Horde::verifySignedUrl(Horde_Util::getFormData('url'))) {
             $url = new Horde_Url($url);
         } else {
@@ -54,10 +55,10 @@ if ($eventID = Horde_Util::getFormData('eventID')) {
         $notification_type = Kronolith::ITIP_CANCEL;
         $instance = null;
         if (Horde_Util::getFormData('future')) {
-            $recurEnd = new Horde_Date(array('hour' => 0, 'min' => 0, 'sec' => 0,
-                                             'month' => Horde_Util::getFormData('month', date('n')),
-                                             'mday' => Horde_Util::getFormData('mday', date('j')) - 1,
-                                             'year' => Horde_Util::getFormData('year', date('Y'))));
+            $recurEnd = new Horde_Date(['hour' => 0, 'min' => 0, 'sec' => 0,
+                'month' => Horde_Util::getFormData('month', date('n')),
+                'mday' => Horde_Util::getFormData('mday', date('j')) - 1,
+                'year' => Horde_Util::getFormData('year', date('Y'))]);
             if ($event->end->compareDate($recurEnd) > 0) {
                 try {
                     $kronolith_driver->deleteEvent($event->id);
@@ -70,18 +71,20 @@ if ($eventID = Horde_Util::getFormData('eventID')) {
             }
             $notification_type = Kronolith::ITIP_REQUEST;
         } elseif (Horde_Util::getFormData('current')) {
-            $event->recurrence->addException(Horde_Util::getFormData('year'),
-                                             Horde_Util::getFormData('month'),
-                                             Horde_Util::getFormData('mday'));
+            $event->recurrence->addException(
+                Horde_Util::getFormData('year'),
+                Horde_Util::getFormData('month'),
+                Horde_Util::getFormData('mday')
+            );
             $event->save();
-            $instance = new Horde_Date(array('year' => Horde_Util::getFormData('year'),
-                                             'month' => Horde_Util::getFormData('month'),
-                                             'mday' => Horde_Util::getFormData('mday')));
+            $instance = new Horde_Date(['year' => Horde_Util::getFormData('year'),
+                'month' => Horde_Util::getFormData('month'),
+                'mday' => Horde_Util::getFormData('mday')]);
         }
 
-        if (!$event->recurs() ||
-            Horde_Util::getFormData('all') ||
-            !$event->recurrence->hasActiveRecurrence()) {
+        if (!$event->recurs()
+            || Horde_Util::getFormData('all')
+            || !$event->recurrence->hasActiveRecurrence()) {
             try {
                 $kronolith_driver->deleteEvent($event->id);
             } catch (Exception $e) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Test importing iCalendar events.
  *
@@ -26,19 +27,20 @@
  * @author     Gunnar Wrobel <wrobel@pardus.de>
  * @link       http://www.horde.org/apps/kronolith
  * @license    http://www.horde.org/licenses/gpl GNU General Public License, version 2
+ * @coversNothing
  */
 class Kronolith_Integration_FromIcalendarTest extends Kronolith_TestCase
 {
     public function testStart()
     {
         $event = $this->_getFixture('fromicalendar.ics');
-        $this->assertEquals('2010-11-01 10:00:00', (string)$event->start);
+        $this->assertEquals('2010-11-01 10:00:00', (string) $event->start);
     }
 
     public function testEnd()
     {
         $event = $this->_getFixture('fromicalendar.ics');
-        $this->assertEquals('2010-11-01 11:00:00', (string)$event->end);
+        $this->assertEquals('2010-11-01 11:00:00', (string) $event->end);
     }
 
     public function testAllDay()
@@ -61,7 +63,7 @@ class Kronolith_Integration_FromIcalendarTest extends Kronolith_TestCase
     {
         $event = $this->_getFixture('fromicalendar.ics');
         $this->assertEquals(
-            array('20101108', '20101122'),
+            ['20101108', '20101122'],
             $event->recurrence->exceptions
         );
     }
@@ -72,7 +74,7 @@ class Kronolith_Integration_FromIcalendarTest extends Kronolith_TestCase
         $GLOBALS['injector'] = new Horde_Injector(new Horde_Injector_TopLevel());
         $event = $this->_getFixture('bug7068.ics');
         $this->assertEquals(
-            array('20080729'),
+            ['20080729'],
             $event->recurrence->exceptions
         );
 
@@ -86,7 +88,7 @@ class Kronolith_Integration_FromIcalendarTest extends Kronolith_TestCase
         $GLOBALS['injector'] = new Horde_Injector(new Horde_Injector_TopLevel());
         $event = $this->_getFixture('bug7068.ics', 1);
         $this->assertEquals(
-            array ('20080722', '20080729'),
+            ['20080722', '20080729'],
             $event->recurrence->exceptions
         );
 
@@ -107,7 +109,7 @@ class Kronolith_Integration_FromIcalendarTest extends Kronolith_TestCase
 
     public function testAttendees()
     {
-        foreach (array(1, 2) as $i) {
+        foreach ([1, 2] as $i) {
             $event = $this->_getFixture("attendees$i.ics");
             $this->assertInstanceOf(
                 'Kronolith_Attendee_List',

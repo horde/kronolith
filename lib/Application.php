@@ -84,9 +84,9 @@ class Kronolith_Application extends Horde_Registry_Application
         if (!$GLOBALS['prefs']->getValue('dynamic_view')) {
             $this->features['dynamicView'] = false;
         }
-        if ($GLOBALS['registry']->getView() != Horde_Registry::VIEW_DYNAMIC ||
-            !$GLOBALS['prefs']->getValue('dynamic_view') ||
-            empty($this->initParams['nodynamicinit'])) {
+        if ($GLOBALS['registry']->getView() != Horde_Registry::VIEW_DYNAMIC
+            || !$GLOBALS['prefs']->getValue('dynamic_view')
+            || empty($this->initParams['nodynamicinit'])) {
             Kronolith::initialize();
         }
     }
@@ -137,8 +137,8 @@ class Kronolith_Application extends Horde_Registry_Application
         $menu->add(Horde::url('search.php'), _("_Search"), 'kronolith-icon-search');
 
         /* Import/Export. */
-        if ($conf['menu']['import_export'] &&
-            !Kronolith::showAjaxView()) {
+        if ($conf['menu']['import_export']
+            && !Kronolith::showAjaxView()) {
             $menu->add(Horde::url('data.php'), _("_Import/Export"), 'horde-data');
         }
 
@@ -172,9 +172,9 @@ class Kronolith_Application extends Horde_Registry_Application
         $admin = $registry->isAdmin();
         $perms = $injector->getInstance('Horde_Core_Perms');
 
-        if (Kronolith::getDefaultCalendar(Horde_Perms::EDIT) &&
-            ($perms->hasAppPermission('max_events') === true ||
-             $perms->hasAppPermission('max_events') > Kronolith::countEvents())) {
+        if (Kronolith::getDefaultCalendar(Horde_Perms::EDIT)
+            && ($perms->hasAppPermission('max_events') === true
+             || $perms->hasAppPermission('max_events') > Kronolith::countEvents())) {
             $sidebar->addNewButton(_("_New Event"), Horde::url('new.php')->add('url', Horde::signUrl(Horde::selfUrl(true, false, true))));
         }
 
@@ -268,8 +268,8 @@ class Kronolith_Application extends Horde_Registry_Application
                 $sidebar->addRow($row, 'system');
             }
         }
-        if (!empty($conf['resources']['enabled']) &&
-            ($admin || $perms->hasAppPermission('resource_management'))) {
+        if (!empty($conf['resources']['enabled'])
+            && ($admin || $perms->hasAppPermission('resource_management'))) {
 
             $sidebar->containers['groups'] = [
                 'header' => [
@@ -561,9 +561,9 @@ class Kronolith_Application extends Horde_Registry_Application
                     }
                     $shown_calendars = unserialize($prefs->getValue('display_cals'));
                     $reminder = $prefs->getValue('event_reminder');
-                    if (($reminder == 'owner' && $alarm_user == $owner) ||
-                        ($reminder == 'show' && in_array($calendar, $shown_calendars)) ||
-                        $reminder == 'read') {
+                    if (($reminder == 'owner' && $alarm_user == $owner)
+                        || ($reminder == 'show' && in_array($calendar, $shown_calendars))
+                        || $reminder == 'read') {
                         $GLOBALS['registry']->setLanguageEnvironment($prefs->getValue('language'));
                         $alarm = $event->toAlarm($time, $alarm_user, $prefs);
                         if ($alarm) {
@@ -759,8 +759,8 @@ class Kronolith_Application extends Horde_Registry_Application
                 $type = Horde_Util::getFormData('type');
 
                 [$driver_type, $calendar] = explode('|', $source);
-                if ($driver_type == 'internal' &&
-                    !Kronolith::hasPermission($calendar, Horde_Perms::SHOW)) {
+                if ($driver_type == 'internal'
+                    && !Kronolith::hasPermission($calendar, Horde_Perms::SHOW)) {
                     $GLOBALS['notification']->push(_("Permission Denied"), 'horde.error');
                     return false;
                 }
@@ -822,8 +822,8 @@ class Kronolith_Application extends Horde_Registry_Application
                     [$type, $cal] = explode('_', $calendar, 2);
                     $kronolith_driver = Kronolith::getDriver($type, $cal);
                     $calendarObject = Kronolith::getCalendar($kronolith_driver);
-                    if (!$calendarObject ||
-                        !$calendarObject->hasPermission(Horde_Perms::READ)) {
+                    if (!$calendarObject
+                        || !$calendarObject->hasPermission(Horde_Perms::READ)) {
                         throw new Horde_Exception_PermissionDenied();
                     }
                     $events[$calendar] = $kronolith_driver->listEvents(
@@ -945,21 +945,21 @@ class Kronolith_Application extends Horde_Registry_Application
             $calendars[] = [
                 'id' => $id,
                 'uri' => $id,
-                '{' . CalDAV\Plugin::NS_CALENDARSERVER . '}shared-url' =>
-                    $calendar['caldav'],
+                '{' . CalDAV\Plugin::NS_CALENDARSERVER . '}shared-url'
+                    => $calendar['caldav'],
                 'principaluri' => 'principals/' . $user,
-                '{http://sabredav.org/ns}owner-principal' =>
-                    'principals/'
+                '{http://sabredav.org/ns}owner-principal'
+                    => 'principals/'
                         . (
                             $share->get('owner')
                            ? $registry->convertUsername($share->get('owner'), false)
                            : '-system-'
                         ),
                 '{DAV:}displayname' => Kronolith::getLabel($share),
-                '{' . CalDAV\Plugin::NS_CALDAV . '}calendar-description' =>
-                    $share->get('desc'),
-                '{http://apple.com/ns/ical/}calendar-color' =>
-                    $share->get('color') . 'ff',
+                '{' . CalDAV\Plugin::NS_CALDAV . '}calendar-description'
+                    => $share->get('desc'),
+                '{http://apple.com/ns/ical/}calendar-color'
+                    => $share->get('color') . 'ff',
                 '{' . CalDAV\Plugin::NS_CALDAV . '}supported-calendar-component-set' => new CalDAV\Xml\Property\SupportedCalendarComponentSet(['VEVENT']),
                 '{http://sabredav.org/ns}read-only' => !$share->hasPermission($hordeUser, Horde_Perms::EDIT),
             ];

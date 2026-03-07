@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Adds an index for the event_baseid column.
  *

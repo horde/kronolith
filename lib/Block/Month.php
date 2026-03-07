@@ -40,8 +40,8 @@ class Kronolith_Block_Month extends Horde_Core_Block
     {
         $title = _("All Calendars");
         $url = Horde::url($GLOBALS['registry']->getInitialPage(), true);
-        if (isset($this->_params['calendar']) &&
-            $this->_params['calendar'] != '__all') {
+        if (isset($this->_params['calendar'])
+            && $this->_params['calendar'] != '__all') {
             $calendars = Kronolith::listCalendars();
             if (isset($calendars[$this->_params['calendar']])) {
                 $title = htmlspecialchars($calendars[$this->_params['calendar']]->name());
@@ -61,8 +61,8 @@ class Kronolith_Block_Month extends Horde_Core_Block
     {
         global $prefs;
 
-        if (isset($this->_params['calendar']) &&
-            $this->_params['calendar'] != '__all') {
+        if (isset($this->_params['calendar'])
+            && $this->_params['calendar'] != '__all') {
             $calendars = Kronolith::listCalendars();
             if (!isset($calendars[$this->_params['calendar']])) {
                 return _("Calendar not found");
@@ -97,8 +97,8 @@ class Kronolith_Block_Month extends Horde_Core_Block
             $month,
             Horde_Date_Utils::daysInMonth($month, $year) + 1
         );
-        $endDate->mday +=
-            (7 - ($endDate->format('w') - $prefs->getValue('week_start_monday')))
+        $endDate->mday
+            += (7 - ($endDate->format('w') - $prefs->getValue('week_start_monday')))
             % 7;
 
         /* Table start. and current month indicator. */
@@ -116,8 +116,8 @@ class Kronolith_Block_Month extends Horde_Core_Block
         }
 
         try {
-            if (isset($this->_params['calendar']) &&
-                $this->_params['calendar'] != '__all') {
+            if (isset($this->_params['calendar'])
+                && $this->_params['calendar'] != '__all') {
                 [$type, $calendar] = explode('_', $this->_params['calendar'], 2);
                 $driver = Kronolith::getDriver($type, $calendar);
                 $all_events = $driver->listEvents($startDate, $endDate, [
@@ -158,8 +158,8 @@ class Kronolith_Block_Month extends Horde_Core_Block
             /* Set up the link to the day view. */
             $url = Horde::url('day.php', true)
                 ->add('date', $date_ob->dateString());
-            if (isset($this->_params['calendar']) &&
-                $this->_params['calendar'] != '__all') {
+            if (isset($this->_params['calendar'])
+                && $this->_params['calendar'] != '__all') {
                 $url->add('display_cal', $this->_params['calendar']);
             }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2008-2017 Horde LLC (http://www.horde.org/)
  *
@@ -22,7 +23,7 @@ function _no_access($status, $reason, $body)
 }
 
 require_once __DIR__ . '/../lib/Application.php';
-Horde_Registry::appInit('kronolith', array('authentication' => 'none', 'session_control' => 'readonly'));
+Horde_Registry::appInit('kronolith', ['authentication' => 'none', 'session_control' => 'readonly']);
 
 $calendar = Horde_Util::getFormData('c');
 $endDate = Horde_Util::getFormData('e');
@@ -30,15 +31,25 @@ $endDate = Horde_Util::getFormData('e');
 try {
     $share = $injector->getInstance('Kronolith_Shares')->getShare($calendar);
 } catch (Exception $e) {
-    _no_access(404, 'Not Found',
-               sprintf(_("The requested feed (%s) was not found on this server."),
-                       htmlspecialchars($calendar)));
+    _no_access(
+        404,
+        'Not Found',
+        sprintf(
+            _("The requested feed (%s) was not found on this server."),
+            htmlspecialchars($calendar)
+        )
+    );
 }
 if (!$share->hasPermission($GLOBALS['registry']->getAuth(), Horde_Perms::READ)) {
     if ($GLOBALS['registry']->getAuth()) {
-        _no_access(403, 'Forbidden',
-                   sprintf(_("Permission denied for the requested feed (%s)."),
-                           htmlspecialchars($calendar)));
+        _no_access(
+            403,
+            'Forbidden',
+            sprintf(
+                _("Permission denied for the requested feed (%s)."),
+                htmlspecialchars($calendar)
+            )
+        );
     } else {
         $auth = $injector->getInstance('Horde_Core_Factory_Auth')->create();
         if (isset($_SERVER['PHP_AUTH_USER'])) {
@@ -48,16 +59,21 @@ if (!$share->hasPermission($GLOBALS['registry']->getAuth(), Horde_Perms::READ)) 
             $hash = str_replace('Basic ', '', $_SERVER['Authorization']);
             $hash = base64_decode($hash);
             if (strpos($hash, ':') !== false) {
-                list($user, $pass) = explode(':', $hash, 2);
+                [$user, $pass] = explode(':', $hash, 2);
             }
         }
 
-        if (!isset($user) ||
-            !$auth->authenticate($user, array('password' => $pass))) {
+        if (!isset($user)
+            || !$auth->authenticate($user, ['password' => $pass])) {
             header('WWW-Authenticate: Basic realm="' . $registry->get('name') . ' Feeds"');
-            _no_access(401, 'Unauthorized',
-                       sprintf(_("Login required for the requested feed (%s)."),
-                               htmlspecialchars($calendar)));
+            _no_access(
+                401,
+                'Unauthorized',
+                sprintf(
+                    _("Login required for the requested feed (%s)."),
+                    htmlspecialchars($calendar)
+                )
+            );
         }
     }
 }
@@ -83,12 +99,12 @@ try {
     $events = Kronolith::listEvents(
         $startDate,
         $endDate,
-        array($calendar),
-        array('show_recurrence' => true, 'cover_dates' => false)
+        [$calendar],
+        ['show_recurrence' => true, 'cover_dates' => false]
     );
 } catch (Exception $e) {
     Horde::log($e, 'ERR');
-    $events = array();
+    $events = [];
 }
 
 if (isset($conf['urls']['pretty']) && $conf['urls']['pretty'] == 'rewrite') {
@@ -117,7 +133,7 @@ $template->set('calendar_email', htmlspecialchars($identity->getValue('from_addr
 $template->set('self_url', $self_url);
 
 $twentyFour = $prefs->getValue('twentyFor');
-$entries = array();
+$entries = [];
 foreach ($events as $date => $day_events) {
     foreach ($day_events as $id => $event) {
         /* Modification date. */

@@ -27,16 +27,16 @@ if (Kronolith::showAjaxView()) {
 switch ($viewName) {
     case 'DeleteEvent':
         /* Shortcut when we're deleting events and don't want confirmation. */
-        if (!$view->event->recurs() &&
-            !($prefs->getValue('confirm_delete') ||
-              Horde_Util::getFormData('confirm'))) {
+        if (!$view->event->recurs()
+            && !($prefs->getValue('confirm_delete')
+              || Horde_Util::getFormData('confirm'))) {
             Horde::url('delete.php?' . $_SERVER['QUERY_STRING'], true)->redirect();
         }
         break;
 
     case 'EditEvent':
-        if ($view->event->private &&
-            $view->event->creator != $GLOBALS['registry']->getAuth()) {
+        if ($view->event->private
+            && $view->event->creator != $GLOBALS['registry']->getAuth()) {
             if ($url = Horde::verifySignedUrl(Horde_Util::getFormData('url'))) {
                 $url = new Horde_Url($url, true);
             } else {

@@ -7,7 +7,7 @@ class Kronolith_Stub_ShareFactory
     public function __construct($shares)
     {
         $this->_shares = $shares;
-        $this->_shares->setShareCallback(array($this, 'create'));
+        $this->_shares->setShareCallback([$this, 'create']);
     }
 
     public function create()
@@ -17,6 +17,6 @@ class Kronolith_Stub_ShareFactory
 
     public function __sleep()
     {
-        return array();
+        return [];
     }
 }

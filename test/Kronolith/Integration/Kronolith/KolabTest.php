@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Test the core Kronolith class with the Kolab backend.
  *
@@ -26,6 +27,7 @@
  * @author     Gunnar Wrobel <wrobel@pardus.de>
  * @link       http://www.horde.org/apps/kronolith
  * @license    http://www.horde.org/licenses/gpl GNU General Public License, version 2
+ * @coversNothing
  */
 class Kronolith_Integration_Kronolith_KolabTest extends Kronolith_Integration_Kronolith_Base
 {

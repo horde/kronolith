@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Test the core Kronolith driver with a sqlite DB.
  *
@@ -26,6 +27,7 @@
  * @author     Gunnar Wrobel <wrobel@pardus.de>
  * @link       http://www.horde.org/apps/kronolith
  * @license    http://www.horde.org/licenses/gpl GNU General Public License, version 2
+ * @coversNothing
  */
 class Kronolith_Integration_Kronolith_Sql_Pdo_SqliteTest extends Kronolith_Integration_Kronolith_Sql_Base
 {
@@ -33,15 +35,15 @@ class Kronolith_Integration_Kronolith_Sql_Pdo_SqliteTest extends Kronolith_Integ
 
     public static function setUpBeforeClass()
     {
-        self::$callback = array(__CLASS__, 'getDb');
+        self::$callback = [__CLASS__, 'getDb'];
         parent::setUpBeforeClass();
         $migrator = new Horde_Db_Migration_Migrator(
             $GLOBALS['injector']->getInstance('Horde_Db_Adapter'),
             null,
-            array(
+            [
                 'migrationsPath' => __DIR__ . '/../../../../../../migration',
-                'schemaTableName' => 'kronolith_test_schema'
-            )
+                'schemaTableName' => 'kronolith_test_schema',
+            ]
         );
         $migrator->up();
     }

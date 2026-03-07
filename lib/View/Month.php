@@ -88,8 +88,8 @@ class Kronolith_View_Month
             $this->month,
             Horde_Date_Utils::daysInMonth($this->month, $this->year) + 1
         );
-        $this->_endDate->mday +=
-            (7 - ($this->_endDate->format('w') - $prefs->getValue('week_start_monday')))
+        $this->_endDate->mday
+            += (7 - ($this->_endDate->format('w') - $prefs->getValue('week_start_monday')))
             % 7;
         if ($prefs->getValue('show_shared_side_by_side')) {
             $allCalendars = Kronolith::listInternalCalendars();
@@ -117,9 +117,9 @@ class Kronolith_View_Month
 
         $sidebyside = $prefs->getValue('show_shared_side_by_side');
         $twentyFour = $prefs->getValue('twentyFour');
-        $addLinks = Kronolith::getDefaultCalendar(Horde_Perms::EDIT) &&
-            ($GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('max_events') === true ||
-             $GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('max_events') > Kronolith::countEvents());
+        $addLinks = Kronolith::getDefaultCalendar(Horde_Perms::EDIT)
+            && ($GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('max_events') === true
+             || $GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('max_events') > Kronolith::countEvents());
 
         if ($sidebyside) {
             require KRONOLITH_TEMPLATES . '/month/head_side_by_side.inc';

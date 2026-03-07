@@ -19,8 +19,8 @@ switch ($registry->getView()) {
 
     case Horde_Registry::VIEW_BASIC:
     case Horde_Registry::VIEW_DYNAMIC:
-        if ($registry->getView() == Horde_Registry::VIEW_DYNAMIC &&
-            $prefs->getValue('dynamic_view')) {
+        if ($registry->getView() == Horde_Registry::VIEW_DYNAMIC
+            && $prefs->getValue('dynamic_view')) {
             break;
         }
         include KRONOLITH_BASE . '/' . $prefs->getValue('defaultview') . '.php';

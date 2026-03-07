@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Test the Kolab driver.
  *
@@ -26,6 +27,7 @@
  * @author     Gunnar Wrobel <wrobel@pardus.de>
  * @link       http://www.horde.org/apps/kronolith
  * @license    http://www.horde.org/licenses/gpl GNU General Public License, version 2
+ * @coversNothing
  */
 class Kronolith_Integration_Driver_KolabTest extends Kronolith_Integration_Driver_Base
 {
@@ -36,7 +38,7 @@ class Kronolith_Integration_Driver_KolabTest extends Kronolith_Integration_Drive
         return;
         parent::setUpBeforeClass();
         self::createKolabShares(self::$setup);
-        list($share, $other_share) = self::_createDefaultShares();
+        [$share, $other_share] = self::_createDefaultShares();
         self::$driver = Kronolith::getDriver('Kolab', $share->getName());
         self::$type = 'Kolab';
     }

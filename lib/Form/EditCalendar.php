@@ -29,9 +29,9 @@ class Kronolith_Form_EditCalendar extends Horde_Form
 
         $this->_calendar = $calendar;
 
-        $owner = $calendar->get('owner') == $registry->getAuth() ||
-            (is_null($calendar->get('owner')) &&
-             $registry->isAdmin());
+        $owner = $calendar->get('owner') == $registry->getAuth()
+            || (is_null($calendar->get('owner'))
+             && $registry->isAdmin());
 
         parent::__construct(
             $vars,
@@ -91,8 +91,8 @@ class Kronolith_Form_EditCalendar extends Horde_Form
         }
 
         $url = $registry->get('webroot', 'horde');
-        if (isset($conf['urls']['pretty']) &&
-            $conf['urls']['pretty'] == 'rewrite') {
+        if (isset($conf['urls']['pretty'])
+            && $conf['urls']['pretty'] == 'rewrite') {
             $webdavUrl = $url . '/rpc/kronolith/';
             $accountUrl = $url . '/rpc/';
         } else {

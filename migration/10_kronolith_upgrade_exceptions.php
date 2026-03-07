@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Adds fields for recurring event exceptions.
  *
@@ -22,7 +23,7 @@ class KronolithUpgradeExceptions extends Horde_Db_Migration_Base
         $t = $this->_connection->table('kronolith_events');
         $cols = $t->getColumns();
         if (!in_array('event_baseid', array_keys($cols))) {
-            $this->addColumn('kronolith_events', 'event_baseid', 'string', array('limit' => 255, 'default' => ''));
+            $this->addColumn('kronolith_events', 'event_baseid', 'string', ['limit' => 255, 'default' => '']);
             $this->addColumn('kronolith_events', 'event_exceptionoriginaldate', 'datetime');
         }
     }

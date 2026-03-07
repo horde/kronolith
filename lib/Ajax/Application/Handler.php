@@ -51,11 +51,11 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
             if (Kronolith::hasApiPermission('tasks')) {
                 foreach ($GLOBALS['registry']->tasks->listTasklists($my, Horde_Perms::SHOW, false) as $id => $tasklist) {
                     if (isset($all_external_calendars['tasks/' . $id])) {
-                        $owner = ($auth_name &&
-                                  ($tasklist->get('owner') == $auth_name));
+                        $owner = ($auth_name
+                                  && ($tasklist->get('owner') == $auth_name));
                         if (($my && $owner) || (!$my && !$owner)) {
-                            $result->calendars['tasklists']['tasks/' . $id] =
-                                $all_external_calendars['tasks/' . $id]->toHash();
+                            $result->calendars['tasklists']['tasks/' . $id]
+                                = $all_external_calendars['tasks/' . $id]->toHash();
                         }
                     }
                 }
@@ -148,8 +148,8 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
     {
         $result = new stdClass();
 
-        if (!($kronolith_driver = $this->_getDriver($this->vars->cal)) ||
-            !isset($this->vars->id)) {
+        if (!($kronolith_driver = $this->_getDriver($this->vars->cal))
+            || !isset($this->vars->id)) {
             return $result;
         }
 
@@ -213,8 +213,8 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
         }
         if (!$this->vars->event) {
             $perms = $injector->getInstance('Horde_Core_Perms');
-            if ($perms->hasAppPermission('max_events') !== true &&
-                $perms->hasAppPermission('max_events') <= Kronolith::countEvents()) {
+            if ($perms->hasAppPermission('max_events') !== true
+                && $perms->hasAppPermission('max_events') <= Kronolith::countEvents()) {
                 Horde::permissionDeniedError(
                     'kronolith',
                     'max_events',
@@ -227,9 +227,9 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
             }
         }
 
-        if ($this->vars->event &&
-            $this->vars->cal &&
-            $this->vars->cal != $this->vars->targetcalendar) {
+        if ($this->vars->event
+            && $this->vars->cal
+            && $this->vars->cal != $this->vars->targetcalendar) {
             if (strpos($kronolith_driver->calendar, '\\')) {
                 [$target, $user] = explode(
                     '\\',
@@ -248,11 +248,11 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
                     $kronolith_driver->calendar
                 );
                 $share = Kronolith::getInternalCalendar($target);
-                if ($sourceShare->hasPermission($registry->getAuth(), Horde_Perms::DELETE) &&
-                    (($user == $registry->getAuth() &&
-                      $share->hasPermission($registry->getAuth(), Horde_Perms::EDIT)) ||
-                     ($user != $registry->getAuth() &&
-                      $share->hasPermission($registry->getAuth(), Kronolith::PERMS_DELEGATE)))) {
+                if ($sourceShare->hasPermission($registry->getAuth(), Horde_Perms::DELETE)
+                    && (($user == $registry->getAuth()
+                      && $share->hasPermission($registry->getAuth(), Horde_Perms::EDIT))
+                     || ($user != $registry->getAuth()
+                      && $share->hasPermission($registry->getAuth(), Kronolith::PERMS_DELEGATE)))) {
                     $kronolith_driver->move($this->vars->event, $target);
                     $kronolith_driver = $this->_getDriver($this->vars->targetcalendar);
                 }
@@ -361,11 +361,11 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
                         $removed_attendees->add($old_attendee);
                     }
                 }
-                if ((!empty($old_start) && !empty($old_end) &&
-                    $event->recurs() &&
-                    ($old_start->compareTime($event->start) !== 0 ||
-                     $old_end->compareTime($event->end) !== 0)) ||
-                      ($old_recurrence && !$event->recurrence->isEqual($old_recurrence))) {
+                if ((!empty($old_start) && !empty($old_end)
+                    && $event->recurs()
+                    && ($old_start->compareTime($event->start) !== 0
+                     || $old_end->compareTime($event->end) !== 0))
+                      || ($old_recurrence && !$event->recurrence->isEqual($old_recurrence))) {
                     // Disconnect any existing exceptions when the
                     // start/end time changes still @todo this when the
                     // recurrence series type/properties change too.
@@ -453,8 +453,8 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
     {
         $result = $this->_signedResponse($this->vars->cal);
 
-        if (!($kronolith_driver = $this->_getDriver($this->vars->cal)) ||
-            !isset($this->vars->id)) {
+        if (!($kronolith_driver = $this->_getDriver($this->vars->cal))
+            || !isset($this->vars->id)) {
             return $result;
         }
 
@@ -494,9 +494,9 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
                     $newDate = new Horde_Date($value);
                     $newDate->setTimezone($event->end->timezone);
                     $event->end = clone($newDate);
-                    if ($event->end->hour == 23 &&
-                        $event->end->min == 59 &&
-                        $event->end->sec == 59) {
+                    if ($event->end->hour == 23
+                        && $event->end->min == 59
+                        && $event->end->sec == 59) {
                         $event->end->mday++;
                         $event->end->hour = $event->end->min = $event->end->sec = 0;
                     }
@@ -544,8 +544,8 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
         $result = new stdClass();
         $instance = null;
 
-        if (!($kronolith_driver = $this->_getDriver($this->vars->cal)) ||
-            !isset($this->vars->id)) {
+        if (!($kronolith_driver = $this->_getDriver($this->vars->cal))
+            || !isset($this->vars->id)) {
             return $result;
         }
 
@@ -712,9 +712,9 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
      */
     public function getTask()
     {
-        if (!$GLOBALS['registry']->hasMethod('tasks/getTask') ||
-            !isset($this->vars->id) ||
-            !isset($this->vars->list)) {
+        if (!$GLOBALS['registry']->hasMethod('tasks/getTask')
+            || !isset($this->vars->id)
+            || !isset($this->vars->list)) {
             return false;
         }
 
@@ -738,8 +738,8 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
      */
     public function saveTask()
     {
-        if (!$GLOBALS['registry']->hasMethod('tasks/updateTask') ||
-            !$GLOBALS['registry']->hasMethod('tasks/addTask')) {
+        if (!$GLOBALS['registry']->hasMethod('tasks/updateTask')
+            || !$GLOBALS['registry']->hasMethod('tasks/addTask')) {
             return false;
         }
 
@@ -812,8 +812,8 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
             return $result;
         }
 
-        if ($due &&
-            $kronolith_driver = $this->_getDriver('tasklists|tasks/' . $task->tasklist)) {
+        if ($due
+            && $kronolith_driver = $this->_getDriver('tasklists|tasks/' . $task->tasklist)) {
             try {
                 $event = $kronolith_driver->getEvent('_tasks' . $id);
                 $end = clone $due;
@@ -874,9 +874,9 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
     {
         $result = new stdClass();
 
-        if (!$GLOBALS['registry']->hasMethod('tasks/deleteTask') ||
-            !isset($this->vars->id) ||
-            !isset($this->vars->list)) {
+        if (!$GLOBALS['registry']->hasMethod('tasks/deleteTask')
+            || !isset($this->vars->id)
+            || !isset($this->vars->list)) {
             return $result;
         }
 
@@ -1014,8 +1014,8 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
 
                 // Create a calendar.
                 if (!$calendar_id) {
-                    if (!$registry->getAuth() ||
-                        $prefs->isLocked('default_share')) {
+                    if (!$registry->getAuth()
+                        || $prefs->isLocked('default_share')) {
                         return $result;
                     }
                     try {
@@ -1042,13 +1042,13 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
                     $original_owner = $calendar->get('owner');
                     Kronolith::updateShare($calendar, $info);
                     Kronolith::readPermsForm($calendar);
-                    if ((!$info['system'] &&
-                         $calendar->get('owner') != $original_owner) ||
-                        ($info['system'] && !is_null($original_owner))) {
+                    if ((!$info['system']
+                         && $calendar->get('owner') != $original_owner)
+                        || ($info['system'] && !is_null($original_owner))) {
                         $result->deleted = true;
                     }
-                    if ($calendar->hasPermission($registry->getAuth(), Horde_Perms::SHOW) ||
-                        (is_null($calendar->get('owner')) && $registry->isAdmin())) {
+                    if ($calendar->hasPermission($registry->getAuth(), Horde_Perms::SHOW)
+                        || (is_null($calendar->get('owner')) && $registry->isAdmin())) {
                         $wrapper = new Kronolith_Calendar_Internal(['share' => $calendar]);
                         $result->saved = true;
                         $result->id = $calendar->getName();
@@ -1074,8 +1074,8 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
 
                 // Create a task list.
                 if (!$calendar_id) {
-                    if (!$registry->getAuth() ||
-                        $prefs->isLocked('default_share')) {
+                    if (!$registry->getAuth()
+                        || $prefs->isLocked('default_share')) {
                         return $result;
                     }
                     try {
@@ -1170,8 +1170,8 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
 
                 if (!$calendar_id) {
                     // New resource
-                    if (!$registry->isAdmin() &&
-                        !$injector->getInstance('Horde_Core_Perms')->hasAppPermission('resource_management')) {
+                    if (!$registry->isAdmin()
+                        && !$injector->getInstance('Horde_Core_Perms')->hasAppPermission('resource_management')) {
                         $notification->push(_("You are not allowed to create new resources."), 'horde.error');
                         return $result;
                     }
@@ -1590,8 +1590,8 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
                 if ($this->_canUploadFiles()) {
                     $max_files = $conf['documents']['count_limit'];
                     foreach ($this->_addFileFromUpload() as $f) {
-                        if (!empty($conf['documents']['count_limit']) &&
-                            count($event->listFiles()) >= $max_files) {
+                        if (!empty($conf['documents']['count_limit'])
+                            && count($event->listFiles()) >= $max_files) {
                             $notification->push(_("You have reached the maximum number of allowed files."), 'horde.notification');
                             break;
                         }
@@ -1701,8 +1701,8 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
     protected function _getDriver($cal)
     {
         [$driver, $calendar] = explode('|', $cal);
-        if ($driver == 'internal' &&
-            !Kronolith::hasPermission($calendar, Horde_Perms::SHOW)) {
+        if ($driver == 'internal'
+            && !Kronolith::hasPermission($calendar, Horde_Perms::SHOW)) {
             $GLOBALS['notification']->push(_("Permission Denied"), 'horde.error');
             return false;
         }

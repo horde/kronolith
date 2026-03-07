@@ -32,8 +32,8 @@ class Kronolith_Factory_IcalendarStorage
         switch ($driver) {
             case 'Sql':
                 $params = Horde::getDriverConfig('caldav', 'Sql');
-                if (isset($params['driverconfig']) &&
-                    $params['driverconfig'] != 'horde') {
+                if (isset($params['driverconfig'])
+                    && $params['driverconfig'] != 'horde') {
                     $customParams = $params;
                     unset($customParams['driverconfig'], $customParams['table']);
                     $db = $injector->getInstance('Horde_Core_Factory_Db')->create('kronolith', $customParams);

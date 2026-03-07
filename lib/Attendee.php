@@ -98,9 +98,9 @@ class Kronolith_Attendee implements Serializable
         $this->role     = $params['role'];
         $this->response = $params['response'];
 
-        if (isset($this->user) &&
-            isset($params['identities']) &&
-            !isset($this->name)) {
+        if (isset($this->user)
+            && isset($params['identities'])
+            && !isset($this->name)) {
             $this->name = $params['identities']
                 ->create($this->user)
                 ->getValue('fullname');
@@ -172,8 +172,8 @@ class Kronolith_Attendee implements Serializable
     public function matchesEmail($email, $caseSensitive)
     {
         $email = new Horde_Mail_Rfc822_Address($email);
-        return ($caseSensitive && $email->match($this->email)) ||
-            (!$caseSensitive && $email->matchInsensitive($this->email));
+        return ($caseSensitive && $email->match($this->email))
+            || (!$caseSensitive && $email->matchInsensitive($this->email));
     }
 
     /**

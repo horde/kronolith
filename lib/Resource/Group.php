@@ -127,12 +127,12 @@ class Kronolith_Resource_Group extends Kronolith_Resource_Base
 
             foreach ($busy as $events) {
                 foreach ($events as $e) {
-                    if (!($e->status == Kronolith::STATUS_CANCELLED ||
-                          $e->status == Kronolith::STATUS_FREE) &&
-                         $e->uid !== $uid) {
+                    if (!($e->status == Kronolith::STATUS_CANCELLED
+                          || $e->status == Kronolith::STATUS_FREE)
+                         && $e->uid !== $uid) {
 
-                        if (!($e->start->compareDateTime($end) >= 0) &&
-                            !($e->end->compareDateTime($start) <= 0)) {
+                        if (!($e->start->compareDateTime($end) >= 0)
+                            && !($e->end->compareDateTime($start) <= 0)) {
 
                             // Not free, continue to the next resource
                             $conflict = true;

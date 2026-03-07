@@ -110,9 +110,9 @@ class Kronolith_Calendar_Internal extends Kronolith_Calendar
      */
     public function display()
     {
-        return $this->owner() == $GLOBALS['registry']->getAuth() ||
-            empty($GLOBALS['conf']['share']['hidden']) ||
-            in_array($this->_share->getName(), $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_CALENDARS));
+        return $this->owner() == $GLOBALS['registry']->getAuth()
+            || empty($GLOBALS['conf']['share']['hidden'])
+            || in_array($this->_share->getName(), $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_CALENDARS));
     }
 
     /**
@@ -156,9 +156,9 @@ class Kronolith_Calendar_Internal extends Kronolith_Calendar
         global $calendar_manager, $conf, $injector, $registry;
 
         $id = $this->_share->getName();
-        $owner = $registry->getAuth() &&
-            ($this->owner() == $registry->getAuth() ||
-             $this->isSystem() && $registry->isAdmin());
+        $owner = $registry->getAuth()
+            && ($this->owner() == $registry->getAuth()
+             || $this->isSystem() && $registry->isAdmin());
 
         $hash = parent::toHash();
         $hash['name']  = $this->name();

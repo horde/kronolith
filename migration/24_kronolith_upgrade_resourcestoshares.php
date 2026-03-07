@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author   Michael J. Rubinsky <mrubinsk@horde.org>
  * @category Horde
@@ -29,18 +30,18 @@ class KronolithUpgradeResourcesToShares extends Horde_Db_Migration_Base
     public function up()
     {
         // shares ng
-        $this->addColumn('kronolith_sharesng', 'attribute_email','text');
-        $this->addColumn('kronolith_sharesng', 'attribute_members','text');
-        $this->addColumn('kronolith_sharesng', 'attribute_response_type','integer');
-        $this->addColumn('kronolith_sharesng', 'attribute_type', 'integer', array('default' => Kronolith::SHARE_TYPE_USER));
-        $this->addColumn('kronolith_sharesng', 'attribute_isgroup', 'integer', array('default' => 0));
+        $this->addColumn('kronolith_sharesng', 'attribute_email', 'text');
+        $this->addColumn('kronolith_sharesng', 'attribute_members', 'text');
+        $this->addColumn('kronolith_sharesng', 'attribute_response_type', 'integer');
+        $this->addColumn('kronolith_sharesng', 'attribute_type', 'integer', ['default' => Kronolith::SHARE_TYPE_USER]);
+        $this->addColumn('kronolith_sharesng', 'attribute_isgroup', 'integer', ['default' => 0]);
 
         // legacy shares
-        $this->addColumn('kronolith_shares', 'attribute_email','text');
-        $this->addColumn('kronolith_shares', 'attribute_members','text');
-        $this->addColumn('kronolith_shares', 'attribute_response_type','integer');
-        $this->addColumn('kronolith_shares', 'attribute_type', 'integer', array('default' => Kronolith::SHARE_TYPE_USER));
-        $this->addColumn('kronolith_shares', 'attribute_isgroup', 'integer', array('default' => 0));
+        $this->addColumn('kronolith_shares', 'attribute_email', 'text');
+        $this->addColumn('kronolith_shares', 'attribute_members', 'text');
+        $this->addColumn('kronolith_shares', 'attribute_response_type', 'integer');
+        $this->addColumn('kronolith_shares', 'attribute_type', 'integer', ['default' => Kronolith::SHARE_TYPE_USER]);
+        $this->addColumn('kronolith_shares', 'attribute_isgroup', 'integer', ['default' => 0]);
 
         /** Migrate existing resources to shares */
         $columns = $this->_connection->columns('kronolith_resources');

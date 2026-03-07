@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
  *
@@ -22,13 +23,14 @@
  * @author     Jan Schneider <jan@horde.org>
  * @link       http://www.horde.org/apps/kronolith
  * @license    http://www.horde.org/licenses/gpl GPLv2
+ * @coversNothing
  */
 class Kronolith_Unit_AttendeeListTest extends Horde_Test_Case
 {
     public function testConstructor()
     {
         new Kronolith_Attendee_List();
-        new Kronolith_Attendee_List(array());
+        new Kronolith_Attendee_List([]);
         new Kronolith_Attendee_List($this->_getAttendees());
     }
 
@@ -76,7 +78,7 @@ class Kronolith_Unit_AttendeeListTest extends Horde_Test_Case
             'New Name',
             $attendees['email:jack@example.com']->name
         );
-        $attendee = new Kronolith_Attendee(array('email' => 'foo@example.com'));
+        $attendee = new Kronolith_Attendee(['email' => 'foo@example.com']);
         $attendees['email:foo@example.com'] = $attendee;
         $this->assertEquals($attendee, $attendees['email:foo@example.com']);
 
@@ -107,12 +109,12 @@ class Kronolith_Unit_AttendeeListTest extends Horde_Test_Case
             array_values($attendees)
         );
         $this->assertEquals(
-            array(
+            [
                 'email:juergen@example.com',
                 'name:Jane Doe',
                 'email:jack@example.com',
-                'email:jenny@example.com'
-            ),
+                'email:jenny@example.com',
+            ],
             array_keys($attendees)
         );
     }
@@ -121,14 +123,14 @@ class Kronolith_Unit_AttendeeListTest extends Horde_Test_Case
     {
         $attendees = $this->_getList();
         $attendees->add(
-            new Kronolith_Attendee(array('email' => 'foo@example.com'))
+            new Kronolith_Attendee(['email' => 'foo@example.com'])
         );
         $this->assertEquals(7, count($attendees));
         $this->assertTrue(isset($attendees['email:foo@example.com']));
 
-        $attendees->add(new Kronolith_Attendee_List(array(
-            new Kronolith_Attendee(array('email' => 'bar@example.com'))
-        )));
+        $attendees->add(new Kronolith_Attendee_List([
+            new Kronolith_Attendee(['email' => 'bar@example.com']),
+        ]));
         $this->assertEquals(8, count($attendees));
         $this->assertTrue(isset($attendees['email:bar@example.com']));
     }
@@ -142,14 +144,14 @@ class Kronolith_Unit_AttendeeListTest extends Horde_Test_Case
         $this->assertFalse($attendees->has('foo@example.com'));
         $this->assertFalse(
             $attendees->has(
-                new Kronolith_Attendee(array('email' => 'foo@example.com'))
+                new Kronolith_Attendee(['email' => 'foo@example.com'])
             )
         );
     }
 
     public function testWithout()
     {
-        $attendees = $this->_getList()->without(array('juergen@example.com'));
+        $attendees = $this->_getList()->without(['juergen@example.com']);
         $this->assertInstanceOf('Kronolith_Attendee_List', $attendees);
         $this->assertEquals(5, count($attendees));
     }

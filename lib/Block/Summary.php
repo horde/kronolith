@@ -70,8 +70,8 @@ class Kronolith_Block_Summary extends Horde_Core_Block
     protected function _title()
     {
         $url = Horde::url($GLOBALS['registry']->getInitialPage(), true);
-        if (isset($this->_params['calendar']) &&
-            $this->_params['calendar'] != '__all') {
+        if (isset($this->_params['calendar'])
+            && $this->_params['calendar'] != '__all') {
             $url->add('display_cal', $this->_params['calendar']);
         }
         return $url->link()
@@ -91,8 +91,8 @@ class Kronolith_Block_Summary extends Horde_Core_Block
         $endDate = new Horde_Date(['year' => date('Y'), 'month' => date('n'), 'mday' => date('j') + $this->_params['days']]);
 
         try {
-            if (isset($this->_params['calendar']) &&
-                $this->_params['calendar'] != '__all') {
+            if (isset($this->_params['calendar'])
+                && $this->_params['calendar'] != '__all') {
                 $calendars = Kronolith::listCalendars();
                 if (!isset($calendars[$this->_params['calendar']])) {
                     return _("Calendar not found");
@@ -134,8 +134,8 @@ class Kronolith_Block_Summary extends Horde_Core_Block
             $firstevent = true;
             $tomorrow = $day->getTomorrow();
             foreach ($all_events[$date_stamp] as $event) {
-                if (!empty($this->_params['maxevents']) &&
-                    $totalevents >= $this->_params['maxevents']) {
+                if (!empty($this->_params['maxevents'])
+                    && $totalevents >= $this->_params['maxevents']) {
                     break 2;
                 }
 
@@ -152,8 +152,8 @@ class Kronolith_Block_Summary extends Horde_Core_Block
                 if (!empty($this->_params['alarms']) && !$event->alarm) {
                     continue;
                 }
-                $event_active = $event->start->compareDateTime($now) < 0 &&
-                    $event->end->compareDateTime($now) > 0;
+                $event_active = $event->start->compareDateTime($now) < 0
+                    && $event->end->compareDateTime($now) > 0;
 
                 if ($firstevent) {
                     $html .= '<tr><td colspan="3" class="control"><strong>';
@@ -169,8 +169,8 @@ class Kronolith_Block_Summary extends Horde_Core_Block
                     $url = Horde::url('day.php', true)
                         ->setRaw(false)
                         ->add('date', $day->dateString());
-                    if (isset($this->_params['calendar']) &&
-                        $this->_params['calendar'] != '__all') {
+                    if (isset($this->_params['calendar'])
+                        && $this->_params['calendar'] != '__all') {
                         $url->add('display_cal', $this->_params['calendar']);
                     }
                     $html .= $url->link(['title' => sprintf(_("Goto %s"), $dayname)])

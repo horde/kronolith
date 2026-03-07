@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2002-2017 Horde LLC (http://www.horde.org/)
  *
@@ -56,10 +57,10 @@ $vars->set('description', $resource->get('description'));
 $vars->set('category', Kronolith::getDriver('Resource')->getGroupMemberships($resource->getId()));
 $vars->set('responsetype', $resource->get('response_type'));
 
-$page_output->header(array(
-    'title' => $form->getTitle()
-));
+$page_output->header([
+    'title' => $form->getTitle(),
+]);
 require KRONOLITH_TEMPLATES . '/javascript_defs.php';
-$notification->notify(array('listeners' => 'status'));
+$notification->notify(['listeners' => 'status']);
 echo $form->renderActive($form->getRenderer(), $vars, Horde::url('resources/edit.php'), 'post');
 $page_output->footer();

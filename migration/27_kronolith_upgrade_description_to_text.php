@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
  *
@@ -35,7 +36,7 @@ class KronolithUpgradeDescriptionToText extends Horde_Db_Migration_Base
      */
     public function down()
     {
-        $this->changeColumn('kronolith_shares', 'attribute_desc', 'string', array('limit' => 255));
-        $this->changeColumn('kronolith_sharesng', 'attribute_desc', 'string', array('limit' => 255));
+        $this->changeColumn('kronolith_shares', 'attribute_desc', 'string', ['limit' => 255]);
+        $this->changeColumn('kronolith_sharesng', 'attribute_desc', 'string', ['limit' => 255]);
     }
 }

@@ -2,7 +2,5 @@
 
 class Content_Objects_Manager
 {
-  public function delete()
-  {
-  }
+    public function delete() {}
 }

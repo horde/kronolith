@@ -147,8 +147,8 @@ class Kronolith_Api extends Horde_Registry_Api
             }
             return $results;
 
-        } elseif (count($parts) == 2 &&
-                  array_key_exists($parts[1], Kronolith::listInternalCalendars(false, Horde_Perms::READ))) {
+        } elseif (count($parts) == 2
+                  && array_key_exists($parts[1], Kronolith::listInternalCalendars(false, Horde_Perms::READ))) {
             // This request is browsing into a specific calendar.  Generate
             // the list of items and represent them as files within the
             // directory.
@@ -176,8 +176,8 @@ class Kronolith_Api extends Horde_Registry_Api
                     } catch (Horde_Dav_Exception $e) {
                     }
                     $key = 'kronolith/' . $path . '/' . $id;
-                    if (in_array('modified', $properties) ||
-                        in_array('etag', $properties)) {
+                    if (in_array('modified', $properties)
+                        || in_array('etag', $properties)) {
                         $modified = $this->modified($event->uid, $parts[1]);
                     }
                     if (in_array('name', $properties)) {
@@ -213,8 +213,8 @@ class Kronolith_Api extends Horde_Registry_Api
         } else {
             // The only valid request left is for either a specific event or
             // for the entire calendar.
-            if (count($parts) == 3 &&
-                array_key_exists($parts[1], Kronolith::listInternalCalendars(false, Horde_Perms::READ))) {
+            if (count($parts) == 3
+                && array_key_exists($parts[1], Kronolith::listInternalCalendars(false, Horde_Perms::READ))) {
                 // This request is for a specific item within a given calendar.
                 $dav = $injector->getInstance('Horde_Dav_Storage');
                 $object = $parts[2];
@@ -233,9 +233,9 @@ class Kronolith_Api extends Horde_Registry_Api
                     $result['mtime'] = $modified;
                 }
                 return $result;
-            } elseif (count($parts) == 2 &&
-                      substr($parts[1], -4, 4) == '.ics' &&
-                      array_key_exists(substr($parts[1], 0, -4), Kronolith::listInternalCalendars(false, Horde_Perms::READ))) {
+            } elseif (count($parts) == 2
+                      && substr($parts[1], -4, 4) == '.ics'
+                      && array_key_exists(substr($parts[1], 0, -4), Kronolith::listInternalCalendars(false, Horde_Perms::READ))) {
                 // This request is for an entire calendar (calendar.ics).
                 $ical_data = $this->exportCalendar(substr($parts[1], 0, -4), 'text/calendar');
                 return [
@@ -388,8 +388,8 @@ class Kronolith_Api extends Horde_Registry_Api
                             $modified = $created;
                         }
                         try {
-                            if (!empty($modified) &&
-                                $modified >= $content->getAttribute('LAST-MODIFIED')) {
+                            if (!empty($modified)
+                                && $modified >= $content->getAttribute('LAST-MODIFIED')) {
                                 // LAST-MODIFIED timestamp of existing
                                 // entry is newer: don't replace it.
                                 continue;
@@ -446,8 +446,8 @@ class Kronolith_Api extends Horde_Registry_Api
             $calendarId = $parts[1];
         }
 
-        if (!(count($parts) == 2 || count($parts) == 3) ||
-            !Kronolith::hasPermission($calendarId, Horde_Perms::DELETE)) {
+        if (!(count($parts) == 2 || count($parts) == 3)
+            || !Kronolith::hasPermission($calendarId, Horde_Perms::DELETE)) {
             throw new Kronolith_Exception(
                 _("Calendar does not exist or no permission to delete")
             );
@@ -878,11 +878,11 @@ class Kronolith_Api extends Horde_Registry_Api
         // Check if the match really is an exact match:
         foreach ($result as $days) {
             foreach ($days as $match) {
-                if ($match->start->compareDateTime($event->start) == 0 &&
-                    $match->end->compareDateTime($event->end) == 0 &&
-                    $match->title == $event->title &&
-                    $match->location == $event->location &&
-                    $match->hasPermission(Horde_Perms::EDIT)) {
+                if ($match->start->compareDateTime($event->start) == 0
+                    && $match->end->compareDateTime($event->end) == 0
+                    && $match->title == $event->title
+                    && $match->location == $event->location
+                    && $match->hasPermission(Horde_Perms::EDIT)) {
                     throw new Kronolith_Exception(sprintf(_("%s Already Exists"), $match->uid));
                 }
             }
@@ -1173,8 +1173,8 @@ class Kronolith_Api extends Horde_Registry_Api
 
         $kronolith_driver = Kronolith::getDriver(null, $source);
         $event = $kronolith_driver->getByUID($uid);
-        if (!$event->hasPermission(Horde_Perms::EDIT) ||
-            ($event->private && $event->creator != $registry->getAuth())) {
+        if (!$event->hasPermission(Horde_Perms::EDIT)
+            || ($event->private && $event->creator != $registry->getAuth())) {
             throw new Horde_Exception_PermissionDenied();
         }
 
@@ -1187,11 +1187,11 @@ class Kronolith_Api extends Horde_Registry_Api
 
         $sourceShare = Kronolith::getInternalCalendar($kronolith_driver->calendar);
         $targetShare = Kronolith::getInternalCalendar($target);
-        if ($sourceShare->hasPermission($registry->getAuth(), Horde_Perms::DELETE) &&
-            (($user == $registry->getAuth() &&
-              $sourceShare->hasPermission($registry->getAuth(), Horde_Perms::EDIT)) ||
-             ($user != $registry->getAuth() &&
-              $sourceShare->hasPermission($registry->getAuth(), Kronolith::PERMS_DELEGATE)))) {
+        if ($sourceShare->hasPermission($registry->getAuth(), Horde_Perms::DELETE)
+            && (($user == $registry->getAuth()
+              && $sourceShare->hasPermission($registry->getAuth(), Horde_Perms::EDIT))
+             || ($user != $registry->getAuth()
+              && $sourceShare->hasPermission($registry->getAuth(), Kronolith::PERMS_DELEGATE)))) {
             $kronolith_driver->move($event->id, $target);
         }
     }
@@ -1219,8 +1219,8 @@ class Kronolith_Api extends Horde_Registry_Api
     {
         $event = Kronolith::getDriver(null, $calendar)->getByUID($uid);
 
-        if (!$event->hasPermission(Horde_Perms::EDIT) ||
-            ($event->private && $event->creator != $GLOBALS['registry']->getAuth())) {
+        if (!$event->hasPermission(Horde_Perms::EDIT)
+            || ($event->private && $event->creator != $GLOBALS['registry']->getAuth())) {
             throw new Horde_Exception_PermissionDenied();
         }
 
@@ -1393,8 +1393,8 @@ class Kronolith_Api extends Horde_Registry_Api
             }
         }
 
-        if (empty($event) ||
-            ($event->private && $event->creator != $GLOBALS['registry']->getAuth())) {
+        if (empty($event)
+            || ($event->private && $event->creator != $GLOBALS['registry']->getAuth())) {
             throw new Horde_Exception_PermissionDenied();
         }
 

@@ -311,19 +311,19 @@ abstract class Kronolith_FreeBusy_View
              * moment. */
             $start = $span[0]->timestamp();
             $end = $span[1]->timestamp();
-            if ($member->getStart() > $start ||
-                $member->getEnd() < $end) {
+            if ($member->getStart() > $start
+                || $member->getEnd() < $end) {
                 $blocks .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/unknownblock.html');
                 continue;
             }
 
-            while ($start > $periodEnd &&
-                   [$periodStart, $periodEnd] = each($periods));
+            while ($start > $periodEnd
+                   && [$periodStart, $periodEnd] = each($periods));
 
-            if (($periodStart <= $start && $periodEnd >= $start) ||
-                ($periodStart <= $end && $periodEnd >= $end) ||
-                ($periodStart <= $start && $periodEnd >= $end) ||
-                ($periodStart >= $start && $periodEnd <= $end)) {
+            if (($periodStart <= $start && $periodEnd >= $start)
+                || ($periodStart <= $end && $periodEnd >= $end)
+                || ($periodStart <= $start && $periodEnd >= $end)
+                || ($periodStart >= $start && $periodEnd <= $end)) {
 
                 $l_start = ($periodStart < $start) ? $start : $periodStart;
                 $l_end = ($periodEnd > $end) ? $end : $periodEnd;

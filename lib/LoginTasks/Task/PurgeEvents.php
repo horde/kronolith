@@ -61,8 +61,8 @@ class Kronolith_LoginTasks_Task_PurgeEvents extends Horde_LoginTasks_Task
         foreach ($days as $events) {
             foreach ($events as $event) {
                 /* Delete if no recurrence, or if we are past the last occurence */
-                if (!$event->recurs() ||
-                    $event->recurrence->nextRecurrence($del_time) == false) {
+                if (!$event->recurs()
+                    || $event->recurrence->nextRecurrence($del_time) == false) {
 
                     if ($event->calendar != $kronolith_driver->calendar) {
                         $kronolith_driver->open($event->calendar);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Adds autoincrement flags
  *
@@ -31,7 +32,7 @@ class KronolithUpgradeResourceAutoIncrement extends Horde_Db_Migration_Base
      */
     public function down()
     {
-        $this->changeColumn('kronolith_resources', 'resource_id', 'integer', array('null' => false, 'autoincrement' => false));
+        $this->changeColumn('kronolith_resources', 'resource_id', 'integer', ['null' => false, 'autoincrement' => false]);
     }
 
 }

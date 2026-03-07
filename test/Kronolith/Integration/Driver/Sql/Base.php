@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Test base for the SQL driver.
  *
@@ -29,7 +30,7 @@
  */
 class Kronolith_Integration_Driver_Sql_Base extends Kronolith_Integration_Driver_Base
 {
-    static $callback;
+    public static $callback;
 
     public static function setUpBeforeClass()
     {
@@ -40,6 +41,6 @@ class Kronolith_Integration_Driver_Sql_Base extends Kronolith_Integration_Driver
 
     protected static function getDb()
     {
-        call_user_func_array(self::$callback, array());
+        call_user_func_array(self::$callback, []);
     }
 }

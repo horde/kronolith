@@ -60,8 +60,8 @@ class Kronolith_Factory_Driver extends Horde_Core_Factory_Base
         switch ($driver) {
             case 'Sql':
                 $params = array_merge(Horde::getDriverConfig('calendar', 'sql'), $params);
-                if (isset($params['driverconfig']) &&
-                    $params['driverconfig'] != 'horde') {
+                if (isset($params['driverconfig'])
+                    && $params['driverconfig'] != 'horde') {
                     $customParams = $params;
                     unset($customParams['driverconfig'], $customParams['table'], $customParams['utc']);
                     $params['db'] = $this->_injector->getInstance('Horde_Core_Factory_Db')->create('kronolith', $customParams);
@@ -71,8 +71,8 @@ class Kronolith_Factory_Driver extends Horde_Core_Factory_Base
                 break;
 
             case 'Resource':
-                if (!isset($GLOBALS['conf']['calendar']['driver']) ||
-                    !isset($GLOBALS['conf']['resources']['enabled'])) {
+                if (!isset($GLOBALS['conf']['calendar']['driver'])
+                    || !isset($GLOBALS['conf']['resources']['enabled'])) {
                     throw new Kronolith_Exception(_("Resources are disabled"));
                 }
                 // Need the 'utc' param here since we no longer extend the sql driver.

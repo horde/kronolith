@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
  *
@@ -10,7 +11,7 @@
  */
 
 require_once __DIR__ . '/lib/Application.php';
-Horde_Registry::appInit('kronolith', array('authentication' => 'none', 'session_control' => 'none'));
+Horde_Registry::appInit('kronolith', ['authentication' => 'none', 'session_control' => 'none']);
 
 // Determine the username to show free/busy time for.
 $cal = Horde_Util::getFormData('c');
@@ -40,8 +41,10 @@ if (!$fb) {
     $cache->set($key, $fb);
 }
 
-$browser->downloadHeaders(($user ? $user : $cal) . '.vfb',
-                          'text/calendar; charset=' . 'UTF-8',
-                          true,
-                          strlen($fb));
+$browser->downloadHeaders(
+    ($user ? $user : $cal) . '.vfb',
+    'text/calendar; charset=' . 'UTF-8',
+    true,
+    strlen($fb)
+);
 echo $fb;

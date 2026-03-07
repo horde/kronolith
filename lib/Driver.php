@@ -168,25 +168,25 @@ class Kronolith_Driver
         );
         foreach ($events as $day_events) {
             foreach ($day_events as $event) {
-                if ((((!isset($query->start) ||
-                       $event->end->compareDateTime($query->start) > 0) &&
-                      (!isset($query->end) ||
-                       $event->end->compareDateTime($query->end) < 0)) ||
-                     ($event->recurs() &&
-                      $event->end->compareDateTime($query->start) >= 0 &&
-                      $event->start->compareDateTime($query->end) <= 0)) &&
-                    (empty($query->title) ||
-                     stristr($event->getTitle(), $query->title)) &&
-                    (empty($query->location) ||
-                     stristr($event->location, $query->location)) &&
-                    (empty($query->description) ||
-                     stristr($event->description, $query->description)) &&
-                    (empty($query->creator) ||
-                     stristr($event->creator, $query->creator)) &&
-                    (!isset($query->status) ||
-                     $event->status == $query->status) &&
-                    (empty($query->baseid) ||
-                     $event->baseid == $query->baseid)) {
+                if ((((!isset($query->start)
+                       || $event->end->compareDateTime($query->start) > 0)
+                      && (!isset($query->end)
+                       || $event->end->compareDateTime($query->end) < 0))
+                     || ($event->recurs()
+                      && $event->end->compareDateTime($query->start) >= 0
+                      && $event->start->compareDateTime($query->end) <= 0))
+                    && (empty($query->title)
+                     || stristr($event->getTitle(), $query->title))
+                    && (empty($query->location)
+                     || stristr($event->location, $query->location))
+                    && (empty($query->description)
+                     || stristr($event->description, $query->description))
+                    && (empty($query->creator)
+                     || stristr($event->creator, $query->creator))
+                    && (!isset($query->status)
+                     || $event->status == $query->status)
+                    && (empty($query->baseid)
+                     || $event->baseid == $query->baseid)) {
                     Kronolith::addEvents($results, $event, $event->start, $event->end, false, $json, false);
                 }
             }
@@ -357,8 +357,8 @@ class Kronolith_Driver
      */
     public function saveEvent(Kronolith_Event $event)
     {
-        if (empty($event->start) || $event->start->year <= 0 ||
-            empty($event->end) || $event->end->year <= 0) {
+        if (empty($event->start) || $event->start->year <= 0
+            || empty($event->end) || $event->end->year <= 0) {
             throw new Kronolith_Exception(_("Invalid date"));
         }
         if ($event->stored || $event->exists()) {
@@ -491,8 +491,8 @@ class Kronolith_Driver
         if (count($resources)) {
             $rd = Kronolith::getDriver('Resource');
             foreach ($resources as $uid => $resource) {
-                if ($resource['response'] !== Kronolith::RESPONSE_DECLINED &&
-                    $resource['response'] !== Kronolith::RESPONSE_NONE) {
+                if ($resource['response'] !== Kronolith::RESPONSE_DECLINED
+                    && $resource['response'] !== Kronolith::RESPONSE_NONE) {
                     try {
                         $r = $rd->getResource($uid);
                         $r->removeEvent($event);

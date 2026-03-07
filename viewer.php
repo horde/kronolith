@@ -21,8 +21,8 @@ $filename = Horde_Util::getFormData('file');
 $type = Horde_Util::getFormData('type');
 
 [$driver_type, $calendar] = explode('|', $source);
-if ($driver_type == 'internal' &&
-    !Kronolith::hasPermission($calendar, Horde_Perms::SHOW)) {
+if ($driver_type == 'internal'
+    && !Kronolith::hasPermission($calendar, Horde_Perms::SHOW)) {
     $GLOBALS['notification']->push(_("Permission Denied"), 'horde.error');
     return false;
 }

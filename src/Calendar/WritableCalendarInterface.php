@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Horde\Kronolith\Calendar;
@@ -7,15 +8,15 @@ use Horde_Icalendar_Vevent as Vevent;
 
 /**
  * Writable calendar interface
- * 
+ *
  * Methods a writable calendar must implement
- * 
+ *
  */
 interface WritableCalendarInterface extends CalendarInterface
 {
     /**
      * Create a new event
-     * 
+     *
      * The event must not yet exist in that calendar
      *
      * @return void
@@ -24,7 +25,7 @@ interface WritableCalendarInterface extends CalendarInterface
 
     /**
      * Update an existing event
-     * 
+     *
      * The event must already exist in that calendar
      *
      * @return void
@@ -33,7 +34,7 @@ interface WritableCalendarInterface extends CalendarInterface
 
     /**
      * Create or update as appropriate
-     * 
+     *
      * This completely replaces the existing event
      *
      * @return void

@@ -51,8 +51,8 @@ class Kronolith_Ajax
         $identity = $injector->getInstance('Horde_Core_Factory_Identity')->create();
 
         $app_urls = $js_vars = [];
-        if (isset($conf['menu']['apps']) &&
-            is_array($conf['menu']['apps'])) {
+        if (isset($conf['menu']['apps'])
+            && is_array($conf['menu']['apps'])) {
             foreach ($conf['menu']['apps'] as $app) {
                 $app_urls[$app] = strval(Horde::url($registry->getInitialPage($app), true));
             }

@@ -41,9 +41,9 @@ class Kronolith_View_Attendees extends Horde_View
         $this->end  = $config['end']->dateString();
         $this->freeBusy = $config['fbView']->render($config['start']);
         $auth = $injector->getInstance('Horde_Core_Factory_Auth')->create();
-        if ($auth->hasCapability('list') &&
-            ($conf['auth']['list_users'] == 'list' ||
-             $conf['auth']['list_users'] == 'both')) {
+        if ($auth->hasCapability('list')
+            && ($conf['auth']['list_users'] == 'list'
+             || $conf['auth']['list_users'] == 'both')) {
             $this->userList = $auth->listNames();
         }
         $this->resourcesEnabled = !empty($conf['resources']['enabled']);

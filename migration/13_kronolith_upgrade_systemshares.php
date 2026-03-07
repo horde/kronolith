@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Adds url field
  *
@@ -19,7 +20,7 @@ class KronolithUpgradeSystemShares extends Horde_Db_Migration_Base
      */
     public function up()
     {
-        $this->changeColumn('kronolith_shares', 'share_owner', 'string', array('limit' => 255));
+        $this->changeColumn('kronolith_shares', 'share_owner', 'string', ['limit' => 255]);
     }
 
     /**
@@ -27,7 +28,7 @@ class KronolithUpgradeSystemShares extends Horde_Db_Migration_Base
      */
     public function down()
     {
-        $this->changeColumn('kronolith_shares', 'share_owner', 'string', array('limit' => 255, 'null' => false));
+        $this->changeColumn('kronolith_shares', 'share_owner', 'string', ['limit' => 255, 'null' => false]);
     }
 
 }

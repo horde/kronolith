@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2009-2017 Horde LLC (http://www.horde.org/)
  *
@@ -31,10 +32,10 @@ if ($form->validate($vars)) {
     }
 }
 
-$page_output->header(array(
-    'title' => $form->getTitle()
-));
+$page_output->header([
+    'title' => $form->getTitle(),
+]);
 require KRONOLITH_TEMPLATES . '/javascript_defs.php';
-$notification->notify(array('listeners' => 'status'));
+$notification->notify(['listeners' => 'status']);
 echo $form->renderActive($form->getRenderer(), $vars, Horde::url('resources/groups/create.php'), 'post');
 $page_output->footer();

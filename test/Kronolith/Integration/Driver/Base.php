@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Driver test base.
  *
@@ -26,6 +27,7 @@
  * @author     Gunnar Wrobel <wrobel@pardus.de>
  * @link       http://www.horde.org/apps/kronolith
  * @license    http://www.horde.org/licenses/gpl GNU General Public License, version 2
+ * @coversNothing
  */
 class Kronolith_Integration_Driver_Base extends Kronolith_TestCase
 {
@@ -51,7 +53,7 @@ class Kronolith_Integration_Driver_Base extends Kronolith_TestCase
     /**
      * List of tasks added during the test.
      */
-    private $_added = array();
+    private $_added = [];
 
     public static function setUpBeforeClass()
     {
@@ -103,7 +105,7 @@ class Kronolith_Integration_Driver_Base extends Kronolith_TestCase
         $end   = new Horde_Date(345600);
         $this->assertEquals(
             1,
-            count(self::$driver->listEvents($start, $end, array('show_recurrence' => true)))
+            count(self::$driver->listEvents($start, $end, ['show_recurrence' => true]))
         );
     }
 
@@ -113,8 +115,8 @@ class Kronolith_Integration_Driver_Base extends Kronolith_TestCase
         $start = new Horde_Date(86400);
         $end   = new Horde_Date(172800);
         $this->assertEquals(
-            array(),
-            self::$driver->listEvents($start, $end, array('show_recurrence' => true))
+            [],
+            self::$driver->listEvents($start, $end, ['show_recurrence' => true])
         );
     }
 

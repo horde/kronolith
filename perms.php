@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2002-2017 Horde LLC (http://www.horde.org/)
  *
@@ -28,79 +29,79 @@ $vars = $injector->getInstance('Horde_Variables');
 
 $reload = false;
 switch ($vars->get('actionID', 'edit')) {
-case 'edit':
-    try {
-        $shareid = $vars->cid;
-        if (!$shareid) {
-            throw new Horde_Exception_NotFound();
-        }
-        $share = $shares->getShareById($shareid);
-        $perm = $share->getPermission();
-    } catch (Horde_Exception_NotFound $e) {
-        if (($category = $vars->share) !== null) {
-            try {
-                $share = $shares->getShare($category);
-                $perm = $share->getPermission();
-            } catch (Horde_Share_Exception $e) {
-                $notification->push($e->getMessage(), 'horde.error');
+    case 'edit':
+        try {
+            $shareid = $vars->cid;
+            if (!$shareid) {
+                throw new Horde_Exception_NotFound();
+            }
+            $share = $shares->getShareById($shareid);
+            $perm = $share->getPermission();
+        } catch (Horde_Exception_NotFound $e) {
+            if (($category = $vars->share) !== null) {
+                try {
+                    $share = $shares->getShare($category);
+                    $perm = $share->getPermission();
+                } catch (Horde_Share_Exception $e) {
+                    $notification->push($e->getMessage(), 'horde.error');
+                }
             }
         }
-    }
 
-    if (!$registry->getAuth() ||
-        (isset($share) &&
-         !$registry->isAdmin() &&
-         ($registry->getAuth() != $share->get('owner')))) {
-        throw new Horde_Exception_PermissionDenied();
-    }
-    break;
-
-case 'editform':
-    $session->checkToken($vars->token);
-
-    try {
-        $share = $shares->getShareById($vars->cid);
-    } catch (Horde_Share_Exception $e) {
-        $notification->push(_("Attempt to edit a non-existent share."), 'horde.error');
-    }
-
-    if (empty($share)) {
+        if (!$registry->getAuth()
+            || (isset($share)
+             && !$registry->isAdmin()
+             && ($registry->getAuth() != $share->get('owner')))) {
+            throw new Horde_Exception_PermissionDenied();
+        }
         break;
-    }
 
-    if (!$registry->getAuth() ||
-        (!$registry->isAdmin() &&
-         ($registry->getAuth() != $share->get('owner')))) {
-        throw new Horde_Exception_PermissionDenied();
-    }
+    case 'editform':
+        $session->checkToken($vars->token);
 
-    try {
-        $errors = Kronolith::readPermsForm($share);
-        if ($errors) {
-            foreach ($errors as $error) {
-                $notification->push($error, 'horde.error');
-            }
-        } elseif ($vars->save_and_finish) {
-            echo Horde::wrapInlineScript(array('window.close();'));
-            exit;
+        try {
+            $share = $shares->getShareById($vars->cid);
+        } catch (Horde_Share_Exception $e) {
+            $notification->push(_("Attempt to edit a non-existent share."), 'horde.error');
         }
-        $notification->push(sprintf(_("Updated \"%s\"."), $share->get('name')), 'horde.success');
-    } catch (Exception $e) {
-        $notification->push($e, 'horde.error');
-    }
-    $perm = $share->getPermission();
 
-    break;
+        if (empty($share)) {
+            break;
+        }
+
+        if (!$registry->getAuth()
+            || (!$registry->isAdmin()
+             && ($registry->getAuth() != $share->get('owner')))) {
+            throw new Horde_Exception_PermissionDenied();
+        }
+
+        try {
+            $errors = Kronolith::readPermsForm($share);
+            if ($errors) {
+                foreach ($errors as $error) {
+                    $notification->push($error, 'horde.error');
+                }
+            } elseif ($vars->save_and_finish) {
+                echo Horde::wrapInlineScript(['window.close();']);
+                exit;
+            }
+            $notification->push(sprintf(_("Updated \"%s\"."), $share->get('name')), 'horde.success');
+        } catch (Exception $e) {
+            $notification->push($e, 'horde.error');
+        }
+        $perm = $share->getPermission();
+
+        break;
 }
 
 $title = ($share instanceof Horde_Share_Object)
     ? sprintf(_("Edit permissions for \"%s\""), $share->get('name'))
     : _("Edit permissions");
 
-$userList = array();
-if ($auth->hasCapability('list') &&
-    ($conf['auth']['list_users'] == 'list' ||
-     $conf['auth']['list_users'] == 'both')) {
+$userList = [];
+if ($auth->hasCapability('list')
+    && ($conf['auth']['list_users'] == 'list'
+     || $conf['auth']['list_users'] == 'both')) {
     try {
         $userList = $auth->listNames();
     } catch (Horde_Auth_Exception $e) {
@@ -115,14 +116,14 @@ try {
     asort($groupList);
 } catch (Horde_Group_Exception $e) {
     Horde::log($e, 'NOTICE');
-    $groupList = array();
+    $groupList = [];
 }
 
 $page_output->topbar = $page_output->sidebar = false;
 
-$page_output->header(array(
-    'title' => $title
-));
-$notification->notify(array('listeners' => 'status'));
+$page_output->header([
+    'title' => $title,
+]);
+$notification->notify(['listeners' => 'status']);
 require KRONOLITH_TEMPLATES . '/perms/perms.inc';
 $page_output->footer();

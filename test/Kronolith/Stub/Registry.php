@@ -4,7 +4,7 @@ class Kronolith_Stub_Registry extends Horde_Test_Stub_Registry
 {
     public $admin = false;
 
-    public function isAdmin(array $options = array())
+    public function isAdmin(array $options = [])
     {
         return $this->admin;
     }

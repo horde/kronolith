@@ -13,8 +13,8 @@
 require_once __DIR__ . '/lib/Application.php';
 $app_ob = Horde_Registry::appInit('kronolith');
 
-if ((Kronolith::showAjaxView() && !(Horde_Util::getPost('import_ajax'))) ||
-    (!$conf['menu']['import_export'])) {
+if ((Kronolith::showAjaxView() && !(Horde_Util::getPost('import_ajax')))
+    || (!$conf['menu']['import_export'])) {
     Horde::url('', true)->redirect();
 }
 
@@ -30,8 +30,8 @@ $templates = [
 ];
 
 $perms = $GLOBALS['injector']->getInstance('Horde_Core_Perms');
-if ($perms->hasAppPermission('max_events') !== true &&
-    $perms->hasAppPermission('max_events') <= Kronolith::countEvents()) {
+if ($perms->hasAppPermission('max_events') !== true
+    && $perms->hasAppPermission('max_events') <= Kronolith::countEvents()) {
     Horde::permissionDeniedError(
         'kronolith',
         'max_events',
@@ -88,8 +88,8 @@ if ($import_format) {
                 ['cleanup' => [$app_ob, 'cleanupData']]
             );
 
-        if ($actionID == Horde_Data::IMPORT_FILE ||
-            $actionID == Horde_Data::IMPORT_URL) {
+        if ($actionID == Horde_Data::IMPORT_FILE
+            || $actionID == Horde_Data::IMPORT_URL) {
             $cleanup = true;
             try {
                 if (!in_array($storage->get('import_cal'), array_keys(Kronolith::listCalendars(Horde_Perms::EDIT)))) {

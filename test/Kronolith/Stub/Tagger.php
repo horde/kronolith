@@ -4,14 +4,10 @@ class Content_Tagger
 {
     public function getTags()
     {
-        return array();
+        return [];
     }
 
-    public function tag()
-    {
-    }
+    public function tag() {}
 
-    public function removeTagFromObject()
-    {
-    }
+    public function removeTagFromObject() {}
 }

@@ -10,7 +10,7 @@
  */
 
 require_once __DIR__ . '/lib/Application.php';
-Horde_Registry::appInit('kronolith', array('authentication' => 'none'));
+Horde_Registry::appInit('kronolith', ['authentication' => 'none']);
 
 $cal = Horde_Util::getFormData('c');
 $id = Horde_Util::getFormData('e');
@@ -18,29 +18,29 @@ $uid = Horde_Util::getFormData('i');
 $user = Horde_Util::getFormData('u');
 
 switch (Horde_Util::getFormData('a')) {
-case 'accept':
-    $action = Kronolith::RESPONSE_ACCEPTED;
-    $msg = _("You have successfully accepted attendence to this event.");
-    break;
+    case 'accept':
+        $action = Kronolith::RESPONSE_ACCEPTED;
+        $msg = _("You have successfully accepted attendence to this event.");
+        break;
 
-case 'decline':
-    $action = Kronolith::RESPONSE_DECLINED;
-    $msg = _("You have successfully declined attendence to this event.");
-    break;
+    case 'decline':
+        $action = Kronolith::RESPONSE_DECLINED;
+        $msg = _("You have successfully declined attendence to this event.");
+        break;
 
-case 'tentative':
-    $action = Kronolith::RESPONSE_TENTATIVE;
-    $msg = _("You have tentatively accepted attendence to this event.");
-    break;
+    case 'tentative':
+        $action = Kronolith::RESPONSE_TENTATIVE;
+        $msg = _("You have tentatively accepted attendence to this event.");
+        break;
 
-default:
-    $action = Kronolith::RESPONSE_NONE;
-    $msg = '';
-    break;
+    default:
+        $action = Kronolith::RESPONSE_NONE;
+        $msg = '';
+        break;
 }
 
 if (((empty($cal) || empty($id)) && empty($uid)) || empty($user)) {
-    $notification->push(_("The request was incomplete. Some parameters that are necessary to accept or decline an event are missing."), 'horde.error', array('sticky'));
+    $notification->push(_("The request was incomplete. Some parameters that are necessary to accept or decline an event are missing."), 'horde.error', ['sticky']);
     $title = '';
 } else {
     try {
@@ -50,35 +50,35 @@ if (((empty($cal) || empty($id)) && empty($uid)) || empty($user)) {
             $event = Kronolith::getDriver()->getByUID($uid);
         }
         if (!$event->hasAttendee($user)) {
-            $notification->push(_("You are not an attendee of the specified event."), 'horde.error', array('sticky'));
+            $notification->push(_("You are not an attendee of the specified event."), 'horde.error', ['sticky']);
             $title = $event->getTitle();
         } else {
             $event->addAttendee($user, Kronolith::PART_IGNORE, $action);
             try {
                 $event->save();
                 if (!empty($msg)) {
-                    $notification->push($msg, 'horde.success', array('sticky'));
+                    $notification->push($msg, 'horde.success', ['sticky']);
                 }
             } catch (Exception $e) {
-                $notification->push($e, 'horde.error', array('sticky'));
+                $notification->push($e, 'horde.error', ['sticky']);
             }
             $title = $event->getTitle();
         }
     } catch (Exception $e) {
-        $notification->push($e, 'horde.error', array('sticky'));
+        $notification->push($e, 'horde.error', ['sticky']);
         $title = '';
     }
 }
 
 $page_output->topbar = $page_output->sidebar = false;
-$page_output->header(array(
-    'title' => $title
-));
+$page_output->header([
+    'title' => $title,
+]);
 require KRONOLITH_TEMPLATES . '/javascript_defs.php';
 
 ?>
 <div id="menu"><h1>&nbsp;<?php echo htmlspecialchars($title) ?></h1></div>
 <?php
 
-$notification->notify(array('listeners' => 'status'));
+$notification->notify(['listeners' => 'status']);
 $page_output->footer();

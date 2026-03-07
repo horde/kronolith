@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Adds url field
  *
@@ -22,7 +23,7 @@ class KronolithUpgradeAddZoom extends Horde_Db_Migration_Base
         $t = $this->_connection->table('kronolith_events_geo');
         $cols = $t->getColumns();
         if (!in_array('event_zoom', array_keys($cols))) {
-            $this->addColumn('kronolith_events_geo', 'event_zoom', 'integer', array('default' => 0, 'null' => false));
+            $this->addColumn('kronolith_events_geo', 'event_zoom', 'integer', ['default' => 0, 'null' => false]);
         }
     }
 

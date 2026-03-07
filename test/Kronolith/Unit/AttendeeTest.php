@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
  *
@@ -22,6 +23,7 @@
  * @author     Jan Schneider <jan@horde.org>
  * @link       http://www.horde.org/apps/kronolith
  * @license    http://www.horde.org/licenses/gpl GPLv2
+ * @coversNothing
  */
 class Kronolith_Unit_AttendeeTest extends Horde_Test_Case
 {
@@ -32,39 +34,39 @@ class Kronolith_Unit_AttendeeTest extends Horde_Test_Case
 
     public function testMigrate()
     {
-        $attendees = array(
+        $attendees = [
             Kronolith_Attendee::migrate(
                 'juergen@example.com',
-                array(
+                [
                     'attendance' => Kronolith::PART_REQUIRED,
                     'response' => Kronolith::RESPONSE_NONE,
-                    'name' => 'Jürgen Doe'
-                )
+                    'name' => 'Jürgen Doe',
+                ]
             ),
             Kronolith_Attendee::migrate(
                 'Jane Doe',
-                array(
+                [
                     'attendance' => Kronolith::PART_OPTIONAL,
                     'response' => Kronolith::RESPONSE_ACCEPTED,
-                    'name' => 'Jane Doe'
-                )
+                    'name' => 'Jane Doe',
+                ]
             ),
             Kronolith_Attendee::migrate(
                 'jack@example.com',
-                array(
+                [
                     'attendance' => Kronolith::PART_NONE,
                     'response' => Kronolith::RESPONSE_DECLINED,
-                    'name' => 'Jack Doe'
-                )
+                    'name' => 'Jack Doe',
+                ]
             ),
             Kronolith_Attendee::migrate(
                 'jenny@example.com',
-                array(
+                [
                     'attendance' => Kronolith::PART_NONE,
-                    'response' => Kronolith::RESPONSE_TENTATIVE
-                )
+                    'response' => Kronolith::RESPONSE_TENTATIVE,
+                ]
             ),
-        );
+        ];
         $this->_testAttendees($attendees, true);
     }
 
@@ -140,58 +142,58 @@ class Kronolith_Unit_AttendeeTest extends Horde_Test_Case
     {
         $attendees = $this->_getAttendees();
         $this->assertEquals(
-            (object)array(
+            (object) [
                 'a' => Kronolith::PART_REQUIRED,
                 'e' => 'juergen@example.com',
                 'l' => 'Jürgen Doe',
                 'r' => Kronolith::RESPONSE_NONE,
                 'u' => null,
                 'i' => 'email:juergen@example.com',
-            ),
+            ],
             $attendees[0]->toJson()
         );
         $this->assertEquals(
-            (object)array(
+            (object) [
                 'a' => Kronolith::PART_OPTIONAL,
                 'e' => null,
                 'l' => 'Jane Doe',
                 'r' => Kronolith::RESPONSE_ACCEPTED,
                 'u' => null,
                 'i' => 'name:Jane Doe',
-            ),
+            ],
             $attendees[1]->toJson()
         );
         $this->assertEquals(
-            (object)array(
+            (object) [
                 'a' => Kronolith::PART_NONE,
                 'e' => 'jenny@example.com',
                 'l' => 'jenny@example.com',
                 'r' => Kronolith::RESPONSE_TENTATIVE,
                 'u' => null,
                 'i' => 'email:jenny@example.com',
-            ),
+            ],
             $attendees[3]->toJson()
         );
         $this->assertEquals(
-            (object)array(
+            (object) [
                 'a' => Kronolith::PART_NONE,
                 'e' => null,
                 'l' => 'User Name',
                 'r' => Kronolith::RESPONSE_TENTATIVE,
                 'u' => 'username',
                 'i' => 'user:username',
-            ),
+            ],
             $attendees[4]->toJson()
         );
         $this->assertEquals(
-            (object)array(
+            (object) [
                 'a' => Kronolith::PART_NONE,
                 'e' => null,
                 'l' => 'Another User',
                 'r' => Kronolith::RESPONSE_TENTATIVE,
                 'u' => 'username2',
                 'i' => 'user:username2',
-            ),
+            ],
             $attendees[5]->toJson()
         );
     }
@@ -199,7 +201,7 @@ class Kronolith_Unit_AttendeeTest extends Horde_Test_Case
     public function testSerialize()
     {
         $attendees = $this->_getAttendees();
-        $serialized = array(serialize($attendees[0]), serialize($attendees[4]));
+        $serialized = [serialize($attendees[0]), serialize($attendees[4])];
         $this->assertEquals(
             'C:18:"Kronolith_Attendee":102:{a:5:{s:1:"u";N;s:1:"e";s:19:"juergen@example.com";s:1:"p";i:1;s:1:"r";i:1;s:1:"n";s:11:"Jürgen Doe";}}',
             $serialized[0]

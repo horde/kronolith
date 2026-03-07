@@ -37,8 +37,8 @@ class Kronolith_Event_Sql extends Kronolith_Event
 
         parent::__construct($driver, $eventObject);
 
-        if (!empty($this->calendar) &&
-            $GLOBALS['calendar_manager']->getEntry(Kronolith::ALL_CALENDARS, $this->calendar) !== false) {
+        if (!empty($this->calendar)
+            && $GLOBALS['calendar_manager']->getEntry(Kronolith::ALL_CALENDARS, $this->calendar) !== false) {
             $this->_backgroundColor = $GLOBALS['calendar_manager']->getEntry(Kronolith::ALL_CALENDARS, $this->calendar)->background();
             $this->_foregroundColor = $GLOBALS['calendar_manager']->getEntry(Kronolith::ALL_CALENDARS, $this->calendar)->foreground();
         }
@@ -86,8 +86,8 @@ class Kronolith_Event_Sql extends Kronolith_Event
             $this->recurrence = new Horde_Date_Recurrence($this->start);
             $this->recurrence->setRecurType((int) $SQLEvent['event_recurtype']);
             $this->recurrence->setRecurInterval((int) $SQLEvent['event_recurinterval']);
-            if (isset($SQLEvent['event_recurenddate']) &&
-                $SQLEvent['event_recurenddate'] != '9999-12-31 23:59:59') {
+            if (isset($SQLEvent['event_recurenddate'])
+                && $SQLEvent['event_recurenddate'] != '9999-12-31 23:59:59') {
                 if ($driver->getParam('utc')) {
                     $recur_end = new Horde_Date($SQLEvent['event_recurenddate'], 'UTC');
                     if ($recur_end->min == 0) {

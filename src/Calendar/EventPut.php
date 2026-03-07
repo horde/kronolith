@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Horde\Kronolith\Calendar;
 
 /**
@@ -9,8 +11,5 @@ namespace Horde\Kronolith\Calendar;
  */
 class EventPut
 {
-    public function __construct($calendar, $event)
-    {
-        
-    }
+    public function __construct($calendar, $event) {}
 }

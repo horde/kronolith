@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2011-2017 Horde LLC (http://www.horde.org/)
  *
@@ -22,6 +23,7 @@
  * @author     Gunnar Wrobel <wrobel@pardus.de>
  * @link       http://www.horde.org/apps/kronolith
  * @license    http://www.horde.org/licenses/gpl GPLv2
+ * @coversNothing
  */
 class Kronolith_Integration_ToIcalendarTest extends Kronolith_TestCase
 {
@@ -95,7 +97,7 @@ class Kronolith_Integration_ToIcalendarTest extends Kronolith_TestCase
         $event->description = "Schöne Bescherung\nNew line";
         $event->location = 'Allgäu';
         $event->alarm = 10;
-        $event->tags = array('Schöngeistiges');
+        $event->tags = ['Schöngeistiges'];
         $event->recurrence = new Horde_Date_Recurrence($event->start);
         $event->recurrence->setRecurType(Horde_Date_Recurrence::RECUR_DAILY);
         $event->recurrence->setRecurInterval(2);

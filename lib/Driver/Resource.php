@@ -215,8 +215,8 @@ class Kronolith_Driver_Resource extends Kronolith_Driver
     public function save(Kronolith_Resource_Base $resource)
     {
         // @todo
-        if (!$GLOBALS['registry']->isAdmin() &&
-            !$GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('resource_management')) {
+        if (!$GLOBALS['registry']->isAdmin()
+            && !$GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('resource_management')) {
             throw new Horde_Exception_PermissionDenied();
         }
         $resource->share()->save();
@@ -235,8 +235,8 @@ class Kronolith_Driver_Resource extends Kronolith_Driver
     public function delete($resource)
     {
         // @todo
-        if (!$GLOBALS['registry']->isAdmin() &&
-            !$GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('resource_management')) {
+        if (!$GLOBALS['registry']->isAdmin()
+            && !$GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('resource_management')) {
             throw new Horde_Exception_PermissionDenied();
         }
 

@@ -238,8 +238,8 @@ class Kronolith
         }
 
         // Resource calendars
-        if (count($GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_RESOURCE_CALENDARS)) &&
-            !empty($GLOBALS['conf']['resources']['enabled'])) {
+        if (count($GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_RESOURCE_CALENDARS))
+            && !empty($GLOBALS['conf']['resources']['enabled'])) {
 
             $driver = self::getDriver('Resource');
             foreach ($GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_RESOURCE_CALENDARS) as $calendar) {
@@ -351,8 +351,8 @@ class Kronolith
          * recurrence object to the event's timezone while calculating next
          * recurrences, to take DST changes in both the event's and the local
          * timezone into account. */
-        $convert = $event->timezone &&
-            $event->getDriver()->supportsTimezones();
+        $convert = $event->timezone
+            && $event->getDriver()->supportsTimezones();
         if ($convert) {
             $timezone = date_default_timezone_get();
         }
@@ -373,10 +373,10 @@ class Kronolith
             /* If the event ends at 12am and does not end at the same time
              * that it starts (0 duration), set the end date to the previous
              * day's end date. */
-            if ($event->end->hour == 0 &&
-                $event->end->min == 0 &&
-                $event->end->sec == 0 &&
-                $event->start->compareDateTime($event->end) != 0) {
+            if ($event->end->hour == 0
+                && $event->end->min == 0
+                && $event->end->sec == 0
+                && $event->start->compareDateTime($event->end) != 0) {
                 $event->end = new Horde_Date(
                     ['hour' =>  23,
                         'min' =>   59,
@@ -487,8 +487,8 @@ class Kronolith
                 $allDay = $event->isAllDay();
 
                 /* Work out what day it starts on. */
-                if ($startDate &&
-                    $event->start->compareDateTime($startDate) < 0) {
+                if ($startDate
+                    && $event->start->compareDateTime($startDate) < 0) {
                     /* It started before the beginning of the period. */
                     if ($event->recurs()) {
                         $eventStart = $event->recurrence->nextRecurrence($startDate);
@@ -503,8 +503,8 @@ class Kronolith
                 }
 
                 /* Work out what day it ends on. */
-                if ($endDate &&
-                    $event->end->compareDateTime($endDate) > 0) {
+                if ($endDate
+                    && $event->end->compareDateTime($endDate) > 0) {
                     /* Ends after the end of the period. */
                     if (is_object($endDate)) {
                         $eventEnd = clone $endDate;
@@ -544,11 +544,11 @@ class Kronolith
                      * the current end date. If it ends at 12am and does not
                      * end at the same time that it starts (0 duration), set
                      * the end date to the previous day's end date. */
-                    if ($theEnd->hour != 0 ||
-                        $theEnd->min != 0 ||
-                        $theEnd->sec != 0 ||
-                        $event->start->compareDateTime($theEnd) == 0 ||
-                        $allDay) {
+                    if ($theEnd->hour != 0
+                        || $theEnd->min != 0
+                        || $theEnd->sec != 0
+                        || $event->start->compareDateTime($theEnd) == 0
+                        || $allDay) {
                         $eventEnd = clone $theEnd;
                     } else {
                         $eventEnd = new Horde_Date(
@@ -610,10 +610,10 @@ class Kronolith
                 'year' => $eventStart->year]
         );
         $allDay = $event->isAllDay();
-        while ($loopDate->compareDateTime($eventEnd) <= 0 &&
-               $loopDate->compareDateTime($endDate) <= 0) {
-            if (!$allDay ||
-                $loopDate->compareDateTime($eventEnd) != 0) {
+        while ($loopDate->compareDateTime($eventEnd) <= 0
+               && $loopDate->compareDateTime($endDate) <= 0) {
+            if (!$allDay
+                || $loopDate->compareDateTime($eventEnd) != 0) {
                 $addEvent = clone $event;
                 if ($originalStart) {
                     $addEvent->originalStart = $originalStart;
@@ -643,8 +643,8 @@ class Kronolith
                 } else {
                     $addEvent->end = $eventEnd;
                 }
-                if ($addEvent->recurs() &&
-                    $addEvent->recurrence->hasCompletion($loopDate->year, $loopDate->month, $loopDate->mday)) {
+                if ($addEvent->recurs()
+                    && $addEvent->recurrence->hasCompletion($loopDate->year, $loopDate->month, $loopDate->mday)) {
                     $addEvent->status = Kronolith::STATUS_CANCELLED;
                 }
                 $results[$loopDate->dateString()][$addEvent->id] = $json
@@ -678,8 +678,8 @@ class Kronolith
                 $eventEnd = $event->end;
             } else {
                 if (empty($query->end)) {
-                    $convert = $event->timezone &&
-                        $event->getDriver()->supportsTimezones();
+                    $convert = $event->timezone
+                        && $event->getDriver()->supportsTimezones();
                     if ($convert) {
                         $timezone = date_default_timezone_get();
                         $event->recurrence->start->setTimezone($event->timezone);
@@ -706,8 +706,8 @@ class Kronolith
             }
         } else {
             // Don't include any results that are outside the query range.
-            if ((!empty($query->end) && $event->start->after($query->end)) ||
-                (!empty($query->start) && $event->end->before($query->start))) {
+            if ((!empty($query->end) && $event->start->after($query->end))
+                || (!empty($query->start) && $event->end->before($query->start))) {
                 return;
             }
             $eventStart = $event->start;
@@ -1176,16 +1176,16 @@ class Kronolith
     ) {
         $calendars = [];
         foreach ($GLOBALS['calendar_manager']->get(Kronolith::ALL_CALENDARS) as $id => $calendar) {
-            if ($calendar->hasPermission($permission) &&
-                (!$display || $calendar->display())) {
+            if ($calendar->hasPermission($permission)
+                && (!$display || $calendar->display())) {
                 $calendars['internal_' . $id] = $calendar;
             }
         }
 
         foreach ($GLOBALS['calendar_manager']->get(Kronolith::ALL_REMOTE_CALENDARS) as $id => $calendar) {
             try {
-                if ($calendar->hasPermission($permission) &&
-                    (!$display || $calendar->display())) {
+                if ($calendar->hasPermission($permission)
+                    && (!$display || $calendar->display())) {
                     $calendars['remote_' . $id] = $calendar;
                 }
             } catch (Kronolith_Exception $e) {
@@ -1194,15 +1194,15 @@ class Kronolith
         }
 
         foreach ($GLOBALS['calendar_manager']->get(Kronolith::ALL_EXTERNAL_CALENDARS) as $id => $calendar) {
-            if ($calendar->hasPermission($permission) &&
-                (!$display || $calendar->display())) {
+            if ($calendar->hasPermission($permission)
+                && (!$display || $calendar->display())) {
                 $calendars['external_' . $id] = $calendar;
             }
         }
 
         foreach ($GLOBALS['calendar_manager']->get(Kronolith::ALL_HOLIDAYS) as $id => $calendar) {
-            if ($calendar->hasPermission($permission) &&
-                (!$display || $calendar->display())) {
+            if ($calendar->hasPermission($permission)
+                && (!$display || $calendar->display())) {
                 $calendars['holiday_' . $id] = $calendar;
             }
         }
@@ -1310,8 +1310,8 @@ class Kronolith
     public static function getLabel($calendar)
     {
         $label = $calendar->get('name');
-        if ($calendar->get('owner') &&
-            $calendar->get('owner') != $GLOBALS['registry']->getAuth()) {
+        if ($calendar->get('owner')
+            && $calendar->get('owner') != $GLOBALS['registry']->getAuth()) {
             $label .= ' [' . $GLOBALS['registry']->convertUsername($calendar->get('owner'), false) . ']';
         }
         return $label;
@@ -1406,9 +1406,9 @@ class Kronolith
      */
     public static function updateShare(&$calendar, $info)
     {
-        if (!$GLOBALS['registry']->getAuth() ||
-            ($calendar->get('owner') != $GLOBALS['registry']->getAuth() &&
-             (!is_null($calendar->get('owner')) || !$GLOBALS['registry']->isAdmin()))) {
+        if (!$GLOBALS['registry']->getAuth()
+            || ($calendar->get('owner') != $GLOBALS['registry']->getAuth()
+             && (!is_null($calendar->get('owner')) || !$GLOBALS['registry']->isAdmin()))) {
             throw new Kronolith_Exception(_("You are not allowed to change this calendar."));
         }
 
@@ -1435,10 +1435,10 @@ class Kronolith
      */
     public static function deleteShare($calendar)
     {
-        if (!$GLOBALS['registry']->getAuth() ||
-            ($calendar->get('owner') != $GLOBALS['registry']->getAuth() &&
-             (!is_null($calendar->get('owner')) ||
-              !$GLOBALS['registry']->isAdmin()))) {
+        if (!$GLOBALS['registry']->getAuth()
+            || ($calendar->get('owner') != $GLOBALS['registry']->getAuth()
+             && (!is_null($calendar->get('owner'))
+              || !$GLOBALS['registry']->isAdmin()))) {
             throw new Kronolith_Exception(_("You are not allowed to delete this calendar."));
         }
 
@@ -1476,10 +1476,10 @@ class Kronolith
             $horde_group = $injector->getInstance('Horde_Group');
             foreach ($groups as $group) {
                 if ($horde_group->exists($group)) {
-                   $users = array_merge(
-                       $users,
-                       $horde_group->listUsers($group)
-		   );
+                    $users = array_merge(
+                        $users,
+                        $horde_group->listUsers($group)
+                    );
                 }
             }
         }
@@ -1535,14 +1535,14 @@ class Kronolith
 
             // Only set new owner if this isn't a system calendar, and the
             // owner actually changed and the new owner is set at all.
-            if (!is_null($old_owner) &&
-                $old_owner !== $new_owner &&
-                !empty($new_owner)) {
-                if ($old_owner != $GLOBALS['registry']->getAuth() &&
-                    !$GLOBALS['registry']->isAdmin()) {
+            if (!is_null($old_owner)
+                && $old_owner !== $new_owner
+                && !empty($new_owner)) {
+                if ($old_owner != $GLOBALS['registry']->getAuth()
+                    && !$GLOBALS['registry']->isAdmin()) {
                     $errors[] = _("Only the owner or system administrator may change ownership or owner permissions for a share");
-                } elseif ($auth->hasCapability('list') &&
-                          !$auth->exists($new_owner_backend)) {
+                } elseif ($auth->hasCapability('list')
+                          && !$auth->exists($new_owner_backend)) {
                     $errors[] = sprintf(_("The user \"%s\" does not exist."), $new_owner_backend);
                 } else {
                     $share->set('owner', $new_owner);
@@ -1571,8 +1571,8 @@ class Kronolith
             $multipart = self::buildMimeMessage($view, 'notification', $image);
         }
 
-        if ($GLOBALS['registry']->isAdmin() ||
-            !empty($GLOBALS['conf']['share']['world'])) {
+        if ($GLOBALS['registry']->isAdmin()
+            || !empty($GLOBALS['conf']['share']['world'])) {
             // Process default permissions.
             if (Horde_Util::getFormData('default_show')) {
                 $perm->addDefaultPermission(Horde_Perms::SHOW, false);
@@ -1674,9 +1674,9 @@ class Kronolith
             $user = $GLOBALS['registry']->convertUsername($user_backend, true);
             // If the user is empty, or we've already set permissions
             // via the owner_ options, don't do anything here.
-            if (empty($user) ||
-                (!($share instanceof Kronolith_Resource_Base) &&
-                 $user == $new_owner)) {
+            if (empty($user)
+                || (!($share instanceof Kronolith_Resource_Base)
+                 && $user == $new_owner)) {
                 continue;
             }
             if ($auth->hasCapability('list') && !$auth->exists($user_backend)) {
@@ -1707,8 +1707,8 @@ class Kronolith
             }
 
             // Notify users that have been added.
-            if ($GLOBALS['conf']['share']['notify'] &&
-                !isset($current[$user]) && $has_perms) {
+            if ($GLOBALS['conf']['share']['notify']
+                && !isset($current[$user]) && $has_perms) {
                 $to = $GLOBALS['injector']
                     ->getInstance('Horde_Core_Factory_Identity')
                     ->create($user)
@@ -1757,8 +1757,8 @@ class Kronolith
             }
 
             // Notify users that have been added.
-            if ($GLOBALS['conf']['share']['notify'] &&
-                !isset($current[$group]) && $has_perms) {
+            if ($GLOBALS['conf']['share']['notify']
+                && !isset($current[$group]) && $has_perms) {
                 $groupOb = $GLOBALS['injector']
                     ->getInstance('Horde_Group')
                     ->getData($group);
@@ -1863,8 +1863,8 @@ class Kronolith
      */
     public static function feedUrl($calendar)
     {
-        if (isset($GLOBALS['conf']['urls']['pretty']) &&
-            $GLOBALS['conf']['urls']['pretty'] == 'rewrite') {
+        if (isset($GLOBALS['conf']['urls']['pretty'])
+            && $GLOBALS['conf']['urls']['pretty'] == 'rewrite') {
             return Horde::url('feed/' . $calendar, true, -1);
         }
         return Horde::url('feed/index.php', true, -1)
@@ -1889,8 +1889,8 @@ class Kronolith
         ]);
         $url->url .= 'embed';
 
-        return '<div id="kronolithCal"></div><script src="' . $url .
-               '" type="text/javascript"></script>';
+        return '<div id="kronolithCal"></div><script src="' . $url
+               . '" type="text/javascript"></script>';
     }
 
     /**
@@ -1977,8 +1977,8 @@ class Kronolith
 
         if ($action == self::ITIP_CANCEL && count($cancellations)) {
             $mail_attendees = $cancellations;
-        } elseif ($event->organizer &&
-                  !self::isUserEmail($event->creator, $event->organizer)) {
+        } elseif ($event->organizer
+                  && !self::isUserEmail($event->creator, $event->organizer)) {
             /* Only send updates to organizer if the user is not the
              * organizer */
             if (isset($event->attendees['email:' . $event->organizer])) {
@@ -1994,16 +1994,16 @@ class Kronolith
         foreach ($mail_attendees as $attendee) {
             /* Don't send notifications to the ORGANIZER if this is the
              * ORGANIZER's copy of the event. */
-            if (!$event->organizer &&
-                Kronolith::isUserEmail($event->creator, $attendee->email)) {
+            if (!$event->organizer
+                && Kronolith::isUserEmail($event->creator, $attendee->email)) {
                 continue;
             }
 
             /* Don't bother sending an invitation/update if the recipient does
              * not need to participate, or has declined participating, or
              * doesn't have an email address. */
-            if (strpos($attendee->email, '@') === false ||
-                $attendee->response == self::RESPONSE_DECLINED) {
+            if (strpos($attendee->email, '@') === false
+                || $attendee->response == self::RESPONSE_DECLINED) {
                 continue;
             }
 
@@ -2395,8 +2395,8 @@ class Kronolith
             'tf' => $prefs->getValue('twentyFour'),
             'df' => $prefs->getValue('date_format')];
 
-        if ($prefs->getValue('event_notification_exclude_self') &&
-            $user == $GLOBALS['registry']->getAuth()) {
+        if ($prefs->getValue('event_notification_exclude_self')
+            && $user == $GLOBALS['registry']->getAuth()) {
             return false;
         }
 
@@ -2563,8 +2563,8 @@ class Kronolith
                 break;
             case 'workweek':
             case 'week':
-                $view->current =
-                    $renderer->days[$renderer->startDay]
+                $view->current
+                    = $renderer->days[$renderer->startDay]
                         ->getTime($prefs->getValue('date_format'))
                     . ' - '
                     . $renderer->days[$renderer->endDay]
@@ -2639,10 +2639,10 @@ class Kronolith
         );
         /* We check for read permissions, because we can always save a copy if
          * we can read the event. */
-        if ((!$event->private ||
-             $event->creator == $GLOBALS['registry']->getAuth()) &&
-            $event->hasPermission(Horde_Perms::READ) &&
-            self::getDefaultCalendar(Horde_Perms::EDIT)) {
+        if ((!$event->private
+             || $event->creator == $GLOBALS['registry']->getAuth())
+            && $event->hasPermission(Horde_Perms::READ)
+            && self::getDefaultCalendar(Horde_Perms::EDIT)) {
             $tabs->addTab(
                 $event->hasPermission(Horde_Perms::EDIT) ? _("_Edit") : _("Save As New"),
                 $event->getEditUrl(),
@@ -2830,28 +2830,28 @@ class Kronolith
                 }
                 switch ($view) {
                     case 'Event':
-                        if (!is_string($event) &&
-                            !$event->hasPermission(Horde_Perms::READ)) {
+                        if (!is_string($event)
+                            && !$event->hasPermission(Horde_Perms::READ)) {
                             $event = _("Permission Denied");
                         }
                         return new Kronolith_View_Event($event);
                     case 'EditEvent':
                         /* We check for read permissions, because we can always save a
                          * copy if we can read the event. */
-                        if (!is_string($event) &&
-                            !$event->hasPermission(Horde_Perms::READ)) {
+                        if (!is_string($event)
+                            && !$event->hasPermission(Horde_Perms::READ)) {
                             $event = _("Permission Denied");
                         }
                         return new Kronolith_View_EditEvent($event);
                     case 'DeleteEvent':
-                        if (!is_string($event) &&
-                            !$event->hasPermission(Horde_Perms::DELETE)) {
+                        if (!is_string($event)
+                            && !$event->hasPermission(Horde_Perms::DELETE)) {
                             $event = _("Permission Denied");
                         }
                         return new Kronolith_View_DeleteEvent($event);
                     case 'ExportEvent':
-                        if (!is_string($event) &&
-                            !$event->hasPermission(Horde_Perms::READ)) {
+                        if (!is_string($event)
+                            && !$event->hasPermission(Horde_Perms::READ)) {
                             $event = _("Permission Denied");
                         }
                         return new Kronolith_View_ExportEvent($event);

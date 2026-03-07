@@ -55,8 +55,8 @@ class Kronolith_Calendar_External_Tasks extends Kronolith_Calendar_External
     {
         global $calendar_manager, $conf, $injector, $registry;
 
-        $owner = $registry->getAuth() &&
-            $this->_share->get('owner') == $registry->getAuth();
+        $owner = $registry->getAuth()
+            && $this->_share->get('owner') == $registry->getAuth();
 
         $hash = parent::toHash();
         $hash['name']  = Kronolith::getLabel($this->_share);

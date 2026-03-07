@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Copyright 2010-2017 Horde LLC (http://www.horde.org/)
@@ -21,7 +22,7 @@ class KronolithUpgradeAddColor extends Horde_Db_Migration_Base
         $t = $this->_connection->table('kronolith_shares');
         $cols = $t->getColumns();
         if (!in_array('attribute_color', array_keys($cols))) {
-            $this->addColumn('kronolith_shares', 'attribute_color', 'string', array('limit' => 7));
+            $this->addColumn('kronolith_shares', 'attribute_color', 'string', ['limit' => 7]);
         }
     }
 

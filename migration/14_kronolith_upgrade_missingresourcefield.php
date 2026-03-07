@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Adds event_resource field
  *

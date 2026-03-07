@@ -177,7 +177,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         if (is_null($startDate)) {
             $startDate = new Horde_Date(['mday' => 1,
                 'month' => 1,
-                'year' => 0000]);
+                'year' => 0o000]);
         }
         if (is_null($endDate)) {
             $endDate = new Horde_Date(['mday' => 31,
@@ -269,8 +269,8 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         $xml->writeAttribute('name', 'VCALENDAR');
         $xml->startElement('C:comp-filter');
         $xml->writeAttribute('name', 'VEVENT');
-        if (!is_null($startDate) ||
-            !is_null($endDate)) {
+        if (!is_null($startDate)
+            || !is_null($endDate)) {
             $xml->startElement('C:time-range');
             if (!is_null($startDate)) {
                 $xml->writeAttribute('start', $startDate->toiCalendar());
@@ -397,9 +397,9 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
 
             /* Catch RECURRENCE-ID attributes which mark single recurrence
              * instances. */
-            if (isset($event->recurrenceid) &&
-                isset($event->uid) &&
-                isset($event->sequence)) {
+            if (isset($event->recurrenceid)
+                && isset($event->uid)
+                && isset($event->sequence)) {
                 $exceptions[$event->uid][$event->sequence] = $event->recurrenceid;
                 if ($hideExceptions) {
                     continue;
@@ -411,17 +411,17 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             $recurs = $event->recurs();
             if (
                 /* Starts after the period. */
-                ($endDate && $event->start->compareDateTime($endDate) > 0) ||
+                ($endDate && $event->start->compareDateTime($endDate) > 0)
                 /* End before the period and doesn't recur. */
-                ($startDate && !$recurs &&
-                 $event->end->compareDateTime($startDate) < 0)) {
+                || ($startDate && !$recurs
+                 && $event->end->compareDateTime($startDate) < 0)) {
                 continue;
             }
 
             if ($recurs && $startDate) {
                 // Fixed end date? Check if end is before start period.
-                if ($event->recurrence->hasRecurEnd() &&
-                    $event->recurrence->recurEnd->compareDateTime($startDate) < 0) {
+                if ($event->recurrence->hasRecurEnd()
+                    && $event->recurrence->recurEnd->compareDateTime($startDate) < 0) {
                     continue;
                 } elseif ($endDate) {
                     $next = $event->recurrence->nextRecurrence($startDate);
@@ -437,8 +437,8 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         /* Loop through all explicitly defined recurrence instances and create
          * exceptions for those in the event with the matching recurrence. */
         foreach ($processed as $key => $event) {
-            if ($event->recurs() &&
-                isset($exceptions[$event->uid][$event->sequence])) {
+            if ($event->recurs()
+                && isset($exceptions[$event->uid][$event->sequence])) {
                 $timestamp = $exceptions[$event->uid][$event->sequence];
                 $processed[$key]->recurrence->addException(date('Y', $timestamp), date('m', $timestamp), date('d', $timestamp));
             }
@@ -843,8 +843,8 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
                     $this->_permission |= Horde_Perms::SHOW;
                     $this->_permission |= Horde_Perms::READ;
                 }
-                if ($privilegeName == '{DAV:}write' ||
-                    $privilegeName == '{DAV:}write-content') {
+                if ($privilegeName == '{DAV:}write'
+                    || $privilegeName == '{DAV:}write-content') {
                     /* PUT access. */
                     $this->_permission |= Horde_Perms::EDIT;
                 }
@@ -1036,12 +1036,12 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
                 CURLOPT_PROXYPORT,
                 $conf['http']['proxy']['proxy_port']
             );
-            if (!empty($conf['http']['proxy']['proxy_user']) &&
-                !empty($conf['http']['proxy']['proxy_pass'])) {
+            if (!empty($conf['http']['proxy']['proxy_user'])
+                && !empty($conf['http']['proxy']['proxy_pass'])) {
                 $client->addCurlSetting(
                     CURLOPT_PROXYUSERPWD,
-                    $conf['http']['proxy']['proxy_user'] . ':' .
-                    $conf['http']['proxy']['proxy_pass']
+                    $conf['http']['proxy']['proxy_user'] . ':'
+                    . $conf['http']['proxy']['proxy_pass']
                 );
             }
         }

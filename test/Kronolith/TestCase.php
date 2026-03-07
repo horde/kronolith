@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Basic Kronolith test case.
  *
@@ -26,9 +27,9 @@
  * @author     Gunnar Wrobel <wrobel@pardus.de>
  * @link       http://www.horde.org/apps/kronolith
  * @license    http://www.horde.org/licenses/gpl GNU General Public License, version 2
+ * @coversNothing
  */
-class Kronolith_TestCase
-extends PHPUnit_Framework_TestCase
+class Kronolith_TestCase extends PHPUnit_Framework_TestCase
 {
     protected function getInjector()
     {
@@ -37,18 +38,18 @@ extends PHPUnit_Framework_TestCase
 
     protected static function createSqlPdoSqlite(Horde_Test_Setup $setup)
     {
-        $setup->setup(array('Horde_Db_Adapter' => array('factory' => 'Db')));
+        $setup->setup(['Horde_Db_Adapter' => ['factory' => 'Db']]);
         $GLOBALS['injector']->bindImplementation('Kronolith_Geo', 'Kronolith_Geo_Sql');
     }
 
     protected static function createBasicKronolithSetup(Horde_Test_Setup $setup)
     {
         $setup->setup(
-            array(
-                '_PARAMS' => array(
+            [
+                '_PARAMS' => [
                     'user' => 'test@example.com',
-                    'app' => 'kronolith'
-                ),
+                    'app' => 'kronolith',
+                ],
                 'Horde_Alarm' => 'Alarm',
                 'Horde_Cache' => 'Cache',
                 'Horde_Group' => 'Group',
@@ -57,15 +58,15 @@ extends PHPUnit_Framework_TestCase
                 'Horde_Perms' => 'Perms',
                 'Horde_Registry' => 'Registry',
                 'Horde_Session' => 'Session',
-            )
+            ]
         );
         $setup->makeGlobal(
-            array(
+            [
                 'injector' => 'Horde_Injector',
                 'prefs' => 'Horde_Prefs',
                 'registry' => 'Horde_Registry',
                 'session' => 'Horde_Session',
-            )
+            ]
         );
         $GLOBALS['injector']->setInstance('Content_Objects_Manager', new Content_Objects_Manager());
         $GLOBALS['injector']->setInstance('Content_Tagger', new Content_Tagger());
@@ -85,9 +86,9 @@ extends PHPUnit_Framework_TestCase
             )
         );
         $setup->setup(
-            array(
+            [
                 'Kronolith_Shares' => 'Share',
-            )
+            ]
         );
         $GLOBALS['injector']->setInstance(
             'Horde_Core_Factory_Share',
@@ -100,18 +101,18 @@ extends PHPUnit_Framework_TestCase
     protected static function createKolabShares(Horde_Test_Setup $setup)
     {
         $setup->setup(
-            array(
-                'Horde_Kolab_Storage' => array(
+            [
+                'Horde_Kolab_Storage' => [
                     'factory' => 'KolabStorage',
-                    'params' => array(
+                    'params' => [
                         'imapuser' => 'test',
-                    )
-                ),
-                'Kronolith_Shares' => array(
+                    ],
+                ],
+                'Kronolith_Shares' => [
                     'factory' => 'Share',
                     'method' => 'Kolab',
-                ),
-            )
+                ],
+            ]
         );
         $GLOBALS['injector']->setInstance(
             'Horde_Core_Factory_Share',
@@ -134,21 +135,25 @@ extends PHPUnit_Framework_TestCase
     protected static function _createDefaultShares()
     {
         $share = self::_createShare(
-            'Calendar of Tester', 'test@example.com'
+            'Calendar of Tester',
+            'test@example.com'
         );
         $other_share = self::_createShare(
-            'Other calendar of Tester', 'test@example.com'
+            'Other calendar of Tester',
+            'test@example.com'
         );
-        return array($share, $other_share);
+        return [$share, $other_share];
     }
 
     private static function _createShare($name, $owner)
     {
         $share = $GLOBALS['injector']->getInstance('Kronolith_Shares')->newShare(
-            $owner, strval(new Horde_Support_Randomid()), $name
+            $owner,
+            strval(new Horde_Support_Randomid()),
+            $name
         );
         $GLOBALS['injector']->getInstance('Kronolith_Shares')->addShare($share);
-        $GLOBALS['all_calendars'][$share->getName()] = new Kronolith_Calendar_Internal(array('share' => $share));
+        $GLOBALS['all_calendars'][$share->getName()] = new Kronolith_Calendar_Internal(['share' => $share]);
         return $share;
     }
 }

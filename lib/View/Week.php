@@ -47,8 +47,8 @@ class Kronolith_View_Week
     {
         $week = $date->weekOfYear();
         $year = $date->year;
-        if (!$GLOBALS['prefs']->getValue('week_start_monday') &&
-            $date->dayOfWeek() == Horde_Date::DATE_SUNDAY) {
+        if (!$GLOBALS['prefs']->getValue('week_start_monday')
+            && $date->dayOfWeek() == Horde_Date::DATE_SUNDAY) {
             ++$week;
         }
         if ($week > 51 && $date->month == 1) {
@@ -133,8 +133,8 @@ class Kronolith_View_Week
             $row .= '<td colspan="' . $this->days[$j]->totalspan . '" valign="top"';
             if ($this->days[$j]->isToday()) {
                 $row .= ' class="kronolith-today"';
-            } elseif ($this->days[$j]->dayOfWeek() == 0 ||
-                      $this->days[$j]->dayOfWeek() == 6) {
+            } elseif ($this->days[$j]->dayOfWeek() == 0
+                      || $this->days[$j]->dayOfWeek() == 6) {
                 $row .= ' class="kronolith-weekend"';
             }
             $row .= '>';
@@ -256,12 +256,12 @@ class Kronolith_View_Week
                                 'year'  => $this->days[$j]->year]);
                             $slot_end = new Horde_Date($start);
                             $slot_end->min += $this->slotLength;
-                            if (((!$day_hour_force || $i >= $day_hour_start) &&
-                                 $event->start->compareDateTime($start) >= 0 &&
-                                 $event->start->compareDateTime($slot_end) < 0 ||
-                                 $start->compareDateTime($this->days[$j]) == 0) ||
-                                ($day_hour_force &&
-                                 $i == $day_hour_start)) {
+                            if (((!$day_hour_force || $i >= $day_hour_start)
+                                 && $event->start->compareDateTime($start) >= 0
+                                 && $event->start->compareDateTime($slot_end) < 0
+                                 || $start->compareDateTime($this->days[$j]) == 0)
+                                || ($day_hour_force
+                                 && $i == $day_hour_start)) {
 
                                 // Store the nodes that we're covering for
                                 // this event in the coverage graph.
@@ -294,8 +294,8 @@ class Kronolith_View_Week
                         $row .= '<td colspan="' . $diff . '"';
                         if ($this->days[$j]->isToday()) {
                             $row .= ' class="kronolith-today"';
-                        } elseif ($this->days[$j]->dayOfWeek() == 0 ||
-                                  $this->days[$j]->dayOfWeek() == 6) {
+                        } elseif ($this->days[$j]->dayOfWeek() == 0
+                                  || $this->days[$j]->dayOfWeek() == 6) {
                             $row .= ' class="kronolith-weekend"';
                         }
                         $row .= '>&nbsp;</td>';

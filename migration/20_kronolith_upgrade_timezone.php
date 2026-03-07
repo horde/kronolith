@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Adds timezone fields to events.
  *
@@ -19,7 +20,7 @@ class KronolithUpgradeTimezone extends Horde_Db_Migration_Base
      */
     public function up()
     {
-        $this->addColumn('kronolith_events', 'event_timezone', 'string', array('limit' => 50));
+        $this->addColumn('kronolith_events', 'event_timezone', 'string', ['limit' => 50]);
     }
 
     /**

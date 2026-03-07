@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Fix exceptionoriginaldate field to be UTC time.
  *
@@ -43,10 +44,12 @@ class KronolithUpgradeExceptionUtc extends Horde_Db_Migration_Base
             if ($row['event_creator_id'] != $creator) {
                 $prefs = $GLOBALS['injector']
                     ->getInstance('Horde_Core_Factory_Prefs')
-                    ->create('horde', array(
-                        'cache' => false,
-                        'user' => $row['event_creator_id'])
-                );
+                    ->create(
+                        'horde',
+                        [
+                            'cache' => false,
+                            'user' => $row['event_creator_id']]
+                    );
 
                 $tz = $prefs->getValue('timezone');
                 if (empty($tz)) {
@@ -60,9 +63,9 @@ class KronolithUpgradeExceptionUtc extends Horde_Db_Migration_Base
             $eod->setTimezone($utc);
 
             try {
-                $this->update($update, array(
+                $this->update($update, [
                     $eod->format('Y-m-d H:i:s'),
-                    $row['event_uid']));
+                    $row['event_uid']]);
             } catch (Horde_Db_Exception $e) {
                 throw new Horde_Exception($e);
             }
@@ -98,10 +101,12 @@ class KronolithUpgradeExceptionUtc extends Horde_Db_Migration_Base
                 try {
                     $prefs = $GLOBALS['injector']
                         ->getInstance('Horde_Core_Factory_Prefs')
-                        ->create('horde', array(
-                            'cache' => false,
-                            'user' => $row['event_creator_id'])
-                    );
+                        ->create(
+                            'horde',
+                            [
+                                'cache' => false,
+                                'user' => $row['event_creator_id']]
+                        );
                     $tz = $prefs->getValue('timezone');
                     if (empty($tz)) {
                         $tz = date_default_timezone_get();
@@ -121,9 +126,9 @@ class KronolithUpgradeExceptionUtc extends Horde_Db_Migration_Base
             $eod->setTimezone($tz);
 
             try {
-                $this->update($update, array(
+                $this->update($update, [
                     $eod->format('Y-m-d H:i:s'),
-                    $row['event_uid']));
+                    $row['event_uid']]);
             } catch (Horde_Db_Exception $e) {
                 throw new Horde_Exception($e);
             }

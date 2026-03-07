@@ -1,7 +1,8 @@
 <?php
+
 /**
  * Adds resource table.
- * 
+ *
  * Copyright 2010-2017 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
@@ -21,19 +22,19 @@ class KronolithUpgradeAddResources extends Horde_Db_Migration_Base
     {
         $tableList = $this->tables();
         if (!in_array('kronolith_resources', $tableList)) {
-            $t = $this->createTable('kronolith_resources', array('autoincrementKey' => false));
-            $t->column('resource_id', 'integer', array('null' => false));
-            $t->column('resource_name', 'string', array('limit' => 255));
-            $t->column('resource_calendar', 'string', array('limit' => 255));
+            $t = $this->createTable('kronolith_resources', ['autoincrementKey' => false]);
+            $t->column('resource_id', 'integer', ['null' => false]);
+            $t->column('resource_name', 'string', ['limit' => 255]);
+            $t->column('resource_calendar', 'string', ['limit' => 255]);
             $t->column('resource_description', 'text');
-            $t->column('resource_response_type', 'integer', array('default' => 0));
-            $t->column('resource_type', 'string', array('limit' => 255, 'null' => false));
+            $t->column('resource_response_type', 'integer', ['default' => 0]);
+            $t->column('resource_type', 'string', ['limit' => 255, 'null' => false]);
             $t->column('resource_members', 'text');
-            $t->primaryKey(array('resource_id'));
+            $t->primaryKey(['resource_id']);
             $t->end();
 
-            $this->addIndex('kronolith_resources', array('resource_calendar'));
-            $this->addIndex('kronolith_resources', array('resource_type'));
+            $this->addIndex('kronolith_resources', ['resource_calendar']);
+            $this->addIndex('kronolith_resources', ['resource_type']);
         }
     }
 

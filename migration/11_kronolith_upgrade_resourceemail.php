@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Adds url field
  *
@@ -22,7 +23,7 @@ class KronolithUpgradeResourceEmail extends Horde_Db_Migration_Base
         $t = $this->_connection->table('kronolith_resources');
         $cols = $t->getColumns();
         if (!in_array('resource_email', array_keys($cols))) {
-            $this->addColumn('kronolith_resources', 'resource_email', 'string', array('limit' => 255));
+            $this->addColumn('kronolith_resources', 'resource_email', 'string', ['limit' => 255]);
         }
     }
 

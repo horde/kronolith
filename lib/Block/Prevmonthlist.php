@@ -49,8 +49,8 @@ class Kronolith_Block_Prevmonthlist extends Horde_Core_Block
     protected function _title()
     {
         $url = Horde::url($GLOBALS['registry']->getInitialPage(), true);
-        if (isset($this->_params['calendar']) &&
-            $this->_params['calendar'] != '__all') {
+        if (isset($this->_params['calendar'])
+            && $this->_params['calendar'] != '__all') {
             $url->add('display_cal', $this->_params['calendar']);
         }
 
@@ -81,8 +81,8 @@ class Kronolith_Block_Prevmonthlist extends Horde_Core_Block
         $current_month = '';
 
         try {
-            if (isset($this->_params['calendar']) &&
-                $this->_params['calendar'] != '__all') {
+            if (isset($this->_params['calendar'])
+                && $this->_params['calendar'] != '__all') {
                 $calendars = Kronolith::listCalendars();
                 if (!isset($calendars[$this->_params['calendar']])) {
                     return _("Calendar not found");
@@ -165,20 +165,20 @@ class Kronolith_Block_Prevmonthlist extends Horde_Core_Block
                 }
 
                 $html .= '<td class="text" nowrap="nowrap" valign="top">';
-                if ($event->start->compareDate($startDate) < 0 &&
-                    $event->end->compareDate($startDate) > 0) {
+                if ($event->start->compareDate($startDate) < 0
+                    && $event->end->compareDate($startDate) > 0) {
                     $html .= '<strong>'
                         . htmlspecialchars($event->getLocation()) . '</strong>';
                 } else {
                     $html .= htmlspecialchars($event->getLocation());
                 }
-                if ($event->start->compareDate($startDate) < 0 &&
-                    $event->end->compareDate($startDate) > 0) {
+                if ($event->start->compareDate($startDate) < 0
+                    && $event->end->compareDate($startDate) > 0) {
                     $html .= '<strong>';
                 }
                 $html .= $event->getLink(null, true, null, true);
-                if ($event->start->compareDate($startDate) < 0 &&
-                    $event->end->compareDate($startDate) > 0) {
+                if ($event->start->compareDate($startDate) < 0
+                    && $event->end->compareDate($startDate) > 0) {
                     $html .= '</strong>';
                 }
                 $html .= '</td></tr>';

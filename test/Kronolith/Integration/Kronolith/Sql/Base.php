@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Test the core Kronolith class with a SQL backend.
  *
@@ -29,7 +30,7 @@
  */
 class Kronolith_Integration_Kronolith_Sql_Base extends Kronolith_Integration_Kronolith_Base
 {
-    static $callback;
+    public static $callback;
 
     public static function setUpBeforeClass()
     {
@@ -40,6 +41,6 @@ class Kronolith_Integration_Kronolith_Sql_Base extends Kronolith_Integration_Kro
 
     protected static function getDb()
     {
-        call_user_func_array(self::$callback, array());
+        call_user_func_array(self::$callback, []);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author   Michael J. Rubinsky <mrubinsk@horde.org>
  * @category Horde
@@ -28,7 +29,7 @@ class KronolithUpgradeSqlnghierarchical extends Horde_Db_Migration_Base
      */
     public function up()
     {
-        $this->addColumn('kronolith_sharesng', 'share_parents','text');
+        $this->addColumn('kronolith_sharesng', 'share_parents', 'text');
     }
 
     /**

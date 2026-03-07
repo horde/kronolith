@@ -56,12 +56,12 @@ class Kronolith_View_Year
             if (!$prefs->getValue('week_start_monday')) {
                 $html .= '<th>' . _("Su") . '</th>';
             }
-            $html .= '<th>' . _("Mo") . '</th>' .
-                '<th>' . _("Tu") . '</th>' .
-                '<th>' . _("We") . '</th>' .
-                '<th>' . _("Th") . '</th>' .
-                '<th>' . _("Fr") . '</th>' .
-                '<th>' . _("Sa") . '</th>';
+            $html .= '<th>' . _("Mo") . '</th>'
+                . '<th>' . _("Tu") . '</th>'
+                . '<th>' . _("We") . '</th>'
+                . '<th>' . _("Th") . '</th>'
+                . '<th>' . _("Fr") . '</th>'
+                . '<th>' . _("Sa") . '</th>';
             if ($prefs->getValue('week_start_monday')) {
                 $html .= '<th>' . _("Su") . '</th>';
             }
@@ -110,8 +110,8 @@ class Kronolith_View_Year
                     $url = Horde::url('day.php', true)
                         ->add('date', $date->dateString());
 
-                    if ($date->month == $month &&
-                              !empty($this->_events[$date->dateString()])) {
+                    if ($date->month == $month
+                              && !empty($this->_events[$date->dateString()])) {
                         /* There are events; create a cell with tooltip to list
                          * them. */
                         $day_events = '';
@@ -141,8 +141,8 @@ class Kronolith_View_Year
                         $style .= ' kronolith-today';
                     }
 
-                    $html .= '<td align="center" class="' . $style . '" height="10" width="5%" valign="top">' .
-                        $cellday . '</td>';
+                    $html .= '<td align="center" class="' . $style . '" height="10" width="5%" valign="top">'
+                        . $cellday . '</td>';
                     ++$cell;
                 }
             }

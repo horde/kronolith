@@ -83,9 +83,9 @@ class Kronolith_Calendar_External extends Kronolith_Calendar
      */
     public function display()
     {
-        return empty($GLOBALS['conf']['share']['hidden']) ||
-            $this->_type != 'share' ||
-            in_array($this->_api . '/' . $this->_id, $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_EXTERNAL_CALENDARS));
+        return empty($GLOBALS['conf']['share']['hidden'])
+            || $this->_type != 'share'
+            || in_array($this->_api . '/' . $this->_id, $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_EXTERNAL_CALENDARS));
     }
 
     /**

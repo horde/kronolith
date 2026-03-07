@@ -1,4 +1,5 @@
 <?php
+
 // Kronolith Unit Test Bootstrap. First detect autoloader, then bootstrap Horde_Test
 $candidates = [
     // installed as UUT / root project

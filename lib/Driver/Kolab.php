@@ -161,8 +161,8 @@ class Kronolith_Driver_Kolab extends Kronolith_Driver
             if (!$event->recurs()) {
                 $start = new Horde_Date($event->start);
                 $start->min -= $event->alarm;
-                if ($start->compareDateTime($date) <= 0 &&
-                    $date->compareDateTime($event->end) <= -1) {
+                if ($start->compareDateTime($date) <= 0
+                    && $date->compareDateTime($event->end) <= -1) {
                     $events[] = $fullevent ? $event : $eventId;
                 }
             } else {
@@ -178,8 +178,8 @@ class Kronolith_Driver_Kolab extends Kronolith_Driver
                         'hour' => $event->end->hour,
                         'min' => $event->end->min,
                         'sec' => $event->end->sec]);
-                    if ($start->compareDateTime($date) <= 0 &&
-                        $date->compareDateTime($end) <= -1) {
+                    if ($start->compareDateTime($date) <= 0
+                        && $date->compareDateTime($end) <= -1) {
                         if ($fullevent) {
                             $event->start = $start;
                             $event->end = $end;
@@ -293,17 +293,17 @@ class Kronolith_Driver_Kolab extends Kronolith_Driver
             $recurs = $event->recurs();
             if (
                 /* Starts after the period. */
-                $event->start->compareDateTime($endDate) > 0 ||
+                $event->start->compareDateTime($endDate) > 0
                 /* End before the period and doesn't recur. */
-                (!$recurs &&
-                 $event->end->compareDateTime($startDate) < 0)) {
+                || (!$recurs
+                 && $event->end->compareDateTime($startDate) < 0)) {
                 continue;
             }
 
             if ($recurs) {
                 // Fixed end date? Check if end is before start period.
-                if ($event->recurrence->hasRecurEnd() &&
-                    $event->recurrence->recurEnd->compareDateTime($startDate) < 0) {
+                if ($event->recurrence->hasRecurEnd()
+                    && $event->recurrence->recurEnd->compareDateTime($startDate) < 0) {
                     continue;
                 } else {
                     $next = $event->recurrence->nextRecurrence($startDate);

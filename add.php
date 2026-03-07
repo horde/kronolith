@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
  *
@@ -18,9 +19,9 @@ do {
         break;
     }
 
-    list($targetType, $targetcalendar) = explode('_', Horde_Util::getFormData('targetcalendar'), 2);
+    [$targetType, $targetcalendar] = explode('_', Horde_Util::getFormData('targetcalendar'), 2);
     if (strpos($targetcalendar, '\\')) {
-        list($calendar_id, $user) = explode('\\', $targetcalendar, 2);
+        [$calendar_id, $user] = explode('\\', $targetcalendar, 2);
     } else {
         $calendar_id = $targetcalendar;
         $user = $GLOBALS['registry']->getAuth();
@@ -29,33 +30,34 @@ do {
     try {
         /* Permission checks on the target calendar . */
         switch ($targetType) {
-        case 'internal':
-            $kronolith_calendar = $GLOBALS['calendar_manager']->getEntry(Kronolith::ALL_CALENDARS, $calendar_id);
-            break;
-        case 'remote':
-            $kronolith_calendar = $GLOBALS['calendar_manager']->getEntry(Kronolith::ALL_REMOTE_CALENDARS, $calendar_id);
-            break;
-        case 'resource':
-            $rid = Kronolith::getDriver('Resource')->getResourceIdByCalendar($calendar_id);
-            $kronolith_calendar = new Kronolith_Calendar_Resource(
-                array('resource' => Kronolith::getDriver('Resource')->getResource($rid)));
-            break;
-        default:
-            break 2;
+            case 'internal':
+                $kronolith_calendar = $GLOBALS['calendar_manager']->getEntry(Kronolith::ALL_CALENDARS, $calendar_id);
+                break;
+            case 'remote':
+                $kronolith_calendar = $GLOBALS['calendar_manager']->getEntry(Kronolith::ALL_REMOTE_CALENDARS, $calendar_id);
+                break;
+            case 'resource':
+                $rid = Kronolith::getDriver('Resource')->getResourceIdByCalendar($calendar_id);
+                $kronolith_calendar = new Kronolith_Calendar_Resource(
+                    ['resource' => Kronolith::getDriver('Resource')->getResource($rid)]
+                );
+                break;
+            default:
+                break 2;
         }
-        if ($user == $GLOBALS['registry']->getAuth() &&
-            !$kronolith_calendar->hasPermission(Horde_Perms::EDIT)) {
+        if ($user == $GLOBALS['registry']->getAuth()
+            && !$kronolith_calendar->hasPermission(Horde_Perms::EDIT)) {
             $notification->push(_("You do not have permission to add events to this calendar."), 'horde.warning');
             break;
         }
-        if ($user != $GLOBALS['registry']->getAuth() &&
-            !$kronolith_calendar->hasPermission(Kronolith::PERMS_DELEGATE)) {
+        if ($user != $GLOBALS['registry']->getAuth()
+            && !$kronolith_calendar->hasPermission(Kronolith::PERMS_DELEGATE)) {
             $notification->push(_("You do not have permission to delegate events to this user."), 'horde.warning');
             break;
         }
         $perms = $GLOBALS['injector']->getInstance('Horde_Core_Perms');
-        if ($perms->hasAppPermission('max_events') !== true &&
-            $perms->hasAppPermission('max_events') <= Kronolith::countEvents()) {
+        if ($perms->hasAppPermission('max_events') !== true
+            && $perms->hasAppPermission('max_events') <= Kronolith::countEvents()) {
             Horde::permissionDeniedError(
                 'kronolith',
                 'max_events',
@@ -88,8 +90,8 @@ if ($url = Horde::verifySignedUrl(Horde_Util::getFormData('url'))) {
     $url = new Horde_Url($url, true);
 } else {
     $url = Horde::url($prefs->getValue('defaultview') . '.php', true)
-        ->add(array('month' => Horde_Util::getFormData('month'),
-                    'year' => Horde_Util::getFormData('year')));
+        ->add(['month' => Horde_Util::getFormData('month'),
+            'year' => Horde_Util::getFormData('year')]);
 }
 
 // Make sure URL is unique.

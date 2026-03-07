@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Test the core Kronolith class with various backends.
  *
@@ -26,6 +27,7 @@
  * @author     Gunnar Wrobel <wrobel@pardus.de>
  * @link       http://www.horde.org/apps/kronolith
  * @license    http://www.horde.org/licenses/gpl GNU General Public License, version 2
+ * @coversNothing
  */
 class Kronolith_Integration_Kronolith_Base extends Kronolith_TestCase
 {
@@ -34,7 +36,7 @@ class Kronolith_Integration_Kronolith_Base extends Kronolith_TestCase
      *
      * @var Horde_Test_Setup
      */
-    static $setup;
+    public static $setup;
 
     /**
      * The default share name expected to be used.
@@ -111,7 +113,8 @@ class Kronolith_Integration_Kronolith_Base extends Kronolith_TestCase
         $default = array_pop($shares);
         $this->assertTrue(
             $default->hasPermission(
-                $GLOBALS['registry']->getAuth(), Horde_Perms::DELETE
+                $GLOBALS['registry']->getAuth(),
+                Horde_Perms::DELETE
             )
         );
     }

@@ -110,17 +110,17 @@ class Kronolith_Driver_Horde extends Kronolith_Driver
             $recurs = $event->recurs();
             if (
                 // Starts after the period.
-                $event->start->compareDateTime($endDate) > 0 ||
+                $event->start->compareDateTime($endDate) > 0
                 // End before the period and doesn't recur.
-                (!$recurs &&
-                 $event->end->compareDateTime($startDate) < 0)) {
+                || (!$recurs
+                 && $event->end->compareDateTime($startDate) < 0)) {
                 continue;
             }
 
             if ($recurs) {
                 // Fixed end date? Check if end is before start period.
-                if ($event->recurrence->hasRecurEnd() &&
-                    $event->recurrence->recurEnd->compareDateTime($startDate) < 0) {
+                if ($event->recurrence->hasRecurEnd()
+                    && $event->recurrence->recurEnd->compareDateTime($startDate) < 0) {
                     continue;
                 } else {
                     $next = $event->recurrence->nextRecurrence($startDate);

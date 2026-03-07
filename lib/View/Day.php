@@ -74,9 +74,9 @@ class Kronolith_View_Day extends Kronolith_Day
 
         $started = false;
         $first_row = true;
-        $addLinks = Kronolith::getDefaultCalendar(Horde_Perms::EDIT) &&
-            ($GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('max_events') === true ||
-             $GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('max_events') > Kronolith::countEvents());
+        $addLinks = Kronolith::getDefaultCalendar(Horde_Perms::EDIT)
+            && ($GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('max_events') === true
+             || $GLOBALS['injector']->getInstance('Horde_Core_Perms')->hasAppPermission('max_events') > Kronolith::countEvents());
         $showLocation = Kronolith::viewShowLocation();
         $showTime = Kronolith::viewShowTime();
 
@@ -187,13 +187,13 @@ class Kronolith_View_Day extends Kronolith_Day
                         'year'  => $this->year]);
                     $end_slot = new Horde_Date($start);
                     $end_slot->min += $this->slotLength;
-                    if (((!$day_hour_force || $i >= $day_hour_start) &&
-                         $event->start->compareDateTime($start) >= 0 &&
-                         $event->start->compareDateTime($end_slot) < 0 ||
-                         $start->compareDateTime($this) == 0) ||
-                        ($day_hour_force &&
-                         $i == $day_hour_start &&
-                         $event->start->compareDateTime($start) < 0)) {
+                    if (((!$day_hour_force || $i >= $day_hour_start)
+                         && $event->start->compareDateTime($start) >= 0
+                         && $event->start->compareDateTime($end_slot) < 0
+                         || $start->compareDateTime($this) == 0)
+                        || ($day_hour_force
+                         && $i == $day_hour_start
+                         && $event->start->compareDateTime($start) < 0)) {
 
                         // Store the nodes that we're covering for
                         // this event in the coverage graph.
@@ -339,27 +339,27 @@ class Kronolith_View_Day extends Kronolith_Day
                 // If the event falls anywhere inside this slot, add
                 // it, make sure other events know that they overlap
                 // it, and increment the event's vertical span.
-                if (($event->end->compareDateTime($start) > 0 &&
-                     $event->start->compareDateTime($end) < 0) ||
-                    ($event->end->compareDateTime($event->start) == 0 &&
-                     $event->start->compareDateTime($start) == 0)) {
+                if (($event->end->compareDateTime($start) > 0
+                     && $event->start->compareDateTime($end) < 0)
+                    || ($event->end->compareDateTime($event->start) == 0
+                     && $event->start->compareDateTime($start) == 0)) {
 
                     // Make sure we keep the latest hour that an event
                     // reaches up-to-date.
-                    if ($i > $this->_last &&
-                        (!$day_hour_force || $i <= $day_hour_end)) {
+                    if ($i > $this->_last
+                        && (!$day_hour_force || $i <= $day_hour_end)) {
                         $this->_last = $i;
                     }
 
                     // Make sure we keep the first hour that an event
                     // reaches up-to-date.
-                    if ($i < $this->_first &&
-                        (!$day_hour_force || $i >= $day_hour_start)) {
+                    if ($i < $this->_first
+                        && (!$day_hour_force || $i >= $day_hour_start)) {
                         $this->_first = $i;
                     }
 
-                    if (!$day_hour_force ||
-                        ($i >= $day_hour_start && $i <= $day_hour_end)) {
+                    if (!$day_hour_force
+                        || ($i >= $day_hour_start && $i <= $day_hour_end)) {
                         // Add this event to the events which are in this row.
                         $this->_event_matrix[$cid][$i][] = $key;
 

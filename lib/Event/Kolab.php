@@ -68,8 +68,8 @@ class Kronolith_Event_Kolab extends Kronolith_Event
             $this->location = $event['location'];
         }
 
-        if (isset($event['sensitivity']) &&
-            ($event['sensitivity'] == 'private' || $event['sensitivity'] == 'confidential')) {
+        if (isset($event['sensitivity'])
+            && ($event['sensitivity'] == 'private' || $event['sensitivity'] == 'confidential')) {
             $this->private = true;
         }
 

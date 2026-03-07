@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Adds geospatial data table for MYSQL SPATIAL EXTENSIONS ONLY.
  *
@@ -14,7 +15,7 @@
  */
 class KronolithUpgradeAddMysqlGeo extends Horde_Db_Migration_Base
 {
-    protected $_allowed = array('MySQL', 'MySQLi', 'PDO_MySQL');
+    protected $_allowed = ['MySQL', 'MySQLi', 'PDO_MySQL'];
     /**
      * Upgrade.
      */
@@ -22,11 +23,11 @@ class KronolithUpgradeAddMysqlGeo extends Horde_Db_Migration_Base
     {
         /* Only run this migration if we are using a Mysql adapter */
         if (in_array($this->adapterName(), $this->_allowed)) {
-            $t = $this->createTable('kronolith_events_mysqlgeo', array('autoincrementKey' => false));
-            $t->column('event_id', 'string', array('limit' => 32, 'null' => false));
-            $t->column('event_coordinates', 'point', array('null' => false));
-            $t->column('event_zoom', 'integer', array('default' => 0, 'null' => false));
-            $t->primaryKey(array('event_id'));
+            $t = $this->createTable('kronolith_events_mysqlgeo', ['autoincrementKey' => false]);
+            $t->column('event_id', 'string', ['limit' => 32, 'null' => false]);
+            $t->column('event_coordinates', 'point', ['null' => false]);
+            $t->column('event_zoom', 'integer', ['default' => 0, 'null' => false]);
+            $t->primaryKey(['event_id']);
             $t->end();
         }
     }
