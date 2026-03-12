@@ -3,7 +3,6 @@
 /**
  * This script converts all dates from the user's timezone to UTC.
  */
-
 if (file_exists(__DIR__ . '/../../kronolith/lib/Application.php')) {
     $baseDir = __DIR__ . '/../';
 } else {
@@ -13,7 +12,6 @@ if (file_exists(__DIR__ . '/../../kronolith/lib/Application.php')) {
 }
 require_once $baseDir . 'lib/Application.php';
 Horde_Registry::appInit('kronolith', array('cli' => true));
-
 /* Prepare DB stuff. */
 $db = $injector->getInstance('Horde_Db_Adapter');
 try {
@@ -22,9 +20,7 @@ try {
     echo $e->getMessage() . "\n";
     exit;
 }
-
 $stmt = 'UPDATE kronolith_events SET event_start = ?, event_end = ?, event_recurenddate = ?, event_exceptionoriginaldate = ? WHERE event_id = ?';
-
 /* Confirm changes. */
 if (!isset($argv[1]) || $argv[1] != '--yes') {
     $answer = $cli->prompt('Running this script will convert all existing events to UTC. This conversion is not reversible. Is this what you want?', array('y' => 'Yes', 'n' => 'No'));
@@ -32,7 +28,6 @@ if (!isset($argv[1]) || $argv[1] != '--yes') {
         exit;
     }
 }
-
 /* Loop through all events. */
 $creator = null;
 $utc = new DateTimeZone('UTC');
@@ -50,7 +45,6 @@ foreach ($result as $row) {
             'cache' => false,
             'user' => $row['event_creator_id']
         ));
-
         $timezone = $prefs->getValue('timezone');
         if (empty($timezone)) {
             $timezone = date_default_timezone_get();
@@ -60,10 +54,35 @@ foreach ($result as $row) {
         $count = 0;
         echo $creator . ': ';
     }
-    $start = new DateTime($row['event_start'], $timezone);
-    $start->setTimezone($utc);
-    $end = new DateTime($row['event_end'], $timezone);
-    $end->setTimezone($utc);
+
+    /* Skip or nullify invalid zero dates to avoid negative datetime values
+     * after timezone conversion (e.g. '0000-00-00 00:00:00' would produce
+     * '-0001-...' with a negative UTC offset). */
+    $startIsNull = (empty($row['event_start']) || $row['event_start'] == '0000-00-00 00:00:00');
+    $endIsNull   = (empty($row['event_end'])   || $row['event_end']   == '0000-00-00 00:00:00');
+
+    if ($startIsNull && $endIsNull) {
+        echo "\n  [SKIP] event_id=" . $row['event_id'] . " title=\"" . $row['event_title'] . "\" (both start and end dates are null/zero, no conversion possible)\n";
+        continue;
+    }
+
+    if ($startIsNull) {
+        echo "\n  [WARN] event_id=" . $row['event_id'] . " title=\"" . $row['event_title'] . "\" (start date is null/zero, will be set to NULL)\n";
+    }
+    if ($endIsNull) {
+        echo "\n  [WARN] event_id=" . $row['event_id'] . " title=\"" . $row['event_title'] . "\" (end date is null/zero, will be set to NULL)\n";
+    }
+
+    $start = $startIsNull ? null : new DateTime($row['event_start'], $timezone);
+    if ($start) {
+        $start->setTimezone($utc);
+    }
+
+    $end = $endIsNull ? null : new DateTime($row['event_end'], $timezone);
+    if ($end) {
+        $end->setTimezone($utc);
+    }
+
     if (!empty($row['event_recurenddate'])) {
         $recur_end = new DateTime($row['event_recurenddate'], $timezone);
         $recur_end->setTimezone($utc);
@@ -72,11 +91,10 @@ foreach ($result as $row) {
         $eod = new DateTime($row['event_exceptionoriginaldate'], $timezone);
         $eod->setTimezone($utc);
     }
-
     try {
         $db->update($stmt, array(
-            $start->format('Y-m-d H:i:s'),
-            $end->format('Y-m-d H:i:s'),
+            $start ? $start->format('Y-m-d H:i:s') : null,
+            $end   ? $end->format('Y-m-d H:i:s')   : null,
             !empty($row['event_recurenddate']) ? $recur_end->format('Y-m-d H:i:s') : null,
             !empty($row['event_exceptionoriginaldate']) ? $eod->format('Y-m-d H:i:s') : null,
             $row['event_id']));
