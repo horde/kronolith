@@ -1,0 +1,23 @@
+/**
+ * Kronolith Responsive Styles
+ * Extends base responsive.css with Kronolith-specific components
+ *
+ * Copyright 2026 Horde LLC (http://www.horde.org/)
+ */
+
+/* ============================================================================
+   App Icon Override
+   ========================================================================= */
+
+/* Override Horde base icon with Kronolith-specific icon */
+.topbar-menu-app-kronolith::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url('graphics/kronolith.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: middle;
+}

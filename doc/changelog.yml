@@ -1,4 +1,38 @@
 ---
+5.0.0-alpha10:
+  api: 5.0.0-alpha10
+  state:
+    release: alpha
+    api: alpha
+  date: 2026-03-07
+  license:
+    identifier: GPL-2.0-only
+    uri: https://spdx.org/licenses/GPL-2.0-only.html
+  notes: |-
+    chore: horde-components qc --fix
+    Merge pull request #25 from amulet1/ical_fixes
+    fix: Fix URL construction for event endpoints and minor docblock cleanup
+    chore: Remove unneeded $_client property in Kronolith_Driver_Ical class
+    fix: Add safeguard against reset() called on empty results
+    fix: Delete k.patch
+    Merge pull request #23 from amulet1/fix_hook_class
+    Revert "fix: Add conditional to hook class template to prevent double declaration issues"
+    Merge pull request #22 from amulet1/kronolith_fixes2
+    fix: Activesync: Address cases when 'airsyncbasebody' or 'airsyncbaseattachments' properties are missing
+    Merge pull request #21 from amulet1/kronolith_fixes
+    fix: Various fixes in lib/Event.php  * add missing parentheses when calling functions  * fix wrong single quotes  * initialize $response_code and $part_type properly  * correct some undefined variables
+    Merge pull request #20 from amulet1/fix_undefined_icalendar
+    fix: Correct config name for caldav events backend
+    Merge pull request #19 from amulet1/autoload_renderer
+    fix: Modify VarRenderer class name to facilitate autoloading
+    Merge pull request #18 from jcdelepine/FRAMEWORK_6_0
+    Update kronolith.po
+    meta: update translator list and correct email address
+    Merge pull request #16 from amulet1/fix-serialize
+    Merge pull request #15 from jcdelepine/update-fr-translation-kronolith
+    [fix] Attendee.php: Call unserialize() to fix issue with wrong data supplied to __unserialize()
+    feat: Update French translation
+    fix: Remove redundant getInfo() method from Form_Type_KronolithTags class
 5.0.0-alpha9:
   api: 5.0.0-alpha1
   state:
