@@ -11,13 +11,13 @@ class Kronolith_Factory_Geo extends Horde_Core_Factory_Injector
     /**
      * Return the driver instance.
      *
-     * @return Kronolith_Storage
-     * @throws Kronolith_Exception
+     * @return Kronolith_Geo_Base
      */
     public function create(Horde_Injector $injector)
     {
         if (empty($GLOBALS['conf']['maps']['geodriver'])) {
-            throw new Kronolith_Exception('Geospatial support not configured.');
+            // Return null driver when geolocation is not configured
+            return new Kronolith_Geo_Null();
         }
 
         $class = 'Kronolith_Geo_' . $GLOBALS['conf']['maps']['geodriver'];
