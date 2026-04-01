@@ -13,7 +13,6 @@
      documentation in UPGRADING.&lt;/strong&gt;">true</configboolean>
     </configsection>
    </case>
-   <case name="kolab" desc="IMAP/Kolab" />
   </configswitch>
  </configsection>
 
@@ -55,19 +54,6 @@
    <case name="sql" desc="SQL">
     <configsection name="params">
      <configsql switchname="driverconfig"/>
-    </configsection>
-   </case>
-   <case name="kolab" desc="Kolab">
-    <configsection name="freebusy">
-     <configenum name="protocol" desc="Protocol to use for accessing the
-     Kolab server's free/busy information">
-      <values>
-       <value>https</value>
-       <value>http</value>
-      </values>
-     </configenum>
-     <configinteger name="port" desc="Port to use for accessing the
-     Kolab server's free/busy information">443</configinteger>
     </configsection>
    </case>
   </configswitch>
