@@ -15,6 +15,7 @@
  */
 
 use Horde\Backup;
+use Horde\Util\Variables;
 use Sabre\CalDAV;
 
 /* Determine the base directories. */
@@ -747,7 +748,7 @@ class Kronolith_Application extends Horde_Registry_Application
     /**
      * @throws Kronolith_Exception
      */
-    public function download(Horde_Variables $vars)
+    public function download(Variables|Horde_Variables $vars)
     {
         global $display_calendars, $injector;
 
