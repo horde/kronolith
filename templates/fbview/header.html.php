@@ -1,5 +1,5 @@
 <div class="header" style="text-align:center">
- <tag:title />
+ <?php echo $title ?>
 </div>
 <br />
 <div class="fbgrid">

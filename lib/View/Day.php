@@ -247,10 +247,9 @@ class Kronolith_View_Day extends Kronolith_Day
             $rows[] = ['row' => $row, 'slot' => $newEventUrl];
         }
 
-        $template = $GLOBALS['injector']->createInstance('Horde_Template');
-        $template->set('rows', $rows);
-        $template->set('show_slots', true, true);
-        echo $template->fetch(KRONOLITH_TEMPLATES . '/day/rows.html')
+        $view = new Horde_View(['templatePath' => KRONOLITH_TEMPLATES . '/day']);
+        $view->rows = $rows;
+        echo $view->render('rows')
             . '</tbody></table>';
     }
 

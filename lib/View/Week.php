@@ -306,10 +306,9 @@ class Kronolith_View_Week
             $rows[] = ['row' => $row, 'slot' => $time];
         }
 
-        $template = $GLOBALS['injector']->createInstance('Horde_Template');
-        $template->set('row_height', round(20 / $this->slotsPerHour));
-        $template->set('rows', $rows);
-        echo $template->fetch(KRONOLITH_TEMPLATES . '/day/rows.html')
+        $view = new Horde_View(['templatePath' => KRONOLITH_TEMPLATES . '/day']);
+        $view->rows = $rows;
+        echo $view->render('rows')
             . '</tbody></table>';
     }
 

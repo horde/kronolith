@@ -23,31 +23,30 @@ class Kronolith_Prefs_Special_DefaultAlarm implements Horde_Core_Prefs_Ui_Specia
      */
     public function display(Horde_Core_Prefs_Ui $ui)
     {
-        global $injector, $prefs;
+        global $prefs;
 
-        $t = $injector->createInstance('Horde_Template');
-        $t->setOption('gettext', true);
+        $view = new Horde_View(['templatePath' => KRONOLITH_TEMPLATES . '/prefs']);
 
         if ($alarm_value = $prefs->getValue('default_alarm')) {
             if ($alarm_value % 10080 == 0) {
                 $alarm_value /= 10080;
-                $t->set('week', true);
+                $view->week = true;
             } elseif ($alarm_value % 1440 == 0) {
                 $alarm_value /= 1440;
-                $t->set('day', true);
+                $view->day = true;
             } elseif ($alarm_value % 60 == 0) {
                 $alarm_value /= 60;
-                $t->set('hour', true);
+                $view->hour = true;
             } else {
-                $t->set('minute', true);
+                $view->minute = true;
             }
         } else {
-            $t->set('minute', true);
+            $view->minute = true;
         }
 
-        $t->set('alarm_value', intval($alarm_value));
+        $view->alarm_value = intval($alarm_value);
 
-        return $t->fetch(KRONOLITH_TEMPLATES . '/prefs/defaultalarm.html');
+        return $view->render('defaultalarm');
     }
 
     /**
