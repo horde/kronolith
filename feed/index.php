@@ -119,18 +119,18 @@ $identity = $injector->getInstance('Horde_Core_Factory_Identity')->create($owner
 $history = $injector->getInstance('Horde_History');
 $now = new Horde_Date(time());
 
-$template = $injector->createInstance('Horde_Template');
-$template->set('updated', $now->format(DATE_ATOM));
-$template->set('kronolith_name', 'Kronolith');
-$template->set('kronolith_version', $registry->getVersion());
-$template->set('kronolith_uri', 'http://www.horde.org/kronolith/');
-$template->set('kronolith_icon', Horde::url(Horde_Themes::img('kronolith.png'), true, -1));
-$template->set('xsl', Horde_Themes::getFeedXsl());
-$template->set('calendar_name', htmlspecialchars($share->get('name')));
-$template->set('calendar_desc', htmlspecialchars($share->get('desc')), true);
-$template->set('calendar_owner', htmlspecialchars($identity->getValue('fullname')));
-$template->set('calendar_email', htmlspecialchars($identity->getValue('from_addr')), true);
-$template->set('self_url', $self_url);
+$view = new Horde_View(['templatePath' => KRONOLITH_TEMPLATES . '/feeds']);
+$view->updated = $now->format(DATE_ATOM);
+$view->kronolith_name = 'Kronolith';
+$view->kronolith_version = $registry->getVersion();
+$view->kronolith_uri = 'http://www.horde.org/kronolith/';
+$view->kronolith_icon = Horde::url(Horde_Themes::img('kronolith.png'), true, -1);
+$view->xsl = Horde_Themes::getFeedXsl();
+$view->calendar_name = htmlspecialchars($share->get('name'));
+$view->calendar_desc = htmlspecialchars($share->get('desc'));
+$view->calendar_owner = htmlspecialchars($identity->getValue('fullname'));
+$view->calendar_email = htmlspecialchars($identity->getValue('from_addr'));
+$view->self_url = $self_url;
 
 $twentyFour = $prefs->getValue('twentyFor');
 $entries = [];
@@ -173,7 +173,7 @@ foreach ($events as $date => $day_events) {
         $entries[$id . $date]['modified'] = $modified->format(DATE_ATOM);
     }
 }
-$template->set('entries', $entries, true);
+$view->entries = $entries;
 
 $browser->downloadHeaders($calendar . '.xml', 'text/xml', true);
-echo $template->fetch(KRONOLITH_TEMPLATES . '/feeds/' . $feed_type . '.xml');
+echo $view->render($feed_type . '.xml');

@@ -82,6 +82,8 @@ abstract class Kronolith_FreeBusy_View
 
         $this->_render($day);
 
+        $view = new Horde_View(['templatePath' => KRONOLITH_TEMPLATES . '/fbview']);
+
         $vCal = new Horde_Icalendar();
 
         /* Required members */
@@ -109,10 +111,7 @@ abstract class Kronolith_FreeBusy_View
         $optimal->merge($required, false);
         $optimal->merge($optional);
 
-        $template = $GLOBALS['injector']->createInstance('Horde_Template');
-        $template->set('title', $this->_title());
-
-        $html = $template->fetch(KRONOLITH_TEMPLATES . '/fbview/header.html');
+        $html = $view->render('header', ['title' => $this->_title()]);
 
         $hours_html = $this->_hours();
 
@@ -126,19 +125,19 @@ abstract class Kronolith_FreeBusy_View
             $rows = '';
             foreach ($this->_requiredMembers as $member) {
                 $member->simplify();
-                $blocks = $this->_getBlocks($member, $member->getBusyPeriods(), 'busyblock.html', _("Busy"));
-                $template = $GLOBALS['injector']->createInstance('Horde_Template');
-                $template->set('blocks', $blocks);
-                $template->set('name', htmlspecialchars($member->getName()));
-                $rows .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/row.html');
+                $blocks = $this->_getBlocks($view, $member, $member->getBusyPeriods(), 'busyblock', _("Busy"));
+                $rows .= $view->renderPartial('row', ['locals' => [
+                    'blocks' => $blocks,
+                    'name' => htmlspecialchars($member->getName()),
+                ]]);
             }
 
-            $template = $GLOBALS['injector']->createInstance('Horde_Template');
-            $template->set('title', _("Required Attendees"));
-            $template->set('rows', $rows);
-            $template->set('span', count($this->_timeBlocks));
-            $template->set('hours', $hours_html);
-            $html .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/section.html');
+            $html .= $view->render('section', [
+                'title' => _("Required Attendees"),
+                'rows' => $rows,
+                'span' => count($this->_timeBlocks),
+                'hours' => $hours_html,
+            ]);
         }
 
         // Optional to attend.
@@ -146,96 +145,93 @@ abstract class Kronolith_FreeBusy_View
             $rows = '';
             foreach ($this->_optionalMembers as $member) {
                 $member->simplify();
-                $blocks = $this->_getBlocks($member, $member->getBusyPeriods(), 'busyblock.html', _("Busy"));
-                $template = $GLOBALS['injector']->createInstance('Horde_Template');
-                $template->set('blocks', $blocks);
-                $template->set('name', htmlspecialchars($member->getName()));
-                $rows .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/row.html');
+                $blocks = $this->_getBlocks($view, $member, $member->getBusyPeriods(), 'busyblock', _("Busy"));
+                $rows .= $view->renderPartial('row', ['locals' => [
+                    'blocks' => $blocks,
+                    'name' => htmlspecialchars($member->getName()),
+                ]]);
             }
 
-            $template = $GLOBALS['injector']->createInstance('Horde_Template');
-            $template->set('title', _("Optional Attendees"));
-            $template->set('rows', $rows);
-            $template->set('span', count($this->_timeBlocks));
-            $template->set('hours', $hours_html);
-            $html .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/section.html');
+            $html .= $view->render('section', [
+                'title' => _("Optional Attendees"),
+                'rows' => $rows,
+                'span' => count($this->_timeBlocks),
+                'hours' => $hours_html,
+            ]);
         }
 
         // Resources
         if (count($this->_requiredResourceMembers) > 0 || count($this->_optionalResourceMembers) > 0) {
-            $template = $GLOBALS['injector']->createInstance('Horde_Template');
             $rows = '';
             foreach ($this->_requiredResourceMembers as $member) {
                 $member->simplify();
-                $blocks = $this->_getBlocks($member, $member->getBusyPeriods(), 'busyblock.html', _("Busy"));
-                $template = $GLOBALS['injector']->createInstance('Horde_Template');
-                $template->set('blocks', $blocks);
-                $template->set('name', htmlspecialchars($member->getName()));
-                $rows .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/row.html');
+                $blocks = $this->_getBlocks($view, $member, $member->getBusyPeriods(), 'busyblock', _("Busy"));
+                $rows .= $view->renderPartial('row', ['locals' => [
+                    'blocks' => $blocks,
+                    'name' => htmlspecialchars($member->getName()),
+                ]]);
             }
             foreach ($this->_optionalResourceMembers as $member) {
                 $member->simplify();
-                $blocks = $this->_getBlocks($member, $member->getBusyPeriods(), 'busyblock.html', _("Busy"));
-                $template = $GLOBALS['injector']->createInstance('Horde_Template');
-                $template->set('blocks', $blocks);
-                $template->set('name', htmlspecialchars($member->getName()));
-                $rows .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/row.html');
+                $blocks = $this->_getBlocks($view, $member, $member->getBusyPeriods(), 'busyblock', _("Busy"));
+                $rows .= $view->renderPartial('row', ['locals' => [
+                    'blocks' => $blocks,
+                    'name' => htmlspecialchars($member->getName()),
+                ]]);
             }
-            $template = $GLOBALS['injector']->createInstance('Horde_Template');
-            $template->set('title', _("Required Resources"));
-            $template->set('rows', $rows);
-            $template->set('span', count($this->_timeBlocks));
-            $template->set('hours', $hours_html);
-            $html .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/section.html');
+            $html .= $view->render('section', [
+                'title' => _("Required Resources"),
+                'rows' => $rows,
+                'span' => count($this->_timeBlocks),
+                'hours' => $hours_html,
+            ]);
         }
 
         // Possible meeting times.
         $optimal->setAttribute('ORGANIZER', _("All Attendees"));
         $blocks = $this->_getBlocks(
+            $view,
             $optimal,
             $optimal->getFreePeriods($this->_start->timestamp(), $this->_end->timestamp()),
-            'meetingblock.html',
+            'meetingblock',
             _("All Attendees")
         );
 
-        $template = $GLOBALS['injector']->createInstance('Horde_Template');
-        $template->set('name', _("All Attendees"));
-        $template->set('blocks', $blocks);
-        $rows = $template->fetch(KRONOLITH_TEMPLATES . '/fbview/row.html');
+        $rows = $view->renderPartial('row', ['locals' => [
+            'name' => _("All Attendees"),
+            'blocks' => $blocks,
+        ]]);
 
         // Possible meeting times.
         $required->setAttribute('ORGANIZER', _("Required Attendees"));
         $blocks = $this->_getBlocks(
+            $view,
             $required,
             $required->getFreePeriods($this->_start->timestamp(), $this->_end->timestamp()),
-            'meetingblock.html',
+            'meetingblock',
             _("Required Attendees")
         );
 
-        $template = $GLOBALS['injector']->createInstance('Horde_Template');
-        $template->set('name', _("Required Attendees"));
-        $template->set('blocks', $blocks);
-        $rows .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/row.html');
+        $rows .= $view->renderPartial('row', ['locals' => [
+            'name' => _("Required Attendees"),
+            'blocks' => $blocks,
+        ]]);
 
         // Reset locale.
         setlocale(LC_NUMERIC, $lc);
 
-        $template = $GLOBALS['injector']->createInstance('Horde_Template');
-        $template->set('rows', $rows);
-        $template->set('title', _("Overview"));
-        $template->set('span', count($this->_timeBlocks));
-        $template->set('hours', $hours_html);
-        $html .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/section.html');
+        $html .= $view->render('section', [
+            'rows' => $rows,
+            'title' => _("Overview"),
+            'span' => count($this->_timeBlocks),
+            'hours' => $hours_html,
+        ]);
 
-        $template = $GLOBALS['injector']->createInstance('Horde_Template');
+        $legend = '';
         if ($prefs->getValue('show_fb_legend')) {
-            $template->setOption('gettext', true);
-            $template->set('span', count($this->_timeBlocks));
-            $template->set('legend', $template->fetch(KRONOLITH_TEMPLATES . '/fbview/legend.html'));
-        } else {
-            $template->set('legend', '');
+            $legend = $view->render('legend', ['span' => count($this->_timeBlocks)]);
         }
-        $html .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/footer.html');
+        $html .= $view->render('footer', ['legend' => $legend]);
 
         return $html;
     }
@@ -290,18 +286,16 @@ abstract class Kronolith_FreeBusy_View
     /**
      * Render the blocks
      *
+     * @param Horde_View $view              View instance for rendering
      * @param Horde_Icalendar_Vfreebusy $member  Member's freebusy info
      * @param array $periods                     Free periods
-     * @param string $blockfile                  Template file to use for blocks
+     * @param string $blockName                  Partial template name (e.g. 'busyblock')
      * @param string $label                      Label to use
      *
      * @return string  The block html
      */
-    protected function _getBlocks($member, $periods, $blockfile, $label)
+    protected function _getBlocks(Horde_View $view, $member, $periods, $blockName, $label)
     {
-        $template = $GLOBALS['injector']->createInstance('Horde_Template');
-        $template->set('label', $label);
-
         reset($periods);
         [$periodStart, $periodEnd] = each($periods);
 
@@ -313,7 +307,7 @@ abstract class Kronolith_FreeBusy_View
             $end = $span[1]->timestamp();
             if ($member->getStart() > $start
                 || $member->getEnd() < $end) {
-                $blocks .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/unknownblock.html');
+                $blocks .= $view->renderPartial('unknownblock');
                 continue;
             }
 
@@ -332,12 +326,13 @@ abstract class Kronolith_FreeBusy_View
                 $left = ($l_start - $start) / $plen;
                 $width = ($l_end - $l_start) / $plen;
 
-                $template->set('left', $left . '%');
-                $template->set('width', $width . '%');
-
-                $blocks .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/' . $blockfile);
+                $blocks .= $view->renderPartial($blockName, ['locals' => [
+                    'left' => $left . '%',
+                    'width' => $width . '%',
+                    'label' => $label,
+                ]]);
             } else {
-                $blocks .= $template->fetch(KRONOLITH_TEMPLATES . '/fbview/emptyblock.html');
+                $blocks .= $view->renderPartial('emptyblock');
             }
         }
 
