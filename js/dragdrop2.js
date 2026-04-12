@@ -124,7 +124,7 @@ var DragDrop = {
             }
 
             this.drags.set(obj.element.identify(), obj);
-            obj.element.addClassName('DragElt');
+            obj.element.classList.add('DragElt');
         },
 
         unregister: function(obj)
@@ -134,12 +134,12 @@ var DragDrop = {
             }
 
             this.drags.unset(obj.element.identify());
-            obj.element.removeClassName('DragElt');
+            obj.element.classList.remove('DragElt');
         },
 
         getDrag: function(el)
         {
-            return this.drags.get(Object.isElement(el) ? $(el).identify() : el);
+            return this.drags.get(el instanceof HTMLElement ? $(el).identify() : el);
         },
 
         activate: function(drag)
@@ -185,7 +185,7 @@ var DragDrop = {
         register: function(obj)
         {
             this.drops.set(obj.element.identify(), obj);
-            obj.element.addClassName('DropElt');
+            obj.element.classList.add('DropElt');
         },
 
         unregister: function(obj)
@@ -195,12 +195,12 @@ var DragDrop = {
             }
 
             this.drops.unset(obj.element.identify());
-            obj.element.removeClassName('DropElt');
+            obj.element.classList.remove('DropElt');
         },
 
         getDrop: function(el)
         {
-            return this.drops.get(Object.isElement(el) ? $(el).identify() : el);
+            return this.drops.get(el instanceof HTMLElement ? $(el).identify() : el);
         }
 
     },
@@ -224,7 +224,7 @@ Drag = Class.create({
         this.dragevent = null;
         this.element = $(el);
         this.ghostOffset = [ 0, 0 ];
-        this.options = Object.extend({
+        this.options = Object.assign({
             caption: '',
             classname: 'drag',
             constraint: null,
@@ -242,15 +242,7 @@ Drag = Class.create({
         DragDrop.Drags.register(this);
 
         // Disable text selection.
-        // See: http://ajaxcookbook.org/disable-text-selection/
-        // Stopping the event on mousedown works on all browsers, but avoid
-        // that if possible because it will prevent any event handlers further
-        // up the DOM tree from firing.
-        if (Prototype.Browser.IE) {
-            this.element.observe('selectstart', Event.stop);
-        } else if (Prototype.Browser.Gecko) {
-            this.element.setStyle({ MozUserSelect: 'none' });
-        }
+        this.element.style.userSelect = 'none';
     },
 
     destroy: function()
@@ -294,11 +286,7 @@ Drag = Class.create({
                 : this.element.parentNode.getDimensions();
         }
 
-        // Stop event to prevent text selection. IE and Gecko are handled in
-        // initialize().
-        if (!Prototype.Browser.IE && !Prototype.Browser.Gecko) {
-            e.stop();
-        }
+        // Text selection prevented by user-select: none in initialize().
     },
 
     _mouseMove: function(e)
@@ -471,7 +459,7 @@ Drag = Class.create({
             elt = this._findElement(e);
 
         /* elt will be null if we drag off the browser window. */
-        if (!Object.isElement(elt)) {
+        if (!(elt instanceof HTMLElement)) {
             return;
         }
 
@@ -485,7 +473,7 @@ Drag = Class.create({
         /* Do mouseover/mouseout-like detection here. Saves on observe calls
          * and handles case where mouse moves over scrollbars. */
         if (DragDrop.Drops.drops.size()) {
-            if (!elt.hasClassName('DropElt')) {
+            if (!elt.classList.contains('DropElt')) {
                 elt = elt.up('.DropElt');
             }
 
@@ -524,7 +512,7 @@ Drag = Class.create({
             if (!d_cap) {
                 return;
             }
-            caption = Object.isFunction(d_cap) ? d_cap(d.element, this.element, e) : d_cap;
+            caption = typeof d_cap === 'function' ? d_cap(d.element, this.element, e) : d_cap;
             if (caption && d.options.hoverclass) {
                 cname = d.options.hoverclass;
             }
@@ -532,13 +520,13 @@ Drag = Class.create({
 
         if (!caption) {
             c_opt = this.options.caption;
-            caption = Object.isFunction(c_opt) ? c_opt(this.element) : c_opt;
+            caption = typeof c_opt === 'function' ? c_opt(this.element) : c_opt;
         }
 
         if (caption != this.lastcaption) {
             this.lastcaption = caption;
             div.update(caption).writeAttribute({ className: cname || this.options.classname });
-            if (caption.empty()) {
+            if (caption === '') {
                 div.hide();
             }
         }
@@ -734,7 +722,7 @@ Drop = Class.create({
     initialize: function(el)
     {
         this.element = $(el);
-        this.options = Object.extend({
+        this.options = Object.assign({
             accept: [],
             caption: '',
             hoverclass: 'dragdrop',
