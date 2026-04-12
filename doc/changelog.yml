@@ -1,4 +1,27 @@
 ---
+5.0.0-alpha11:
+  api: 5.0.0-alpha11
+  state:
+    release: alpha
+    api: alpha
+  date: 2026-04-12
+  license:
+    identifier: GPL-2.0-only
+    uri: https://spdx.org/licenses/GPL-2.0-only.html
+  notes: |-
+    Add default case to event status handling
+    Merge pull request #29 from horde/feat/migrate-horde-template-to-view
+    feat: Migrate remaining Horde_Template usages to Horde_View
+    fix: More defensive code when trying to drop tables
+    docs: Clarify where to put local overrides
+    fix: Accept both styles of Horde Variables
+    Merge pull request #28 from horde/fix/geo-null-driver-circular-dependency
+    feat: Null Driver instead of exception when no geo driver is configured
+    feat(kolab)!: Remove Kolab drivers
+    feat(kolab)!: Remove Kolab related config options
+    fix: Commit metadata after components mishap.
+    Merge pull request #26 from jcdelepine/fix/convert-to-utc-zero-dates
+    Fix crash on zero dates in kronolith-convert-to-utc
 5.0.0-alpha10:
   api: 5.0.0-alpha10
   state:
