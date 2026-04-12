@@ -34,31 +34,31 @@ var KronolithEdit =
             return;
         }
 
-        $(prefix + '_year').setValue(e.memo.getFullYear());
-        $(prefix + '_month').setValue(e.memo.getMonth() + 1);
-        $(prefix + '_day').setValue(e.memo.getDate());
+        document.getElementById(prefix + '_year').value = e.memo.getFullYear();
+        document.getElementById(prefix + '_month').value = e.memo.getMonth() + 1;
+        document.getElementById(prefix + '_day').value = e.memo.getDate();
 
         this.doAction(prefix + '_year');
     },
 
     updateWday: function(p)
     {
-        $(p + '_wday').update('(' + Horde_Calendar.fullweekdays[this.getFormDate(p).getDay()] + ')');
+        document.getElementById(p + '_wday').textContent = '(' + Horde_Calendar.fullweekdays[this.getFormDate(p).getDay()] + ')';
     },
 
     getFormDate: function(p)
     {
-        return new Date($F(p + '_year'), $F(p + '_month') - 1, $F(p + '_day'));
+        return new Date(document.getElementById(p + '_year').value, document.getElementById(p + '_month').value - 1, document.getElementById(p + '_day').value);
     },
 
     clickHandler: function(e)
     {
-        if (e.isRightClick()) {
+        if (e.button === 2) {
             return;
         }
 
         var elt = e.element(),
-            id = elt.readAttribute('id');
+            id = elt.getAttribute('id');
 
         switch (id) {
         case 'allday':
@@ -76,9 +76,9 @@ var KronolithEdit =
         case 'attendees_button':
             HordePopup.popup({
                 params: {
-                    startdate: (('000' + $F('start_year')).slice(-4) + ('0' + $F('start_month')).slice(-2) + ('0' + $F('start_day')).slice(-2)),
+                    startdate: (('000' + document.getElementById('start_year').value).slice(-4) + ('0' + document.getElementById('start_month').value).slice(-2) + ('0' + document.getElementById('start_day').value).slice(-2)),
                 },
-                url: elt.readAttribute('href')
+                url: elt.getAttribute('href')
             });
             e.stop();
             break;
@@ -92,9 +92,9 @@ var KronolithEdit =
 
         case 'edit_current':
         case 'edit_future':
-            $('start_year').setValue(parseInt($F('recur_ex').substr(0, 4), 10));
-            $('start_month').selectedIndex = parseInt($F('recur_ex').substr(4, 2), 10) - 1;
-            $('start_day').selectedIndex = parseInt($F('recur_ex').substr(6, 2), 10) - 1;
+            document.getElementById('start_year').value = parseInt(document.getElementById('recur_ex').value.substr(0, 4), 10);
+            document.getElementById('start_month').selectedIndex = parseInt(document.getElementById('recur_ex').value.substr(4, 2), 10) - 1;
+            document.getElementById('start_day').selectedIndex = parseInt(document.getElementById('recur_ex').value.substr(6, 2), 10) - 1;
 
             this.updateWday('start');
             this.updateEndDate();
@@ -122,11 +122,11 @@ var KronolithEdit =
 
         case 'nooverwrite':
         case 'yesoverwrite':
-            if ($F('nooverwrite')) {
-                $('notification_options').hide();
+            if (document.getElementById('nooverwrite').checked) {
+                document.getElementById('notification_options').hidden = true;
             } else {
-                $('notification_options').show();
-                $('yesalarm').setValue(1);
+                document.getElementById('notification_options').hidden = false;
+                document.getElementById('yesalarm').checked = true;
             }
             break;
 
@@ -175,15 +175,15 @@ var KronolithEdit =
             break;
 
         default:
-            if (elt.readAttribute('name') == 'resetButton') {
-                $('eventform').reset();
+            if (elt.getAttribute('name') == 'resetButton') {
+                document.getElementById('eventform').reset();
                 this.updateWday('start');
                 this.updateWday('end');
             } else {
                 if (!elt.match('TD')) {
                     elt = elt.up('TD');
                 }
-                if (elt && elt.hasClassName('toggle')) {
+                if (elt && elt.classList.contains('toggle')) {
                     elt.down().toggle().next().toggle();
                     $('section' + elt.identify().substr(6)).toggle();
                 }
@@ -241,33 +241,33 @@ var KronolithEdit =
 
         switch (id) {
         case 'allday':
-            if ($F('allday')) {
+            if (document.getElementById('allday').checked) {
                 if (KronolithVar.twentyFour) {
-                    $('start_hour').selectedIndex = 0;
+                    document.getElementById('start_hour').selectedIndex = 0;
                 } else {
-                    $('start_hour').selectedIndex = 11;
-                    $('am').setValue(1);
+                    document.getElementById('start_hour').selectedIndex = 11;
+                    document.getElementById('am').checked = true;
                 }
-                $('start_min').setValue(0);
-                $('dur_day').setValue(1);
-                $('dur_hour').setValue(0);
-                $('dur_min').setValue(0);
+                document.getElementById('start_min').value = 0;
+                document.getElementById('dur_day').value = 1;
+                document.getElementById('dur_hour').value = 0;
+                document.getElementById('dur_min').value = 0;
             }
             this.updateEndDate();
-            $('duration').setValue(1);
+            document.getElementById('duration').value = 1;
             break;
 
         case 'am':
-            $('allday').setValue(0);
+            document.getElementById('allday').checked = false;
             this.updateEndDate();
             break;
 
         case 'dur_day':
         case 'dur_hour':
         case 'dur_min':
-            $('allday').setValue(0);
+            document.getElementById('allday').checked = false;
             this.updateEndDate();
-            $('end').setValue(1);
+            document.getElementById('end').value = 1;
             break;
 
         case 'eam':
@@ -283,31 +283,31 @@ var KronolithEdit =
         case 'end_hour':
         case 'end_min':
         case 'pm':
-            $('end').setValue(1);
+            document.getElementById('end').value = 1;
 
-            startHour = this.convertTo24Hour(parseInt($F('start_hour'), 10), 'pm');
-            endHour = this.convertTo24Hour(parseInt($F('end_hour'), 10), 'epm');
+            startHour = this.convertTo24Hour(parseInt(document.getElementById('start_hour').value, 10), 'pm');
+            endHour = this.convertTo24Hour(parseInt(document.getElementById('end_hour').value, 10), 'epm');
             startDate = Date.UTC(
-                $F('start_year'),
-                $F('start_month') - 1,
-                $F('start_day'),
+                document.getElementById('start_year').value,
+                document.getElementById('start_month').value - 1,
+                document.getElementById('start_day').value,
                 startHour,
-                $F('start_min')
+                document.getElementById('start_min').value
             );
             endDate = Date.UTC(
-                $F('end_year'),
-                $F('end_month') - 1,
-                $F('end_day'),
+                document.getElementById('end_year').value,
+                document.getElementById('end_month').value - 1,
+                document.getElementById('end_day').value,
                 endHour,
-                $F('end_min')
+                document.getElementById('end_min').value
             );
 
             if (endDate < startDate) {
                 if (KronolithVar.twentyFour &&
-                    $F('start_year') == $F('end_year') &&
-                    $F('start_month') == $F('end_month') &&
-                    $F('start_day') == $F('end_day') &&
-                    !$F('pm') && !$F('epm')) {
+                    document.getElementById('start_year').value == document.getElementById('end_year').value &&
+                    document.getElementById('start_month').value == document.getElementById('end_month').value &&
+                    document.getElementById('start_day').value == document.getElementById('end_day').value &&
+                    !document.getElementById('pm').checked && !document.getElementById('epm').checked) {
                     /* If the end hour is marked as the (default) AM, and
                      * the start hour is also AM, automatically default
                      * the end hour to PM if the date is otherwise the
@@ -315,16 +315,16 @@ var KronolithEdit =
                      * (for example), instead of throwing an error. */
 
                     // Toggle the end date to PM.
-                    $('epm').checked = true;
+                    document.getElementById('epm').checked = true;
 
                     // Recalculate end time
-                    endHour = this.convertTo24Hour(parseInt($F('end_hour'), 10), 'epm');
+                    endHour = this.convertTo24Hour(parseInt(document.getElementById('end_hour').value, 10), 'epm');
                     endDate = Date.UTC(
-                        $F('end_year'),
-                        $F('end_month') - 1,
-                        $F('end_day'),
+                        document.getElementById('end_year').value,
+                        document.getElementById('end_month').value - 1,
+                        document.getElementById('end_day').value,
                         endHour,
-                        $F('end_min')
+                        document.getElementById('end_min').value
                     );
                 } else {
                     alert(KronolithText.enddate_error);
@@ -334,7 +334,7 @@ var KronolithEdit =
             }
 
             duration = (endDate - startDate) / 1000;
-            $('dur_day').setValue(Math.floor(duration / 86400));
+            document.getElementById('dur_day').value = Math.floor(duration / 86400);
             duration %= 86400;
 
             durHour = Math.floor(duration / 3600);
@@ -342,9 +342,9 @@ var KronolithEdit =
 
             durMin = Math.floor(duration / 60 / 5);
 
-            $('dur_hour').selectedIndex = durHour;
-            $('dur_min').selectedIndex = durMin;
-            $('allday').setValue(false);
+            document.getElementById('dur_hour').selectedIndex = durHour;
+            document.getElementById('dur_min').selectedIndex = durMin;
+            document.getElementById('allday').checked = false;
 
             if (failed) {
                 this.updateEndDate();
@@ -354,7 +354,7 @@ var KronolithEdit =
         case 'recur_end_year':
         case 'recur_end_month':
         case 'recur_end_day':
-            $('recur_end_type').setValue(1);
+            document.getElementById('recur_end_type').value = 1;
             this.updateWday('recur_end');
             break;
 
@@ -398,7 +398,7 @@ var KronolithEdit =
 
         case 'start_hour':
         case 'start_min':
-            $('allday').setValue(0);
+            document.getElementById('allday').checked = false;
             this.updateEndDate();
             break;
         }
@@ -407,28 +407,28 @@ var KronolithEdit =
     updateEndDate: function()
     {
         var endHour, endYear, msecs,
-            startHour = this.convertTo24Hour(parseInt($F('start_hour'), 10), 'pm'),
+            startHour = this.convertTo24Hour(parseInt(document.getElementById('start_hour').value, 10), 'pm'),
             startDate = new Date(
-                $F('start_year'),
-                $F('start_month') - 1,
-                $F('start_day'),
+                document.getElementById('start_year').value,
+                document.getElementById('start_month').value - 1,
+                document.getElementById('start_day').value,
                 startHour,
-                $F('start_min')
+                document.getElementById('start_min').value
             ),
             endDate = new Date(),
-            minutes = $F('dur_day') * 1440;
+            minutes = document.getElementById('dur_day').value * 1440;
 
-        minutes += $F('dur_hour') * 60;
-        minutes += parseInt($F('dur_min'));
+        minutes += document.getElementById('dur_hour').value * 60;
+        minutes += parseInt(document.getElementById('dur_min').value);
         msecs = minutes * 60000;
 
         endDate.setTime(startDate.getTime() + msecs);
 
         endYear = endDate.getFullYear();
 
-        $('end_year').setValue(endYear);
-        $('end_month').selectedIndex = endDate.getMonth();
-        $('end_day').selectedIndex = endDate.getDate() - 1;
+        document.getElementById('end_year').value = endYear;
+        document.getElementById('end_month').selectedIndex = endDate.getMonth();
+        document.getElementById('end_day').selectedIndex = endDate.getDate() - 1;
 
         endHour = endDate.getHours();
         if (!KronolithVar.twentyFour) {
@@ -436,18 +436,18 @@ var KronolithEdit =
                 if (endHour === 0) {
                     endHour = 12;
                 }
-                $('eam').setValue(1);
+                document.getElementById('eam').checked = true;
             } else {
                 if (endHour > 12) {
                     endHour -= 12;
                 }
-                $('epm').setValue(1);
+                document.getElementById('epm').checked = true;
             }
             endHour -= 1;
        }
 
-        $('end_hour').selectedIndex = endHour;
-        $('end_min').selectedIndex = endDate.getMinutes() / 5;
+        document.getElementById('end_hour').selectedIndex = endHour;
+        document.getElementById('end_min').selectedIndex = endDate.getMinutes() / 5;
 
         this.updateWday('end');
     },
@@ -456,7 +456,7 @@ var KronolithEdit =
     convertTo24Hour: function(val, elt)
     {
         if (!KronolithVar.twentyFour) {
-            if ($F(elt)) {
+            if (document.getElementById(elt).checked) {
                 if (val != 12) {
                     val += 12;
                 }
@@ -470,8 +470,8 @@ var KronolithEdit =
 
     setInterval: function(elt, id)
     {
-        if (!$F(id)) {
-            $(elt).setValue(1);
+        if (!document.getElementById(id).value) {
+            document.getElementById(elt).value = 1;
         }
 
         switch (id) {
@@ -510,23 +510,23 @@ var KronolithEdit =
     clearFields: function(index)
     {
         if (index != 1) {
-            $('recur_daily_interval').setValue('');
+            document.getElementById('recur_daily_interval').value = '';
         }
         if (index != 2) {
-            $('recur_weekly_interval').setValue('');
+            document.getElementById('recur_weekly_interval').value = '';
             $('recur_weekly_interval').adjacent('.checkbox').invoke('setValue', 0);
         }
         if (index != 3) {
-            $('recur_day_of_month_interval').setValue('');
+            document.getElementById('recur_day_of_month_interval').value = '';
         }
         if (index != 4) {
-            $('recur_week_of_month_interval').setValue('');
+            document.getElementById('recur_week_of_month_interval').value = '';
         }
         if (index != 8) {
-            $('recur_last_week_of_month_interval').setValue('');
+            document.getElementById('recur_last_week_of_month_interval').value = '';
         }
         if (index != 5) {
-            $('recur_yearly_interval').setValue('');
+            document.getElementById('recur_yearly_interval').value = '';
         }
     },
 
@@ -534,14 +534,14 @@ var KronolithEdit =
     {
         this.updateWday('start');
         this.updateWday('end');
-        if ($('recur_end_wday')) {
+        if (document.getElementById('recur_end_wday')) {
             this.updateWday('recur_end');
         }
         $('eventform').observe('click', this.clickHandler.bindAsEventListener(this));
         $('eventform').observe('change', this.changeHandler.bindAsEventListener(this));
         $('eventform').observe('keypress', this.keypressHandler.bindAsEventListener(this));
 
-        $('title').focus();
+        document.getElementById('title').focus();
     }
 
 };
