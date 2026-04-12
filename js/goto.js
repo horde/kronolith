@@ -15,15 +15,19 @@ var KronolithGoto =
 {
     // Variables defined externally: dayurl, monthurl, weekurl, yearurl
 
-    calendarSelect: function(e, type)
+    calendarSelect: function(type, e)
     {
         // Only trigger if this is the goto menu.
-        if (!e.findElement('A.kgotomenu')) {
+        if (!e.target.closest('A.kgotomenu')) {
             return;
         }
 
         var q, url,
-            params = $H({ date: e.memo.getFullYear() + (e.memo.getMonth() + 1).toPaddedString(2) + (e.memo.getDate()).toPaddedString(2) });
+            d = e.detail,
+            dateStr = d.getFullYear() +
+                String(d.getMonth() + 1).padStart(2, '0') +
+                String(d.getDate()).padStart(2, '0'),
+            params = new URLSearchParams({ date: dateStr });
 
         switch (type) {
         case 'day':
@@ -45,24 +49,25 @@ var KronolithGoto =
 
         q = url.indexOf('?');
         if (q != -1) {
-            params.update(url.toQueryParams());
+            var existing = new URLSearchParams(url.substring(q + 1));
+            existing.forEach(function(v, k) { params.set(k, v); });
             url = url.substring(0, q);
         }
 
-        window.location = url + '?' + params.toQueryString();
+        window.location = url + '?' + params.toString();
     },
 
     onDomLoad: function()
     {
-        $('horde-sidebar').down('A.kgotomenu').observe('click', function(e) {
-            Horde_Calendar.open(e.element(), Object.isUndefined(window.KronolithDate) ? new Date() : window.KronolithDate);
+        document.getElementById('horde-sidebar').querySelector('A.kgotomenu').addEventListener('click', function(e) {
+            Horde_Calendar.open(e.target, typeof window.KronolithDate === 'undefined' ? new Date() : window.KronolithDate);
         });
     }
 
 };
 
-document.observe('dom:loaded', KronolithGoto.onDomLoad.bind(KronolithGoto));
-document.observe('Horde_Calendar:select', KronolithGoto.calendarSelect.bindAsEventListener(KronolithGoto, 'day'));
-document.observe('Horde_Calendar:selectMonth', KronolithGoto.calendarSelect.bindAsEventListener(KronolithGoto, 'month'));
-document.observe('Horde_Calendar:selectWeek', KronolithGoto.calendarSelect.bindAsEventListener(KronolithGoto, 'week'));
-document.observe('Horde_Calendar:selectYear', KronolithGoto.calendarSelect.bindAsEventListener(KronolithGoto, 'year'));
+document.addEventListener('DOMContentLoaded', KronolithGoto.onDomLoad.bind(KronolithGoto));
+document.addEventListener('Horde_Calendar:select', KronolithGoto.calendarSelect.bind(KronolithGoto, 'day'));
+document.addEventListener('Horde_Calendar:selectMonth', KronolithGoto.calendarSelect.bind(KronolithGoto, 'month'));
+document.addEventListener('Horde_Calendar:selectWeek', KronolithGoto.calendarSelect.bind(KronolithGoto, 'week'));
+document.addEventListener('Horde_Calendar:selectYear', KronolithGoto.calendarSelect.bind(KronolithGoto, 'year'));

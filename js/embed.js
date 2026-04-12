@@ -1,7 +1,7 @@
-Event.observe(window, 'load', function() {
+window.addEventListener('load', function() {
     var nodeCount = kronolithNodes.length;
     for (var n = 0; n < nodeCount; n++) {
         var j = kronolithNodes[n];
-        $(j).update(kronolith[j]);
+        document.getElementById(j).innerHTML = kronolith[j];
     }
 });

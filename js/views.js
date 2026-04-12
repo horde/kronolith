@@ -3,20 +3,20 @@ var eventTabs = null;
 function ShowTab(tab)
 {
     if (eventTabs === null) {
-        eventTabs = $('page').select('.tabset ul li');
+        eventTabs = Array.from(document.getElementById('page').querySelectorAll('.tabset ul li'));
     }
 
-    eventTabs.each(function(c) {
-        var t = $(c.id.substring(3));
+    eventTabs.forEach(function(c) {
+        var t = document.getElementById(c.id.substring(3));
         if (!t) {
             return;
         }
         if (c.id == 'tab' + tab) {
-            c.addClassName('horde-active');
-            t.show();
+            c.classList.add('horde-active');
+            t.hidden = false;
         } else {
-            c.removeClassName('horde-active');
-            t.hide();
+            c.classList.remove('horde-active');
+            t.hidden = true;
         }
     });
 
