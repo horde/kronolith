@@ -4460,6 +4460,9 @@ abstract class Kronolith_Event
             case Kronolith::STATUS_TENTATIVE:
             case Kronolith::STATUS_FREE:
                 return 'kronolith-event-tentative';
+            
+            default:
+                return '';
         }
     }
 
