@@ -14,103 +14,154 @@
  * Integers should be given literally (without quotes).
  * Boolean values may be true or false (never quotes).
  *
- * Generated from conf.xml on 2026-04-13
+ * Generated from conf.xml on 2026-04-04
  */
+
 // ----------------------------------------------------------------------
 // Calendar Driver Settings
 // ----------------------------------------------------------------------
-// What storage driver should we use? ('sql' = SQL)
+
+// What storage driver should we use?
+// Options:
+//   'sql' - SQL
 $conf['calendar']['driver'] = 'sql';
-// Database connection: 'horde' uses the global Horde DB, 'custom' uses settings below
-// $conf['calendar']['params']['driverconfig'] = 'custom';
-// $conf['calendar']['params']['phptype'] = 'mysqli';
-// $conf['calendar']['params']['hostspec'] = 'localhost';
-// $conf['calendar']['params']['username'] = '';
-// $conf['calendar']['params']['password'] = '';
-// $conf['calendar']['params']['database'] = '';
-// $conf['calendar']['params']['charset'] = 'utf8mb4';
-// $conf['calendar']['params']['ssl'] = false;
-$conf['calendar']['params']['driverconfig'] = 'horde';
-// Store the dates in UTC format? WARNING: if you are upgrading from Kronolith before version 3, you must convert the ol...
+
+// Database configuration
+// Configure your database connection parameters
+/*
+$conf['calendar']['params']['phptype'] = 'mysqli';
+$conf['calendar']['params']['hostspec'] = 'localhost';
+$conf['calendar']['params']['username'] = '';
+$conf['calendar']['params']['password'] = '';
+$conf['calendar']['params']['database'] = '';
+$conf['calendar']['params']['charset'] = 'utf8mb4';
+$conf['calendar']['params']['ssl'] = false;
+*/
+
+// Store the dates in UTC format?      <strong>WARNING: if you are upgrading from Kronolith before version      3, you must convert the old events to UTC before activating this. See the      documentation in UPGRADING.</strong>
 $conf['calendar']['params']['utc'] = true;
+
+
 
 // ----------------------------------------------------------------------
 // CalDAV Driver Settings
 // ----------------------------------------------------------------------
-// What CalDAV storage driver should we use? ('sql' = SQL, 'null' = Do not save extra attributes)
+
+// What CalDAV storage driver should we use?
+// Options:
+//   'sql' - SQL
+//   'null' - Do not save extra attributes
 $conf['caldav']['driver'] = 'sql';
-// Database connection: 'horde' uses the global Horde DB, 'custom' uses settings below
-// $conf['caldav']['params']['driverconfig'] = 'custom';
-// $conf['caldav']['params']['phptype'] = 'mysqli';
-// $conf['caldav']['params']['hostspec'] = 'localhost';
-// $conf['caldav']['params']['username'] = '';
-// $conf['caldav']['params']['password'] = '';
-// $conf['caldav']['params']['database'] = '';
-// $conf['caldav']['params']['charset'] = 'utf8mb4';
-// $conf['caldav']['params']['ssl'] = false;
-$conf['caldav']['params']['driverconfig'] = 'horde';
+
+// Database configuration
+// Configure your database connection parameters
+/*
+$conf['caldav']['params']['phptype'] = 'mysqli';
+$conf['caldav']['params']['hostspec'] = 'localhost';
+$conf['caldav']['params']['username'] = '';
+$conf['caldav']['params']['password'] = '';
+$conf['caldav']['params']['database'] = '';
+$conf['caldav']['params']['charset'] = 'utf8mb4';
+$conf['caldav']['params']['ssl'] = false;
+*/
+
 
 // ----------------------------------------------------------------------
 // Virtual File Storage
 // ----------------------------------------------------------------------
-// VFS storage: 'horde' uses the global Horde VFS config
-// Other options: 'None', 'File', 'Nosql', 'Sql', 'Ssh2'
-// $conf['documents']['type'] = 'File';
-// $conf['documents']['params']['vfsroot'] = '/tmp';
-$conf['documents']['type'] = 'horde';
-// The maximum total size of documents allowed per event (in bytes)? Set to 0 for no limit. [The maximum allowable size ...
+
+// The maximum total size of    documents allowed per event (in bytes)? Set to 0 for no limit. [The    maximum allowable size of any individual attachment is set via the PHP    'upload_max_filesize' parameter; see kronolith/doc/INSTALL]
 $conf['documents']['size_limit'] = 0;
-// The maximum total number of documents allowed per event? Set to 0 for no limit.
+
+// The maximum total number of    documents allowed per event? Set to 0 for no limit.
 $conf['documents']['count_limit'] = 0;
+
 
 // ----------------------------------------------------------------------
 // Free/Busy Driver Settings
 // ----------------------------------------------------------------------
-// Default domain to add to attendee email addresses if none is specified. (optional)
-// $conf['storage']['default_domain'] = '';
-// What free/busy driver should we use? ('sql' = SQL)
+
+// Default domain to add to attendee   email addresses if none is specified.
+$conf['storage']['default_domain'] = '';
+
+// What free/busy driver should we use?
+// Options:
+//   'sql' - SQL
 $conf['storage']['driver'] = 'sql';
-// Database connection: 'horde' uses the global Horde DB, 'custom' uses settings below
-// $conf['storage']['params']['driverconfig'] = 'custom';
-// $conf['storage']['params']['phptype'] = 'mysqli';
-// $conf['storage']['params']['hostspec'] = 'localhost';
-// $conf['storage']['params']['username'] = '';
-// $conf['storage']['params']['password'] = '';
-// $conf['storage']['params']['database'] = '';
-// $conf['storage']['params']['charset'] = 'utf8mb4';
-// $conf['storage']['params']['ssl'] = false;
-$conf['storage']['params']['driverconfig'] = 'horde';
+
+// Database configuration
+// Configure your database connection parameters
+/*
+$conf['storage']['params']['phptype'] = 'mysqli';
+$conf['storage']['params']['hostspec'] = 'localhost';
+$conf['storage']['params']['username'] = '';
+$conf['storage']['params']['password'] = '';
+$conf['storage']['params']['database'] = '';
+$conf['storage']['params']['charset'] = 'utf8mb4';
+$conf['storage']['params']['ssl'] = false;
+*/
+
 
 // ----------------------------------------------------------------------
 // Resource Settings
 // ----------------------------------------------------------------------
+
 // Should resource scheduling be enabled?
 $conf['resources']['enabled'] = true;
+
 
 // ----------------------------------------------------------------------
 // Reminder Settings
 // ----------------------------------------------------------------------
-// Server name from which reminder emails should be sent (optional)
-// $conf['reminder']['server_name'] = '';
-// Email address from which reminder emails should be sent (optional)
-// $conf['reminder']['from_addr'] = '';
+
+// Server name from which reminder    emails should be sent
+$conf['reminder']['server_name'] = '';
+
+// Email address from which reminder    emails should be sent
+$conf['reminder']['from_addr'] = '';
+
 
 // ----------------------------------------------------------------------
 // Share Settings
 // ----------------------------------------------------------------------
-// When a new user is created, his default calendar can be automatically shared with his group(s). Which permissions sho... ('none' = None (no sharing), 'read' = Read-only, 'edit' = Read and write, 'full' = Read, write and delete)
-$conf['autoshare']['shareperms'] = '';
-// Notify users and groups per e-mail if they have been granted access to a shared calendar (or tasklist), or are the ne...
+
+
+// Notify users and groups per e-mail if   they have been granted access to a shared calendar (or tasklist), or are the   new owner of the share?
 $conf['share']['notify'] = false;
+
 
 // ----------------------------------------------------------------------
 // Displaying Holidays
 // ----------------------------------------------------------------------
+
 // Should support for holidays be enabled?
 $conf['holidays']['enable'] = true;
+
 
 // ----------------------------------------------------------------------
 // Menu Settings
 // ----------------------------------------------------------------------
-// Should we display an Import/Export link in the Horde application menus?
+
+// Should we display an Import/Export    link in the Horde application menus?
 $conf['menu']['import_export'] = true;
+
+
+/* CONFIG START. DO NOT CHANGE ANYTHING IN OR AFTER THIS LINE. */
+// $Hash: 30f37b3034fdc3f3ed09549d082d2df1cf65773c
+// $Id$
+$conf['calendar']['params']['driverconfig'] = 'horde';
+$conf['calendar']['params']['utc'] = true;
+$conf['calendar']['driver'] = 'sql';
+$conf['caldav']['params']['driverconfig'] = 'horde';
+$conf['caldav']['driver'] = 'sql';
+$conf['documents']['type'] = 'horde';
+$conf['documents']['size_limit'] = 0;
+$conf['documents']['count_limit'] = 0;
+$conf['storage']['params']['driverconfig'] = 'horde';
+$conf['storage']['driver'] = 'sql';
+$conf['resources']['enabled'] = true;
+$conf['autoshare']['shareperms'] = 'none';
+$conf['share']['notify'] = false;
+$conf['holidays']['enable'] = true;
+$conf['menu']['import_export'] = true;
+/* CONFIG END. DO NOT CHANGE ANYTHING IN OR BEFORE THIS LINE. */
