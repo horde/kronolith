@@ -42,7 +42,7 @@ class Kronolith_Unit_Factory_GeoTest extends TestCase
         // Ensure geodriver is not set
         unset($GLOBALS['conf']['maps']['geodriver']);
 
-        $factory = new Kronolith_Factory_Geo();
+        $factory = new Kronolith_Factory_Geo($this->injector);
         $driver = $factory->create($this->injector);
 
         $this->assertInstanceOf(Kronolith_Geo_Null::class, $driver);
@@ -53,7 +53,7 @@ class Kronolith_Unit_Factory_GeoTest extends TestCase
     {
         $GLOBALS['conf']['maps']['geodriver'] = null;
 
-        $factory = new Kronolith_Factory_Geo();
+        $factory = new Kronolith_Factory_Geo($this->injector);
         $driver = $factory->create($this->injector);
 
         $this->assertInstanceOf(Kronolith_Geo_Null::class, $driver);
@@ -63,7 +63,7 @@ class Kronolith_Unit_Factory_GeoTest extends TestCase
     {
         $GLOBALS['conf']['maps']['geodriver'] = '';
 
-        $factory = new Kronolith_Factory_Geo();
+        $factory = new Kronolith_Factory_Geo($this->injector);
         $driver = $factory->create($this->injector);
 
         $this->assertInstanceOf(Kronolith_Geo_Null::class, $driver);
@@ -77,7 +77,7 @@ class Kronolith_Unit_Factory_GeoTest extends TestCase
         $dbAdapter = $this->createMock(Horde_Db_Adapter::class);
         $this->injector->setInstance('Horde_Db_Adapter', $dbAdapter);
 
-        $factory = new Kronolith_Factory_Geo();
+        $factory = new Kronolith_Factory_Geo($this->injector);
         $driver = $factory->create($this->injector);
 
         $this->assertInstanceOf(Kronolith_Geo_Sql::class, $driver);
@@ -92,7 +92,7 @@ class Kronolith_Unit_Factory_GeoTest extends TestCase
         $dbAdapter = $this->createMock(Horde_Db_Adapter::class);
         $this->injector->setInstance('Horde_Db_Adapter', $dbAdapter);
 
-        $factory = new Kronolith_Factory_Geo();
+        $factory = new Kronolith_Factory_Geo($this->injector);
         $driver = $factory->create($this->injector);
 
         $this->assertInstanceOf(Kronolith_Geo_Mysql::class, $driver);
@@ -121,7 +121,7 @@ class Kronolith_Unit_Factory_GeoTest extends TestCase
         // Create injector WITHOUT database adapter
         $injector = new Horde_Injector(new Horde_Injector_TopLevel());
 
-        $factory = new Kronolith_Factory_Geo();
+        $factory = new Kronolith_Factory_Geo($injector);
 
         // Should not throw exception about missing Horde_Db_Adapter
         $driver = $factory->create($injector);
@@ -131,5 +131,29 @@ class Kronolith_Unit_Factory_GeoTest extends TestCase
         // Verify driver works
         $driver->setLocation('test', ['lat' => 1.0, 'lon' => 2.0]);
         $this->assertNull($driver->getLocation('test'));
+    }
+
+    public function testCreateReturnsNullDriverWhenConfiguredAsStringFalse(): void
+    {
+        // conf.xml generates the string 'false' for the "None" geodriver option
+        $GLOBALS['conf']['maps']['geodriver'] = 'false';
+
+        $factory = new Kronolith_Factory_Geo($this->injector);
+        $driver = $factory->create($this->injector);
+
+        $this->assertInstanceOf(Kronolith_Geo_Null::class, $driver);
+    }
+
+    public function testCreateThrowsExceptionForInvalidDriver(): void
+    {
+        $GLOBALS['conf']['maps']['geodriver'] = 'NonExistentDriver';
+
+        $dbAdapter = $this->createMock(Horde_Db_Adapter::class);
+        $this->injector->setInstance('Horde_Db_Adapter', $dbAdapter);
+
+        $factory = new Kronolith_Factory_Geo($this->injector);
+
+        $this->expectException(Kronolith_Exception::class);
+        $factory->create($this->injector);
     }
 }

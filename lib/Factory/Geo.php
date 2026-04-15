@@ -15,15 +15,20 @@ class Kronolith_Factory_Geo extends Horde_Core_Factory_Injector
      */
     public function create(Horde_Injector $injector)
     {
-        if (empty($GLOBALS['conf']['maps']['geodriver'])) {
-            // Return null driver when geolocation is not configured
+        $geodriver = $GLOBALS['conf']['maps']['geodriver'] ?? '';
+
+        if (empty($geodriver) || $geodriver === 'false') {
             return new Kronolith_Geo_Null();
         }
 
-        $class = 'Kronolith_Geo_' . $GLOBALS['conf']['maps']['geodriver'];
-        $db = $injector->getInstance('Horde_Db_Adapter');
+        $class = 'Kronolith_Geo_' . $geodriver;
 
-        return new $class($db);
+        try {
+            $db = $injector->getInstance('Horde_Db_Adapter');
+            return new $class($db);
+        } catch (\Throwable $e) {
+            throw new Kronolith_Exception($e->getMessage());
+        }
     }
 
 }
