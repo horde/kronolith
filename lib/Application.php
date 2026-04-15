@@ -6,7 +6,7 @@
  * This file defines Horde's core API interface. Other core Horde libraries
  * can interact with Kronolith through this API.
  *
- * Copyright 2010-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2010-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -17,6 +17,7 @@
 use Horde\Backup;
 use Horde\Util\Variables;
 use Sabre\CalDAV;
+use Horde\Util\Util;
 
 /* Determine the base directories. */
 if (!defined('KRONOLITH_BASE')) {
@@ -754,10 +755,10 @@ class Kronolith_Application extends Horde_Registry_Application
 
         switch ($vars->actionID) {
             case 'download_file':
-                $source = Horde_Util::getFormData('source');
-                $key = Horde_Util::getFormData('key');
-                $filename = Horde_Util::getFormData('file');
-                $type = Horde_Util::getFormData('type');
+                $source = Util::getFormData('source');
+                $key = Util::getFormData('key');
+                $filename = Util::getFormData('file');
+                $type = Util::getFormData('type');
 
                 [$driver_type, $calendar] = explode('|', $source);
                 if ($driver_type == 'internal'
@@ -1001,7 +1002,7 @@ class Kronolith_Application extends Horde_Registry_Application
                     $event->created = $modified;
                     $event->modified = $modified;
                 }
-                if ($modified instanceof \Horde_Date) {
+                if ($modified instanceof Horde_Date) {
                     $modified = $modified->toDateTime();
                 }
                 try {
@@ -1055,7 +1056,7 @@ class Kronolith_Application extends Horde_Registry_Application
             $event->created = $modified;
             $event->modified = $modified;
         }
-        if ($modified instanceof \Horde_Date) {
+        if ($modified instanceof Horde_Date) {
             $modified = $modified->toDateTime();
         }
         $share = $GLOBALS['injector']

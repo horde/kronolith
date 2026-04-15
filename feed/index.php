@@ -1,7 +1,9 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 2008-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2008-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -25,8 +27,8 @@ function _no_access($status, $reason, $body)
 require_once __DIR__ . '/../lib/Application.php';
 Horde_Registry::appInit('kronolith', ['authentication' => 'none', 'session_control' => 'readonly']);
 
-$calendar = Horde_Util::getFormData('c');
-$endDate = Horde_Util::getFormData('e');
+$calendar = Util::getFormData('c');
+$endDate = Util::getFormData('e');
 
 try {
     $share = $injector->getInstance('Kronolith_Shares')->getShare($calendar);
@@ -78,7 +80,7 @@ if (!$share->hasPermission($GLOBALS['registry']->getAuth(), Horde_Perms::READ)) 
     }
 }
 
-$feed_type = basename(Horde_Util::getFormData('type'));
+$feed_type = basename(Util::getFormData('type'));
 if (empty($feed_type)) {
     // If not specified, default to Atom.
     $feed_type = 'atom';

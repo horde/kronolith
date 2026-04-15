@@ -13,4 +13,4 @@ foreach ($candidates as $candidate) {
         require_once $candidate;
     }
 }
-\Horde_Test_Bootstrap::bootstrap(dirname(__FILE__));
+Horde_Test_Bootstrap::bootstrap(dirname(__FILE__));

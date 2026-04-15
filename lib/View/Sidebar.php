@@ -6,7 +6,7 @@
  * This is for the dynamic view. For traditional the view, see
  * Kronolith_Application::sidebar().
  *
- * Copyright 2012-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2012-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.

@@ -56,7 +56,7 @@ function switchDateView(view, date)
 <?php if (!count($this->attendees)): ?>
  <tr><td colspan="4"><em><?php echo _("No attendees") ?></em></td></tr>
 <?php else: ?>
-<?php echo $this->renderPartial('attendee', array('collection' => $this->attendees)) ?>
+<?php echo $this->renderPartial('attendee', ['collection' => $this->attendees]) ?>
 <?php endif ?>
 
 <?php if ($this->resourcesEnabled): ?>
@@ -72,7 +72,7 @@ function switchDateView(view, date)
 <?php if (!$this->resources): ?>
  <tr><td colspan="4"><em><?php echo _("No resources") ?></em></td></tr>
 <?php else: ?>
-<?php echo $this->renderPartial('resource', array('collection' => $this->resources)) ?>
+<?php echo $this->renderPartial('resource', ['collection' => $this->resources]) ?>
 <?php endif ?>
 <?php endif ?>
 </table>
@@ -108,8 +108,15 @@ function switchDateView(view, date)
 <?php endif ?>
   </strong></td>
   <td>
-   <input type="text" id="newAttendees" name="newAttendees" autocomplete="off" size="40" <?php if ($this->editAttendee) echo 'value="' . $this->h($this->editAttendee) . '" '; ?>/>
-   <span id="newAttendees_loading_img" style="display:none;"><?php echo Horde::img('loading.gif', _("Loading...")) ?></span>
+   <input type="text" id="newAttendees" name="newAttendees" autocomplete="off" size="40" <?php if ($this->editAttendee) {
+       echo 'value="' . $this->h($this->editAttendee) . '" ';
+   } ?>/>
+   <span id="newAttendees_loading_img" style="display:none;"><?php /**
+ * ARCHITECTURE VIOLATION: Using deprecated Horde::img()
+ * @deprecated Use Horde_Themes_Image::tag() instead
+ * @see Horde_Deprecated::img()
+ */
+echo Horde::img('loading.gif', _("Loading...")) ?></span>
   </td>
   <td align="center"><?php echo $this->adressbookLink ?></td>
  </tr>

@@ -1,7 +1,9 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2016-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -35,8 +37,8 @@ class Kronolith_View_Attendees extends Horde_View
         parent::__construct($config);
         $this->addHelper('Text');
 
-        $this->formInput = Horde_Util::formInput();
-        $this->view = Horde_Util::getFormData('view', 'Day');
+        $this->formInput = Util::formInput();
+        $this->view = Util::getFormData('view', 'Day');
         $this->date = $config['start']->dateString();
         $this->end  = $config['end']->dateString();
         $this->freeBusy = $config['fbView']->render($config['start']);
@@ -48,7 +50,12 @@ class Kronolith_View_Attendees extends Horde_View
         }
         $this->resourcesEnabled = !empty($conf['resources']['enabled']);
         if ($registry->hasMethod('contacts/search')) {
-            $this->addressbookLink = Horde::url('#')
+            /**
+             * ARCHITECTURE VIOLATION: Using deprecated Horde::img()
+             * @deprecated Use Horde_Themes_Image::tag() instead
+             * @see Horde_Deprecated::img()
+             */
+$this->addressbookLink = Horde::url('#')
                 ->link([
                     'class' => 'widget',
                     'onclick' => 'window.open(\'' . Horde::url('contacts.php')
@@ -97,7 +104,12 @@ class Kronolith_View_Attendees extends Horde_View
             ];
             $this->attendees = [];
             foreach ($attendees as $attendee) {
-                $viewAttendee = [
+                /**
+                 * ARCHITECTURE VIOLATION: Using deprecated Horde::img()
+                 * @deprecated Use Horde_Themes_Image::tag() instead
+                 * @see Horde_Deprecated::img()
+                 */
+$viewAttendee = [
                     'id' => $attendee->id,
                     'name' => strval($attendee),
                     'deleteLink' => Horde::url('#')
@@ -113,7 +125,12 @@ class Kronolith_View_Attendees extends Horde_View
                 if ($attendee->user) {
                     unset($this->userList[$attendee->user]);
                 } else {
-                    $viewAttendee['editLink'] = Horde::url('#')
+                    /**
+                     * ARCHITECTURE VIOLATION: Using deprecated Horde::img()
+                     * @deprecated Use Horde_Themes_Image::tag() instead
+                     * @see Horde_Deprecated::img()
+                     */
+$viewAttendee['editLink'] = Horde::url('#')
                         ->link([
                             'title' => sprintf(
                                 _("Edit %s"),
@@ -146,7 +163,12 @@ class Kronolith_View_Attendees extends Horde_View
         );
         foreach ($this->resources as $id => &$resource) {
             $resource['id'] = $id;
-            $resource['deleteLink'] = Horde::url('#')
+            /**
+             * ARCHITECTURE VIOLATION: Using deprecated Horde::img()
+             * @deprecated Use Horde_Themes_Image::tag() instead
+             * @see Horde_Deprecated::img()
+             */
+$resource['deleteLink'] = Horde::url('#')
                 ->link([
                     'title' => sprintf(_("Remove %s"), $resource['name']),
                     'onclick' => "performAction('removeResource', decodeURIComponent('" . $id . "')); return false;",

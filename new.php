@@ -1,7 +1,9 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 1999-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -18,8 +20,8 @@ if (Kronolith::showAjaxView()) {
 
 /* Check permissions. */
 $url = Horde::url($prefs->getValue('defaultview') . '.php', true)
-      ->add(['month' => Horde_Util::getFormData('month'),
-          'year' => Horde_Util::getFormData('year')]);
+      ->add(['month' => Util::getFormData('month'),
+          'year' => Util::getFormData('year')]);
 
 $perms = $GLOBALS['injector']->getInstance('Horde_Core_Perms');
 if ($perms->hasAppPermission('max_events') !== true
@@ -33,7 +35,7 @@ if ($perms->hasAppPermission('max_events') !== true
 }
 
 $display_resource = $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_RESOURCE_CALENDARS);
-$calendar_id = Horde_Util::getFormData(
+$calendar_id = Util::getFormData(
     'calendar',
     empty($display_resource)
         ? 'internal_' . Kronolith::getDefaultCalendar(Horde_Perms::EDIT)
@@ -47,18 +49,18 @@ $event = Kronolith::getDriver()->getEvent();
 $session->set('kronolith', 'attendees', $event->attendees);
 $session->set('kronolith', 'resources', $event->getResources());
 
-$date = Horde_Util::getFormData('datetime');
+$date = Util::getFormData('datetime');
 if ($date) {
     $event->start = new Horde_Date($date);
 } else {
-    $date = Horde_Util::getFormData('date', date('Ymd')) . '000600';
+    $date = Util::getFormData('date', date('Ymd')) . '000600';
     $event->start = new Horde_Date($date);
     if ($prefs->getValue('twentyFour')) {
         $event->start->hour = 12;
     }
 }
 $event->end = new Horde_Date($event->start);
-if (Horde_Util::getFormData('allday')) {
+if (Util::getFormData('allday')) {
     $event->end->mday++;
 } else {
     // Default to a 1 hour duration.
@@ -68,7 +70,7 @@ $month = $event->start->month;
 $year = $event->start->year;
 
 $buttons = ['<input type="submit" class="horde-default" name="save" value="' . _("Save Event") . '" />'];
-$url = Horde_Util::getFormData('url');
+$url = Util::getFormData('url');
 if (isset($url)) {
     $cancelurl = new Horde_Url($url);
 } else {

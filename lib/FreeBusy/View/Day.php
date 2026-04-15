@@ -3,7 +3,7 @@
 /**
  * This class represent a single day of free busy information sets.
  *
- * Copyright 2003-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2003-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information.
  *
@@ -23,7 +23,12 @@ class Kronolith_FreeBusy_View_Day extends Kronolith_FreeBusy_View
         $prev->mday--;
         $next = new Horde_Date($this->_start);
         $next->mday++;
-        return Horde::url('#')->link(['title' => _("Previous Day"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'])
+        /**
+         * ARCHITECTURE VIOLATION: Using deprecated Horde::img()
+         * @deprecated Use Horde_Themes_Image::tag() instead
+         * @see Horde_Deprecated::img()
+         */
+return Horde::url('#')->link(['title' => _("Previous Day"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'])
             . Horde::img('nav/left.png', '<')
             . '</a>'
             . $this->_start->strftime($prefs->getValue('date_format'))

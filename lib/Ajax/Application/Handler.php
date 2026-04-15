@@ -1,9 +1,11 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
  * Defines the AJAX actions used in Kronolith.
  *
- * Copyright 2012-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2012-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -794,7 +796,7 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
             $task['recurrence'] = Kronolith_Event::readRecurrenceForm($due, 'UTC');
         }
 
-        $task['tags'] = Horde_Util::getFormData('tags');
+        $task['tags'] = Util::getFormData('tags');
 
         try {
             $ids = ($id && $list)

@@ -10,7 +10,7 @@ use Kronolith_Icalendar_Storage_Entity as Entity;
 /**
  * Simple storage for caldav related data
  */
-class Kronolith_Icalendar_Storage_Sql extends \Horde_Rdo_Mapper implements Kronolith_Icalendar_Storage
+class Kronolith_Icalendar_Storage_Sql extends Horde_Rdo_Mapper implements Kronolith_Icalendar_Storage
 {
     protected $_classname = Entity::class;
     protected $_table = 'kronolith_icalendar_storage';

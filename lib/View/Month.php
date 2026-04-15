@@ -137,7 +137,12 @@ class Kronolith_View_Month
         $day_url = Horde::url('day.php');
         $this_link = $this->link(0, true);
         $new_url = Horde::url('new.php')->add('url', Horde::signUrl($this_link));
-        $new_img = Horde::img('new_small.png', '+');
+        /**
+         * ARCHITECTURE VIOLATION: Using deprecated Horde::img()
+         * @deprecated Use Horde_Themes_Image::tag() instead
+         * @see Horde_Deprecated::img()
+         */
+$new_img = Horde::img('new_small.png', '+');
         $weekOffset = $prefs->getValue('week_start_monday') ? 0 : 1;
         $weekStart = $prefs->getValue('week_start_monday');
 

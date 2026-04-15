@@ -15,9 +15,12 @@
   </td>
   <td valign="top">
     <table width="100%" border="0" cellpadding="5" cellspacing="0">
-      <?php $i = 0; foreach ($this->events as $event): ?>
+      <?php $i = 0;
+foreach ($this->events as $event): ?>
 
-      <tr<?php if ($i++ % 2) echo ' bgcolor="#f1f1f1"' ?>>
+      <tr<?php if ($i++ % 2) {
+          echo ' bgcolor="#f1f1f1"';
+      } ?>>
         <td nowrap="nowrap" align="right">
           <font size="2"><strong>
             <?php if ($event->isAllDay()): ?>
@@ -37,7 +40,7 @@
           <?php elseif ($event->status == Kronolith::STATUS_CANCELLED): ?>
           <del style="text-decoration:line-through">
           <?php endif ?>
-            <a href="<?php echo $event->getViewUrl(array(), true)->remove(session_name()) ?>"><?php echo $this->h($event->title) ?></a>
+            <a href="<?php echo $event->getViewUrl([], true)->remove(session_name()) ?>"><?php echo $this->h($event->title) ?></a>
           <?php if ($event->status == Kronolith::STATUS_CONFIRMED): ?>
           </strong>
           <?php elseif ($event->status == Kronolith::STATUS_FREE || $event->status == Kronolith::STATUS_TENTATIVE): ?>

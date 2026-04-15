@@ -1,6 +1,8 @@
 <?php
+use Horde\Util\Util;
+
 /**
- * Copyright 2005-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2005-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -12,12 +14,12 @@
 require_once __DIR__ . '/lib/Application.php';
 Horde_Registry::appInit('kronolith', ['authentication' => 'none']);
 
-$cal = Horde_Util::getFormData('c');
-$id = Horde_Util::getFormData('e');
-$uid = Horde_Util::getFormData('i');
-$user = Horde_Util::getFormData('u');
+$cal = Util::getFormData('c');
+$id = Util::getFormData('e');
+$uid = Util::getFormData('i');
+$user = Util::getFormData('u');
 
-switch (Horde_Util::getFormData('a')) {
+switch (Util::getFormData('a')) {
     case 'accept':
         $action = Kronolith::RESPONSE_ACCEPTED;
         $msg = _("You have successfully accepted attendence to this event.");

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Horde\Kronolith\Calendar;
 
 use Horde_Icalendar_Vevent as Vevent;
+use Horde_Dav_Storage;
+use Kronolith_Icalendar_Storage;
 
 /**
  * Event Put Operation Handler
@@ -42,8 +44,8 @@ use Horde_Icalendar_Vevent as Vevent;
 class EventPutListener
 {
     public function __construct(
-        \Horde_Dav_Storage $dav,
-        \Kronolith_Icalendar_Storage $icalStore,
+        Horde_Dav_Storage $dav,
+        Kronolith_Icalendar_Storage $icalStore,
         PutHandlerListeners $listeners
     ) {}
 

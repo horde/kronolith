@@ -3,7 +3,7 @@
 /**
  * This class represent a work week of free busy information sets.
  *
- * Copyright 2003-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2003-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information.
  *

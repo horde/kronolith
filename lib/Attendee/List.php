@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2016-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -200,7 +200,7 @@ class Kronolith_Attendee_List implements ArrayAccess, Countable, IteratorAggrega
 
     /**
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetExists($index)
     {
         return isset($this->_list[$index]);
@@ -208,7 +208,7 @@ class Kronolith_Attendee_List implements ArrayAccess, Countable, IteratorAggrega
 
     /**
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function &offsetGet($index)
     {
         if (isset($this->_list[$index])) {
@@ -220,7 +220,7 @@ class Kronolith_Attendee_List implements ArrayAccess, Countable, IteratorAggrega
 
     /**
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetSet($index, $value)
     {
         if (!($value instanceof Kronolith_Attendee)) {
@@ -234,7 +234,7 @@ class Kronolith_Attendee_List implements ArrayAccess, Countable, IteratorAggrega
 
     /**
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetUnset($index)
     {
         unset($this->_list[$index]);
@@ -242,7 +242,7 @@ class Kronolith_Attendee_List implements ArrayAccess, Countable, IteratorAggrega
 
     /* Countable method. */
 
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function count()
     {
         return count($this->_list);

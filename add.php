@@ -1,7 +1,9 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 1999-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -15,11 +17,11 @@ if (Kronolith::showAjaxView()) {
 }
 
 do {
-    if (Horde_Util::getFormData('cancel')) {
+    if (Util::getFormData('cancel')) {
         break;
     }
 
-    [$targetType, $targetcalendar] = explode('_', Horde_Util::getFormData('targetcalendar'), 2);
+    [$targetType, $targetcalendar] = explode('_', Util::getFormData('targetcalendar'), 2);
     if (strpos($targetcalendar, '\\')) {
         [$calendar_id, $user] = explode('\\', $targetcalendar, 2);
     } else {
@@ -71,7 +73,7 @@ do {
         try {
             $event->save();
             Kronolith::notifyOfResourceRejection($event);
-            if (Horde_Util::getFormData('sendupdates', false)) {
+            if (Util::getFormData('sendupdates', false)) {
                 try {
                     Kronolith::sendITipNotifications($event, $notification, Kronolith::ITIP_REQUEST);
                 } catch (Exception $e) {
@@ -86,12 +88,12 @@ do {
     }
 } while (false);
 
-if ($url = Horde::verifySignedUrl(Horde_Util::getFormData('url'))) {
+if ($url = Horde::verifySignedUrl(Util::getFormData('url'))) {
     $url = new Horde_Url($url, true);
 } else {
     $url = Horde::url($prefs->getValue('defaultview') . '.php', true)
-        ->add(['month' => Horde_Util::getFormData('month'),
-            'year' => Horde_Util::getFormData('year')]);
+        ->add(['month' => Util::getFormData('month'),
+            'year' => Util::getFormData('year')]);
 }
 
 // Make sure URL is unique.

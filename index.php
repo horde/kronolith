@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 1999-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * not receive such a file, see also http://www.horde.org/licenses/gpl.
@@ -148,7 +148,12 @@ $impleFactory->create('Kronolith_Ajax_Imple_ResourceAutoCompleter', [
 ]);
 
 if ($conf['maps']['driver']) {
-    Horde::initMap();
+    /**
+     * ARCHITECTURE VIOLATION: Using deprecated Horde::initMap()
+     * @deprecated Use Horde_Core_HordeMap::init() instead
+     * @see Horde_Deprecated::initMap()
+     */
+Horde::initMap();
 }
 
 $time_jobs = $time_clients = false;

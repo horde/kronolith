@@ -1,7 +1,9 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 2005-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2005-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -16,9 +18,9 @@ if (Kronolith::showAjaxView()) {
     Horde::url('', true)->redirect();
 }
 
-$view = Kronolith::getView(Horde_Util::getFormData('view'));
+$view = Kronolith::getView(Util::getFormData('view'));
 if ($view) {
     Kronolith::tabs(strtolower(str_replace('kronolith_view_', '', Horde_String::lower(get_class($view)))));
     $view->html();
-    echo '<div style="display:none" id="view_vars" view="' . htmlspecialchars(Horde_Util::getFormData('view')) . '" date="' . Kronolith::currentDate()->format(DATE_RFC2822) . '">';
+    echo '<div style="display:none" id="view_vars" view="' . htmlspecialchars(Util::getFormData('view')) . '" date="' . Kronolith::currentDate()->format(DATE_RFC2822) . '">';
 }

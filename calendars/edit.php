@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2002-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2002-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -29,10 +30,10 @@ try {
     $notification->push($e, 'horde.error');
     $default->redirect();
 }
-$owner = $calendar->get('owner') == $GLOBALS['registry']->getAuth() ||
-    (is_null($calendar->get('owner')) && $GLOBALS['registry']->isAdmin());
-if (!$owner &&
-    !$calendar->hasPermission($GLOBALS['registry']->getAuth(), Horde_Perms::READ)) {
+$owner = $calendar->get('owner') == $GLOBALS['registry']->getAuth()
+    || (is_null($calendar->get('owner')) && $GLOBALS['registry']->isAdmin());
+if (!$owner
+    && !$calendar->hasPermission($GLOBALS['registry']->getAuth(), Horde_Perms::READ)) {
     $notification->push(_("You are not allowed to see this calendar."), 'horde.error');
     $default->redirect();
 }
@@ -67,15 +68,15 @@ $vars->set('description', $calendar->get('desc'));
 $tagger = Kronolith::getTagger();
 $vars->set('tags', implode(',', array_values($tagger->getTags($calendar->getName(), Kronolith_Tagger::TYPE_CALENDAR))));
 
-$page_output->header(array(
-    'title' => $form->getTitle()
-));
+$page_output->header([
+    'title' => $form->getTitle(),
+]);
 require KRONOLITH_TEMPLATES . '/javascript_defs.php';
-$notification->notify(array('listeners' => 'status'));
+$notification->notify(['listeners' => 'status']);
 if ($owner) {
-    $injector->getInstance('Horde_Core_Factory_Imple')->create('Kronolith_Ajax_Imple_TagAutoCompleter', array(
-        'id' => 'tags'
-    ));
+    $injector->getInstance('Horde_Core_Factory_Imple')->create('Kronolith_Ajax_Imple_TagAutoCompleter', [
+        'id' => 'tags',
+    ]);
     echo $form->renderActive($form->getRenderer(), $vars, Horde::url('calendars/edit.php'), 'post');
 } else {
     echo $form->renderInactive($form->getRenderer(), $vars);

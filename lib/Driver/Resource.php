@@ -4,7 +4,7 @@
  * The Kronolith_Driver_Resource class implements the Kronolith_Driver API for
  * storing resource calendars.
  *
- * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 1999-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.

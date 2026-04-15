@@ -1,7 +1,9 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 2001-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2001-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -13,7 +15,7 @@
 require_once __DIR__ . '/lib/Application.php';
 $app_ob = Horde_Registry::appInit('kronolith');
 
-if ((Kronolith::showAjaxView() && !(Horde_Util::getPost('import_ajax')))
+if ((Kronolith::showAjaxView() && !(Util::getPost('import_ajax')))
     || (!$conf['menu']['import_export'])) {
     Horde::url('', true)->redirect();
 }
@@ -43,8 +45,8 @@ if ($perms->hasAppPermission('max_events') !== true
 }
 
 /* Initial values. */
-$import_step   = Horde_Util::getFormData('import_step', 0) + 1;
-$actionID      = Horde_Util::getFormData('actionID');
+$import_step   = Util::getFormData('import_step', 0) + 1;
+$actionID      = Util::getFormData('actionID');
 $next_step     = Horde_Data::IMPORT_FILE;
 $app_fields    = ['title' => _("Title"),
     'start_date' => _("Start Date"),
@@ -67,14 +69,14 @@ $time_fields   = ['start_date'     => 'date',
     'recur_end_date' => 'date'];
 $param         = ['time_fields' => $time_fields,
     'file_types'  => $file_types];
-$import_format = Horde_Util::getFormData('import_format', '');
+$import_format = Util::getFormData('import_format', '');
 $storage = $injector->getInstance('Horde_Core_Data_Storage');
 
 switch ($actionID) {
     case Horde_Data::IMPORT_FILE:
     case Horde_Data::IMPORT_URL:
-        $storage->set('import_cal', Horde_Util::getFormData('importCal'));
-        $storage->set('purge', Horde_Util::getFormData('purge'));
+        $storage->set('import_cal', Util::getFormData('importCal'));
+        $storage->set('purge', Util::getFormData('purge'));
         break;
 }
 
@@ -124,7 +126,7 @@ if ($import_format) {
     }
 }
 
-if (Horde_Util::getFormData('import_ajax')) {
+if (Util::getFormData('import_ajax')) {
     $page_output->includeScriptFiles();
     $page_output->addInlineScript('(function(window){window.KronolithCore.loading--;if(!window.KronolithCore.loading)window.$(\'kronolithLoading\').hide();})(window.parent)');
 }
@@ -235,13 +237,13 @@ if (is_array($next_step)) {
             $file_types[$storage->get('format')]
         ), 'horde.success');
     }
-    if (Horde_Util::getFormData('import_ajax')) {
+    if (Util::getFormData('import_ajax')) {
         $page_output->addInlineScript('(function(window){window.KronolithCore.loadCalendar(\'' . $type . '\', \'' . $calendar . '\');})(window.parent)');
     }
     $next_step = $data->cleanup();
 }
 
-if (Horde_Util::getFormData('import_ajax')) {
+if (Util::getFormData('import_ajax')) {
     $page_output->addInlineScript('window.parent.$(window.name).remove();');
     $page_output->outputInlineScript();
     exit;

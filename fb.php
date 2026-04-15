@@ -1,7 +1,9 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 1999-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -14,13 +16,13 @@ require_once __DIR__ . '/lib/Application.php';
 Horde_Registry::appInit('kronolith', ['authentication' => 'none', 'session_control' => 'none']);
 
 // Determine the username to show free/busy time for.
-$cal = Horde_Util::getFormData('c');
-$user = Horde_Util::getFormData('u');
+$cal = Util::getFormData('c');
+$user = Util::getFormData('u');
 if (!empty($cal)) {
     if (is_array($cal)) {
         $cal = implode('|', $cal);
     }
-} elseif ($pathInfo = Horde_Util::getPathInfo()) {
+} elseif ($pathInfo = Util::getPathInfo()) {
     $user = basename($pathInfo);
 }
 

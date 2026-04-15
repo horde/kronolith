@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
  * The Kronolith_View_EditEvent:: class provides an API for viewing
  * event edit forms.
@@ -76,16 +78,16 @@ class Kronolith_View_EditEvent
         }
         $GLOBALS['session']->set('kronolith', 'attendees', $this->_event->attendees);
         $GLOBALS['session']->set('kronolith', 'resources', $this->_event->getResources());
-        if ($datetime = Horde_Util::getFormData('datetime')) {
+        if ($datetime = Util::getFormData('datetime')) {
             $datetime = new Horde_Date($datetime);
             $month = $datetime->month;
             $year = $datetime->year;
         } else {
-            $month = Horde_Util::getFormData('month', date('n'));
-            $year = Horde_Util::getFormData('year', date('Y'));
+            $month = Util::getFormData('month', date('n'));
+            $year = Util::getFormData('year', date('Y'));
         }
 
-        $url = Horde_Util::getFormData('url');
+        $url = Util::getFormData('url');
         $perms = Horde_Perms::EDIT;
         if ($this->_event->creator == $GLOBALS['registry']->getAuth()) {
             $perms |= Kronolith::PERMS_DELEGATE;

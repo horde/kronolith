@@ -1,8 +1,10 @@
 <?php
 
+use Horde\Util\Util;
+
 $auth = $GLOBALS['injector']->getInstance('Horde_Core_Factory_Auth')->create();
 
-$groups = array();
+$groups = [];
 try {
     $groups = $GLOBALS['injector']
         ->getInstance('Horde_Group')
@@ -10,23 +12,26 @@ try {
                   ? $GLOBALS['registry']->getAuth()
                   : null);
     asort($groups);
-} catch (Horde_Group_Exception $e) {}
+} catch (Horde_Group_Exception $e) {
+}
 
 $file_upload = $GLOBALS['browser']->allowFileUploads();
 
 if (!empty($GLOBALS['conf']['resources']['enabled'])) {
     $resources = Kronolith::getDriver('Resource')
-        ->listResources(Horde_Perms::READ,
-                        array('isgroup' => 0));
-    $resource_enum = array();
+        ->listResources(
+            Horde_Perms::READ,
+            ['isgroup' => 0]
+        );
+    $resource_enum = [];
     foreach ($resources as $resource) {
         $resource_enum[$resource->getId()] = htmlspecialchars($resource->get('name'));
     }
 }
 
 $accountUrl = $GLOBALS['registry']->get('webroot', 'horde');
-if (isset($GLOBALS['conf']['urls']['pretty']) &&
-    $GLOBALS['conf']['urls']['pretty'] == 'rewrite') {
+if (isset($GLOBALS['conf']['urls']['pretty'])
+    && $GLOBALS['conf']['urls']['pretty'] == 'rewrite') {
     $accountUrl .= '/rpc/';
 } else {
     $accountUrl .= '/rpc.php/';
@@ -35,7 +40,7 @@ $accountUrl = Horde::url($accountUrl, true, -1) . 'principals/';
 $user = $GLOBALS['registry']->convertUsername($GLOBALS['registry']->getAuth(), false);
 try {
     $user = $GLOBALS['injector']->getInstance('Horde_Core_Hooks')
-        ->callHook('davusername', 'horde', array($user, false));
+        ->callHook('davusername', 'horde', [$user, false]);
 } catch (Horde_Exception_HookNotSet $e) {
 }
 $accountUrl .= $user;
@@ -43,7 +48,9 @@ $accountUrl .= $user;
 ?>
 <div id="kronolithCalendarDialog" class="kronolithDialog">
 
-<form id="kronolithCalendarForminternal" method="post" action="<?php echo Horde::url('data.php') ?>"<?php if ($file_upload) echo ' enctype="multipart/form-data"' ?>>
+<form id="kronolithCalendarForminternal" method="post" action="<?php echo Horde::url('data.php') ?>"<?php if ($file_upload) {
+    echo ' enctype="multipart/form-data"';
+} ?>>
 <input type="hidden" name="type" value="internal" />
 <input id="kronolithCalendarinternalId" type="hidden" name="calendar" />
 <?php if ($file_upload): ?>
@@ -53,7 +60,7 @@ $accountUrl .= $user;
 <input type="hidden" name="import_step" value="1" />
 <input type="hidden" name="import_format" value="icalendar" />
 <input type="hidden" name="import_ajax" value="1" />
-<?php Horde_Util::pformInput() ?>
+<?php Util::pformInput() ?>
 <?php endif; ?>
 
 <div class="kronolithCalendarDiv" id="kronolithCalendarinternal1">
@@ -67,7 +74,12 @@ $accountUrl .= $user;
   <p>
     <label><?php echo _("Color") ?>:
       <input type="text" name="color" id="kronolithCalendarinternalColor" size="7" />
-      <?php echo Horde::url('#')->link(array('title' => _("Color Picker"), 'class' => 'kronolithColorPicker')) . Horde::img('colorpicker.png', _("Color Picker")) . '</a>' ?>
+      <?php /**
+ * ARCHITECTURE VIOLATION: Using deprecated Horde::img()
+ * @deprecated Use Horde_Themes_Image::tag() instead
+ * @see Horde_Deprecated::img()
+ */
+echo Horde::url('#')->link(['title' => _("Color Picker"), 'class' => 'kronolithColorPicker']) . Horde::img('colorpicker.png', _("Color Picker")) . '</a>' ?>
     </label>
 <?php if ($GLOBALS['registry']->isAdmin()): ?>
     &nbsp;
@@ -101,12 +113,18 @@ $accountUrl .= $user;
 <div id="kronolithCalendarinternalTabTags" class="kronolithTabsOption kronolithTabTags" style="display:none">
   <input id="kronolithCalendarinternalTags" name="tags" />
   <label for="kronolithCalendarinternalTopTags"><?php echo _("Previously used tags") ?>:</label><br />
-  <span id="kronolithCalendarinternalTags_loading_img" style="display:none;"><?php echo Horde::img('loading.gif', _("Loading...")) ?></span>
+  <span id="kronolithCalendarinternalTags_loading_img" style="display:none;"><?php /**
+ * ARCHITECTURE VIOLATION: Using deprecated Horde::img()
+ * @deprecated Use Horde_Themes_Image::tag() instead
+ * @see Horde_Deprecated::img()
+ */
+echo Horde::img('loading.gif', _("Loading...")) ?></span>
   <div class="kronolithTopTags" id="kronolithCalendarinternalTopTags"></div>
 </div>
 
 <div id="kronolithCalendarinternalTabPerms" class="kronolithTabsOption" style="display:none">
-<?php $type = 'internal'; include __DIR__ . '/permissions.inc'; ?>
+<?php $type = 'internal';
+include __DIR__ . '/permissions.inc'; ?>
 </div>
 
 <div id="kronolithCalendarinternalTabUrls" class="kronolithTabsOption" style="display:none">
@@ -155,8 +173,8 @@ $accountUrl .= $user;
   </p>
   <p>
     <?php printf(_("Importing should %s %sreplace this calendar%s."),
-                 '<input type="checkbox" id="kronolithCalendarinternalImportOver" name="purge" />',
-                 '<label for="kronolithCalendarinternalImportOver">', '</label>') ?>
+        '<input type="checkbox" id="kronolithCalendarinternalImportOver" name="purge" />',
+        '<label for="kronolithCalendarinternalImportOver">', '</label>') ?>
     <span class="kronolithDialogWarning"><?php printf(_("%sWarning:%s also %sdeletes all events%s currently in the calendar."), '<strong>', '</strong>', '<strong>', '</strong>') ?></span>
   </p>
   <input id="kronolithCalendarinternalImportButton" type="button" value="<?php echo _("Import") ?>" class="kronolithCalendarImport button" style="display:none;" />
@@ -196,7 +214,12 @@ $accountUrl .= $user;
 <div>
   <p><label><?php echo _("Color") ?>:<br />
     <input type="text" name="color" id="kronolithCalendartasklistsColor" size="7" />
-    <?php echo Horde::url('#')->link(array('title' => _("Color Picker"), 'class' => 'kronolithColorPicker')) . Horde::img('colorpicker.png', _("Color Picker")) . '</a>' ?>
+    <?php /**
+ * ARCHITECTURE VIOLATION: Using deprecated Horde::img()
+ * @deprecated Use Horde_Themes_Image::tag() instead
+ * @see Horde_Deprecated::img()
+ */
+echo Horde::url('#')->link(['title' => _("Color Picker"), 'class' => 'kronolithColorPicker']) . Horde::img('colorpicker.png', _("Color Picker")) . '</a>' ?>
   </label></p>
 </div>
 
@@ -217,7 +240,8 @@ $accountUrl .= $user;
 </div>
 
 <div id="kronolithCalendartasklistsTabPerms" class="kronolithTabsOption" style="display:none">
-<?php $type = 'tasklists'; include __DIR__ . '/permissions.inc'; ?>
+<?php $type = 'tasklists';
+include __DIR__ . '/permissions.inc'; ?>
 </div>
 
 <div id="kronolithCalendartasklistsTabUrls" class="kronolithTabsOption" style="display:none">
@@ -314,7 +338,12 @@ $accountUrl .= $user;
 <div>
   <p><label><?php echo _("Color") ?>:<br />
     <input type="text" name="color" id="kronolithCalendarremoteColor" size="7" />
-    <?php echo Horde::url('#')->link(array('title' => _("Color Picker"), 'class' => 'kronolithColorPicker')) . Horde::img('colorpicker.png', _("Color Picker")) . '</a>' ?>
+    <?php /**
+ * ARCHITECTURE VIOLATION: Using deprecated Horde::img()
+ * @deprecated Use Horde_Themes_Image::tag() instead
+ * @see Horde_Deprecated::img()
+ */
+echo Horde::url('#')->link(['title' => _("Color Picker"), 'class' => 'kronolithColorPicker']) . Horde::img('colorpicker.png', _("Color Picker")) . '</a>' ?>
   </label></p>
 </div>
 
@@ -396,7 +425,8 @@ $accountUrl .= $user;
   <p class="kronolithDialogInfo"><?php echo _("iCalendar is a computer file format which allows internet users to send meeting requests and tasks to other internet users, via email, or sharing files with an extension of .ics.") ?></p>
 </div>
 <div id="kronolithCalendarresourceTabPerms" class="kronolithTabsOption" style="display:none">
-<?php $type = 'resource'; include __DIR__ . '/permissions.inc'; ?>
+<?php $type = 'resource';
+    include __DIR__ . '/permissions.inc'; ?>
 </div>
 <div class="kronolithFormActions">
   <input type="button" value="<?php echo _("Save") ?>" class="kronolithCalendarSave horde-default" />

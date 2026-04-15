@@ -26,7 +26,7 @@ class Kronolith_Factory_Geo extends Horde_Core_Factory_Injector
         try {
             $db = $injector->getInstance('Horde_Db_Adapter');
             return new $class($db);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new Kronolith_Exception($e->getMessage());
         }
     }

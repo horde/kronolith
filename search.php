@@ -1,7 +1,9 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 2004-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2004-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -17,13 +19,13 @@ if (Kronolith::showAjaxView()) {
 }
 
 /* Get search parameters. */
-$search_mode = Horde_Util::getFormData('search_mode', 'basic');
-$search_calendar = explode('|', Horde_Util::getFormData('calendar', '|__any'), 2);
+$search_mode = Util::getFormData('search_mode', 'basic');
+$search_calendar = explode('|', Util::getFormData('calendar', '|__any'), 2);
 $events = null;
 
 if ($search_mode == 'basic') {
-    $desc = Horde_Util::getFormData('pattern_desc');
-    $title = Horde_Util::getFormData('pattern_title');
+    $desc = Util::getFormData('pattern_desc');
+    $title = Util::getFormData('pattern_title');
     if (strlen($desc) || strlen($title)) {
         $event = Kronolith::getDriver()->getEvent();
         $event->description = $desc;
@@ -31,7 +33,7 @@ if ($search_mode == 'basic') {
         $event->status = null;
 
         $time1 = $_SERVER['REQUEST_TIME'];
-        $range = Horde_Util::getFormData('range');
+        $range = Util::getFormData('range');
         if ($range == '+') {
             $event->start = new Horde_Date($time1);
             $event->end = null;
@@ -59,9 +61,9 @@ if ($search_mode == 'basic') {
      * a default end date. */
     $event->initialized = true;
 
-    if (Horde_Util::getFormData('actionID') == 'search_calendar') {
+    if (Util::getFormData('actionID') == 'search_calendar') {
         $event->readForm();
-        if (Horde_Util::getFormData('status') == Kronolith::STATUS_NONE) {
+        if (Util::getFormData('status') == Kronolith::STATUS_NONE) {
             $event->status = null;
         }
 

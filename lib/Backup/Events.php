@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2017-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -17,6 +17,7 @@ use ArrayIterator;
 use EmptyIterator;
 use Iterator;
 use Kronolith_Driver;
+use ReturnTypeWillChange;
 
 /**
  * Backup iterator for events.
@@ -82,7 +83,7 @@ class Events implements Iterator
 
     /**
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function current()
     {
         global $registry;

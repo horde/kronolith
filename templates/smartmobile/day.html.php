@@ -1,5 +1,5 @@
 <div data-role="page" id="dayview">
- <?php echo $this->smartmobileHeader(array('logout' => true, 'portal' => true, 'title' => _("Day"))) ?>
+ <?php echo $this->smartmobileHeader(['logout' => true, 'portal' => true, 'title' => _("Day")]) ?>
 
  <div data-role="header">
   <div data-role="navbar">

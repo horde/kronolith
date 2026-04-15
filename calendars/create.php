@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2002-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2002-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -37,14 +38,14 @@ if ($form->validate($vars)) {
     }
 }
 
-$injector->getInstance('Horde_Core_Factory_Imple')->create('Kronolith_Ajax_Imple_TagAutoCompleter', array(
-    'id' => 'tags'
-));
+$injector->getInstance('Horde_Core_Factory_Imple')->create('Kronolith_Ajax_Imple_TagAutoCompleter', [
+    'id' => 'tags',
+]);
 
-$page_output->header(array(
-    'title' => $form->getTitle()
-));
+$page_output->header([
+    'title' => $form->getTitle(),
+]);
 require KRONOLITH_TEMPLATES . '/javascript_defs.php';
-$notification->notify(array('listeners' => 'status'));
+$notification->notify(['listeners' => 'status']);
 echo $form->renderActive($form->getRenderer(), $vars, Horde::url('calendars/create.php'), 'post');
 $page_output->footer();

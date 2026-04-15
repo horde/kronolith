@@ -1,5 +1,5 @@
 <div data-role="page" id="overview">
- <?php echo $this->smartmobileHeader(array('logout' => true, 'portal' => true, 'title' => _("Summary"))) ?>
+ <?php echo $this->smartmobileHeader(['logout' => true, 'portal' => true, 'title' => _("Summary")]) ?>
 
  <div data-role="header">
   <div data-role="navbar">

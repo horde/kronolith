@@ -1,7 +1,9 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 2002-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2002-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -24,7 +26,7 @@ $source_list = $registry->call('contacts/sources');
 
 /* If we self-submitted, use that source. Otherwise, choose a good
  * source. */
-$source = Horde_Util::getFormData('source');
+$source = Util::getFormData('source');
 if (empty($source) || !isset($source_list[$source])) {
     /* We don't just pass the second argument to getFormData() because
      * we want to trap for invalid sources, not just no source. */
@@ -32,7 +34,7 @@ if (empty($source) || !isset($source_list[$source])) {
 }
 
 /* Get the search as submitted (defaults to '' which should list everyone). */
-$search = Horde_Util::getFormData('search');
+$search = Util::getFormData('search');
 
 if ($search || $prefs->getValue('display_contact')) {
     $searchpref = Kronolith::getAddressbookSearchParams();
@@ -62,13 +64,13 @@ foreach ($results as $r) {
 /* If self-submitted, preserve the currently selected users encoded by
    javascript to pass as value|text. */
 $selected_addresses = [];
-$sa = explode('|', Horde_Util::getFormData('sa'));
+$sa = explode('|', Util::getFormData('sa'));
 for ($i = 0; $i < count($sa) - 1; $i += 2) {
     $selected_addresses[$sa[$i]] = $sa[$i + 1];
 }
 
 /* Set the default list display (name or email). */
-$display = Horde_Util::getFormData('display', 'name');
+$display = Util::getFormData('display', 'name');
 
 /* Display the form. */
 $page_output->header([

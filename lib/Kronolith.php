@@ -1,7 +1,9 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 1999-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -1527,7 +1529,7 @@ class Kronolith
         if (!($share instanceof Kronolith_Resource_Base)) {
             $old_owner = $share->get('owner');
             if ($old_owner) {
-                $new_owner_backend = Horde_Util::getFormData('owner_select', Horde_Util::getFormData('owner_input', $old_owner));
+                $new_owner_backend = Util::getFormData('owner_select', Util::getFormData('owner_input', $old_owner));
                 $new_owner = $GLOBALS['registry']->convertUsername($new_owner_backend, true);
             } else {
                 $new_owner_backend = $new_owner = null;
@@ -1574,81 +1576,81 @@ class Kronolith
         if ($GLOBALS['registry']->isAdmin()
             || !empty($GLOBALS['conf']['share']['world'])) {
             // Process default permissions.
-            if (Horde_Util::getFormData('default_show')) {
+            if (Util::getFormData('default_show')) {
                 $perm->addDefaultPermission(Horde_Perms::SHOW, false);
             } else {
                 $perm->removeDefaultPermission(Horde_Perms::SHOW, false);
             }
-            if (Horde_Util::getFormData('default_read')) {
+            if (Util::getFormData('default_read')) {
                 $perm->addDefaultPermission(Horde_Perms::READ, false);
             } else {
                 $perm->removeDefaultPermission(Horde_Perms::READ, false);
             }
-            if (Horde_Util::getFormData('default_edit')) {
+            if (Util::getFormData('default_edit')) {
                 $perm->addDefaultPermission(Horde_Perms::EDIT, false);
             } else {
                 $perm->removeDefaultPermission(Horde_Perms::EDIT, false);
             }
-            if (Horde_Util::getFormData('default_delete')) {
+            if (Util::getFormData('default_delete')) {
                 $perm->addDefaultPermission(Horde_Perms::DELETE, false);
             } else {
                 $perm->removeDefaultPermission(Horde_Perms::DELETE, false);
             }
-            if (Horde_Util::getFormData('default_delegate')) {
+            if (Util::getFormData('default_delegate')) {
                 $perm->addDefaultPermission(self::PERMS_DELEGATE, false);
             } else {
                 $perm->removeDefaultPermission(self::PERMS_DELEGATE, false);
             }
 
             // Process guest permissions.
-            if (Horde_Util::getFormData('guest_show')) {
+            if (Util::getFormData('guest_show')) {
                 $perm->addGuestPermission(Horde_Perms::SHOW, false);
             } else {
                 $perm->removeGuestPermission(Horde_Perms::SHOW, false);
             }
-            if (Horde_Util::getFormData('guest_read')) {
+            if (Util::getFormData('guest_read')) {
                 $perm->addGuestPermission(Horde_Perms::READ, false);
             } else {
                 $perm->removeGuestPermission(Horde_Perms::READ, false);
             }
-            if (Horde_Util::getFormData('guest_edit')) {
+            if (Util::getFormData('guest_edit')) {
                 $perm->addGuestPermission(Horde_Perms::EDIT, false);
             } else {
                 $perm->removeGuestPermission(Horde_Perms::EDIT, false);
             }
-            if (Horde_Util::getFormData('guest_delete')) {
+            if (Util::getFormData('guest_delete')) {
                 $perm->addGuestPermission(Horde_Perms::DELETE, false);
             } else {
                 $perm->removeGuestPermission(Horde_Perms::DELETE, false);
             }
-            if (Horde_Util::getFormData('guest_delegate')) {
+            if (Util::getFormData('guest_delegate')) {
                 $perm->addGuestPermission(self::PERMS_DELEGATE, false);
             } else {
                 $perm->removeGuestPermission(self::PERMS_DELEGATE, false);
             }
 
             // Process creator permissions.
-            if (Horde_Util::getFormData('creator_show')) {
+            if (Util::getFormData('creator_show')) {
                 $perm->addCreatorPermission(Horde_Perms::SHOW, false);
             } else {
                 $perm->removeCreatorPermission(Horde_Perms::SHOW, false);
             }
-            if (Horde_Util::getFormData('creator_read')) {
+            if (Util::getFormData('creator_read')) {
                 $perm->addCreatorPermission(Horde_Perms::READ, false);
             } else {
                 $perm->removeCreatorPermission(Horde_Perms::READ, false);
             }
-            if (Horde_Util::getFormData('creator_edit')) {
+            if (Util::getFormData('creator_edit')) {
                 $perm->addCreatorPermission(Horde_Perms::EDIT, false);
             } else {
                 $perm->removeCreatorPermission(Horde_Perms::EDIT, false);
             }
-            if (Horde_Util::getFormData('creator_delete')) {
+            if (Util::getFormData('creator_delete')) {
                 $perm->addCreatorPermission(Horde_Perms::DELETE, false);
             } else {
                 $perm->removeCreatorPermission(Horde_Perms::DELETE, false);
             }
-            if (Horde_Util::getFormData('creator_delegate')) {
+            if (Util::getFormData('creator_delegate')) {
                 $perm->addCreatorPermission(self::PERMS_DELEGATE, false);
             } else {
                 $perm->removeCreatorPermission(self::PERMS_DELEGATE, false);
@@ -1656,12 +1658,12 @@ class Kronolith
         }
 
         // Process user permissions.
-        $u_names = Horde_Util::getFormData('u_names');
-        $u_show = Horde_Util::getFormData('u_show');
-        $u_read = Horde_Util::getFormData('u_read');
-        $u_edit = Horde_Util::getFormData('u_edit');
-        $u_delete = Horde_Util::getFormData('u_delete');
-        $u_delegate = Horde_Util::getFormData('u_delegate');
+        $u_names = Util::getFormData('u_names');
+        $u_show = Util::getFormData('u_show');
+        $u_read = Util::getFormData('u_read');
+        $u_edit = Util::getFormData('u_edit');
+        $u_delete = Util::getFormData('u_delete');
+        $u_delegate = Util::getFormData('u_delegate');
 
         $current = $perm->getUserPermissions();
         if ($GLOBALS['conf']['share']['notify']) {
@@ -1720,12 +1722,12 @@ class Kronolith
         }
 
         // Process group permissions.
-        $g_names = Horde_Util::getFormData('g_names');
-        $g_show = Horde_Util::getFormData('g_show');
-        $g_read = Horde_Util::getFormData('g_read');
-        $g_edit = Horde_Util::getFormData('g_edit');
-        $g_delete = Horde_Util::getFormData('g_delete');
-        $g_delegate = Horde_Util::getFormData('g_delegate');
+        $g_names = Util::getFormData('g_names');
+        $g_show = Util::getFormData('g_show');
+        $g_read = Util::getFormData('g_read');
+        $g_edit = Util::getFormData('g_edit');
+        $g_delete = Util::getFormData('g_delete');
+        $g_delegate = Util::getFormData('g_delegate');
 
         $current = $perm->getGroupPermissions();
         $perm->removeGroupPermission(null, null, false);
@@ -2477,10 +2479,10 @@ class Kronolith
      */
     public static function currentDate()
     {
-        if ($date = Horde_Util::getFormData('date')) {
+        if ($date = Util::getFormData('date')) {
             return new Horde_Date($date . '000000');
         }
-        if ($date = Horde_Util::getFormData('datetime')) {
+        if ($date = Util::getFormData('datetime')) {
             return new Horde_Date($date);
         }
 
@@ -2813,16 +2815,16 @@ class Kronolith
             case 'DeleteEvent':
             case 'ExportEvent':
                 try {
-                    if ($uid = Horde_Util::getFormData('uid')) {
+                    if ($uid = Util::getFormData('uid')) {
                         $event = self::getDriver()->getByUID($uid);
                     } else {
                         $event = self::getDriver(
-                            Horde_Util::getFormData('type'),
-                            Horde_Util::getFormData('calendar')
+                            Util::getFormData('type'),
+                            Util::getFormData('calendar')
                         )
                             ->getEvent(
-                                Horde_Util::getFormData('eventID'),
-                                Horde_Util::getFormData('datetime')
+                                Util::getFormData('eventID'),
+                                Util::getFormData('datetime')
                             );
                     }
                 } catch (Horde_Exception $e) {

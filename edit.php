@@ -1,7 +1,9 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 1999-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -14,7 +16,7 @@ function _save(&$event)
 {
     try {
         $event->save();
-        if (Horde_Util::getFormData('sendupdates', false)) {
+        if (Util::getFormData('sendupdates', false)) {
             Kronolith::sendITipNotifications($event, $GLOBALS['notification'], Kronolith::ITIP_REQUEST);
         }
     } catch (Exception $e) {
@@ -47,9 +49,9 @@ if (Kronolith::showAjaxView()) {
 }
 
 do {
-    if ($exception = Horde_Util::getFormData('del_exception')) {
+    if ($exception = Util::getFormData('del_exception')) {
         /* Deleting recurrence exceptions. */
-        [$type, $calendar] = explode('_', Horde_Util::getFormData('calendar'), 2);
+        [$type, $calendar] = explode('_', Util::getFormData('calendar'), 2);
         try {
             $kronolith_driver = Kronolith::getDriver($type, $calendar);
             switch ($type) {
@@ -61,7 +63,7 @@ do {
                     break;
             }
 
-            $event = $kronolith_driver->getEvent(Horde_Util::getFormData('eventID'));
+            $event = $kronolith_driver->getEvent(Util::getFormData('eventID'));
             if (!$kronolith_calendar->hasPermission(Horde_Perms::EDIT, $registry->getAuth(), $event->creator)) {
                 $notification->push(_("You do not have permission to edit this event."), 'horde.warning');
                 break;
@@ -78,12 +80,12 @@ do {
         break;
     }
 
-    if (Horde_Util::getFormData('cancel')) {
+    if (Util::getFormData('cancel')) {
         break;
     }
 
-    [$sourceType, $source] = explode('_', Horde_Util::getFormData('existingcalendar'), 2);
-    [$targetType, $targetcalendar] = explode('_', Horde_Util::getFormData('targetcalendar'), 2);
+    [$sourceType, $source] = explode('_', Util::getFormData('existingcalendar'), 2);
+    [$targetType, $targetcalendar] = explode('_', Util::getFormData('targetcalendar'), 2);
     if (strpos($targetcalendar, '\\')) {
         [$target, $user] = explode('\\', $targetcalendar, 2);
     } else {
@@ -93,7 +95,7 @@ do {
 
     try {
         $event = false;
-        if (($edit_recur = Horde_Util::getFormData('edit_recur'))
+        if (($edit_recur = Util::getFormData('edit_recur'))
             && $edit_recur != 'all' && $edit_recur != 'copy'
             && ($targetType != 'internal' || _check_max())) {
             /* Edit a recurring exception. */
@@ -108,13 +110,13 @@ do {
                     $kronolith_calendar = $GLOBALS['calendar_manager']->getEntry(Kronolith::ALL_REMOTE_CALENDARS, $source);
                     break;
             }
-            $event = $kronolith_driver->getEvent(Horde_Util::getFormData('eventID'));
+            $event = $kronolith_driver->getEvent(Util::getFormData('eventID'));
             if (!$event->hasPermission(Horde_Perms::EDIT)) {
                 $notification->push(_("You do not have permission to edit this event."), 'horde.warning');
                 break;
             }
 
-            $exception = new Horde_Date(Horde_Util::getFormData('recur_ex'));
+            $exception = new Horde_Date(Util::getFormData('recur_ex'));
 
             switch ($edit_recur) {
                 case 'current':
@@ -185,7 +187,7 @@ do {
             break;
         }
 
-        if (Horde_Util::getFormData('saveAsNew') || $edit_recur == 'copy') {
+        if (Util::getFormData('saveAsNew') || $edit_recur == 'copy') {
             /* Creating a copy of the event. */
             if ($targetType == 'internal' && !_check_max()) {
                 break;
@@ -194,7 +196,7 @@ do {
             $event = $kronolith_driver->getEvent();
         } else {
             /* Regular saving of event. */
-            $eventId = Horde_Util::getFormData('eventID');
+            $eventId = Util::getFormData('eventID');
             $kronolith_driver = Kronolith::getDriver($sourceType, $source);
             $event = $kronolith_driver->getEvent($eventId);
 
@@ -233,12 +235,12 @@ do {
     }
 } while (false);
 
-if ($url = Horde::verifySignedUrl(Horde_Util::getFormData('url'))) {
+if ($url = Horde::verifySignedUrl(Util::getFormData('url'))) {
     $url = new Horde_Url($url, true);
 } else {
     $url = Horde::url($prefs->getValue('defaultview') . '.php', true)
-        ->add(['month' => Horde_Util::getFormData('month'),
-            'year' => Horde_Util::getFormData('year')]);
+        ->add(['month' => Util::getFormData('month'),
+            'year' => Util::getFormData('year')]);
 }
 
 /* Make sure URL is unique. */

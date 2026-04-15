@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2004-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2004-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -474,9 +474,9 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             $url = $this->_getUrl($eventId);
             try {
                 $response = $this->_getClient($url)->request('GET');
-            } catch (\Sabre\HTTP\ClientException $e) {
+            } catch (Sabre\HTTP\ClientException $e) {
                 throw new Kronolith_Exception($e);
-            } catch (\Sabre\DAV\Exception $e) {
+            } catch (Sabre\DAV\Exception $e) {
                 throw new Kronolith_Exception($e);
             }
             if ($response['statusCode'] == 200) {
@@ -587,7 +587,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
      *
      * @param Kronolith_Event $event  The event to save.
      *
-     * @return \Sabre\HTTP\ResponseInterface  The HTTP response.
+     * @return Sabre\HTTP\ResponseInterface  The HTTP response.
      * @throws Horde_Mime_Exception
      * @throws Kronolith_Exception
      */
@@ -605,10 +605,10 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
                     $ical->exportvCalendar(),
                     ['Content-Type' => 'text/calendar']
                 );
-        } catch (\Sabre\HTTP\ClientException $e) {
+        } catch (Sabre\HTTP\ClientException $e) {
             Horde::log($e, 'INFO');
             throw new Kronolith_Exception($e);
-        } catch (\Sabre\DAV\Exception $e) {
+        } catch (Sabre\DAV\Exception $e) {
             Horde::log($e, 'INFO');
             throw new Kronolith_Exception($e);
         }
@@ -646,10 +646,10 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         $url = $this->_getUrl($eventId);
         try {
             $response = $this->_getClient($url)->request('DELETE');
-        } catch (\Sabre\HTTP\ClientException $e) {
+        } catch (Sabre\HTTP\ClientException $e) {
             Horde::log($e, 'INFO');
             throw new Kronolith_Exception($e);
-        } catch (\Sabre\DAV\Exception $e) {
+        } catch (Sabre\DAV\Exception $e) {
             Horde::log($e, 'INFO');
             throw new Kronolith_Exception($e);
         }
@@ -700,9 +700,9 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             if ($response['statusCode'] != 200) {
                 throw new Kronolith_Exception($error, $response['statusCode']);
             }
-        } catch (\Sabre\HTTP\ClientException $e) {
+        } catch (Sabre\HTTP\ClientException $e) {
             throw new Kronolith_Exception($e);
-        } catch (\Sabre\DAV\Exception $e) {
+        } catch (Sabre\DAV\Exception $e) {
             Horde::log(
                 sprintf(
                     'Failed to retrieve remote calendar: url = "%s", status = %s',
@@ -788,10 +788,10 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         $client = $this->_getClient($this->_getUrl());
         try {
             $this->_davSupport = $client->options();
-        } catch (\Sabre\HTTP\ClientException $e) {
+        } catch (Sabre\HTTP\ClientException $e) {
             $this->_davSupport = false;
             return false;
-        } catch (\Sabre\DAV\Exception $e) {
+        } catch (Sabre\DAV\Exception $e) {
             if ($e->getHttpStatus() != 405) {
                 Horde::log($e, 'INFO');
             }
@@ -814,10 +814,10 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
                 '',
                 ['{DAV:}resourcetype', '{DAV:}current-user-privilege-set']
             );
-        } catch (\Sabre\HTTP\ClientException $e) {
+        } catch (Sabre\HTTP\ClientException $e) {
             Horde::log($e, 'INFO');
             return false;
-        } catch (\Sabre\DAV\Exception $e) {
+        } catch (Sabre\DAV\Exception $e) {
             Horde::log($e, 'INFO');
             return false;
         } catch (Horde_Dav_Exception $e) {
@@ -953,10 +953,10 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
                         $headers
                     )
                 );
-        } catch (\Sabre\HTTP\ClientException $e) {
+        } catch (Sabre\HTTP\ClientException $e) {
             Horde::log($e, 'INFO');
             throw new Kronolith_Exception($e);
-        } catch (\Sabre\DAV\Exception $e) {
+        } catch (Sabre\DAV\Exception $e) {
             Horde::log($e, 'INFO');
             throw new Kronolith_Exception($e);
         }
@@ -1007,9 +1007,9 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
      *
      * @param string $uri  The base URI for any requests.
      *
-     * @return \Sabre\DAV\Client  A DAV client.
-     * @throws \Sabre\DAV\Exception
-     * @throws \Sabre\HTTP\ClientException
+     * @return Client  A DAV client.
+     * @throws Sabre\DAV\Exception
+     * @throws Sabre\HTTP\ClientException
      */
     protected function _getClient($uri)
     {

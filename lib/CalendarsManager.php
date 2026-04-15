@@ -1,7 +1,9 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 2013-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2013-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -250,7 +252,7 @@ class Kronolith_CalendarsManager
         // user doesn't have any selected calendars to view then fall
         // back to an available calendar. An empty string passed in this
         // parameter will clear any existing session value.
-        if (($calId = Horde_Util::getFormData('display_cal')) !== null) {
+        if (($calId = Util::getFormData('display_cal')) !== null) {
             $session->set('kronolith', 'display_cal', $calId);
         } else {
             $calId = $session->get('kronolith', 'display_cal');
@@ -318,7 +320,7 @@ class Kronolith_CalendarsManager
     {
         global $prefs, $registry;
 
-        if (($calId = Horde_Util::getFormData('toggle_calendar')) !== null) {
+        if (($calId = Util::getFormData('toggle_calendar')) !== null) {
             if (strncmp($calId, 'remote_', 7) === 0) {
                 $calId = substr($calId, 7);
                 if (($key = array_search($calId, $this->_displayRemote)) === false) {

@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
  * The Kronolith_View_DeleteEvent:: class provides an API for viewing
  * event delete forms.
@@ -60,18 +62,18 @@ class Kronolith_View_DeleteEvent
             exit;
         }
 
-        if ($datetime = Horde_Util::getFormData('datetime')) {
+        if ($datetime = Util::getFormData('datetime')) {
             $datetime = new Horde_Date($datetime);
             $month = $datetime->month;
             $year = $datetime->year;
             $day = $datetime->mday;
         } else {
-            $month = Horde_Util::getFormData('month', date('n'));
-            $day = Horde_Util::getFormData('mday', date('j'));
-            $year = Horde_Util::getFormData('year', date('Y'));
+            $month = Util::getFormData('month', date('n'));
+            $day = Util::getFormData('mday', date('j'));
+            $year = Util::getFormData('year', date('Y'));
         }
 
-        $url = Horde_Util::getFormData('url');
+        $url = Util::getFormData('url');
 
         echo '<div id="DeleteEvent"' . ($active ? '' : ' style="display:none"') . '>';
         if (!$this->_event->recurs()) {

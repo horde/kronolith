@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Horde\Kronolith\Calendar;
 
+use Horde_Dav_Storage;
+use Kronolith_Icalendar_Storage;
+
 /**
  * Event Delete Operation Handler
  *
@@ -18,8 +21,8 @@ namespace Horde\Kronolith\Calendar;
 class EventDeletedListener
 {
     public function __construct(
-        \Horde_Dav_Storage $dav,
-        \Kronolith_Icalendar_Storage $icalStore,
+        Horde_Dav_Storage $dav,
+        Kronolith_Icalendar_Storage $icalStore,
         DeleteHandlerListeners $listeners
     ) {}
 

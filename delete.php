@@ -1,7 +1,9 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 1999-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -17,14 +19,14 @@ if (Kronolith::showAjaxView()) {
     Horde::url('', true)->redirect();
 }
 
-$c = Horde_Util::getFormData('calendar');
-$driver = Horde_Util::getFormData('type');
+$c = Util::getFormData('calendar');
+$driver = Util::getFormData('type');
 $kronolith_driver = Kronolith::getDriver($driver, $c);
-if ($eventID = Horde_Util::getFormData('eventID')) {
+if ($eventID = Util::getFormData('eventID')) {
     try {
         $event = $kronolith_driver->getEvent($eventID);
     } catch (Exception $e) {
-        if ($url = Horde::verifySignedUrl(Horde_Util::getFormData('url'))) {
+        if ($url = Horde::verifySignedUrl(Util::getFormData('url'))) {
             $url = new Horde_Url($url);
         } else {
             $url = Horde::url($prefs->getValue('defaultview') . '.php', true);
@@ -54,11 +56,11 @@ if ($eventID = Horde_Util::getFormData('eventID')) {
     if (!empty($have_perms)) {
         $notification_type = Kronolith::ITIP_CANCEL;
         $instance = null;
-        if (Horde_Util::getFormData('future')) {
+        if (Util::getFormData('future')) {
             $recurEnd = new Horde_Date(['hour' => 0, 'min' => 0, 'sec' => 0,
-                'month' => Horde_Util::getFormData('month', date('n')),
-                'mday' => Horde_Util::getFormData('mday', date('j')) - 1,
-                'year' => Horde_Util::getFormData('year', date('Y'))]);
+                'month' => Util::getFormData('month', date('n')),
+                'mday' => Util::getFormData('mday', date('j')) - 1,
+                'year' => Util::getFormData('year', date('Y'))]);
             if ($event->end->compareDate($recurEnd) > 0) {
                 try {
                     $kronolith_driver->deleteEvent($event->id);
@@ -70,20 +72,20 @@ if ($eventID = Horde_Util::getFormData('eventID')) {
                 $event->save();
             }
             $notification_type = Kronolith::ITIP_REQUEST;
-        } elseif (Horde_Util::getFormData('current')) {
+        } elseif (Util::getFormData('current')) {
             $event->recurrence->addException(
-                Horde_Util::getFormData('year'),
-                Horde_Util::getFormData('month'),
-                Horde_Util::getFormData('mday')
+                Util::getFormData('year'),
+                Util::getFormData('month'),
+                Util::getFormData('mday')
             );
             $event->save();
-            $instance = new Horde_Date(['year' => Horde_Util::getFormData('year'),
-                'month' => Horde_Util::getFormData('month'),
-                'mday' => Horde_Util::getFormData('mday')]);
+            $instance = new Horde_Date(['year' => Util::getFormData('year'),
+                'month' => Util::getFormData('month'),
+                'mday' => Util::getFormData('mday')]);
         }
 
         if (!$event->recurs()
-            || Horde_Util::getFormData('all')
+            || Util::getFormData('all')
             || !$event->recurrence->hasActiveRecurrence()) {
             try {
                 $kronolith_driver->deleteEvent($event->id);
@@ -92,18 +94,18 @@ if ($eventID = Horde_Util::getFormData('eventID')) {
             }
         }
 
-        if (Horde_Util::getFormData('sendupdates', false)) {
+        if (Util::getFormData('sendupdates', false)) {
             Kronolith::sendITipNotifications($event, $notification, $notification_type, $instance);
         }
     }
 }
 
-if ($url = Horde::verifySignedUrl(Horde_Util::getFormData('url'))) {
+if ($url = Horde::verifySignedUrl(Util::getFormData('url'))) {
     $url = new Horde_Url($url, true);
 } else {
-    $date = new Horde_Date(Horde_Util::getFormData('date'));
+    $date = new Horde_Date(Util::getFormData('date'));
     $url = Horde::url($prefs->getValue('defaultview') . '.php', true)
-        ->add('date', Horde_Util::getFormData('date', date('Ymd')));
+        ->add('date', Util::getFormData('date', date('Ymd')));
 }
 
 // Make sure URL is unique.

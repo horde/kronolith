@@ -1,6 +1,9 @@
 <?php
+
+use Horde\Util\Util;
+
 /**
- * Copyright 2010-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2010-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -11,7 +14,7 @@
 require_once __DIR__ . '/../lib/Application.php';
 Horde_Registry::appInit('kronolith');
 
-$calendar = Horde_Util::getFormData('calendar');
+$calendar = Util::getFormData('calendar');
 $url = Horde::url('', true);
 if (Kronolith::showAjaxView()) {
     $url->setAnchor('calendar:internal|' . $calendar);

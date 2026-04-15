@@ -13,21 +13,27 @@
       <tbody>
         <?php $i = 1 ?>
 
-        <tr<?php if ($i++ % 2) echo ' bgcolor="#f1f1f1"' ?>>
+        <tr<?php if ($i++ % 2) {
+            echo ' bgcolor="#f1f1f1"';
+        } ?>>
           <td nowrap="nowrap" align="right">
             <font size="2"><strong><?php echo _("Calendar:") ?></strong></font>
           </td>
           <td width="5">&nbsp;</td>
           <td width="100%"><font size="2"><strong><?php echo $this->h($this->calendar) ?></strong></font></td>
         </tr>
-        <tr<?php if ($i++ % 2) echo ' bgcolor="#f1f1f1"' ?>>
+        <tr<?php if ($i++ % 2) {
+            echo ' bgcolor="#f1f1f1"';
+        } ?>>
           <td nowrap="nowrap" align="right">
             <font size="2"><strong><?php echo _("Start:") ?></strong></font>
           </td>
           <td width="5">&nbsp;</td>
           <td width="100%"><font size="2"><strong><?php echo $this->event->start->strftime('%x %X') ?></strong></font></td>
         </tr>
-        <tr<?php if ($i++ % 2) echo ' bgcolor="#f1f1f1"' ?>>
+        <tr<?php if ($i++ % 2) {
+            echo ' bgcolor="#f1f1f1"';
+        } ?>>
           <td nowrap="nowrap" align="right">
             <font size="2"><strong><?php echo _("End:") ?></strong></font>
           </td>
@@ -36,7 +42,9 @@
         </tr>
         <?php if (strlen($this->event->location) && !$this->private): ?>
 
-        <tr<?php if ($i++ % 2) echo ' bgcolor="#f1f1f1"' ?>>
+        <tr<?php if ($i++ % 2) {
+            echo ' bgcolor="#f1f1f1"';
+        } ?>>
           <td nowrap="nowrap" align="right">
             <font size="2"><strong><?php echo _("Location:") ?></strong></font>
           </td>
@@ -46,7 +54,9 @@
         <?php endif ?>
         <?php if (count($this->event->attendees) && !$this->private): ?>
 
-        <tr<?php if ($i++ % 2) echo ' bgcolor="#f1f1f1"' ?>>
+        <tr<?php if ($i++ % 2) {
+            echo ' bgcolor="#f1f1f1"';
+        } ?>>
           <td nowrap="nowrap" align="right" valign="top">
             <font size="2"><strong><?php echo _("Attendees:") ?></strong></font>
           </td>
@@ -66,12 +76,14 @@
 
         <?php if (strlen($this->event->description) && !$this->private): ?>
 
-        <tr<?php if ($i++ % 2) echo ' bgcolor="#f1f1f1"' ?>>
+        <tr<?php if ($i++ % 2) {
+            echo ' bgcolor="#f1f1f1"';
+        } ?>>
           <td nowrap="nowrap" align="right" valign="top">
             <font size="2"><strong><?php echo _("Description:") ?></strong></font>
           </td>
           <td width="5">&nbsp;</td>
-          <td width="100%"><font size="2"><strong><?php echo $GLOBALS['injector']->getInstance('Horde_Core_Factory_TextFilter')->filter($this->event->description, 'text2html', array('parselevel' => Horde_Text_Filter_Text2html::MICRO, 'callback' => null)) ?></strong></font></td>
+          <td width="100%"><font size="2"><strong><?php echo $GLOBALS['injector']->getInstance('Horde_Core_Factory_TextFilter')->filter($this->event->description, 'text2html', ['parselevel' => Horde_Text_Filter_Text2html::MICRO, 'callback' => null]) ?></strong></font></td>
         </tr>
         <?php endif ?>
 

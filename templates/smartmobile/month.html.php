@@ -1,5 +1,5 @@
 <div data-role="page" id="monthview">
- <?php echo $this->smartmobileHeader(array('logout' => true, 'portal' => true, 'title' => _("Month"))) ?>
+ <?php echo $this->smartmobileHeader(['logout' => true, 'portal' => true, 'title' => _("Month")]) ?>
 
  <div data-role="header">
   <div data-role="navbar">

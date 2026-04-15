@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
  * The Kronolith_View_Event:: class provides an API for viewing events.
  *
@@ -73,13 +75,13 @@ class Kronolith_View_Event
         $status = Kronolith::statusToString($this->_event->status);
         $attendees = $this->_event->attendees;
         $resources = $this->_event->getResources();
-        if ($datetime = Horde_Util::getFormData('datetime')) {
+        if ($datetime = Util::getFormData('datetime')) {
             $datetime = new Horde_Date($datetime);
             $month = $datetime->month;
             $year = $datetime->year;
         } else {
-            $month = (int) Horde_Util::getFormData('month', date('n'));
-            $year = (int) Horde_Util::getFormData('year', date('Y'));
+            $month = (int) Util::getFormData('month', date('n'));
+            $year = (int) Util::getFormData('year', date('Y'));
         }
 
         $dateFormat = $prefs->getValue('date_format');

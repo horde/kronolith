@@ -1,8 +1,10 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
- * Copyright 2004-2007 Code Fusion  <http://www.codefusion.co.za/>
- * Copyright 2004-2007 Stuart Binge <s.binge@codefusion.co.za>
+ * Copyright 2004-2026 Code Fusion  <http://www.codefusion.co.za/>
+ * Copyright 2004-2026 Stuart Binge <s.binge@codefusion.co.za>
  *
  * See the enclosed file LICENSE for license information (GPL). If you
  * did not receive this file, see http://www.horde.org/licenses/gpl.
@@ -24,11 +26,11 @@ $resources = $session->get('kronolith', 'resources', Horde_Session::TYPE_ARRAY);
 $editAttendee = null;
 
 // Get the current Free/Busy view; default to the 'day' view if none specified.
-$view = Horde_Util::getFormData('view', 'Day');
+$view = Util::getFormData('view', 'Day');
 
 // Get the date information.
 $start = new Horde_Date(
-    Horde_Util::getFormData('startdate'),
+    Util::getFormData('startdate'),
     date_default_timezone_get()
 );
 switch ($view) {
@@ -55,20 +57,20 @@ switch ($view) {
 }
 
 // Get the action ID and value. This specifies what action the user initiated.
-$actionID = Horde_Util::getFormData('actionID');
-if (Horde_Util::getFormData('clearAll')) {
+$actionID = Util::getFormData('actionID');
+if (Util::getFormData('clearAll')) {
     $actionID =  'clear';
 }
-$actionValue = Horde_Util::getFormData('actionValue');
+$actionValue = Util::getFormData('actionValue');
 // Perform the specified action, if there is one.
 switch ($actionID) {
     case 'add':
         // Add new attendees and/or resources. Multiple attendees can be seperated
         // on a single line by whitespace and/or commas. Resources are added one
         // at a time (at least for now).
-        $newUser = trim(Horde_Util::getFormData('newUser'));
-        $newAttendees = trim(Horde_Util::getFormData('newAttendees'));
-        $newResource = trim(Horde_Util::getFormData('resourceselect'));
+        $newUser = trim(Util::getFormData('newUser'));
+        $newAttendees = trim(Util::getFormData('newAttendees'));
+        $newResource = trim(Util::getFormData('resourceselect'));
 
         if (!is_null($newUser)) {
             if (!$user = Kronolith::validateUserAttendee($newUser)) {
@@ -102,7 +104,7 @@ switch ($actionID) {
             $session->set('kronolith', 'resources', $resources);
         }
 
-        if (Horde_Util::getFormData('addNewClose')) {
+        if (Util::getFormData('addNewClose')) {
             echo Horde::wrapInlineScript(['window.close();']);
             exit;
         }
@@ -176,7 +178,7 @@ switch ($actionID) {
             exit;
         }
 
-        if ($url = Horde::verifySignedUrl(Horde_Util::getFormData('url'))) {
+        if ($url = Horde::verifySignedUrl(Util::getFormData('url'))) {
             $url = new Horde_Url($url, true);
         } else {
             $url = Horde::url($prefs->getValue('defaultview') . '.php', true)
@@ -193,6 +195,11 @@ switch ($actionID) {
         break;
 }
 
+/**
+ * ARCHITECTURE VIOLATION: Using deprecated Horde::img()
+ * @deprecated Use Horde_Themes_Image::tag() instead
+ * @see Horde_Deprecated::img()
+ */
 // Pre-format our delete image/link.
 $delimg = Horde::img('delete.png', _("Remove Attendee"));
 
