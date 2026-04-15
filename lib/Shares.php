@@ -13,6 +13,8 @@
  * @package   Kronolith
  */
 
+use Horde\Injector\Attribute\Factory;
+
 /**
  * Share wrapper to simplify listing shares.
  *
@@ -22,6 +24,7 @@
  * @license   http://www.horde.org/licenses/gpl GPL
  * @package   Kronolith
  */
+#[Factory(factory: Kronolith_Factory_Shares::class, method: 'create')]
 class Kronolith_Shares
 {
     /**
