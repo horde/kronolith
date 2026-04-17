@@ -117,7 +117,7 @@ abstract class Kronolith_FreeBusy_View
 
         // Set C locale to avoid localized decimal separators during CSS width
         // calculation.
-        $lc = setlocale(LC_NUMERIC, 0);
+        $lc = setlocale(LC_NUMERIC, '0');
         setlocale(LC_NUMERIC, 'C');
 
         // Required to attend.

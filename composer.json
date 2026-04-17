@@ -21,11 +21,15 @@
             "role": "lead"
         }
     ],
-    "time": "2026-04-12",
+    "keywords": [
+        "caldav",
+        "calendar"
+    ],
+    "time": "2026-04-15",
     "repositories": [],
     "require": {
         "horde/horde-installer-plugin": "dev-FRAMEWORK_6_0 || ^3 || ^2",
-        "php": "^7.4 || ^8",
+        "php": "^8.1",
         "horde/content": "^3 || dev-FRAMEWORK_6_0",
         "horde/horde": "^6 || dev-FRAMEWORK_6_0",
         "horde/auth": "^3 || dev-FRAMEWORK_6_0",

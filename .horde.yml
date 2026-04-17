@@ -32,17 +32,17 @@ authors:
     active: false
     role: lead
 version:
-  release: 5.0.0-alpha11
+  release: 5.0.0-beta1
   api: 5.0.0alpha1
 state:
-  release: alpha
+  release: beta
   api: alpha
 license:
   identifier: GPL-2.0-only
   uri: http://www.horde.org/licenses/gpl
 dependencies:
   required:
-    php: ^7.4 || ^8
+    php: ^8.1
     composer:
       horde/content: ^3
       horde/horde: ^6
@@ -108,3 +108,6 @@ autoload:
   psr-4:
     Horde\Kronolith\: /src
 vendor: horde
+keywords:
+  - caldav
+  - calendar
