@@ -3128,11 +3128,15 @@ abstract class Kronolith_Event
         $timezone = $to_original ? $this->timezone : date_default_timezone_get();
         $this->start->setTimezone($timezone);
         $this->end->setTimezone($timezone);
-        if ($this->recurs() && $this->recurrence->hasRecurEnd()) {
-            /* @todo Check if have to go through all recurrence
-               exceptions too. */
-            $this->recurrence->start->setTimezone($timezone);
-            $this->recurrence->recurEnd->setTimezone($timezone);
+        if ($this->recurs()) {
+            $this->recurrence->setRecurStart(
+                (clone $this->recurrence->start)->setTimezone($timezone)
+            );
+            if ($this->recurrence->hasRecurEnd()) {
+                $this->recurrence->setRecurEnd(
+                    (clone $this->recurrence->recurEnd)->setTimezone($timezone)
+                );
+            }
         }
     }
 

@@ -429,9 +429,13 @@ class Kronolith
             }
 
             if ($convert) {
-                $event->recurrence->start->setTimezone($event->timezone);
+                $event->recurrence->setRecurStart(
+                    (clone $event->recurrence->start)->setTimezone($event->timezone)
+                );
                 if ($event->recurrence->hasRecurEnd()) {
-                    $event->recurrence->recurEnd->setTimezone($event->timezone);
+                    $event->recurrence->setRecurEnd(
+                        (clone $event->recurrence->recurEnd)->setTimezone($event->timezone)
+                    );
                 }
             }
 
@@ -684,9 +688,13 @@ class Kronolith
                         && $event->getDriver()->supportsTimezones();
                     if ($convert) {
                         $timezone = date_default_timezone_get();
-                        $event->recurrence->start->setTimezone($event->timezone);
+                        $event->recurrence->setRecurStart(
+                            (clone $event->recurrence->start)->setTimezone($event->timezone)
+                        );
                         if ($event->recurrence->hasRecurEnd()) {
-                            $event->recurrence->recurEnd->setTimezone($event->timezone);
+                            $event->recurrence->setRecurEnd(
+                                (clone $event->recurrence->recurEnd)->setTimezone($event->timezone)
+                            );
                         }
                     }
                     $eventEnd = $event->recurrence->nextRecurrence($now);
