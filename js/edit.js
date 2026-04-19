@@ -17,7 +17,7 @@ var KronolithEdit =
     {
         var prefix;
 
-        switch (e.element().identify()) {
+        switch (e.target.id) {
         case 'end_img':
             prefix = 'end';
             break;
@@ -34,9 +34,9 @@ var KronolithEdit =
             return;
         }
 
-        document.getElementById(prefix + '_year').value = e.memo.getFullYear();
-        document.getElementById(prefix + '_month').value = e.memo.getMonth() + 1;
-        document.getElementById(prefix + '_day').value = e.memo.getDate();
+        document.getElementById(prefix + '_year').value = e.detail.getFullYear();
+        document.getElementById(prefix + '_month').value = e.detail.getMonth() + 1;
+        document.getElementById(prefix + '_day').value = e.detail.getDate();
 
         this.doAction(prefix + '_year');
     },
@@ -57,7 +57,7 @@ var KronolithEdit =
             return;
         }
 
-        var elt = e.element(),
+        var elt = e.target,
             id = elt.getAttribute('id');
 
         switch (id) {
@@ -80,7 +80,8 @@ var KronolithEdit =
                 },
                 url: elt.getAttribute('href')
             });
-            e.stop();
+            e.preventDefault();
+            e.stopPropagation();
             break;
 
         case 'eam':
@@ -99,14 +100,15 @@ var KronolithEdit =
             this.updateWday('start');
             this.updateEndDate();
 
-            $('recur_weekly_interval').adjacent('.checkbox').invoke('setValue', 0);
+            this.uncheckWeeklyCheckboxes();
             break;
 
         case 'end_img':
         case 'recur_end_img':
         case 'start_img':
             Horde_Calendar.open(elt, this.getFormDate(id.slice(0, -4)));
-            e.stop();
+            e.preventDefault();
+            e.stopPropagation();
             break;
 
         case 'mo':
@@ -180,26 +182,63 @@ var KronolithEdit =
                 this.updateWday('start');
                 this.updateWday('end');
             } else {
-                if (!elt.match('TD')) {
-                    elt = elt.up('TD');
+                if (!elt.matches('TD')) {
+                    elt = elt.closest('TD');
                 }
                 if (elt && elt.classList.contains('toggle')) {
-                    elt.down().toggle().next().toggle();
-                    $('section' + elt.identify().substr(6)).toggle();
+                    var first = elt.firstElementChild;
+                    if (first) {
+                        this.toggleDisplay(first);
+                        if (first.nextElementSibling) {
+                            this.toggleDisplay(first.nextElementSibling);
+                        }
+                    }
+                    this.toggleDisplay(document.getElementById('section' + elt.id.substr(6)));
                 }
             }
             break;
         }
     },
 
+    /**
+     * Toggle an element's visibility via its display style, matching the
+     * semantics of Prototype's Element.toggle().
+     */
+    toggleDisplay: function(elt)
+    {
+        if (!elt) {
+            return;
+        }
+        var hidden = elt.style.display === 'none' ||
+            window.getComputedStyle(elt).display === 'none';
+        elt.style.display = hidden ? '' : 'none';
+    },
+
+    /**
+     * Uncheck the recurrence checkboxes/radios that are siblings of the
+     * weekly interval field (Prototype: $(...).adjacent('.checkbox')).
+     */
+    uncheckWeeklyCheckboxes: function()
+    {
+        var elt = document.getElementById('recur_weekly_interval');
+        if (!elt || !elt.parentNode) {
+            return;
+        }
+        Array.prototype.forEach.call(elt.parentNode.children, function(sib) {
+            if (sib !== elt && sib.matches('.checkbox')) {
+                sib.checked = false;
+            }
+        });
+    },
+
     changeHandler: function(e)
     {
-        this.doAction(e.element().readAttribute('id'));
+        this.doAction(e.target.getAttribute('id'));
     },
 
     keypressHandler: function(e)
     {
-        switch (e.element().readAttribute('id')) {
+        switch (e.target.getAttribute('id')) {
         case 'recur_daily_interval':
             this.setRecur(1);
             break;
@@ -514,7 +553,7 @@ var KronolithEdit =
         }
         if (index != 2) {
             document.getElementById('recur_weekly_interval').value = '';
-            $('recur_weekly_interval').adjacent('.checkbox').invoke('setValue', 0);
+            this.uncheckWeeklyCheckboxes();
         }
         if (index != 3) {
             document.getElementById('recur_day_of_month_interval').value = '';
@@ -537,14 +576,15 @@ var KronolithEdit =
         if (document.getElementById('recur_end_wday')) {
             this.updateWday('recur_end');
         }
-        $('eventform').observe('click', this.clickHandler.bindAsEventListener(this));
-        $('eventform').observe('change', this.changeHandler.bindAsEventListener(this));
-        $('eventform').observe('keypress', this.keypressHandler.bindAsEventListener(this));
+        var eventform = document.getElementById('eventform');
+        eventform.addEventListener('click', this.clickHandler.bind(this));
+        eventform.addEventListener('change', this.changeHandler.bind(this));
+        eventform.addEventListener('keypress', this.keypressHandler.bind(this));
 
         document.getElementById('title').focus();
     }
 
 };
 
-document.observe('dom:loaded', KronolithEdit.onDomLoad.bind(KronolithEdit));
-document.observe('Horde_Calendar:select', KronolithEdit.calendarSelect.bindAsEventListener(KronolithEdit));
+document.addEventListener('DOMContentLoaded', KronolithEdit.onDomLoad.bind(KronolithEdit));
+document.addEventListener('Horde_Calendar:select', KronolithEdit.calendarSelect.bind(KronolithEdit));
