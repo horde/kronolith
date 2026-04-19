@@ -680,7 +680,7 @@ KronolithCore = {
             this.monthDays['kronolithMonthDay' + dateString] = cell;
             cell.id = 'kronolithMonthDay' + dateString;
             cell.store('date', dateString);
-            cell.classList.remove('kronolith-other-month').classList.remove('kronolith-today');
+            cell.classList.remove('kronolith-other-month', 'kronolith-today');
             if (day.getMonth() != month) {
                 cell.classList.add('kronolith-other-month');
             }
