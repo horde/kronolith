@@ -551,7 +551,12 @@ class Kronolith_CalendarsManager
     {
         $this->_allHolidays = [];
         if (!empty($GLOBALS['conf']['holidays']['enable'])) {
-            if (class_exists('Date_Holidays')) {
+            try {
+                $hasHolidays = class_exists('Date_Holidays');
+            } catch (Throwable $e) {
+                $hasHolidays = false;
+            }
+            if ($hasHolidays) {
                 $dh = new Date_Holidays();
                 foreach ($dh->getInstalledDrivers() as $driver) {
                     if ($driver['id'] == 'Composite') {
