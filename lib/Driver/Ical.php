@@ -788,6 +788,9 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
         $client = $this->_getClient($this->_getUrl());
         try {
             $this->_davSupport = $client->options();
+        } catch (Sabre\HTTP\ClientHttpException $e) {
+            $this->_davSupport = false;
+            return false;
         } catch (Sabre\HTTP\ClientException $e) {
             $this->_davSupport = false;
             return false;
@@ -814,6 +817,9 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
                 '',
                 ['{DAV:}resourcetype', '{DAV:}current-user-privilege-set']
             );
+        } catch (Sabre\HTTP\ClientHttpException $e) {
+            Horde::log($e, 'INFO');
+            return false;
         } catch (Sabre\HTTP\ClientException $e) {
             Horde::log($e, 'INFO');
             return false;
