@@ -25,7 +25,7 @@
         "caldav",
         "calendar"
     ],
-    "time": "2026-04-17",
+    "time": "2026-04-27",
     "repositories": [],
     "require": {
         "horde/horde-installer-plugin": "dev-FRAMEWORK_6_0 || ^3 || ^2",
@@ -92,7 +92,7 @@
             "lib/"
         ],
         "psr-4": {
-            "Horde\\Kronolith\\": "/src"
+            "Horde\\Kronolith\\": "src/"
         }
     },
     "autoload-dev": {
