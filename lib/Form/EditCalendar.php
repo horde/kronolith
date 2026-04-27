@@ -210,7 +210,7 @@ class Kronolith_Form_EditCalendar extends Horde_Form
                     'text' => _("Change Permissions"),
                     'onclick' => Horde::popupJs(
                         $url,
-                        ['params' => ['urlencode' => true]]
+                        ['urlencode' => true]
                     )
                          . 'return false;',
                     'class' => 'horde-button',

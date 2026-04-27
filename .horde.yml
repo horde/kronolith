@@ -106,7 +106,7 @@ autoload:
   classmap:
     - lib/
   psr-4:
-    Horde\Kronolith\: /src
+    Horde\Kronolith\: src/
 vendor: horde
 keywords:
   - caldav
