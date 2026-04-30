@@ -4,6 +4,7 @@
     color: transparent;
     padding-right: 18px;
     text-indent: -10000px;
+    background-size: 14px 14px;
 }
 .horde-buttonbar a.kronolithNext {
     background-image: url("graphics/right.png");
@@ -13,6 +14,7 @@
 }
 #kronolithNavTasks {
     background-image: url("graphics/tasks.png");
+    background-size: 16px 16px;
 }
 #kronolithNavAgenda {
     /*
@@ -21,18 +23,23 @@
 }
 #kronolithNavDay {
     background-image: url("graphics/dayview.png");
+    background-size: 16px 16px;
 }
 #kronolithNavWeek {
     background-image: url("graphics/weekview.png");
+    background-size: 16px 16px;
 }
 #kronolithNavWorkweek {
     background-image: url("graphics/workweekview.png");
+    background-size: 16px 16px;
 }
 #kronolithNavMonth {
     background-image: url("graphics/monthview.png");
+    background-size: 16px 16px;
 }
 #kronolithNavYear {
     background-image: url("graphics/yearview.png");
+    background-size: 16px 16px;
 }
 
 /* Autocomplete styles. */
@@ -406,15 +413,19 @@ div.fbgrid {
 /* Icons. */
 .kronolith-icon-today {
     background-image: url('graphics/today.png');
+    background-size: 16px 16px;
 }
 .kronolith-icon-goto {
     background-image: url('graphics/goto.png');
+    background-size: 16px 16px;
 }
 .kronolith-icon-search {
     background-image: url('graphics/search.png');
+    background-size: 16px 16px;
 }
 .kronolith-icon-back {
     background-image: url('graphics/back.png');
+    background-size: 16px 16px;
 }
 
 /* Tags */
