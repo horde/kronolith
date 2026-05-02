@@ -1,4 +1,16 @@
 ---
+5.0.0-beta4:
+  api: 5.0.0-beta4
+  state:
+    release: beta
+    api: beta
+  date: 2026-05-02
+  license:
+    identifier: GPL-2.0-only
+    uri: https://spdx.org/licenses/GPL-2.0-only.html
+  notes: |-
+    docs: icon license
+    style: Changed CSS and icon assets to Lucide Icons with proper attribution
 5.0.0-beta3:
   api: 5.0.0-beta3
   state:
