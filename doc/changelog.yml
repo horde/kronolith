@@ -200,6 +200,17 @@
   notes: |
     Original version string was 5.0.0alpha3
     [rla] Try to get around merge issues when refreshing the maintaina clone
+5.0.0-RC1:
+  api: 5.0.0-RC1
+  state:
+    release: RC
+    api: RC
+  date: 2026-05-12
+  license:
+    identifier: GPL-2.0-only
+    uri: https://spdx.org/licenses/GPL-2.0-only.html
+  notes: |-
+    style: Add CSS rules for event form icons
 5.0.0:
   api: 5.0.0
   state:
