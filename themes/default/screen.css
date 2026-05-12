@@ -352,6 +352,9 @@ img.kronolithEventIcon {
 }
 #eventform #start_img, #eventform #end_img, #eventform #recur_end_img {
     cursor: pointer;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
 }
 #eventform .horde-form-buttons {
     padding-left: 0;
