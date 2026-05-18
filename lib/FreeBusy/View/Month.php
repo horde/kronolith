@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Date\Formatter\IcuFormatter;
+
 /**
  * This class represent a month of free busy information sets.
  *
@@ -44,7 +46,7 @@ class Kronolith_FreeBusy_View_Month extends Kronolith_FreeBusy_View
 return Horde::url('#')->link(['title' => _("Previous Month"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'])
             . Horde::img('nav/left.png', '<')
             . '</a>'
-            . $this->_start->strftime('%B %Y')
+            . $this->_start->format('MMMM yyyy', new IcuFormatter(), $GLOBALS['language'])
             . Horde::url('#')->link(['title' => _("Next Month"), 'onclick' => 'return switchDate(' . $next->dateString() . ');'])
             . Horde::img('nav/right.png', '>')
             . '</a>';

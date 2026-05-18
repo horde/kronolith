@@ -1,5 +1,6 @@
 <?php
 
+use Horde\Date\Formatter\IcuFormatter;
 use Horde\Util\Util;
 
 /**
@@ -2825,12 +2826,12 @@ abstract class Kronolith_Event
             }
             if ($this->isAllDay()) {
                 if ($start->compareDate($end) == 0) {
-                    $methods['notify']['subtitle'] = sprintf(_("On %s"), '<strong>' . $start->strftime($prefs->getValue('date_format')) . '</strong>');
+                    $methods['notify']['subtitle'] = sprintf(_("On %s"), '<strong>' . $start->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . '</strong>');
                 } else {
-                    $methods['notify']['subtitle'] = sprintf(_("From %s to %s"), '<strong>' . $start->strftime($prefs->getValue('date_format')) . '</strong>', '<strong>' . $end->strftime($prefs->getValue('date_format')) . '</strong>');
+                    $methods['notify']['subtitle'] = sprintf(_("From %s to %s"), '<strong>' . $start->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . '</strong>', '<strong>' . $end->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . '</strong>');
                 }
             } else {
-                $methods['notify']['subtitle'] = sprintf(_("From %s at %s to %s at %s"), '<strong>' . $start->strftime($prefs->getValue('date_format')), $start->format($prefs->getValue('twentyFour') ? 'H:i' : 'h:ia') . '</strong>', '<strong>' . $end->strftime($prefs->getValue('date_format')), $this->end->format($prefs->getValue('twentyFour') ? 'H:i' : 'h:ia') . '</strong>');
+                $methods['notify']['subtitle'] = sprintf(_("From %s at %s to %s at %s"), '<strong>' . $start->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'), $start->format($prefs->getValue('twentyFour') ? 'HH:mm' : 'h:mm a', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . '</strong>', '<strong>' . $end->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'), $this->end->format($prefs->getValue('twentyFour') ? 'HH:mm' : 'h:mm a', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . '</strong>');
             }
         }
         if (isset($methods['mail'])) {
@@ -2842,7 +2843,7 @@ abstract class Kronolith_Event
             $view->imageId = $image->getContentId();
             $view->user = $user;
             $view->dateFormat = $prefs->getValue('date_format');
-            $view->timeFormat = $prefs->getValue('twentyFour') ? 'H:i' : 'h:ia';
+            $view->timeFormat = $prefs->getValue('twentyFour') ? 'HH:mm' : 'h:mm a';
             $view->start = $start;
             if (!$prefs->isLocked('event_reminder')) {
                 $view->prefsUrl = Horde::url($GLOBALS['registry']->getServiceLink('prefs', 'kronolith'), true)->remove(session_name());
@@ -2854,12 +2855,12 @@ abstract class Kronolith_Event
         if (isset($methods['desktop'])) {
             if ($this->isAllDay()) {
                 if ($this->start->compareDate($this->end) == 0) {
-                    $methods['desktop']['subtitle'] = sprintf(_("On %s"), $start->strftime($prefs->getValue('date_format')));
+                    $methods['desktop']['subtitle'] = sprintf(_("On %s"), $start->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'));
                 } else {
-                    $methods['desktop']['subtitle'] = sprintf(_("From %s to %s"), $start->strftime($prefs->getValue('date_format')), $end->strftime($prefs->getValue('date_format')));
+                    $methods['desktop']['subtitle'] = sprintf(_("From %s to %s"), $start->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'), $end->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'));
                 }
             } else {
-                $methods['desktop']['subtitle'] = sprintf(_("From %s at %s to %s at %s"), $start->strftime($prefs->getValue('date_format')), $start->format($prefs->getValue('twentyFour') ? 'H:i' : 'h:ia'), $end->strftime($prefs->getValue('date_format')), $this->end->format($prefs->getValue('twentyFour') ? 'H:i' : 'h:ia'));
+                $methods['desktop']['subtitle'] = sprintf(_("From %s at %s to %s at %s"), $start->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'), $start->format($prefs->getValue('twentyFour') ? 'HH:mm' : 'h:mm a', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'), $end->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'), $this->end->format($prefs->getValue('twentyFour') ? 'HH:mm' : 'h:mm a', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'));
             }
             $methods['desktop']['url'] = strval($this->getViewUrl([], true, false));
         }
@@ -2997,7 +2998,7 @@ abstract class Kronolith_Event
         } elseif ($this->baseid) {
             $json->bid = $this->baseid;
             if ($this->exceptionoriginaldate) {
-                $json->eod = sprintf(_("%s at %s"), $this->exceptionoriginaldate->strftime($GLOBALS['prefs']->getValue('date_format')), $this->exceptionoriginaldate->strftime(($GLOBALS['prefs']->getValue('twentyFour') ? '%H:%M' : '%I:%M %p')));
+                $json->eod = sprintf(_("%s at %s"), $this->exceptionoriginaldate->format($GLOBALS['prefs']->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'), $this->exceptionoriginaldate->format($GLOBALS['prefs']->getValue('twentyFour') ? 'HH:mm' : 'h:mm a', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'));
             }
         }
         if ($this->_resources) {
@@ -3009,8 +3010,8 @@ abstract class Kronolith_Event
             if (!empty($this->created)) {
                 $json->cb = sprintf(
                     '%s %s %s',
-                    $this->created->strftime($GLOBALS['prefs']->getValue('date_format')),
-                    $this->created->strftime(($GLOBALS['prefs']->getValue('twentyFour') ? '%H:%M' : '%I:%M %p')),
+                    $this->created->format($GLOBALS['prefs']->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'),
+                    $this->created->format($GLOBALS['prefs']->getValue('twentyFour') ? 'HH:mm' : 'h:mm a', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'),
                     $this->createdby
                 );
             } else {
@@ -3019,8 +3020,8 @@ abstract class Kronolith_Event
             if (!empty($this->modified)) {
                 $json->mb = sprintf(
                     '%s %s %s',
-                    $this->modified->strftime($GLOBALS['prefs']->getValue('date_format')),
-                    $this->modified->strftime(($GLOBALS['prefs']->getValue('twentyFour') ? '%H:%M' : '%I:%M %p')),
+                    $this->modified->format($GLOBALS['prefs']->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'),
+                    $this->modified->format($GLOBALS['prefs']->getValue('twentyFour') ? 'HH:mm' : 'h:mm a', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'),
                     $this->modifiedby
                 );
             } else {
@@ -3036,9 +3037,9 @@ abstract class Kronolith_Event
         if ($options['full']) {
             $json->id = $this->id;
             $json->ty = $this->calendarType;
-            $json->sd = $this->start->strftime('%x');
+            $json->sd = $this->start->format('short', new IcuFormatter(), $GLOBALS['language']);
             $json->st = $this->start->format($options['time_format']);
-            $json->ed = $this->end->strftime('%x');
+            $json->ed = $this->end->format('short', new IcuFormatter(), $GLOBALS['language']);
             $json->et = $this->end->format($options['time_format']);
             $json->tz = $this->timezone;
             $json->a = $this->alarm;
@@ -3217,7 +3218,7 @@ abstract class Kronolith_Event
         $horde_date = new Horde_Date(['year' => $match[1],
             'month' => $match[2],
             'mday' => $match[3]]);
-        $formatted = $horde_date->strftime($GLOBALS['prefs']->getValue('date_format'));
+        $formatted = $horde_date->format($GLOBALS['prefs']->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
         /**
          * ARCHITECTURE VIOLATION: Using deprecated Horde::img()
          * @deprecated Use Horde_Themes_Image::tag() instead
@@ -4057,7 +4058,7 @@ return $formatted
             case 'start[month]':
                 $sel = $this->start->month;
                 for ($i = 1; $i < 13; ++$i) {
-                    $options[$i] = strftime('%b', mktime(1, 1, 1, $i, 1));
+                    $options[$i] = (new \IntlDateFormatter($GLOBALS['language'], \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, null, null, 'MMM'))->format(mktime(1, 1, 1, $i, 1));
                 }
                 $label = _("Start Month");
                 break;
@@ -4098,7 +4099,7 @@ return $formatted
             case 'end[month]':
                 $sel = $this->end ? $this->end->month : $this->start->month;
                 for ($i = 1; $i < 13; ++$i) {
-                    $options[$i] = strftime('%b', mktime(1, 1, 1, $i, 1));
+                    $options[$i] = (new \IntlDateFormatter($GLOBALS['language'], \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, null, null, 'MMM'))->format(mktime(1, 1, 1, $i, 1));
                 }
                 $label = _("End Month");
                 break;
@@ -4181,7 +4182,7 @@ return $formatted
                     $sel = $this->start->month;
                 }
                 for ($i = 1; $i < 13; ++$i) {
-                    $options[$i] = strftime('%b', mktime(1, 1, 1, $i, 1));
+                    $options[$i] = (new \IntlDateFormatter($GLOBALS['language'], \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, null, null, 'MMM'))->format(mktime(1, 1, 1, $i, 1));
                 }
                 $label = _("Recurrence End Month");
                 break;
@@ -4287,7 +4288,7 @@ return $formatted
         }
 
         $event_title = $this->getTitle();
-        $view_url = $this->getViewUrl(['datetime' => $datetime->strftime('%Y%m%d%H%M%S'), 'url' => $from_url], $full, $encoded);
+        $view_url = $this->getViewUrl(['datetime' => $datetime->format('YmdHis'), 'url' => $from_url], $full, $encoded);
         $read_permission = $this->hasPermission(Horde_Perms::READ);
 
         $link = '<span' . $this->getCSSColors() . '>';
@@ -4382,7 +4383,7 @@ $status .= Horde::fullSrcImg('attendees-' . $icon_color . '.png', ['attr' => ['a
                  || $this->creator == $GLOBALS['registry']->getAuth())
                 && Kronolith::getDefaultCalendar(Horde_Perms::EDIT)) {
                 $url = $this->getEditUrl(
-                    ['datetime' => $datetime->strftime('%Y%m%d%H%M%S'),
+                    ['datetime' => $datetime->format('YmdHis'),
                         'url' => $from_url],
                     $full
                 );
@@ -4405,7 +4406,7 @@ $link .= $space
             }
             if ($this->hasPermission(Horde_Perms::DELETE)) {
                 $url = $this->getDeleteUrl(
-                    ['datetime' => $datetime->strftime('%Y%m%d%H%M%S'),
+                    ['datetime' => $datetime->format('YmdHis'),
                         'url' => $from_url],
                     $full
                 );
@@ -4480,11 +4481,11 @@ $link .= $space
         } elseif (($cmp = $this->start->compareDate($this->end)) > 0) {
             $df = $GLOBALS['prefs']->getValue('date_format');
             if ($cmp > 0) {
-                return $this->end->strftime($df) . '-'
-                    . $this->start->strftime($df);
+                return $this->end->format($df, new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . '-'
+                    . $this->start->format($df, new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
             } else {
-                return $this->start->strftime($df) . '-'
-                    . $this->end->strftime($df);
+                return $this->start->format($df, new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . '-'
+                    . $this->end->format($df, new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
             }
         } else {
             $twentyFour = $GLOBALS['prefs']->getValue('twentyFour');

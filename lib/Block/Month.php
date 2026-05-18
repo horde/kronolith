@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Date\Formatter\IcuFormatter;
+
 /**
  * Display a mini month view of calendar items.
  */
@@ -52,7 +54,7 @@ class Kronolith_Block_Month extends Horde_Core_Block
         }
         $date = new Horde_Date(time());
 
-        return $title . ', ' . $url->link() . $date->strftime('%B, %Y') . '</a>';
+        return $title . ', ' . $url->link() . $date->format('MMMM, yyyy', new IcuFormatter(), $GLOBALS['language']) . '</a>';
     }
 
     /**
@@ -175,7 +177,7 @@ class Kronolith_Block_Month extends Horde_Core_Block
                     if ($event->isAllDay()) {
                         $day_events .= _("All day");
                     } else {
-                        $day_events .= $event->start->strftime($prefs->getValue('twentyFour') ? '%R' : '%I:%M%p') . '-' . $event->end->strftime($prefs->getValue('twentyFour') ? '%R' : '%I:%M%p');
+                        $day_events .= $event->start->format($prefs->getValue('twentyFour') ? 'HH:mm' : 'h:mma', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . '-' . $event->end->format($prefs->getValue('twentyFour') ? 'HH:mm' : 'h:mma', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
                     }
                     $location = $event->getLocation();
                     $day_events .= ':'

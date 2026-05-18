@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Date\Formatter\IcuFormatter;
+
 /**
  * This class represent a single day of free busy information sets.
  *
@@ -31,7 +33,7 @@ class Kronolith_FreeBusy_View_Day extends Kronolith_FreeBusy_View
 return Horde::url('#')->link(['title' => _("Previous Day"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'])
             . Horde::img('nav/left.png', '<')
             . '</a>'
-            . $this->_start->strftime($prefs->getValue('date_format'))
+            . $this->_start->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US')
             . Horde::url('#')->link(['title' => _("Next Day"), 'onclick' => 'return switchDate(' . $next->dateString() . ');'])
             . Horde::img('nav/right.png', '>')
             . '</a>';
@@ -49,7 +51,7 @@ return Horde::url('#')->link(['title' => _("Previous Day"), 'onclick' => 'return
         for ($i = $this->_startHour; $i < $this->_endHour; $i++) {
             $start->hour = $end->hour = $i;
             $this->_timeBlocks[] = [clone $start, clone $end];
-            $hours_html .= '<th width="' . $width . '%">' . $start->strftime($prefs->getValue('twentyFour') ? '%H:00' : '%I:00') . '</th>';
+            $hours_html .= '<th width="' . $width . '%">' . $start->format($prefs->getValue('twentyFour') ? 'HH:mm' : 'h:mm', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . '</th>';
         }
 
         return $hours_html;

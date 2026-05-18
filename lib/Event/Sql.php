@@ -217,8 +217,8 @@ class Kronolith_Event_Sql extends Kronolith_Event
         $properties['event_organizer'] = $this->organizer;
 
         if ($this->isAllDay()) {
-            $properties['event_start'] = $this->start->strftime('%Y-%m-%d %H:%M:%S');
-            $properties['event_end'] = $this->end->strftime('%Y-%m-%d %H:%M:%S');
+            $properties['event_start'] = $this->start->format('Y-m-d H:i:s');
+            $properties['event_end'] = $this->end->format('Y-m-d H:i:s');
             $properties['event_allday'] = 1;
         } else {
             if ($driver->getParam('utc')) {
@@ -230,8 +230,8 @@ class Kronolith_Event_Sql extends Kronolith_Event
                 $start = $this->start;
                 $end = $this->end;
             }
-            $properties['event_start'] = $start->strftime('%Y-%m-%d %H:%M:%S');
-            $properties['event_end'] = $end->strftime('%Y-%m-%d %H:%M:%S');
+            $properties['event_start'] = $start->format('Y-m-d H:i:s');
+            $properties['event_end'] = $end->format('Y-m-d H:i:s');
             $properties['event_allday'] = 0;
         }
 
@@ -279,7 +279,7 @@ class Kronolith_Event_Sql extends Kronolith_Event
             } else {
                 $eod = $this->exceptionoriginaldate;
             }
-            $properties['event_exceptionoriginaldate'] = $eod->strftime('%Y-%m-%d %H:%M:%S');
+            $properties['event_exceptionoriginaldate'] = $eod->format('Y-m-d H:i:s');
         } else {
             /* This must be an empty string. */
             $properties['event_baseid'] = '';

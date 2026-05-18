@@ -9,6 +9,8 @@
  * @author Chuck Hagenbuch <chuck@horde.org>
  */
 
+use Horde\Date\Formatter\IcuFormatter;
+
 require_once __DIR__ . '/lib/Application.php';
 Horde_Registry::appInit('kronolith');
 
@@ -23,7 +25,7 @@ Kronolith::addCalendarLinks();
 
 $page_output->header([
     'body_class' => $prefs->getValue('show_panel') ? 'rightPanel' : null,
-    'title' => $view->date->strftime('%B %Y'),
+    'title' => $view->date->format('MMMM yyyy', new IcuFormatter(), $GLOBALS['language']),
 ]);
 require KRONOLITH_TEMPLATES . '/javascript_defs.php';
 $notification->notify(['listeners' => 'status']);

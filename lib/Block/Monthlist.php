@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Date\Formatter\IcuFormatter;
+
 /**
  * Display a list of calendar items grouped by month.
  */
@@ -134,7 +136,7 @@ class Kronolith_Block_Monthlist extends Horde_Core_Block
 
             /* Output month header. */
             if ($current_month != $day->month) {
-                $html .= '<tr><td colspan="4" class="control"><strong>' . $day->strftime('%B') . '</strong></td></tr>';
+                $html .= '<tr><td colspan="4" class="control"><strong>' . $day->format('MMMM', new IcuFormatter(), $GLOBALS['language']) . '</strong></td></tr>';
             }
 
             $firstevent = true;
@@ -201,7 +203,7 @@ class Kronolith_Block_Monthlist extends Horde_Core_Block
                 $totalevents++;
             }
 
-            $current_month = $day->strftime('%m');
+            $current_month = $day->format('m');
         }
 
         if (empty($html)) {

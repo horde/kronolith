@@ -1,5 +1,6 @@
 <?php
 
+use Horde\Date\Formatter\IcuFormatter;
 use Horde\Util\Util;
 
 /**
@@ -169,9 +170,9 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
             // original event in the series.
             if ($event->recurs() && $this->vars->rsd) {
                 $rs = new Horde_Date($this->vars->rsd);
-                $result->event->rsd = $rs->strftime('%x');
+                $result->event->rsd = $rs->format('short', new IcuFormatter(), $GLOBALS['language']);
                 $re = new Horde_Date($this->vars->red);
-                $result->event->red = $re->strftime('%x');
+                $result->event->red = $re->format('short', new IcuFormatter(), $GLOBALS['language']);
             }
         } catch (Horde_Exception_NotFound $e) {
             $GLOBALS['notification']->push(_("The requested event was not found."), 'horde.error');
@@ -1878,12 +1879,12 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
             $rend->min = $event->end->min;
         }
         $uid = $event->uid;
-        $otime = $event->start->strftime('%T');
+        $otime = $event->start->format('H:i:s');
 
         // Create new event for the exception
         $nevent = $event->getDriver()->getEvent();
         $nevent->baseid = $uid;
-        $nevent->exceptionoriginaldate = new Horde_Date($rstart->strftime('%Y-%m-%d') . 'T' . $otime);
+        $nevent->exceptionoriginaldate = new Horde_Date($rstart->format('Y-m-d') . 'T' . $otime);
         $nevent->exceptionoriginaldate->setTimezone($event->start->timezone);
         $nevent->creator = $event->creator;
         $nevent->title = $copy->title;

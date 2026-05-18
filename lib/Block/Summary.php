@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Date\Formatter\IcuFormatter;
+
 /**
  * Block to display a summary of calendar items.
  */
@@ -162,9 +164,9 @@ class Kronolith_Block_Summary extends Horde_Core_Block
                     } elseif ($day->isTomorrow()) {
                         $dayname = _("Tomorrow");
                     } elseif ($day->diff() < 7) {
-                        $dayname = $day->strftime('%A');
+                        $dayname = $day->format('EEEE', new IcuFormatter(), $GLOBALS['language']);
                     } else {
-                        $dayname = $day->strftime($GLOBALS['prefs']->getValue('date_format'));
+                        $dayname = $day->format($GLOBALS['prefs']->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
                     }
                     $url = Horde::url('day.php', true)
                         ->setRaw(false)

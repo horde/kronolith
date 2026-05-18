@@ -15,7 +15,7 @@
           <font size="2"><strong><?php echo _("Date and time:") ?></strong></font>
         </td>
         <td width="5">&nbsp;</td>
-        <td width="100%"><font size="2"><strong><?php echo $this->start->strftime($this->dateFormat) ?>, <?php echo $this->event->start->format($this->timeFormat) ?></strong></font></td>
+        <td width="100%"><font size="2"><strong><?php echo $this->start->format($this->dateFormat, new \Horde\Date\Formatter\IcuFormatter(), $GLOBALS['language'] ?? 'en_US') ?>, <?php echo $this->event->start->format($this->timeFormat, new \Horde\Date\Formatter\IcuFormatter(), $GLOBALS['language'] ?? 'en_US') ?></strong></font></td>
       </tr>
       <?php if (strlen($this->event->getLocation($this->user))): ?>
 
