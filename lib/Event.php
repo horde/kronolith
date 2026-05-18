@@ -3037,9 +3037,9 @@ abstract class Kronolith_Event
         if ($options['full']) {
             $json->id = $this->id;
             $json->ty = $this->calendarType;
-            $json->sd = $this->start->format('short', new IcuFormatter(), $GLOBALS['language']);
+            $json->sd = $this->start->format(Horde_Nls::getLangInfo(D_FMT), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
             $json->st = $this->start->format($options['time_format']);
-            $json->ed = $this->end->format('short', new IcuFormatter(), $GLOBALS['language']);
+            $json->ed = $this->end->format(Horde_Nls::getLangInfo(D_FMT), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
             $json->et = $this->end->format($options['time_format']);
             $json->tz = $this->timezone;
             $json->a = $this->alarm;
