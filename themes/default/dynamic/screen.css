@@ -93,7 +93,11 @@ html, body {
 #horde-sidebar div.horde-resources .horde-resource-refresh-fff {
     float: right;
     display: block;
-    background: url("../graphics/refresh-sidebar-000.png") no-repeat;
+    background-color: transparent;
+    background-image: url("../graphics/refresh-sidebar-000.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 16px 16px;
     margin: 2px 10px 0 0;
     width: 17px;
     height: 17px;
