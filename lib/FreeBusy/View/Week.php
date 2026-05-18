@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Date\Formatter\IcuFormatter;
+
 /**
  * This class represent a week of free busy information sets.
  *
@@ -45,8 +47,8 @@ class Kronolith_FreeBusy_View_Week extends Kronolith_FreeBusy_View
 return Horde::url('#')->link(['title' => _("Previous Week"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'])
             . Horde::img('nav/left.png', '<')
             . '</a>'
-            . $this->_start->strftime($prefs->getValue('date_format')) . ' - '
-            . $end->strftime($prefs->getValue('date_format'))
+            . $this->_start->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . ' - '
+            . $end->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US')
             . Horde::url('#')->link(['title' => _("Next Week"), 'onclick' => 'return switchDate(' . $next->dateString() . ');'])
             . Horde::img('nav/right.png', '>')
             . '</a>';
@@ -68,7 +70,7 @@ return Horde::url('#')->link(['title' => _("Previous Week"), 'onclick' => 'retur
                 'mday' => $this->_start->mday + $i,
                 'year' => $this->_start->year]);
             $day_label = Horde::url('#')->link(['onclick' => 'return switchDateView(\'Day\',' . $t->dateString() . ');'])
-                . $t->strftime($date_format) . '</a>';
+                . $t->format($date_format, new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . '</a>';
             $hours_html .= sprintf(
                 '<th colspan="%d" width="%s%%">%s</th>',
                 $span,
@@ -95,7 +97,7 @@ return Horde::url('#')->link(['title' => _("Previous Week"), 'onclick' => 'retur
                 }
                 $this->_timeBlocks[] = [$start, $end];
 
-                $hour = $start->strftime($prefs->getValue('twentyFour') ? '%H:00' : '%I:00');
+                $hour = $start->format($prefs->getValue('twentyFour') ? 'HH:mm' : 'h:mm', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
                 $hours_html .= sprintf('<th width="%d%%">%s</th>', $width, $hour);
             }
         }

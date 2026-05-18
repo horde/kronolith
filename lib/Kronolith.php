@@ -1,5 +1,6 @@
 <?php
 
+use Horde\Date\Formatter\IcuFormatter;
 use Horde\Util\Util;
 
 /**
@@ -2581,7 +2582,7 @@ class Kronolith
                         ->getTime($prefs->getValue('date_format'));
                 break;
             case 'month':
-                $view->current = $renderer->date->strftime('%B %Y');
+                $view->current = $renderer->date->format('MMMM yyyy', new IcuFormatter(), $GLOBALS['language']);
                 break;
             case 'year':
                 $view->current = $renderer->year;

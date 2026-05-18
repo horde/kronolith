@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Date\Formatter\IcuFormatter;
+
 /**
  * Kronolith external API interface.
  *
@@ -1705,7 +1707,7 @@ class Kronolith_Api extends Horde_Registry_Api
                 $view_url = $event->getViewUrl();
                 $return[] = [
                     'title' => $event->title,
-                    'desc' => $event->start->strftime($GLOBALS['prefs']->getValue('date_format_mini')) . ' ' . $event->start->strftime($GLOBALS['prefs']->getValue('time_format')),
+                    'desc' => $event->start->format($GLOBALS['prefs']->getValue('date_format_mini'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . ' ' . $event->start->format($GLOBALS['prefs']->getValue('time_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US'),
                     'view_url' => $view_url,
                     'app' => 'kronolith',
                 ];

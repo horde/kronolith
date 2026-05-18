@@ -1,4 +1,4 @@
-<?php echo $this->header ?> (<?php printf(_("on %s at %s"), $this->event->start->strftime('%x'), $this->event->start->strftime('%X')) ?>)
+<?php echo $this->header ?> (<?php printf(_("on %s at %s"), $this->event->start->format('short', new \Horde\Date\Formatter\IcuFormatter(), $GLOBALS['language']), (new \IntlDateFormatter($GLOBALS['language'], \IntlDateFormatter::NONE, \IntlDateFormatter::MEDIUM))->format($this->event->start->timestamp())) ?>)
 
 
 <?php echo _("Calendar:") ?> <?php echo $this->calendar ?>

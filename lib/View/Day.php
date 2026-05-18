@@ -427,7 +427,7 @@ class Kronolith_View_Day extends Kronolith_Day
     public function link($offset = 0, $full = false)
     {
         return Horde::url('day.php', $full)
-            ->add('date', $this->getTime('%Y%m%d', $offset));
+            ->add('date', $this->getTime('Ymd', $offset));
     }
 
     public function getName()

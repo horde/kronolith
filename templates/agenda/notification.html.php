@@ -9,7 +9,7 @@
         </td>
       </tr>
       <tr>
-        <td align="center"><font size="4"><strong><?php echo $this->date->strftime('%B') ?></strong></font></td>
+        <td align="center"><font size="4"><strong><?php echo $this->date->format('MMMM', new \Horde\Date\Formatter\IcuFormatter(), $GLOBALS['language']) ?></strong></font></td>
       </tr>
     </table>
   </td>

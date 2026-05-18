@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Date\Format;
+use Horde\Date\Formatter\IcuFormatter;
 use Horde\Util\Util;
 
 /**
@@ -152,11 +154,11 @@ foreach ($events as $date => $day_events) {
             $desc .= '<br /><br />';
         }
         /* Time. */
-        $desc .= _("When:") . ' ' . $event->start->strftime($prefs->getValue('date_format')) . ' ' . $event->start->format($twentyFour ? 'H:i' : 'h:ia') . _(" to ");
+        $desc .= _("When:") . ' ' . $event->start->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . ' ' . $event->start->format($twentyFour ? 'HH:mm' : 'h:mma', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . _(" to ");
         if ($event->start->compareDate($event->end->timestamp()) == 0) {
-            $desc .= $event->end->format($twentyFour ? 'H:i' : 'h:ia');
+            $desc .= $event->end->format($twentyFour ? 'HH:mm' : 'h:mma', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
         } else {
-            $desc .= $event->end->strftime($prefs->getValue('date_format')) . ' ' . $event->end->format($twentyFor ? 'H:i' : 'h:ia');
+            $desc .= $event->end->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . ' ' . $event->end->format($twentyFour ? 'HH:mm' : 'h:mma', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
         }
         /* Attendees. */
         if (!$event->isPrivate()) {

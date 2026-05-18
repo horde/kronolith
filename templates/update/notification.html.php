@@ -29,7 +29,7 @@
             <font size="2"><strong><?php echo _("Start:") ?></strong></font>
           </td>
           <td width="5">&nbsp;</td>
-          <td width="100%"><font size="2"><strong><?php echo $this->event->start->strftime('%x %X') ?></strong></font></td>
+          <td width="100%"><font size="2"><strong><?php echo (new \IntlDateFormatter($GLOBALS['language'], \IntlDateFormatter::SHORT, \IntlDateFormatter::MEDIUM))->format($this->event->start->timestamp()) ?></strong></font></td>
         </tr>
         <tr<?php if ($i++ % 2) {
             echo ' bgcolor="#f1f1f1"';
@@ -38,7 +38,7 @@
             <font size="2"><strong><?php echo _("End:") ?></strong></font>
           </td>
           <td width="5">&nbsp;</td>
-          <td width="100%"><font size="2"><strong><?php echo $this->event->end->strftime('%x %X') ?></strong></font></td>
+          <td width="100%"><font size="2"><strong><?php echo (new \IntlDateFormatter($GLOBALS['language'], \IntlDateFormatter::SHORT, \IntlDateFormatter::MEDIUM))->format($this->event->end->timestamp()) ?></strong></font></td>
         </tr>
         <?php if (strlen($this->event->location) && !$this->private): ?>
 

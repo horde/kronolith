@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Date\Formatter\IcuFormatter;
+
 /**
  * The Kronolith_View_Year:: class provides an API for viewing years.
  *
@@ -51,7 +53,7 @@ class Kronolith_View_Year
             $date = new Horde_Date(sprintf('%04d%02d01010101', $this->year, $month));
             $html .= '<table><thead><tr class="kronolith-minical-nav"><th colspan="7">'
                 . Horde::url('month.php')->add('date', $date->dateString())->link()
-                . $date->strftime('%B')
+                . $date->format('MMMM', new IcuFormatter(), $GLOBALS['language'])
                 . '</a></th></tr><tr><th class="kronolith-minical-empty">&nbsp;</th>';
             if (!$prefs->getValue('week_start_monday')) {
                 $html .= '<th>' . _("Su") . '</th>';
@@ -125,7 +127,7 @@ class Kronolith_View_Year
                             if ($event->isAllDay()) {
                                 $day_events .= _("All day");
                             } else {
-                                $day_events .= $event->start->strftime($prefs->getValue('twentyFour') ? '%R' : '%I:%M%p') . '-' . $event->end->strftime($prefs->getValue('twentyFour') ? '%R' : '%I:%M%p');
+                                $day_events .= $event->start->format($prefs->getValue('twentyFour') ? 'HH:mm' : 'h:mma', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US') . '-' . $event->end->format($prefs->getValue('twentyFour') ? 'HH:mm' : 'h:mma', new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
                             }
                             $day_events .= ':'
                                 . ($event->getLocation() ? ' (' . $event->getLocation() . ')' : '')

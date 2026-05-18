@@ -78,7 +78,7 @@ class Kronolith_Day extends Horde_Date
         $date = new Horde_Date(['month' => $this->month,
             'mday' => $this->mday + $offset,
             'year' => $this->year]);
-        return $date->strftime($format);
+        return $date->format($format);
     }
 
     public function getTomorrow()

@@ -164,7 +164,7 @@ function send_agendas()
         $view->events = $eventlist;
 
         $mime_mail = new Horde_Mime_Mail(array(
-            'Subject' => sprintf(_("Your daily agenda for %s"), $runtime->strftime($view->dateFormat)),
+            'Subject' => sprintf(_("Your daily agenda for %s"), $runtime->format($view->dateFormat, new \Horde\Date\Formatter\IcuFormatter(), $GLOBALS['language'] ?? 'en_US')),
             'To' => $email,
             'From' => $GLOBALS['conf']['reminder']['from_addr'],
             'User-Agent' => 'Kronolith ' . $GLOBALS['registry']->getVersion(),
