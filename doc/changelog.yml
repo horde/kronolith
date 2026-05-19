@@ -200,6 +200,24 @@
   notes: |
     Original version string was 5.0.0alpha3
     [rla] Try to get around merge issues when refreshing the maintaina clone
+5.0.0-RC2:
+  api: 5.0.0-RC2
+  state:
+    release: RC
+    api: RC
+  date: 2026-05-19
+  license:
+    identifier: GPL-2.0-only
+    uri: https://spdx.org/licenses/GPL-2.0-only.html
+  notes: |-
+    fix: Don't crash dynamic UI when viewing a task without an organizer or assignee
+    fix: resize color picker icon in css
+    refactor(injector): Widen type hints from Horde_Injector to Horde_Injector|Injector
+    Merge pull request #39 from horde/refactor/strftime-icu-migration
+    fix(kronolith): Use D_FMT for sd/ed JSON fields to match Date.js parser
+    refactor(strftime): Migrate to native usage of IntlDateFormatter and DateTime
+    Refactor background properties for sidebar icons
+    style: DatePicker icons need to be resized/shrunk
 5.0.0-RC1:
   api: 5.0.0-RC1
   state:
