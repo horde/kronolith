@@ -2913,10 +2913,13 @@ KronolithCore = {
         var assignee = $('kronolithTaskAssignee');
         assignee.update(new Element('option', { value: '' })
                        .update(Kronolith.text.no_assignee));
-        $H(Kronolith.conf.calendars.tasklists['tasks/' + list].users).each(function(user) {
-            assignee.insert(new Element('option', { value: user.key })
-                            .update(user.value.escapeHTML()));
-        });
+        var users = Kronolith.conf.calendars.tasklists['tasks/' + list].users;
+        if (users && typeof users === 'object' && !Object.isArray(users)) {
+            $H(users).each(function(user) {
+                assignee.insert(new Element('option', { value: user.key })
+                                .update(String(user.value).escapeHTML()));
+            });
+        }
     },
 
     /**

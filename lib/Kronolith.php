@@ -1498,11 +1498,11 @@ class Kronolith
         $users = array_flip($users);
         $factory = $injector->getInstance('Horde_Core_Factory_Identity');
         foreach (array_keys($users) as $user) {
-            $fullname = $factory->create($user)->getValue('fullname');
+            $fullname = (string) $factory->create($user)->getValue('fullname');
             $users[$user] = strlen($fullname) ? $fullname : $user;
         }
 
-        return $users;
+        return (object) $users;
     }
 
     /**
