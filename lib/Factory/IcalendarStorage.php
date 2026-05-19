@@ -1,4 +1,5 @@
 <?php
+use Horde\Injector\Injector;
 
 /**
  * Horde_Injector based factory for Icalendar storage.
@@ -21,7 +22,7 @@ class Kronolith_Factory_IcalendarStorage
      * @return Kronolith_Caldav_Storage
      * @throws Kronolith_Exception
      */
-    public function create(Horde_Injector $injector): Kronolith_Icalendar_Storage
+    public function create(Horde_Injector|Injector $injector): Kronolith_Icalendar_Storage
     {
         $driver = Horde_String::ucfirst($GLOBALS['conf']['caldav']['driver']);
 

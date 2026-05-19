@@ -1,4 +1,5 @@
 <?php
+use Horde\Injector\Injector;
 
 /**
  * Horde_Injector based factory for Kronolith_Geo drivers
@@ -13,7 +14,7 @@ class Kronolith_Factory_Geo extends Horde_Core_Factory_Injector
      *
      * @return Kronolith_Geo_Base
      */
-    public function create(Horde_Injector $injector)
+    public function create(Horde_Injector|Injector $injector)
     {
         $geodriver = $GLOBALS['conf']['maps']['geodriver'] ?? '';
 

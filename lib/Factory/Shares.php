@@ -1,4 +1,5 @@
 <?php
+use Horde\Injector\Injector;
 
 /**
  * Horde_Injector based factory for the Kronolith share driver.
@@ -15,7 +16,7 @@ class Kronolith_Factory_Shares extends Horde_Core_Factory_Injector
      * @return Kronolith_Shares
      * @throws Horde_Exception
      */
-    public function create(Horde_Injector $injector)
+    public function create(Horde_Injector|Injector $injector)
     {
         return new Kronolith_Shares($injector->getInstance('Horde_Core_Factory_Share')->create('kronolith'));
     }
