@@ -153,7 +153,7 @@ if ($conf['maps']['driver']) {
      * @deprecated Use Horde_Core_HordeMap::init() instead
      * @see Horde_Deprecated::initMap()
      */
-Horde::initMap();
+    Horde::initMap();
 }
 
 $time_jobs = $time_clients = false;

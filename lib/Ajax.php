@@ -107,7 +107,7 @@ class Kronolith_Ajax
             'max_events' => intval($prefs->getValue('max_events')),
             'day_hour_start' => $prefs->getValue('day_hour_start'),
             'date_format' => Horde_Core_Script_Package_Datejs::translateFormat(
-                Horde_Nls::getLangInfo(D_FMT)
+                (new Horde\Nls\Nls())->getLangInfo(D_FMT)
             ),
             'time_format' => $prefs->getValue('twentyFour') ? 'HH:mm' : 'hh:mm tt',
             'import_file' => Horde_Data::IMPORT_FILE,
@@ -188,11 +188,11 @@ class Kronolith_Ajax
         ];
 
         for ($i = 1; $i <= 12; ++$i) {
-            $js_vars['text']['month'][$i - 1] = Horde_Nls::getLangInfo(constant('MON_' . $i));
+            $js_vars['text']['month'][$i - 1] = (new Horde\Nls\Nls())->getLangInfo(constant('MON_' . $i));
         }
 
         for ($i = 1; $i <= 7; ++$i) {
-            $js_vars['text']['weekday'][$i] = Horde_Nls::getLangInfo(constant('DAY_' . $i));
+            $js_vars['text']['weekday'][$i] = (new Horde\Nls\Nls())->getLangInfo(constant('DAY_' . $i));
         }
 
         foreach (array_diff(array_keys($js_vars['conf']['recur']), [Horde_Date_Recurrence::RECUR_NONE]) as $recurType) {

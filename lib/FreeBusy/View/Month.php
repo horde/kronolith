@@ -43,13 +43,13 @@ class Kronolith_FreeBusy_View_Month extends Kronolith_FreeBusy_View
          * @deprecated Use Horde_Themes_Image::tag() instead
          * @see Horde_Deprecated::img()
          */
-return Horde::url('#')->link(['title' => _("Previous Month"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'])
-            . Horde::img('nav/left.png', '<')
-            . '</a>'
-            . $this->_start->format('MMMM yyyy', new IcuFormatter(), $GLOBALS['language'])
-            . Horde::url('#')->link(['title' => _("Next Month"), 'onclick' => 'return switchDate(' . $next->dateString() . ');'])
-            . Horde::img('nav/right.png', '>')
-            . '</a>';
+        return Horde::url('#')->link(['title' => _("Previous Month"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'])
+                    . Horde::img('nav/left.png', '<')
+                    . '</a>'
+                    . $this->_start->format('MMMM yyyy', new IcuFormatter(), $GLOBALS['language'])
+                    . Horde::url('#')->link(['title' => _("Next Month"), 'onclick' => 'return switchDate(' . $next->dateString() . ');'])
+                    . Horde::img('nav/right.png', '>')
+                    . '</a>';
     }
 
     protected function _hours()

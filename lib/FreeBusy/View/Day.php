@@ -30,13 +30,13 @@ class Kronolith_FreeBusy_View_Day extends Kronolith_FreeBusy_View
          * @deprecated Use Horde_Themes_Image::tag() instead
          * @see Horde_Deprecated::img()
          */
-return Horde::url('#')->link(['title' => _("Previous Day"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'])
-            . Horde::img('nav/left.png', '<')
-            . '</a>'
-            . $this->_start->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US')
-            . Horde::url('#')->link(['title' => _("Next Day"), 'onclick' => 'return switchDate(' . $next->dateString() . ');'])
-            . Horde::img('nav/right.png', '>')
-            . '</a>';
+        return Horde::url('#')->link(['title' => _("Previous Day"), 'onclick' => 'return switchDate(' . $prev->dateString() . ');'])
+                    . Horde::img('nav/left.png', '<')
+                    . '</a>'
+                    . $this->_start->format($prefs->getValue('date_format'), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US')
+                    . Horde::url('#')->link(['title' => _("Next Day"), 'onclick' => 'return switchDate(' . $next->dateString() . ');'])
+                    . Horde::img('nav/right.png', '>')
+                    . '</a>';
     }
 
     protected function _hours()

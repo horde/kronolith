@@ -142,7 +142,7 @@ class Kronolith_View_Month
          * @deprecated Use Horde_Themes_Image::tag() instead
          * @see Horde_Deprecated::img()
          */
-$new_img = Horde::img('new_small.png', '+');
+        $new_img = Horde::img('new_small.png', '+');
         $weekOffset = $prefs->getValue('week_start_monday') ? 0 : 1;
         $weekStart = $prefs->getValue('week_start_monday');
 

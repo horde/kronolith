@@ -52,7 +52,7 @@ class Kronolith_View_Sidebar extends Horde_View_Sidebar
         for ($i = $prefs->getValue('week_start_monday'), $c = $i + 7;
             $i < $c;
             $i++) {
-            $weekday = Horde_Nls::getLangInfo(constant('DAY_' . ($i % 7 + 1)));
+            $weekday = (new Horde\Nls\Nls())->getLangInfo(constant('DAY_' . ($i % 7 + 1)));
             $sidebar->weekdays[$weekday] = Horde_String::substr($weekday, 0, 2);
         }
 
