@@ -1687,6 +1687,9 @@ abstract class Kronolith_Event
             return false;
         }
         $tz = $message->getTimezone();
+        if (empty($tz)) {
+            $tz = date_default_timezone_get();
+        }
         $kronolith_driver = $this->getDriver();
 
         // Do we already have an exception for this day? If so, remove the
@@ -1841,6 +1844,9 @@ abstract class Kronolith_Event
             );
         } else {
             $tz = !$message->isGhosted('timezone') ? $message->getTimezone() : $this->timezone;
+            if (empty($tz)) {
+                $tz = date_default_timezone_get();
+            }
             $this->start = !$message->isGhosted('starttime') ? clone($dates['start']) : $this->start;
             try {
                 $this->start->setTimezone($tz);
