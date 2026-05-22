@@ -3043,9 +3043,9 @@ abstract class Kronolith_Event
         if ($options['full']) {
             $json->id = $this->id;
             $json->ty = $this->calendarType;
-            $json->sd = $this->start->format(Horde_Nls::getLangInfo(D_FMT), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
+            $json->sd = $this->start->format((new Horde\Nls\Nls())->getLangInfo(D_FMT), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
             $json->st = $this->start->format($options['time_format']);
-            $json->ed = $this->end->format(Horde_Nls::getLangInfo(D_FMT), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
+            $json->ed = $this->end->format((new Horde\Nls\Nls())->getLangInfo(D_FMT), new IcuFormatter(), $GLOBALS['language'] ?? 'en_US');
             $json->et = $this->end->format($options['time_format']);
             $json->tz = $this->timezone;
             $json->a = $this->alarm;
@@ -3230,15 +3230,15 @@ abstract class Kronolith_Event
          * @deprecated Use Horde_Themes_Image::tag() instead
          * @see Horde_Deprecated::img()
          */
-return $formatted
-            . Horde::url('edit.php')
-            ->add(['calendar' => $this->calendarType . '_' . $this->calendar,
-                'eventID' => $this->id,
-                'del_exception' => $date,
-                'url' => Util::getFormData('url')])
-            ->link(['title' => sprintf(_("Delete exception on %s"), $formatted)])
-            . Horde::img('delete-small.png', _("Delete"))
-            . '</a>';
+        return $formatted
+                    . Horde::url('edit.php')
+                    ->add(['calendar' => $this->calendarType . '_' . $this->calendar,
+                        'eventID' => $this->id,
+                        'del_exception' => $date,
+                        'url' => Util::getFormData('url')])
+                    ->link(['title' => sprintf(_("Delete exception on %s"), $formatted)])
+                    . Horde::img('delete-small.png', _("Delete"))
+                    . '</a>';
     }
 
     /**
@@ -4064,7 +4064,7 @@ return $formatted
             case 'start[month]':
                 $sel = $this->start->month;
                 for ($i = 1; $i < 13; ++$i) {
-                    $options[$i] = (new \IntlDateFormatter($GLOBALS['language'], \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, null, null, 'MMM'))->format(mktime(1, 1, 1, $i, 1));
+                    $options[$i] = (new IntlDateFormatter($GLOBALS['language'], IntlDateFormatter::NONE, IntlDateFormatter::NONE, null, null, 'MMM'))->format(mktime(1, 1, 1, $i, 1));
                 }
                 $label = _("Start Month");
                 break;
@@ -4105,7 +4105,7 @@ return $formatted
             case 'end[month]':
                 $sel = $this->end ? $this->end->month : $this->start->month;
                 for ($i = 1; $i < 13; ++$i) {
-                    $options[$i] = (new \IntlDateFormatter($GLOBALS['language'], \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, null, null, 'MMM'))->format(mktime(1, 1, 1, $i, 1));
+                    $options[$i] = (new IntlDateFormatter($GLOBALS['language'], IntlDateFormatter::NONE, IntlDateFormatter::NONE, null, null, 'MMM'))->format(mktime(1, 1, 1, $i, 1));
                 }
                 $label = _("End Month");
                 break;
@@ -4188,7 +4188,7 @@ return $formatted
                     $sel = $this->start->month;
                 }
                 for ($i = 1; $i < 13; ++$i) {
-                    $options[$i] = (new \IntlDateFormatter($GLOBALS['language'], \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, null, null, 'MMM'))->format(mktime(1, 1, 1, $i, 1));
+                    $options[$i] = (new IntlDateFormatter($GLOBALS['language'], IntlDateFormatter::NONE, IntlDateFormatter::NONE, null, null, 'MMM'))->format(mktime(1, 1, 1, $i, 1));
                 }
                 $label = _("Recurrence End Month");
                 break;
@@ -4337,7 +4337,7 @@ return $formatted
                  * @deprecated Use Horde_Themes_Image::tag() instead
                  * @see Horde_Deprecated::fullSrcImg()
                  */
-$status .= Horde::fullSrcImg('alarm-' . $icon_color . '.png', ['attr' => ['alt' => $title, 'title' => $title, 'class' => 'iconAlarm']]);
+                $status .= Horde::fullSrcImg('alarm-' . $icon_color . '.png', ['attr' => ['alt' => $title, 'title' => $title, 'class' => 'iconAlarm']]);
             }
 
             if ($this->recurs()) {
@@ -4347,7 +4347,7 @@ $status .= Horde::fullSrcImg('alarm-' . $icon_color . '.png', ['attr' => ['alt' 
                  * @deprecated Use Horde_Themes_Image::tag() instead
                  * @see Horde_Deprecated::fullSrcImg()
                  */
-$status .= Horde::fullSrcImg('recur-' . $icon_color . '.png', ['attr' => ['alt' => $title, 'title' => $title, 'class' => 'iconRecur']]);
+                $status .= Horde::fullSrcImg('recur-' . $icon_color . '.png', ['attr' => ['alt' => $title, 'title' => $title, 'class' => 'iconRecur']]);
             } elseif ($this->baseid) {
                 $title = _("Exception");
                 /**
@@ -4355,7 +4355,7 @@ $status .= Horde::fullSrcImg('recur-' . $icon_color . '.png', ['attr' => ['alt' 
                  * @deprecated Use Horde_Themes_Image::tag() instead
                  * @see Horde_Deprecated::fullSrcImg()
                  */
-$status .= Horde::fullSrcImg('exception-' . $icon_color . '.png', ['attr' => ['alt' => $title, 'title' => $title, 'class' => 'iconRecur']]);
+                $status .= Horde::fullSrcImg('exception-' . $icon_color . '.png', ['attr' => ['alt' => $title, 'title' => $title, 'class' => 'iconRecur']]);
             }
 
             if ($this->private) {
@@ -4365,7 +4365,7 @@ $status .= Horde::fullSrcImg('exception-' . $icon_color . '.png', ['attr' => ['a
                  * @deprecated Use Horde_Themes_Image::tag() instead
                  * @see Horde_Deprecated::fullSrcImg()
                  */
-$status .= Horde::fullSrcImg('private-' . $icon_color . '.png', ['attr' => ['alt' => $title, 'title' => $title, 'class' => 'iconPrivate']]);
+                $status .= Horde::fullSrcImg('private-' . $icon_color . '.png', ['attr' => ['alt' => $title, 'title' => $title, 'class' => 'iconPrivate']]);
             }
 
             if (count($this->attendees)) {
@@ -4374,7 +4374,7 @@ $status .= Horde::fullSrcImg('private-' . $icon_color . '.png', ['attr' => ['alt
                  * @deprecated Use Horde_Themes_Image::tag() instead
                  * @see Horde_Deprecated::fullSrcImg()
                  */
-$status .= Horde::fullSrcImg('attendees-' . $icon_color . '.png', ['attr' => ['alt' => _("Meeting"), 'title' => _("Meeting"), 'class' => 'iconPeople']]);
+                $status .= Horde::fullSrcImg('attendees-' . $icon_color . '.png', ['attr' => ['alt' => _("Meeting"), 'title' => _("Meeting"), 'class' => 'iconPeople']]);
             }
 
             $space = ' ';
@@ -4399,14 +4399,14 @@ $status .= Horde::fullSrcImg('attendees-' . $icon_color . '.png', ['attr' => ['a
                      * @deprecated Use Horde_Themes_Image::tag() instead
                      * @see Horde_Deprecated::fullSrcImg()
                      */
-$link .= $space
-                        . $url->link(['title' => sprintf(_("Edit %s"), $event_title),
-                            'class' => 'iconEdit'])
-                        . Horde::fullSrcImg(
-                            'edit-' . $icon_color . '.png',
-                            ['attr' => ['alt' => _("Edit")]]
-                        )
-                        . '</a>';
+                    $link .= $space
+                                            . $url->link(['title' => sprintf(_("Edit %s"), $event_title),
+                                                'class' => 'iconEdit'])
+                                            . Horde::fullSrcImg(
+                                                'edit-' . $icon_color . '.png',
+                                                ['attr' => ['alt' => _("Edit")]]
+                                            )
+                                            . '</a>';
                     $space = '';
                 }
             }
@@ -4422,14 +4422,14 @@ $link .= $space
                      * @deprecated Use Horde_Themes_Image::tag() instead
                      * @see Horde_Deprecated::fullSrcImg()
                      */
-$link .= $space
-                        . $url->link(['title' => sprintf(_("Delete %s"), $event_title),
-                            'class' => 'iconDelete'])
-                        . Horde::fullSrcImg(
-                            'delete-' . $icon_color . '.png',
-                            ['attr' => ['alt' => _("Delete")]]
-                        )
-                        . '</a>';
+                    $link .= $space
+                                            . $url->link(['title' => sprintf(_("Delete %s"), $event_title),
+                                                'class' => 'iconDelete'])
+                                            . Horde::fullSrcImg(
+                                                'delete-' . $icon_color . '.png',
+                                                ['attr' => ['alt' => _("Delete")]]
+                                            )
+                                            . '</a>';
                 }
             }
         }

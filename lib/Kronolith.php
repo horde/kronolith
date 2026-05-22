@@ -2518,7 +2518,7 @@ class Kronolith
         // strptime() is locale dependent, i.e. %p is not always matching
         // AM/PM. Set the locale to C to workaround this, but grab the
         // locale's D_FMT before that.
-        $format = Horde_Nls::getLangInfo(D_FMT);
+        $format = (new Horde\Nls\Nls())->getLangInfo(D_FMT);
         if ($withtime) {
             $format .= ' '
                 . ($GLOBALS['prefs']->getValue('twentyFour') ? '%H:%M' : '%I:%M %p');

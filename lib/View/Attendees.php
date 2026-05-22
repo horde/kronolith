@@ -55,14 +55,14 @@ class Kronolith_View_Attendees extends Horde_View
              * @deprecated Use Horde_Themes_Image::tag() instead
              * @see Horde_Deprecated::img()
              */
-$this->addressbookLink = Horde::url('#')
-                ->link([
-                    'class' => 'widget',
-                    'onclick' => 'window.open(\'' . Horde::url('contacts.php')
-                        . '\', \'contacts\', \'toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=550,height=270,left=100,top=100\'); return false;',
-                ])
-                . Horde::img('addressbook_browse.png') . '<br />'
-                . _("Address Book") . '</a>';
+            $this->addressbookLink = Horde::url('#')
+                            ->link([
+                                'class' => 'widget',
+                                'onclick' => 'window.open(\'' . Horde::url('contacts.php')
+                                    . '\', \'contacts\', \'toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=550,height=270,left=100,top=100\'); return false;',
+                            ])
+                            . Horde::img('addressbook_browse.png') . '<br />'
+                            . _("Address Book") . '</a>';
         }
 
         $vars = Horde_Variables::getDefaultVariables();
@@ -109,7 +109,7 @@ $this->addressbookLink = Horde::url('#')
                  * @deprecated Use Horde_Themes_Image::tag() instead
                  * @see Horde_Deprecated::img()
                  */
-$viewAttendee = [
+                $viewAttendee = [
                     'id' => $attendee->id,
                     'name' => strval($attendee),
                     'deleteLink' => Horde::url('#')
@@ -130,15 +130,15 @@ $viewAttendee = [
                      * @deprecated Use Horde_Themes_Image::tag() instead
                      * @see Horde_Deprecated::img()
                      */
-$viewAttendee['editLink'] = Horde::url('#')
-                        ->link([
-                            'title' => sprintf(
-                                _("Edit %s"),
-                                $attendee->displayName
-                            ),
-                            'onclick' => "performAction('edit', decodeURIComponent('" . rawurlencode($attendee->id) . "')); return false;",
-                        ])
-                        . Horde::img('edit.png') . '</a>';
+                    $viewAttendee['editLink'] = Horde::url('#')
+                                            ->link([
+                                                'title' => sprintf(
+                                                    _("Edit %s"),
+                                                    $attendee->displayName
+                                                ),
+                                                'onclick' => "performAction('edit', decodeURIComponent('" . rawurlencode($attendee->id) . "')); return false;",
+                                            ])
+                                            . Horde::img('edit.png') . '</a>';
                 }
                 foreach ($roles as $role) {
                     $viewAttendee['roles'][$role] = [
@@ -168,12 +168,12 @@ $viewAttendee['editLink'] = Horde::url('#')
              * @deprecated Use Horde_Themes_Image::tag() instead
              * @see Horde_Deprecated::img()
              */
-$resource['deleteLink'] = Horde::url('#')
-                ->link([
-                    'title' => sprintf(_("Remove %s"), $resource['name']),
-                    'onclick' => "performAction('removeResource', decodeURIComponent('" . $id . "')); return false;",
-                ])
-                . Horde::img('delete.png') . '</a>';
+            $resource['deleteLink'] = Horde::url('#')
+                            ->link([
+                                'title' => sprintf(_("Remove %s"), $resource['name']),
+                                'onclick' => "performAction('removeResource', decodeURIComponent('" . $id . "')); return false;",
+                            ])
+                            . Horde::img('delete.png') . '</a>';
             foreach ($roles as $role) {
                 $resource['roles'][$role] = [
                     'selected' => $resource['attendance'] == $role,

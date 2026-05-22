@@ -34,7 +34,7 @@ class Kronolith_Ui_VarRenderer_Html extends Horde_Core_Ui_VarRenderer_Html
          * @deprecated Use Horde_Themes_Image::tag() instead
          * @see Horde_Deprecated::img()
          */
-$html .= sprintf(
+        $html .= sprintf(
             '<span id="%s_loading_img" style="display:none;">%s</span>',
             $varname,
             Horde::img('loading.gif', _("Loading..."))

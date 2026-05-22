@@ -51,9 +51,9 @@ class Kronolith_Unit_CalendarsManagerTest extends TestCase
 
         $autoloader = static function (string $class): never {
             if ($class === 'Date_Holidays') {
-                throw new \Error('Failed opening required Date.php');
+                throw new Error('Failed opening required Date.php');
             }
-            throw new \Exception('Unexpected class: ' . $class);
+            throw new Exception('Unexpected class: ' . $class);
         };
         spl_autoload_register($autoloader, true, true);
 
