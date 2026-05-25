@@ -1736,8 +1736,6 @@ class Kronolith_Api extends Horde_Registry_Api
      */
     public function addCalendar($name, array $params = [])
     {
-        global $prefs;
-
         $info = [
             'name' => $name,
             'color' => empty($params['color']) ? null : $params['color'],
@@ -1748,9 +1746,8 @@ class Kronolith_Api extends Horde_Registry_Api
         $share = Kronolith::addShare($info);
 
         if (!empty($params['synchronize'])) {
-            $sync = @unserialize($prefs->getValue('sync_calendars'));
-            $sync[] = $share->getName();
-            $prefs->setValue('sync_calendars', serialize($sync));
+            Kronolith::addCalendarToSyncCalendars($share->getName());
+            Kronolith::notifyActiveSyncOfCalendarChange();
         }
 
         return $share->getName();
@@ -1763,9 +1760,27 @@ class Kronolith_Api extends Horde_Registry_Api
      */
     public function deleteCalendar($id)
     {
-        $calendar = $GLOBALS['injector']
-            ->getInstance('Kronolith_Shares')
-            ->getShare($calendar);
+        try {
+            $calendar = $GLOBALS['injector']
+                ->getInstance('Kronolith_Shares')
+                ->getShare($id);
+        } catch (Horde_Exception_NotFound $e) {
+            Kronolith::removeCalendarFromSyncCalendars($id);
+            Kronolith::removeCalendarFromDisplayCalendarsPref($id);
+            Kronolith::removeActiveSyncCalendarCollectionsFromDeviceCache($id);
+            Kronolith::notifyActiveSyncOfCalendarChange();
+            return;
+        } catch (Horde_Share_Exception $e) {
+            if (strpos($e->getMessage(), 'not found') === false) {
+                throw $e;
+            }
+            Kronolith::removeCalendarFromSyncCalendars($id);
+            Kronolith::removeCalendarFromDisplayCalendarsPref($id);
+            Kronolith::removeActiveSyncCalendarCollectionsFromDeviceCache($id);
+            Kronolith::notifyActiveSyncOfCalendarChange();
+            return;
+        }
+
         Kronolith::deleteShare($calendar);
     }
 
