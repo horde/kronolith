@@ -513,3 +513,19 @@ li.panel-tags {
         background-color: inherit;
     }
 }
+
+/* ============================================================================
+   Responsive View (scoped under .horde-responsive)
+   ============================================================================ */
+
+.horde-responsive .topbar-menu-app-kronolith::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url('graphics/kronolith.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: middle;
+}
