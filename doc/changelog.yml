@@ -200,6 +200,22 @@
   notes: |
     Original version string was 5.0.0alpha3
     [rla] Try to get around merge issues when refreshing the maintaina clone
+5.0.0-RC3:
+  api: 5.0.0-RC3
+  state:
+    release: RC
+    api: RC
+  date: 2026-05-25
+  license:
+    identifier: GPL-2.0-only
+    uri: https://spdx.org/licenses/GPL-2.0-only.html
+  notes: |-
+    refactor: Transition to unified screen.css
+    Merge pull request #43 from horde/feat/adopt-nls-psr4
+    refactor: Use PSR-4 version of horde/nls
+    Merge pull request #42 from horde/fix/activesync-null-timezone
+    fix: Guard against null
+    chore: Update workflow dependency
 5.0.0-RC2:
   api: 5.0.0-RC2
   state:

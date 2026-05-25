@@ -32,7 +32,7 @@ authors:
     active: false
     role: lead
 version:
-  release: 5.0.0-RC2
+  release: 5.0.0-RC3
   api: 5.0.0alpha1
 state:
   release: RC
