@@ -1932,17 +1932,17 @@ abstract class Kronolith_Event
              * drawback to this is that the UIDs will change. */
             $kronolith_driver = $this->getDriver();
 
-            // EAS 16 doesn't update exception data on edits of the base event
-            // but still sends the recurrence rule. We need to replace the
-            // recurrence rule if it changed (and overwrite any exceptions),
-            // otherwise leave it alone.
-            if ($version >= Horde_ActiveSync::VERSION_SIXTEEN) {
-                if (!empty($this->uid)
-                    && !empty($this->recurrence)
-                    && !$this->recurrence->isEqual($rrule)) {
+            if (empty($this->recurrence) || !$this->recurrence->isEqual($rrule)) {
+                // EAS 16 doesn't update exception data on edits of the base
+                // event, but still sends the recurrence rule. If the rule
+                // changed, overwrite existing exceptions; otherwise only set
+                // the rule for new events or events becoming recurring.
+                if ($version >= Horde_ActiveSync::VERSION_SIXTEEN
+                    && !empty($this->uid)
+                    && !empty($this->recurrence)) {
                     $this->disconnectExceptions(true);
-                    $this->recurrence = $rrule;
                 }
+                $this->recurrence = $rrule;
             }
 
             if (!empty($this->uid)
