@@ -299,6 +299,9 @@ $_prefs['sync_calendars'] = [
     },
     'on_change' => function () {
         $sync = @unserialize($GLOBALS['prefs']->getValue('sync_calendars'));
+        if (!is_array($sync)) {
+            $sync = [];
+        }
         $haveDefault = false;
         $default = Kronolith::getDefaultCalendar(Horde_Perms::DELETE);
         foreach ($sync as $cid) {
@@ -313,17 +316,8 @@ $_prefs['sync_calendars'] = [
         }
         if ($GLOBALS['conf']['activesync']['enabled']) {
             try {
-                $sm = $GLOBALS['injector']->getInstance('Horde_ActiveSyncState');
-                $sm->setLogger($GLOBALS['injector']->getInstance('Horde_Log_Logger'));
-                $devices = $sm->listDevices($GLOBALS['registry']->getAuth());
-                foreach ($devices as $device) {
-                    $sm->removeState([
-                        'devId' => $device['device_id'],
-                        'id' => Horde_Core_ActiveSync_Driver::APPOINTMENTS_FOLDER_UID,
-                        'user' => $GLOBALS['registry']->getAuth(),
-                    ]);
-                }
-                $GLOBALS['notification']->push(_("All state removed for your ActiveSync devices. They will resynchronize next time they connect to the server."));
+                Kronolith::notifyActiveSyncOfCalendarChange();
+                $GLOBALS['notification']->push(_("Calendar synchronization settings saved. Your device will update calendar folders on the next sync."));
             } catch (Horde_ActiveSync_Exception $e) {
                 $GLOBALS['notification']->push(_("There was an error communicating with the ActiveSync server: %s"), $e->getMessage(), 'horde.error');
             }
