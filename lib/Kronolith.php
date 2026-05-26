@@ -77,6 +77,11 @@ class Kronolith
     public const VFS_PATH = '.horde/kronolith/documents';
 
     /**
+     * Cache key prefix for cross-session calendar list invalidation markers.
+     */
+    public const CALENDAR_CACHE_TS_PREFIX = 'kronolith.calendar_cache_ts.';
+
+    /**
      * @var Kronolith_Tagger
      */
     private static $_tagger;
@@ -808,6 +813,7 @@ class Kronolith
      */
     public static function initialize()
     {
+        self::refreshWebSessionState();
         $GLOBALS['calendar_manager'] = $GLOBALS['injector']->createInstance('Kronolith_CalendarsManager');
     }
 
@@ -1271,7 +1277,7 @@ class Kronolith
     public static function getSyncCalendars($prune = false)
     {
         $haveRemoved = false;
-        $cs = unserialize($GLOBALS['prefs']->getValue('sync_calendars'));
+        $cs = self::_getPrefList('sync_calendars');
         if (!empty($cs)) {
             if ($prune) {
                 $calendars = self::listInternalCalendars(false, Horde_Perms::DELETE);
@@ -1283,7 +1289,8 @@ class Kronolith
                     }
                 }
                 if ($haveRemoved) {
-                    $GLOBALS['prefs']->setValue('sync_calendars', serialize(array_flip($cscopy)));
+                    $cs = array_values(array_flip($cscopy));
+                    self::_setPrefList('sync_calendars', $cs);
                 }
             }
             return $cs;
@@ -1362,7 +1369,7 @@ class Kronolith
      */
     public static function addShare($info)
     {
-        global $calendar_manager, $injector, $prefs, $registry;
+        global $calendar_manager, $injector, $registry;
 
         $kronolith_shares = $injector->getInstance('Kronolith_Shares');
 
@@ -1399,10 +1406,7 @@ class Kronolith
         $all_cals = $calendar_manager->get(Kronolith::ALL_CALENDARS);
         $all_cals[$calendar->getName()] = new Kronolith_Calendar_Internal(['share' => $calendar]);
         $calendar_manager->set(Kronolith::ALL_CALENDARS, $all_cals);
-        $display_cals = $calendar_manager->get(Kronolith::DISPLAY_CALENDARS);
-        $display_cals[] = $calendar->getName();
-        $calendar_manager->set(Kronolith::DISPLAY_CALENDARS, $display_cals);
-        $prefs->setValue('display_cals', serialize($display_cals));
+        self::addCalendarToDisplayCalendarsPref($calendar->getName());
 
         return $calendar;
     }
@@ -1435,6 +1439,8 @@ class Kronolith
 
         $tagger = self::getTagger();
         $tagger->replaceTags($calendar->getName(), $info['tags'], $calendar->get('owner'), Kronolith_Tagger::TYPE_CALENDAR);
+
+        self::notifyActiveSyncOfCalendarChange();
     }
 
     /**
@@ -1453,9 +1459,11 @@ class Kronolith
             throw new Kronolith_Exception(_("You are not allowed to delete this calendar."));
         }
 
+        $calendarId = $calendar->getName();
+
         // Delete the calendar.
         try {
-            self::getDriver()->delete($calendar->getName());
+            self::getDriver()->delete($calendarId);
         } catch (Exception $e) {
             throw new Kronolith_Exception(sprintf(_("Unable to delete \"%s\": %s"), $calendar->get('name'), $e->getMessage()));
         }
@@ -1468,6 +1476,454 @@ class Kronolith
         } catch (Horde_Share_Exception $e) {
             throw new Kronolith_Exception($e);
         }
+
+        self::removeCalendarFromSyncCalendars($calendarId);
+        self::removeCalendarFromDisplayCalendarsPref($calendarId);
+        if (!empty($GLOBALS['calendar_manager'])) {
+            $all = $GLOBALS['calendar_manager']->get(Kronolith::ALL_CALENDARS);
+            unset($all[$calendarId]);
+            $GLOBALS['calendar_manager']->set(Kronolith::ALL_CALENDARS, $all);
+        }
+        self::removeActiveSyncCalendarCollectionsFromDeviceCache($calendarId);
+        self::notifyActiveSyncOfCalendarChange();
+    }
+
+    /**
+     * Reload Kronolith state that is cached in the web PHP session.
+     *
+     * ActiveSync and other RPC clients update preferences and shares in their
+     * own requests; an existing browser session may otherwise keep stale lists
+     * until logout.
+     */
+    public static function refreshWebSessionState()
+    {
+        if ($GLOBALS['registry']->getApp() !== 'kronolith'
+            || empty($GLOBALS['session'])) {
+            return;
+        }
+
+        $cacheTs = self::_getCalendarCacheTimestamp();
+        if (!$cacheTs) {
+            return;
+        }
+
+        $sessionTs = (float)$GLOBALS['session']->get(
+            'kronolith',
+            'calendar_cache_ts'
+        );
+        if ($cacheTs <= $sessionTs) {
+            return;
+        }
+
+        $GLOBALS['prefs']->cleanup();
+        $GLOBALS['prefs']->retrieve();
+
+        $GLOBALS['injector']
+            ->getInstance('Kronolith_Shares')
+            ->expireListCache();
+
+        $calendarIds = array_keys(self::listInternalCalendars());
+        self::_pruneCalendarPrefList('display_cals', $calendarIds);
+        self::getDefaultCalendar(Horde_Perms::EDIT, true);
+        self::getSyncCalendars(true);
+        self::_clearStaleDisplayCalendarSession($calendarIds);
+        self::persistPrefs();
+
+        $GLOBALS['session']->set('kronolith', 'calendar_cache_ts', $cacheTs);
+    }
+
+    /**
+     * Write preference changes to storage immediately.
+     */
+    public static function persistPrefs()
+    {
+        $GLOBALS['prefs']->store();
+    }
+
+    /**
+     * Add a calendar to the display_cals preference.
+     *
+     * @param string $calendarId  Calendar share id.
+     */
+    public static function addCalendarToDisplayCalendarsPref($calendarId)
+    {
+        $display = !empty($GLOBALS['calendar_manager'])
+            ? $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_CALENDARS)
+            : self::_getPrefList('display_cals');
+        if (in_array($calendarId, $display, true)) {
+            return;
+        }
+
+        $display[] = $calendarId;
+        self::_setPrefList('display_cals', $display);
+        if (!empty($GLOBALS['calendar_manager'])) {
+            $GLOBALS['calendar_manager']->set(Kronolith::DISPLAY_CALENDARS, $display);
+        }
+    }
+
+    /**
+     * Remove a calendar from the display_cals preference.
+     *
+     * @param string $calendarId  Calendar share id.
+     */
+    public static function removeCalendarFromDisplayCalendarsPref($calendarId)
+    {
+        $display = !empty($GLOBALS['calendar_manager'])
+            ? $GLOBALS['calendar_manager']->get(Kronolith::DISPLAY_CALENDARS)
+            : self::_getPrefList('display_cals');
+        $key = array_search($calendarId, $display, true);
+        if ($key === false) {
+            return;
+        }
+
+        unset($display[$key]);
+        $display = array_values($display);
+        self::_setPrefList('display_cals', $display);
+        if (!empty($GLOBALS['calendar_manager'])) {
+            $GLOBALS['calendar_manager']->set(Kronolith::DISPLAY_CALENDARS, $display);
+        }
+    }
+
+    /**
+     * Add a calendar to the sync_calendars preference.
+     *
+     * @param string $calendarId  Calendar share id.
+     */
+    public static function addCalendarToSyncCalendars($calendarId)
+    {
+        $sync = self::_getPrefList('sync_calendars');
+        if (in_array($calendarId, $sync, true)) {
+            return;
+        }
+
+        $sync[] = $calendarId;
+        self::_setPrefList('sync_calendars', $sync);
+    }
+
+    /**
+     * Remove a calendar from the sync_calendars preference.
+     *
+     * @param string $calendarId  Calendar share id.
+     */
+    public static function removeCalendarFromSyncCalendars($calendarId)
+    {
+        $sync = self::_getPrefList('sync_calendars');
+        $key = array_search($calendarId, $sync, true);
+        if ($key === false) {
+            return;
+        }
+
+        unset($sync[$key]);
+        self::_setPrefList('sync_calendars', array_values($sync));
+    }
+
+    /**
+     * Persist calendar prefs and wake ActiveSync after calendar folder changes.
+     *
+     * Folder hierarchy updates are delivered on the device's next FolderSync.
+     * Stored folder/cache mappings are left intact so FolderSync can emit
+     * FolderHierarchy:Add/Update/Delete cleanly.
+     *
+     * @return boolean  True if at least one device was notified.
+     */
+    public static function notifyActiveSyncOfCalendarChange()
+    {
+        self::markCalendarCacheChanged();
+        self::persistPrefs();
+
+        try {
+            return self::requestActiveSyncFolderHierarchySync();
+        } catch (Exception $e) {
+            Horde::log($e);
+            return false;
+        }
+    }
+
+    /**
+     * Mark calendar list data as changed for other web sessions.
+     */
+    public static function markCalendarCacheChanged()
+    {
+        try {
+            $cache = $GLOBALS['injector']->getInstance('Horde_Cache');
+            $timestamp = sprintf('%.6F', microtime(true));
+            foreach (self::_calendarCacheKeysForCurrentUser() as $key) {
+                $cache->set($key, $timestamp, 0);
+            }
+        } catch (Exception $e) {
+            Horde::log($e);
+        }
+    }
+
+    /**
+     * Remove per-device SYNC/PING collection entries for one calendar.
+     *
+     * Folder cache mappings are kept so FolderSync can still deliver
+     * FolderHierarchy:Delete after a web-side delete.
+     *
+     * @param string $calendarId  Calendar share id.
+     *
+     * @return boolean  True if at least one device cache was updated.
+     */
+    public static function removeActiveSyncCalendarCollectionsFromDeviceCache($calendarId)
+    {
+        try {
+            if (!self::_isActiveSyncEnabled()
+                || !$GLOBALS['prefs']->getValue('activesync_no_multiplex')) {
+                return false;
+            }
+
+            $sm = $GLOBALS['injector']->getInstance('Horde_ActiveSyncState');
+            $logger = $GLOBALS['injector']->getInstance('Horde_Log_Logger');
+            $sm->setLogger($logger);
+            $devices = self::_listActiveSyncDevicesForUser();
+            if (!count($devices)) {
+                return false;
+            }
+
+            $updated = false;
+            foreach ($devices as $device) {
+                $cache = new Horde_ActiveSync_SyncCache(
+                    $sm,
+                    $device['device_id'],
+                    $device['device_user'],
+                    $logger
+                );
+                if (self::_purgeActiveSyncCalendarCollections($cache, $calendarId)) {
+                    $cache->save();
+                    $updated = true;
+                }
+            }
+
+            return $updated;
+        } catch (Exception $e) {
+            Horde::log($e);
+            return false;
+        }
+    }
+
+    /**
+     * Tell all of a user's devices to run FolderSync on the next request.
+     *
+     * @return boolean  True if at least one device cache was updated.
+     *
+     * @throws Horde_ActiveSync_Exception
+     */
+    public static function requestActiveSyncFolderHierarchySync()
+    {
+        if (!self::_isActiveSyncEnabled()
+            || !$GLOBALS['prefs']->getValue('activesync_no_multiplex')) {
+            return false;
+        }
+
+        $devices = self::_listActiveSyncDevicesForUser();
+        if (!count($devices)) {
+            return false;
+        }
+
+        $sm = $GLOBALS['injector']->getInstance('Horde_ActiveSyncState');
+        $logger = $GLOBALS['injector']->getInstance('Horde_Log_Logger');
+        $sm->setLogger($logger);
+
+        $updated = false;
+        foreach ($devices as $device) {
+            $cache = new Horde_ActiveSync_SyncCache(
+                $sm,
+                $device['device_id'],
+                $device['device_user'],
+                $logger
+            );
+            if (!count($cache->getFolders()) && !count($cache->getCollections(false))) {
+                continue;
+            }
+
+            $cache->hierarchy = '0';
+            $cache->updateTimestamp();
+            $cache->save();
+            $updated = true;
+        }
+
+        return $updated;
+    }
+
+    /**
+     * @return boolean
+     */
+    protected static function _isActiveSyncEnabled()
+    {
+        return !empty($GLOBALS['conf']['activesync']['enabled']);
+    }
+
+    /**
+     * List ActiveSync devices for the logged-in user.
+     *
+     * @return array  Device rows from Horde_ActiveSync_State::listDevices().
+     *
+     * @throws Horde_ActiveSync_Exception
+     */
+    protected static function _listActiveSyncDevicesForUser()
+    {
+        $registry = $GLOBALS['registry'];
+        $userIds = array_unique(array_filter([
+            $registry->getAuth(),
+            $registry->getAuth('original'),
+        ]));
+        if (!count($userIds)) {
+            return [];
+        }
+
+        $sm = $GLOBALS['injector']->getInstance('Horde_ActiveSyncState');
+        $logger = $GLOBALS['injector']->getInstance('Horde_Log_Logger');
+        $sm->setLogger($logger);
+
+        $devices = [];
+        foreach ($userIds as $userId) {
+            foreach ($sm->listDevices($userId) as $device) {
+                $key = $device['device_id'] . "\0" . $device['device_user'];
+                $devices[$key] = $device;
+            }
+        }
+
+        return array_values($devices);
+    }
+
+    /**
+     * @param Horde_ActiveSync_SyncCache $cache
+     * @param string $calendarId
+     *
+     * @return boolean
+     */
+    protected static function _purgeActiveSyncCalendarCollections(
+        Horde_ActiveSync_SyncCache $cache,
+        $calendarId
+    ) {
+        $backendId = Horde_ActiveSync::CLASS_CALENDAR . ':' . $calendarId;
+        $updated = false;
+
+        foreach ($cache->getCollections(false) as $collectionId => $collection) {
+            if (($collection['class'] ?? '') !== Horde_ActiveSync::CLASS_CALENDAR) {
+                continue;
+            }
+            $collBackendId = $collection['serverid'] ?? '';
+            if ($collBackendId === $backendId
+                || $collectionId === $backendId
+                || $collectionId === $calendarId) {
+                $cache->removeCollection($collectionId, true);
+                $updated = true;
+            }
+        }
+
+        return $updated;
+    }
+
+    /**
+     * @param string $pref  Preference name.
+     *
+     * @return array  List of calendar ids.
+     */
+    protected static function _getPrefList($pref)
+    {
+        $list = @unserialize($GLOBALS['prefs']->getValue($pref));
+
+        return is_array($list) ? array_values($list) : [];
+    }
+
+    /**
+     * @param string $pref  Preference name.
+     * @param array  $list  List of calendar ids.
+     */
+    protected static function _setPrefList($pref, array $list)
+    {
+        $GLOBALS['prefs']->setValue($pref, serialize(array_values($list)));
+    }
+
+    /**
+     * Remove stale calendar ids from a serialized calendar preference.
+     *
+     * @param string $pref         Preference name.
+     * @param array  $calendarIds  Existing internal calendar ids.
+     */
+    protected static function _pruneCalendarPrefList($pref, array $calendarIds)
+    {
+        $list = self::_getPrefList($pref);
+        $pruned = array_values(array_intersect($list, $calendarIds));
+        if ($pruned !== $list) {
+            self::_setPrefList($pref, $pruned);
+        }
+    }
+
+    /**
+     * Clear a stale single-calendar web view stored in this PHP session.
+     *
+     * @param array $calendarIds  Existing internal calendar ids.
+     */
+    protected static function _clearStaleDisplayCalendarSession(array $calendarIds)
+    {
+        if (empty($GLOBALS['session'])) {
+            return;
+        }
+
+        $displayCal = $GLOBALS['session']->get('kronolith', 'display_cal');
+        if (!is_string($displayCal) || !strlen($displayCal)) {
+            return;
+        }
+
+        if (strncmp($displayCal, 'internal_', 9) === 0) {
+            $displayCal = substr($displayCal, 9);
+        } elseif (strncmp($displayCal, 'remote_', 7) === 0
+                  || strncmp($displayCal, 'external_', 9) === 0
+                  || strncmp($displayCal, 'resource_', 9) === 0
+                  || strncmp($displayCal, 'holidays_', 9) === 0) {
+            return;
+        }
+
+        if (!in_array($displayCal, $calendarIds, true)) {
+            $GLOBALS['session']->set('kronolith', 'display_cal', '');
+        }
+    }
+
+    /**
+     * Read the current cross-session calendar list marker.
+     *
+     * @return float  Timestamp marker, or 0 if none exists.
+     */
+    protected static function _getCalendarCacheTimestamp()
+    {
+        try {
+            $cache = $GLOBALS['injector']->getInstance('Horde_Cache');
+            $timestamp = 0;
+            foreach (self::_calendarCacheKeysForCurrentUser() as $key) {
+                $value = $cache->get($key, 0);
+                if ($value !== false) {
+                    $timestamp = max($timestamp, (float)$value);
+                }
+            }
+            return $timestamp;
+        } catch (Exception $e) {
+            Horde::log($e);
+            return 0;
+        }
+    }
+
+    /**
+     * Return cache keys for auth ids that may address the same user.
+     *
+     * @return array  Cache keys.
+     */
+    protected static function _calendarCacheKeysForCurrentUser()
+    {
+        $registry = $GLOBALS['registry'];
+        $userIds = array_unique(array_filter([
+            $registry->getAuth(),
+            $registry->getAuth('original'),
+        ]));
+
+        $keys = [];
+        foreach ($userIds as $userId) {
+            $keys[] = self::CALENDAR_CACHE_TS_PREFIX . hash('sha256', $userId);
+        }
+
+        return $keys;
     }
 
     /**
