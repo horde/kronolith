@@ -295,7 +295,7 @@ class Kronolith_CalendarsManager
             }
 
             foreach ($display_prefs as $key => $val) {
-                $pref_val = @unserialize($prefs->getValue($key));
+                $pref_val = @unserialize($prefs->getValue($key), ['allowed_classes' => false]);
                 $val = '_' . $val;
                 $this->$val = is_array($pref_val)
                     ? $pref_val
@@ -615,7 +615,7 @@ class Kronolith_CalendarsManager
             // Check that all selected remote calendars are still configured.
             $tmp = $this->_displayRemote;
             $this->_allRemote = $this->_displayRemote = [];
-            $calendars = @unserialize($GLOBALS['prefs']->getValue('remote_cals'));
+            $calendars = @unserialize($GLOBALS['prefs']->getValue('remote_cals'), ['allowed_classes' => false]);
             if (!is_array($calendars)) {
                 $calendars = [];
             }

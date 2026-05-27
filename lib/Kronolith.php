@@ -1147,7 +1147,7 @@ class Kronolith
                 Horde::log($e);
                 return [];
             }
-            $display_calendars = @unserialize($GLOBALS['prefs']->getValue('display_cals'));
+            $display_calendars = @unserialize($GLOBALS['prefs']->getValue('display_cals'), ['allowed_classes' => false]);
             if (is_array($display_calendars)) {
                 foreach ($display_calendars as $id) {
                     try {
@@ -1507,7 +1507,7 @@ class Kronolith
             return;
         }
 
-        $sessionTs = (float)$GLOBALS['session']->get(
+        $sessionTs = (float) $GLOBALS['session']->get(
             'kronolith',
             'calendar_cache_ts'
         );
@@ -1823,7 +1823,7 @@ class Kronolith
      */
     protected static function _getPrefList($pref)
     {
-        $list = @unserialize($GLOBALS['prefs']->getValue($pref));
+        $list = @unserialize($GLOBALS['prefs']->getValue($pref), ['allowed_classes' => false]);
 
         return is_array($list) ? array_values($list) : [];
     }
@@ -1895,7 +1895,7 @@ class Kronolith
             foreach (self::_calendarCacheKeysForCurrentUser() as $key) {
                 $value = $cache->get($key, 0);
                 if ($value !== false) {
-                    $timestamp = max($timestamp, (float)$value);
+                    $timestamp = max($timestamp, (float) $value);
                 }
             }
             return $timestamp;
@@ -3331,7 +3331,7 @@ class Kronolith
      */
     public static function viewShowLocation()
     {
-        $show = @unserialize($GLOBALS['prefs']->getValue('show_location'));
+        $show = @unserialize($GLOBALS['prefs']->getValue('show_location'), ['allowed_classes' => false]);
         return @in_array('screen', $show);
     }
 
@@ -3340,7 +3340,7 @@ class Kronolith
      */
     public static function viewShowTime()
     {
-        $show = @unserialize($GLOBALS['prefs']->getValue('show_time'));
+        $show = @unserialize($GLOBALS['prefs']->getValue('show_time'), ['allowed_classes' => false]);
         return @in_array('screen', $show);
     }
 

@@ -274,7 +274,7 @@ class Kronolith_Attendee_List implements ArrayAccess, Countable, IteratorAggrega
      */
     public function unserialize($data)
     {
-        $this->_list = @unserialize($data);
+        $this->_list = @unserialize($data, ['allowed_classes' => ['Kronolith_Attendee']]);
     }
 
     public function __unserialize(array $data): void

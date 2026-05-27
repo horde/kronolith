@@ -182,7 +182,7 @@ class Kronolith_FreeBusy
         $prefs = $injector->getInstance('Horde_Core_Factory_Prefs')
             ->create('kronolith', ['cache' => false, 'user' => $user]);
         $registry->setTimeZone();
-        $cals = @unserialize($prefs->getValue('fb_cals'));
+        $cals = @unserialize($prefs->getValue('fb_cals'), ['allowed_classes' => false]);
 
         // If the free/busy calendars preference is empty, default to the
         // user's default_share preference, and if that's empty, to their

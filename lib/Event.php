@@ -2813,7 +2813,7 @@ abstract class Kronolith_Event
             $prefs = $GLOBALS['prefs'];
         }
 
-        $methods = !empty($this->methods) ? $this->methods : @unserialize($prefs->getValue('event_alarms'));
+        $methods = !empty($this->methods) ? $this->methods : @unserialize($prefs->getValue('event_alarms'), ['allowed_classes' => false]);
         if (isset($methods['notify'])) {
             $methods['notify']['show'] = [
                 '__app' => $GLOBALS['registry']->getApp(),

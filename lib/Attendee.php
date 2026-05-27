@@ -254,7 +254,7 @@ class Kronolith_Attendee implements Serializable
     // TODO: Remove unserialize() - Serializable interface is deprecated
     public function unserialize(string $data)
     {
-        $data = unserialize($data);
+        $data = unserialize($data, ['allowed_classes' => false]);
         $this->__unserialize($data);
     }
 
