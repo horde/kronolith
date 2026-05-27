@@ -1764,14 +1764,10 @@ class Kronolith_Api extends Horde_Registry_Api
             $calendar = $GLOBALS['injector']
                 ->getInstance('Kronolith_Shares')
                 ->getShare($id);
-        } catch (Horde_Exception_NotFound $e) {
-            Kronolith::removeCalendarFromSyncCalendars($id);
-            Kronolith::removeCalendarFromDisplayCalendarsPref($id);
-            Kronolith::removeActiveSyncCalendarCollectionsFromDeviceCache($id);
-            Kronolith::notifyActiveSyncOfCalendarChange();
-            return;
-        } catch (Horde_Share_Exception $e) {
-            if (strpos($e->getMessage(), 'not found') === false) {
+        } catch (Horde_Exception_NotFound|Horde_Share_Exception $e) {
+            if ($e instanceof Horde_Share_Exception
+                && stripos($e->getMessage(), 'not found') === false
+            ) {
                 throw $e;
             }
             Kronolith::removeCalendarFromSyncCalendars($id);
