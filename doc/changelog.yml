@@ -200,6 +200,23 @@
   notes: |
     Original version string was 5.0.0alpha3
     [rla] Try to get around merge issues when refreshing the maintaina clone
+5.0.0-RC4:
+  api: 5.0.0-RC4
+  state:
+    release: RC
+    api: RC
+  date: 2026-05-28
+  license:
+    identifier: GPL-2.0-only
+    uri: https://spdx.org/licenses/GPL-2.0-only.html
+  notes: |-
+    fix(security): restrict unserialize allowed_classes (ZDI-20-1051)
+    refactor: Refine/reduce the PR horde/kronolith#44 because other changes make some of it unnecessary
+    Refactor addCalendar and deleteCalendar methods
+    Refactor calendar preference management methods
+    Refactor ActiveSync handling in prefs.php
+    Simplify recurrence rule update logic
+    Add image styles to kronolithEventFileList
 5.0.0-RC3:
   api: 5.0.0-RC3
   state:
