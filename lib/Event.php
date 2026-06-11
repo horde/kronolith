@@ -1675,6 +1675,73 @@ abstract class Kronolith_Event
     }
 
     /**
+     * Normalize an EAS InstanceId to a UTC Horde_Date.
+     *
+     * @author Torben Dannhauer <torben@dannhauer.de>
+     *
+     * @param Horde_Date|string|null $instanceid
+     *
+     * @return Horde_Date|null
+     */
+    protected function _easInstanceIdToUtcDate($instanceid): ?Horde_Date
+    {
+        if ($instanceid instanceof Horde_Date) {
+            $date = clone $instanceid;
+        } elseif (is_string($instanceid) && $instanceid !== '') {
+            try {
+                $date = new Horde_Date($instanceid, 'UTC');
+            } catch (Horde_Date_Exception $e) {
+                return null;
+            }
+        } else {
+            return null;
+        }
+
+        $date->setTimezone('UTC');
+
+        return $date;
+    }
+
+    /**
+     * Compare two EAS InstanceId values for the same occurrence.
+     *
+     * @author Torben Dannhauer <torben@dannhauer.de>
+     *
+     * @param Horde_Date|string|null $a
+     * @param Horde_Date|string|null $b
+     *
+     * @return boolean
+     */
+    protected function _easInstanceIdsEqual($a, $b): bool
+    {
+        $da = $this->_easInstanceIdToUtcDate($a);
+        $db = $this->_easInstanceIdToUtcDate($b);
+
+        return $da && $db
+            && $da->format('Ymd\THis\Z') === $db->format('Ymd\THis\Z');
+    }
+
+    /**
+     * Delete a bound exception event for a recurring-series instance.
+     *
+     * @author Torben Dannhauer <torben@dannhauer.de>
+     *
+     * @param Horde_Date|string|null $instanceid
+     */
+    public function deleteBoundExceptionForInstance($instanceid): void
+    {
+        if (!$this->_easInstanceIdToUtcDate($instanceid)) {
+            return;
+        }
+
+        foreach ($this->boundExceptions() as $exception) {
+            if ($this->_easInstanceIdsEqual($exception->exceptionoriginaldate, $instanceid)) {
+                $this->getDriver()->deleteEvent($exception->id);
+            }
+        }
+    }
+
+    /**
      * Handle adding/editing exceptions from EAS 16.0 clients.
      *
      * @param  Horde_ActiveSync_Message_Appointment $message
@@ -1686,29 +1753,32 @@ abstract class Kronolith_Event
         if (!$this->recurs()) {
             return false;
         }
-        $tz = $message->getTimezone();
+
+        $originalUtc = $this->_easInstanceIdToUtcDate($message->instanceid);
+        if (!$originalUtc) {
+            return false;
+        }
+
+        // EAS 16.0 exception MODIFY often omits Timezone; use the series tz.
+        if (!$message->isGhosted('timezone') && !empty($message->timezone)) {
+            try {
+                $tz = $message->getTimezone();
+            } catch (Horde_Mapi_Exception $e) {
+                $tz = $this->timezone;
+            }
+        } else {
+            $tz = $this->timezone;
+        }
         if (empty($tz)) {
             $tz = date_default_timezone_get();
         }
         $kronolith_driver = $this->getDriver();
 
-        // Do we already have an exception for this day? If so, remove the
-        // bound exception (but don't need to remove it from the recurrence
-        // object since we are just replacing it).
-        $search = new StdClass();
-        $search->baseid = $this->uid;
-        $results = $kronolith_driver->search($search);
-        foreach ($results as $days) {
-            foreach ($days as $exception) {
-                if ($exception->exceptionoriginaldate->setTimezone('UTC')->format('Ymd\THis\Z') == $message->instanceid) {
-                    $kronolith_driver->deleteEvent($exception->id);
-                    break;
-                }
-            }
-        }
+        // Replace any existing bound exception for this instance.
+        $this->deleteBoundExceptionForInstance($originalUtc);
 
         // Ensure the exception is added to the recurrence object.
-        $original = new Horde_Date($message->instanceid, 'UTC');
+        $original = clone $originalUtc;
         $original->setTimezone($tz);
         $this->recurrence->addException($original->format('Y'), $original->format('m'), $original->format('d'));
 
@@ -1730,13 +1800,17 @@ abstract class Kronolith_Event
         $event->description = $message->getBody();
         $event->description = empty($event->description) ? $this->description : $event->description;
         $event->baseid = $this->uid;
-        $event->exceptionoriginaldate = new Horde_Date($message->instanceid, 'UTC');
+        $event->exceptionoriginaldate = clone $originalUtc;
         $event->exceptionoriginaldate->setTimezone($tz);
         $event->initialized = true;
         if ($tz != date_default_timezone_get()) {
             $event->timezone = $tz;
         }
         $event->save();
+
+        // Persist the master's recurrence exception list so the base
+        // occurrence is suppressed on export.
+        $this->save();
 
         return true;
     }
