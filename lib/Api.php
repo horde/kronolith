@@ -1140,6 +1140,11 @@ class Kronolith_Api extends Horde_Registry_Api
             $deleteDate = ($recurrenceId instanceof Horde_Date)
                 ? $recurrenceId
                 : new Horde_Date($recurrenceId);
+
+            // EAS 16.0 may have created a bound exception for this instance.
+            $event->deleteBoundExceptionForInstance($deleteDate);
+
+            $deleteDate->setTimezone($event->timezone ?: date_default_timezone_get());
             $event->recurrence->addException($deleteDate->format('Y'), $deleteDate->format('m'), $deleteDate->format('d'));
             $event->save();
         } elseif ($range == Kronolith::RANGE_THISANDFUTURE) {
