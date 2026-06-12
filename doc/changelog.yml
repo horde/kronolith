@@ -1,4 +1,127 @@
 ---
+5.0.0:
+  api: 5.0.0
+  state:
+    release: beta
+    api: beta
+  date: 2017-10-20
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |
+    [mjr] Prevent creation of corrupt recurrence end dates (Bug #14752).
+    [jan] Add API to backup and restore user data.
+    [jan] Use colors, names, and descriptions of remote CalDAV calendars (Request #14612).
+    [jan] Add headers to print views.
+    [mjr] Add support for tracking the ORGANIZER of an event independently of the horde user (Bug #3965, PR: 127, Ralf Lang <lang@b1-systems.de>).
+    [jan] Use preferred start and end of day for color shades in dynamic view.
+    [jan] Automatically scroll to preferred start of day (heinz@htl-steyr.ac.at, Request #14498).
+    [mjr] Changes to support EAS attachment sync support.
+    [jan] Remove dependency on PEAR's Date package.
+    [mjr] Fix display of recurring multi-day events ("Pascal Rigaux" <pascal.rigaux@univ-paris1.fr>).
+    [jan] Only export the timezone rules required for an event to iCalendar objects.
+    [jan] Show timezone abbreviations in event dialog too.
+    [jan] Show users' full names in share dialogs.
+    [mjr] Support for subset of features of ActiveSync 16.0.
+    [mjr] Disconnect exceptions from base event when series changes.
+    [mjr] Support file attachments to events (Request #2009).
+    [mjr] Add ability to prevent any iTip notifications from being sent (Request #14157).
+    [mjr] Remove maps configuration, replaced by global maps configuration (Bug #14168).
+    [mjr] Show created/last-modified info on event view (Request #10715).
+    [jan] Allow to edit system calendars in dynamic view.
+    [jan] Add support for monthly recurrence on last weekday (Request #1922).
+    [jan] Send event update notifications with HTML part.
+    [mjr] Resource permissions have been implemented (Request #13647).
+    [jan] Add refresh button to individual calendars and task lists.
+    [mjr] Enforce case on attendee user part, but add attendee to event if only only the case differs (Bug #13905).
+    [jan] Keep original file names when PUTing events via WebDAV.
+    [jan] Remove configuration options for database tables.
+    [mjr] Honor the UID value sent from EAS clients directly in the message structure.
+    [jan] Add entries for Tasks and Agenda to top menu.
+    [mjr] Add Kronolith_Api::move().
+    [jan] Return ETags with browse() API method.
+    [jan] Add importing of calendar data from a URL.
+5.0.0-RC5:
+  api: 5.0.0-RC5
+  state:
+    release: RC
+    api: RC
+  date: 2026-06-12
+  license:
+    identifier: GPL-2.0-only
+    uri: https://spdx.org/licenses/GPL-2.0-only.html
+  notes: |-
+    fix(kronolith): constrain unsized <img> icons in AC widget and portal blocks
+    fix(kronolith): constrain unsized icons in dynamic event editor
+    Merge pull request #52 from horde/refactor/js-from-pr-50
+    Fix/meeting attendance (#53)
+    refactor(kronolith): drop more prototypejs idioms from touched blocks
+    refactor(kronolith): use plain DOM for free/busy table helpers
+    fix(kronolith): persist calendar visibility and fix attendee event dialog
+    Implement bound exception deletion for recurring events
+    fix(kronolith): harden EAS 16.0 recurring calendar instance sync
+5.0.0-RC4:
+  api: 5.0.0-RC4
+  state:
+    release: RC
+    api: RC
+  date: 2026-05-28
+  license:
+    identifier: GPL-2.0-only
+    uri: https://spdx.org/licenses/GPL-2.0-only.html
+  notes: |-
+    fix(security): restrict unserialize allowed_classes (ZDI-20-1051)
+    refactor: Refine/reduce the PR horde/kronolith#44 because other changes make some of it unnecessary
+    Refactor addCalendar and deleteCalendar methods
+    Refactor calendar preference management methods
+    Refactor ActiveSync handling in prefs.php
+    Simplify recurrence rule update logic
+    Add image styles to kronolithEventFileList
+5.0.0-RC3:
+  api: 5.0.0-RC3
+  state:
+    release: RC
+    api: RC
+  date: 2026-05-25
+  license:
+    identifier: GPL-2.0-only
+    uri: https://spdx.org/licenses/GPL-2.0-only.html
+  notes: |-
+    refactor: Transition to unified screen.css
+    Merge pull request #43 from horde/feat/adopt-nls-psr4
+    refactor: Use PSR-4 version of horde/nls
+    Merge pull request #42 from horde/fix/activesync-null-timezone
+    fix: Guard against null
+    chore: Update workflow dependency
+5.0.0-RC2:
+  api: 5.0.0-RC2
+  state:
+    release: RC
+    api: RC
+  date: 2026-05-19
+  license:
+    identifier: GPL-2.0-only
+    uri: https://spdx.org/licenses/GPL-2.0-only.html
+  notes: |-
+    fix: Don't crash dynamic UI when viewing a task without an organizer or assignee
+    fix: resize color picker icon in css
+    refactor(injector): Widen type hints from Horde_Injector to Horde_Injector|Injector
+    Merge pull request #39 from horde/refactor/strftime-icu-migration
+    fix(kronolith): Use D_FMT for sd/ed JSON fields to match Date.js parser
+    refactor(strftime): Migrate to native usage of IntlDateFormatter and DateTime
+    Refactor background properties for sidebar icons
+    style: DatePicker icons need to be resized/shrunk
+5.0.0-RC1:
+  api: 5.0.0-RC1
+  state:
+    release: RC
+    api: RC
+  date: 2026-05-12
+  license:
+    identifier: GPL-2.0-only
+    uri: https://spdx.org/licenses/GPL-2.0-only.html
+  notes: |-
+    style: Add CSS rules for event form icons
 5.0.0-beta4:
   api: 5.0.0-beta4
   state:
@@ -200,110 +323,6 @@
   notes: |
     Original version string was 5.0.0alpha3
     [rla] Try to get around merge issues when refreshing the maintaina clone
-5.0.0-RC4:
-  api: 5.0.0-RC4
-  state:
-    release: RC
-    api: RC
-  date: 2026-05-28
-  license:
-    identifier: GPL-2.0-only
-    uri: https://spdx.org/licenses/GPL-2.0-only.html
-  notes: |-
-    fix(security): restrict unserialize allowed_classes (ZDI-20-1051)
-    refactor: Refine/reduce the PR horde/kronolith#44 because other changes make some of it unnecessary
-    Refactor addCalendar and deleteCalendar methods
-    Refactor calendar preference management methods
-    Refactor ActiveSync handling in prefs.php
-    Simplify recurrence rule update logic
-    Add image styles to kronolithEventFileList
-5.0.0-RC3:
-  api: 5.0.0-RC3
-  state:
-    release: RC
-    api: RC
-  date: 2026-05-25
-  license:
-    identifier: GPL-2.0-only
-    uri: https://spdx.org/licenses/GPL-2.0-only.html
-  notes: |-
-    refactor: Transition to unified screen.css
-    Merge pull request #43 from horde/feat/adopt-nls-psr4
-    refactor: Use PSR-4 version of horde/nls
-    Merge pull request #42 from horde/fix/activesync-null-timezone
-    fix: Guard against null
-    chore: Update workflow dependency
-5.0.0-RC2:
-  api: 5.0.0-RC2
-  state:
-    release: RC
-    api: RC
-  date: 2026-05-19
-  license:
-    identifier: GPL-2.0-only
-    uri: https://spdx.org/licenses/GPL-2.0-only.html
-  notes: |-
-    fix: Don't crash dynamic UI when viewing a task without an organizer or assignee
-    fix: resize color picker icon in css
-    refactor(injector): Widen type hints from Horde_Injector to Horde_Injector|Injector
-    Merge pull request #39 from horde/refactor/strftime-icu-migration
-    fix(kronolith): Use D_FMT for sd/ed JSON fields to match Date.js parser
-    refactor(strftime): Migrate to native usage of IntlDateFormatter and DateTime
-    Refactor background properties for sidebar icons
-    style: DatePicker icons need to be resized/shrunk
-5.0.0-RC1:
-  api: 5.0.0-RC1
-  state:
-    release: RC
-    api: RC
-  date: 2026-05-12
-  license:
-    identifier: GPL-2.0-only
-    uri: https://spdx.org/licenses/GPL-2.0-only.html
-  notes: |-
-    style: Add CSS rules for event form icons
-5.0.0:
-  api: 5.0.0
-  state:
-    release: beta
-    api: beta
-  date: 2017-10-20
-  license:
-    identifier: GPL-2.0
-    uri: http://www.horde.org/licenses/gpl
-  notes: |
-    [mjr] Prevent creation of corrupt recurrence end dates (Bug #14752).
-    [jan] Add API to backup and restore user data.
-    [jan] Use colors, names, and descriptions of remote CalDAV calendars (Request #14612).
-    [jan] Add headers to print views.
-    [mjr] Add support for tracking the ORGANIZER of an event independently of the horde user (Bug #3965, PR: 127, Ralf Lang <lang@b1-systems.de>).
-    [jan] Use preferred start and end of day for color shades in dynamic view.
-    [jan] Automatically scroll to preferred start of day (heinz@htl-steyr.ac.at, Request #14498).
-    [mjr] Changes to support EAS attachment sync support.
-    [jan] Remove dependency on PEAR's Date package.
-    [mjr] Fix display of recurring multi-day events ("Pascal Rigaux" <pascal.rigaux@univ-paris1.fr>).
-    [jan] Only export the timezone rules required for an event to iCalendar objects.
-    [jan] Show timezone abbreviations in event dialog too.
-    [jan] Show users' full names in share dialogs.
-    [mjr] Support for subset of features of ActiveSync 16.0.
-    [mjr] Disconnect exceptions from base event when series changes.
-    [mjr] Support file attachments to events (Request #2009).
-    [mjr] Add ability to prevent any iTip notifications from being sent (Request #14157).
-    [mjr] Remove maps configuration, replaced by global maps configuration (Bug #14168).
-    [mjr] Show created/last-modified info on event view (Request #10715).
-    [jan] Allow to edit system calendars in dynamic view.
-    [jan] Add support for monthly recurrence on last weekday (Request #1922).
-    [jan] Send event update notifications with HTML part.
-    [mjr] Resource permissions have been implemented (Request #13647).
-    [jan] Add refresh button to individual calendars and task lists.
-    [mjr] Enforce case on attendee user part, but add attendee to event if only only the case differs (Bug #13905).
-    [jan] Keep original file names when PUTing events via WebDAV.
-    [jan] Remove configuration options for database tables.
-    [mjr] Honor the UID value sent from EAS clients directly in the message structure.
-    [jan] Add entries for Tasks and Agenda to top menu.
-    [mjr] Add Kronolith_Api::move().
-    [jan] Return ETags with browse() API method.
-    [jan] Add importing of calendar data from a URL.
 4.2.28:
   api: 4.2.0
   state:
@@ -699,6 +718,49 @@
     [mjr] Ensure default share attribute is set when auto determining a default share.
     [mjr] Fix fatal error when calculating alarms on a recurring event that has completed.
     [mjr] Fix catching minical clicks on browsers that return element names in uppercase (Jasper.Olbrich@students.uni-marburg.de, Bug #13370).
+4.2.0:
+  api: 4.2.0
+  state:
+    release: stable
+    api: stable
+  date: 2014-07-08
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |
+    [jan] Fix selecting days in the sidebar mini calendar (Bug #13327).
+    [mjr] Issue a cancellation iTip when an event's status changes to cancelled (Bug #13321).
+    [jan] Fix loading events for intial view in smartphone mode.
+4.2.0-RC2:
+  api: 4.2.0
+  state:
+    release: beta
+    api: beta
+  date: 2014-07-01
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |
+    Original version string was 4.2.0RC2
+    [jan] Fix issues with event URL field not updating (Carlos Timóteo <ctimoteo@sapo.pt>).
+4.2.0-RC1:
+  api: 4.2.0
+  state:
+    release: beta
+    api: beta
+  date: 2014-06-17
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |
+    Original version string was 4.2.0RC1
+    [jan] Fix error when deleting unselected calendars.
+    [jan] Improve DTEND compatibility with other programs using iCalendar.
+    [mjr] Fix sending iTip invitations when Save As New is used (Bug #13239).
+    [jan] Fix free/busy display with 24-hours-busy days.
+    [jan] Fix navigating free/busy dates.
+    [jan] Fix hover style in year view (Bug #13057).
+    [jan] Update Polish translation (Maciej Uhlig <maciej.uhlig@us.edu.pl>).
 4.2.0-beta2:
   api: 4.2.0
   state:
@@ -766,49 +828,6 @@
     [mjr] Add ability to export event to a timeslice (Request #11307).
     [mjr] Add API support for supporting multiple calendar sync via ActiveSync.
     [jan] Improve sort order of events in month view (Request #11155).
-4.2.0-RC2:
-  api: 4.2.0
-  state:
-    release: beta
-    api: beta
-  date: 2014-07-01
-  license:
-    identifier: GPL-2.0
-    uri: http://www.horde.org/licenses/gpl
-  notes: |
-    Original version string was 4.2.0RC2
-    [jan] Fix issues with event URL field not updating (Carlos Timóteo <ctimoteo@sapo.pt>).
-4.2.0-RC1:
-  api: 4.2.0
-  state:
-    release: beta
-    api: beta
-  date: 2014-06-17
-  license:
-    identifier: GPL-2.0
-    uri: http://www.horde.org/licenses/gpl
-  notes: |
-    Original version string was 4.2.0RC1
-    [jan] Fix error when deleting unselected calendars.
-    [jan] Improve DTEND compatibility with other programs using iCalendar.
-    [mjr] Fix sending iTip invitations when Save As New is used (Bug #13239).
-    [jan] Fix free/busy display with 24-hours-busy days.
-    [jan] Fix navigating free/busy dates.
-    [jan] Fix hover style in year view (Bug #13057).
-    [jan] Update Polish translation (Maciej Uhlig <maciej.uhlig@us.edu.pl>).
-4.2.0:
-  api: 4.2.0
-  state:
-    release: stable
-    api: stable
-  date: 2014-07-08
-  license:
-    identifier: GPL-2.0
-    uri: http://www.horde.org/licenses/gpl
-  notes: |
-    [jan] Fix selecting days in the sidebar mini calendar (Bug #13327).
-    [mjr] Issue a cancellation iTip when an event's status changes to cancelled (Bug #13321).
-    [jan] Fix loading events for intial view in smartphone mode.
 4.1.6:
   api: 4.1.0
   state:
@@ -914,6 +933,29 @@
     [mjr] Fix setting RECURRENCE-ID field when exporting ics file (Bug #12368).
     [jan] Fix propagating calendar URLs if import/export is turned off.
     [mjr] Add API methods for using history modification sequences.
+4.1.0:
+  api: 4.1.0
+  state:
+    release: stable
+    api: stable
+  date: 2013-06-04
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |
+    [jan] Add help text for CalDAV usage.
+4.1.0-RC1:
+  api: 4.1.0
+  state:
+    release: beta
+    api: stable
+  date: 2013-05-29
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |
+    Original version string was 4.1.0RC1
+    [jan] Fix editing of events per CalDAV if client sends LAST-MODIFIED attribute (Bug #12244).
 4.1.0-beta2:
   api: 4.1.0
   state:
@@ -940,29 +982,6 @@
     [jan] Add CalDAV server support (Request #4267).
     [jan] Use Horde_Dav for accessing remote calendars.
     [mjr] Expose Kronolith_FreeBusy::get() via the external API.
-4.1.0-RC1:
-  api: 4.1.0
-  state:
-    release: beta
-    api: stable
-  date: 2013-05-29
-  license:
-    identifier: GPL-2.0
-    uri: http://www.horde.org/licenses/gpl
-  notes: |
-    Original version string was 4.1.0RC1
-    [jan] Fix editing of events per CalDAV if client sends LAST-MODIFIED attribute (Bug #12244).
-4.1.0:
-  api: 4.1.0
-  state:
-    release: stable
-    api: stable
-  date: 2013-06-04
-  license:
-    identifier: GPL-2.0
-    uri: http://www.horde.org/licenses/gpl
-  notes: |
-    [jan] Add help text for CalDAV usage.
 4.0.5:
   api: 4.0.0
   state:
@@ -1048,6 +1067,35 @@
     [jan] Fix authentication to remote calendars (Bug #11643).
     [jan] Fix incorrect nesting of VTIMEZONE components when exporting to iCalendar (Bug #11636).
     [jan] Fix fatal error when moving non-recurring events with resources (Bug #11629).
+4.0.0:
+  api: 4.0.0
+  state:
+    release: stable
+    api: stable
+  date: 2012-10-30
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |
+    [jan] Update Polish translation (Krzysztof Kozera <krzysztof113@o2.pl>).
+    [jan] Update Dutch translation (Arjen de Korte <arjen+horde@de-korte.org>).
+4.0.0-RC1:
+  api: 4.0.0beta1
+  state:
+    release: beta
+    api: beta
+  date: 2012-10-27
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |
+    Original version string was 4.0.0RC1
+    [jan] Show completed future tasks in complete category, not in future category (Bug #11562).
+    [jan] Fix exporting of recurring events with exceptions from Kolab backends.
+    [jan] Fix export links for calendars (Bug #11576).
+    [jan] Fix broken Apple iCal behavior with exception dates (Evert Pot <evert@rooftopsolutions.nl>).
+    [jan] Use more compatible message format for iTip notifications (Bug #9854).
+    [jan] Fix free/busy retrieval on Kolab.
 4.0.0-beta2:
   api: 4.0.0beta1
   state:
@@ -1092,35 +1140,6 @@
     [jan] Support importing of iCalendar events with non-local timezones (Request #7156).
     [jan] Include timezone information when exporting events to iCalendar (Request #7156).
     [jan] Allow to set individual timezones for each event (Request #10727).
-4.0.0-RC1:
-  api: 4.0.0beta1
-  state:
-    release: beta
-    api: beta
-  date: 2012-10-27
-  license:
-    identifier: GPL-2.0
-    uri: http://www.horde.org/licenses/gpl
-  notes: |
-    Original version string was 4.0.0RC1
-    [jan] Show completed future tasks in complete category, not in future category (Bug #11562).
-    [jan] Fix exporting of recurring events with exceptions from Kolab backends.
-    [jan] Fix export links for calendars (Bug #11576).
-    [jan] Fix broken Apple iCal behavior with exception dates (Evert Pot <evert@rooftopsolutions.nl>).
-    [jan] Use more compatible message format for iTip notifications (Bug #9854).
-    [jan] Fix free/busy retrieval on Kolab.
-4.0.0:
-  api: 4.0.0
-  state:
-    release: stable
-    api: stable
-  date: 2012-10-30
-  license:
-    identifier: GPL-2.0
-    uri: http://www.horde.org/licenses/gpl
-  notes: |
-    [jan] Update Polish translation (Krzysztof Kozera <krzysztof113@o2.pl>).
-    [jan] Update Dutch translation (Arjen de Korte <arjen+horde@de-korte.org>).
 3.0.18:
   api: 3.0.0
   state:
@@ -1419,6 +1438,50 @@
     [jan] Support adding and editing of CalDAV events in dynamic view (Bug #9865).
     [mjr] Allow migrations to complete despite of missing shares.
     [jan] Remove debug code in Ajax library (Bug #9818).
+3.0.0:
+  api: 3.0.0
+  state:
+    release: stable
+    api: stable
+  date: 2011-04-06
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |
+    First stable release for Horde 4.
+    [jan] Fix application-specific permission checks (Bug #9786).
+    [jan] Fix fatal error when using the max_events permission (Bug #9784).
+    [mjr] Datatree share to SQL upgrade script refactored for Horde 4.
+    [mjr] Add migration for mysql specific geospatial fields (Bug #9758).
+    [jan] Set default alarm in dynamic view (Bug #9752).
+    [jan] Move all executable scripts to bin/ and prefix with kronolith-.
+3.0.0-RC2:
+  api: 3.0.0
+  state:
+    release: beta
+    api: beta
+  date: 2011-03-29
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |
+    Original version string was 3.0.0RC2
+    Second release candidate for Horde 4.
+    [jan] Fix javascript error when viewing events with desktop notifications (Bug #9727).
+3.0.0-RC1:
+  api: 3.0.0
+  state:
+    release: beta
+    api: beta
+  date: 2011-03-23
+  license:
+    identifier: GPL-2.0
+    uri: http://www.horde.org/licenses/gpl
+  notes: |
+    Original version string was 3.0.0RC1
+    First release candidate for Horde 4.
+    [jan] Update installation and upgrade instructions.
+    [jan] Fix custom event alarm settings in traditional view (Bug #9154).
 3.0.0-beta1:
   api: 3.0.0
   state:
@@ -1478,50 +1541,6 @@
     [jan] Store events in UTC and convert to the user's timezone on the fly.
     [jan] Remove alarm reminder code.
     [jan] Change listEvents API method to return keys as dates instead of timestamps.
-3.0.0-RC2:
-  api: 3.0.0
-  state:
-    release: beta
-    api: beta
-  date: 2011-03-29
-  license:
-    identifier: GPL-2.0
-    uri: http://www.horde.org/licenses/gpl
-  notes: |
-    Original version string was 3.0.0RC2
-    Second release candidate for Horde 4.
-    [jan] Fix javascript error when viewing events with desktop notifications (Bug #9727).
-3.0.0-RC1:
-  api: 3.0.0
-  state:
-    release: beta
-    api: beta
-  date: 2011-03-23
-  license:
-    identifier: GPL-2.0
-    uri: http://www.horde.org/licenses/gpl
-  notes: |
-    Original version string was 3.0.0RC1
-    First release candidate for Horde 4.
-    [jan] Update installation and upgrade instructions.
-    [jan] Fix custom event alarm settings in traditional view (Bug #9154).
-3.0.0:
-  api: 3.0.0
-  state:
-    release: stable
-    api: stable
-  date: 2011-04-06
-  license:
-    identifier: GPL-2.0
-    uri: http://www.horde.org/licenses/gpl
-  notes: |
-    First stable release for Horde 4.
-    [jan] Fix application-specific permission checks (Bug #9786).
-    [jan] Fix fatal error when using the max_events permission (Bug #9784).
-    [mjr] Datatree share to SQL upgrade script refactored for Horde 4.
-    [mjr] Add migration for mysql specific geospatial fields (Bug #9758).
-    [jan] Set default alarm in dynamic view (Bug #9752).
-    [jan] Move all executable scripts to bin/ and prefix with kronolith-.
 2.3.6:
   notes: |
     [jan] Add upgrade scripts for next-generation SQL share driver.
@@ -1583,6 +1602,12 @@
     [jan] Set timezone per user preference and fix recurring events when sending reminders through Kronolith (develop@kristov.de, Bug #7038).
     [cjh] Add a PostgreSQL-specific upgrade script for 2.2 to 2.3 (michael.menge@zdv.uni-tuebingen.de, Bug #7454).
     [mms] Upgrade prototype.js to v1.6.0.3.
+2.3.0:
+  notes: |
+    [jan] Change group field in shares table to work with LDAP groups (Bug #6883).
+    [jan] Fix user name conversion with user hooks in the calendar panel (Bug #7366).
+    [gwr] Fixed handling of free events in the Kolab driver (noethen@uni-paderborn.de, Bug #7192).
+    [jan] Differentiate between days with events and days with busy events in the year view.
 2.3.0-RC1:
   notes: |
     Original version string was 2.3.0RC1
@@ -1607,12 +1632,62 @@
     [jan] Fix warning when importing events through the API (Bug #6865).
     [cjh] Be case insensitive when comparing attendees (aloyse.gilbert@gmail.com, Bug #6833).
     [jan] Use smaller icons for private events.
-2.3.0:
+2.2.0:
   notes: |
-    [jan] Change group field in shares table to work with LDAP groups (Bug #6883).
-    [jan] Fix user name conversion with user hooks in the calendar panel (Bug #7366).
-    [gwr] Fixed handling of free events in the Kolab driver (noethen@uni-paderborn.de, Bug #7192).
-    [jan] Differentiate between days with events and days with busy events in the year view.
+    [jan] Identify the correct event when using attend.php to update invitations (Bug #6606).
+    [cjh] Improve resource usage in datatree_to_sql share migration script (Bug #6740).
+    [jan] Decode user names and passwords when editing remote calendars.
+    [cjh] Ensure that event_category is always a string (Bug #6696).
+2.2.0-RC3:
+  notes: |
+    Original version string was 2.2.0RC3
+    [cjh] Apply fix for http://dev.rubyonrails.org/ticket/11473 to prototype.js (Request #6590).
+    [cjh] In WebDAV PUT operations, only look for existing events on the calendar being uploaded (Bug #6617).
+    [cjh] Add an upgrade script for the new SQL share driver (Request #6109).
+    [cjh] Use json_encode and json_decode if they are available (Bug #6457).
+    [cjh] Use the first matching free/busy URL if more than one is found (almarin@um.es, Request #6638).
+    [cjh] Allow subscribing/unsubscribing from external calendars through the API (duck@obala.net, Request #6626).
+    [jan] Add another directory level for calendar owners to the WebDAV interface.
+    [jan] Cut off categories at 80 characters to save them correctly (Bug #5211).
+    [gwr] Fixed removal of recurrence in the Kolab driver.
+    [jan] Show full title in email alarms (Bug #6510).
+    [jan] Add export of single events.
+    [gwr] Fixed History support in the Kolab driver.
+    [cjh] Don't report cancelled events as busy (m.gabriel@das-netzwerkteam.de, Bug #6376).
+    [cjh] Show who created or made the last change to an event along with the date (Request #6305).
+    [cjh] Make sure event time and location are shown in the day and week views (Bug #6158).
+    [cjh] Include Location and Attendee information in the plain-text portion of iTip messages (almarin@um.es, Request #6271).
+    [jan] Add Turkish translation (METU <horde-tr@metu.edu.tr>).
+2.2.0-RC2:
+  notes: |
+    Original version string was 2.2.0RC2
+    [jan] SECURITY: Fix privilege escalation in Horde API.
+    [cjh] SECURITY: Fix missing ownership validation on share changes.
+    [cjh] Fix month links in the year view when the first day of the month is on the first day of the week (hofsteda@gmail.com, Bug #6172).
+    [cjh] Make sure calendar info boxes show the full remote URL (Bug #6134).
+    [jan] Fix importing of events with an existing UID (Bug #6122).
+    [cjh] Fix timestamps in portal block event links.
+    [mjr] Fix issue that caused recurring events on 2/29 to appear on 3/1 when recurrence type is HORDE_DATE_RECUR_YEARLY_DATE.
+    [cjh] If JavaScript is available, open the Attendees window set to the current event's date (Request #5813).
+    [cjh] Fix display of events that end at 00:00 at a non-zero second (Bug #6047).
+    [cjh] Fix handling of local names in attendees.php (m.gabriel@das-netzwerkteam.de, Bug #6041).
+    [cjh] Fix inline calendar search in the calendar panel.
+    [cjh] New share management UI that doesn't require JavaScript.
+2.2.0-RC1:
+  notes: |
+    Original version string was 2.2.0RC1
+    [jan] Don't allow to modify private events throught the API (Bug #5736).
+    [jan] Don't overwrite event owner when changing events over WebDAV (Bug #5736).
+    [jan] Implement WebDAV DELETE.
+    [cjh] Event exceptions are now correctly reflected when subscribing to Kronolith calendars from Apple iCal.
+    [cjh] When adding attendees, parse email groups and add each member individually (Bug #5812).
+    [cjh] External events are now enabled/disabled by individual category, such as showing a particular tasklist on your calendar, but not all tasks (Request #4581).
+    [jan] Add SQL upgrade script.
+    [cjh] Let the "show" URL of a calendar always show that calendar, instead of toggling whether or not it is displayed.
+    [cjh] Fix permissions granted to remote calendar subscribers on calendars that do not have guest permissions.
+    [cjh] Fix generation of UIDs with PHP 5.2+.
+    [cjh] Add preferences for showing event times and locations in screen views, print views, both, or neither (Request #1982).
+    [cjh] Run attendee email address through MIME::encodeAddress() before validating them (Bug #5670).
 2.2.0-alpha1:
   notes: |
     Original version string was 2.2.0-alpha
@@ -1666,62 +1741,6 @@
     [mdj] Add support for split read/write database.
     [mdj] Add failover support for SQL backend.
     [cjh] Use partial page fetches to update the main "page" div if the browser supports the necessary JavaScript.
-2.2.0-RC3:
-  notes: |
-    Original version string was 2.2.0RC3
-    [cjh] Apply fix for http://dev.rubyonrails.org/ticket/11473 to prototype.js (Request #6590).
-    [cjh] In WebDAV PUT operations, only look for existing events on the calendar being uploaded (Bug #6617).
-    [cjh] Add an upgrade script for the new SQL share driver (Request #6109).
-    [cjh] Use json_encode and json_decode if they are available (Bug #6457).
-    [cjh] Use the first matching free/busy URL if more than one is found (almarin@um.es, Request #6638).
-    [cjh] Allow subscribing/unsubscribing from external calendars through the API (duck@obala.net, Request #6626).
-    [jan] Add another directory level for calendar owners to the WebDAV interface.
-    [jan] Cut off categories at 80 characters to save them correctly (Bug #5211).
-    [gwr] Fixed removal of recurrence in the Kolab driver.
-    [jan] Show full title in email alarms (Bug #6510).
-    [jan] Add export of single events.
-    [gwr] Fixed History support in the Kolab driver.
-    [cjh] Don't report cancelled events as busy (m.gabriel@das-netzwerkteam.de, Bug #6376).
-    [cjh] Show who created or made the last change to an event along with the date (Request #6305).
-    [cjh] Make sure event time and location are shown in the day and week views (Bug #6158).
-    [cjh] Include Location and Attendee information in the plain-text portion of iTip messages (almarin@um.es, Request #6271).
-    [jan] Add Turkish translation (METU <horde-tr@metu.edu.tr>).
-2.2.0-RC2:
-  notes: |
-    Original version string was 2.2.0RC2
-    [jan] SECURITY: Fix privilege escalation in Horde API.
-    [cjh] SECURITY: Fix missing ownership validation on share changes.
-    [cjh] Fix month links in the year view when the first day of the month is on the first day of the week (hofsteda@gmail.com, Bug #6172).
-    [cjh] Make sure calendar info boxes show the full remote URL (Bug #6134).
-    [jan] Fix importing of events with an existing UID (Bug #6122).
-    [cjh] Fix timestamps in portal block event links.
-    [mjr] Fix issue that caused recurring events on 2/29 to appear on 3/1 when recurrence type is HORDE_DATE_RECUR_YEARLY_DATE.
-    [cjh] If JavaScript is available, open the Attendees window set to the current event's date (Request #5813).
-    [cjh] Fix display of events that end at 00:00 at a non-zero second (Bug #6047).
-    [cjh] Fix handling of local names in attendees.php (m.gabriel@das-netzwerkteam.de, Bug #6041).
-    [cjh] Fix inline calendar search in the calendar panel.
-    [cjh] New share management UI that doesn't require JavaScript.
-2.2.0-RC1:
-  notes: |
-    Original version string was 2.2.0RC1
-    [jan] Don't allow to modify private events throught the API (Bug #5736).
-    [jan] Don't overwrite event owner when changing events over WebDAV (Bug #5736).
-    [jan] Implement WebDAV DELETE.
-    [cjh] Event exceptions are now correctly reflected when subscribing to Kronolith calendars from Apple iCal.
-    [cjh] When adding attendees, parse email groups and add each member individually (Bug #5812).
-    [cjh] External events are now enabled/disabled by individual category, such as showing a particular tasklist on your calendar, but not all tasks (Request #4581).
-    [jan] Add SQL upgrade script.
-    [cjh] Let the "show" URL of a calendar always show that calendar, instead of toggling whether or not it is displayed.
-    [cjh] Fix permissions granted to remote calendar subscribers on calendars that do not have guest permissions.
-    [cjh] Fix generation of UIDs with PHP 5.2+.
-    [cjh] Add preferences for showing event times and locations in screen views, print views, both, or neither (Request #1982).
-    [cjh] Run attendee email address through MIME::encodeAddress() before validating them (Bug #5670).
-2.2.0:
-  notes: |
-    [jan] Identify the correct event when using attend.php to update invitations (Bug #6606).
-    [cjh] Improve resource usage in datatree_to_sql share migration script (Bug #6740).
-    [jan] Decode user names and passwords when editing remote calendars.
-    [cjh] Ensure that event_category is always a string (Bug #6696).
 2.1.7:
   notes: |
     [jan] SECURITY: Fix privilege escalation in Horde API.
@@ -1781,6 +1800,9 @@
     [cjh] Honor time format and language preferences in email notifications (Bug #2064).
     [cjh] Add missing display_contact preference (Bug #3575).
     [cjh] Fix fatal error during first login of new users.
+2.1.0:
+  notes: |
+    [cjh] There are now several guards against users being stuck with no selected calendars and no way to select one (Bug #3538).
 2.1.0-RC3:
   notes: |
     Original version string was 2.1.0RC3
@@ -1828,9 +1850,6 @@
     [jan] Add preference to send email notifications to users when events have been added, edited, or deleted in their calendars.
     [cjh] Add a Year view (mbydalek@mobilemini.com) (Bug #1238).
     [jan] Use OPTGROUPs in calendar drop down list.
-2.1.0:
-  notes: |
-    [cjh] There are now several guards against users being stuck with no selected calendars and no way to select one (Bug #3538).
 2.0.7:
   notes: |
     [cjh] SECURITY: Close arbitrary file inclusion in free/busy views.
@@ -1841,6 +1860,10 @@
   notes: |
     [jan] Fix warnings with Internet Explorer on HTTPS connections.
     [jan] Fix reminder emails.
+2.0.4:
+  notes: |
+    [jan] Allow to import more than one event from iCalendar data at once.
+    [cjh] Avoid loops and other errors by immediately failing nextRecurrence() checking for any event with a recurInterval of 0 (Bug #2709).
 2.0.4-RC1:
   notes: |
     Original version string was 2.0.4RC1
@@ -1850,10 +1873,11 @@
     [cjh] Be smarter about enforcing "end before beginning" check for am/pm users when creating an event than spans noon (Bug #1731).
     [jan] Sort search results by start date and show category colors.
     [cjh] Respect twenty_four preference in reminders script (Bug #1896).
-2.0.4:
+2.0.3:
   notes: |
-    [jan] Allow to import more than one event from iCalendar data at once.
-    [cjh] Avoid loops and other errors by immediately failing nextRecurrence() checking for any event with a recurInterval of 0 (Bug #2709).
+    [jan] Respect SMTP authentication settings when sending reminders and notifications (requires Horde 3.0.4).
+    [jan] Include date in reminder message (Bug #1855).
+    [jan] Fix time grids in free/busy view (Bugs #1557, #1868, tasin@fhm.edu).
 2.0.3-RC1:
   notes: |
     Original version string was 2.0.3RC1
@@ -1881,11 +1905,9 @@
     [jan] Workaround IE warning when entering Kronolith over HTTPS (Bug #910).
     [jan] Add shortcut icon (favicon.ico).
     [jan] Sort whole day events alphabetically (Bug #222).
-2.0.3:
+2.0.2:
   notes: |
-    [jan] Respect SMTP authentication settings when sending reminders and notifications (requires Horde 3.0.4).
-    [jan] Include date in reminder message (Bug #1855).
-    [jan] Fix time grids in free/busy view (Bugs #1557, #1868, tasin@fhm.edu).
+    [jan] Fix portal block for missing events at the turn of the year (Bug #1337).
 2.0.2-RC1:
   notes: |
     Original version string was 2.0.2RC1
@@ -1895,9 +1917,6 @@
     [cjh] Make sure that event UIDs are properly set in iTip notifications (Bug #1153).
     [jan] Add Japanese translation (Hiromi Kimura <hiromi@tac.tsukuba.ac.jp>).
     [cjh] Check the completion status of tasks, not just their due date, before showing them on the calendar (Bug #947).
-2.0.2:
-  notes: |
-    [jan] Fix portal block for missing events at the turn of the year (Bug #1337).
 2.0.1:
   notes: |
     [cjh] Fix one page load delay in showing new/removing deleted shares on the My Calendars screen (Bug #1048).
@@ -1908,6 +1927,42 @@
     [cjh] Fix an off-by-one error in the work week view when the user views weeks starts on Sunday (Bug #1046).
     [cjh] Add PostgreSQL version of 2004-12-21_add_event_uid (Bug #1028).
     [cjh] Fix typo that prevented attendees from being saved (Bug #1019).
+2.0.0:
+  notes: |
+    [cjh] UIDs need to be stored in the History system with a kronolith: prefix and with the calendar so as not to confuse different instances of the same event (if two users both have a event on their seperate calendars, they should have unique histories for that event).
+    [cjh] The My Calendars page now has a tool for generating Free/Busy URLs (Bug #571).
+    [cjh] Pass Horde_Date objects instead of timestamps when exporting to iCalendar (Bug #950).
+    [cjh] Clone events before changing their start dates to the current day in the day view so that the week view isn't wrong.
+    [cjh] Fix an off-by-one error in the week view when the user views weeks starting on Sunday.
+    [cjh] Add a preference for whether or not to show the background color for tasks shown on the calendar.
+    [cjh] Don't produce invalid exception dates when exporting iCal files or when loading SQL events.
+    [cjh] Users can now get to the category/color edit screen directly from the category legend, instead of having to find them in Horde's prefs.
+2.0.0-RC3:
+  notes: |
+    Original version string was 2.0.0RC3
+    [cjh] Add All Past as an option on simple searches.
+    [cjh] Add My Calendars menu entry.
+    [cjh] Event exceptions are now correctly exported in iCalendar files.
+    [cjh] Fix recurring events that recur on the same day of the month every n months where n > 1 (Bug #907).
+    [cjh] Fix month view for months starting on Sunday with the first displayed day set to Monday (Bug #907).
+    [cjh] Show event state by CSS styling (Derek P. Moore <derekm@hackunix.org>).
+    [jan] Correctly highlight the current view's tab (Bug #896).
+2.0.0-RC2:
+  notes: |
+    Original version string was 2.0.0RC2
+    [jan] Fix recurring events from remote calendars (Bug #559).
+    [cjh] The menubar Goto popup is now always on top of <select> boxes, even in Internet Explorer (Bug #822).
+    [cjh] Menubar Goto link works on the Options screen again.
+2.0.0-RC1:
+  notes: |
+    Original version string was 2.0.0RC1
+    [cjh] Fix the menubar popup date navigator on the New Event screen.
+    [cjh] Remove unused specialized notification listener.
+    [cjh] Update icons.
+    [jan] Fix importing of non-recurring events.
+    [jan] Save categories of imported events.
+    [cjh] Show different calendar views in tabs, not in the menu.
+    [cjh] Show free/busy view only in the event screen.
 2.0.0-beta1:
   notes: |
     Original version string was 2.0.0-beta
@@ -1953,42 +2008,6 @@
     [cjh] Kronolith can now send iCalendar invitations to an event.
     [cjh] Import/Export of iCalendar data works for basic attributes now.
     [cjh] Use Horde::compressOutput() for output compression.
-2.0.0-RC3:
-  notes: |
-    Original version string was 2.0.0RC3
-    [cjh] Add All Past as an option on simple searches.
-    [cjh] Add My Calendars menu entry.
-    [cjh] Event exceptions are now correctly exported in iCalendar files.
-    [cjh] Fix recurring events that recur on the same day of the month every n months where n > 1 (Bug #907).
-    [cjh] Fix month view for months starting on Sunday with the first displayed day set to Monday (Bug #907).
-    [cjh] Show event state by CSS styling (Derek P. Moore <derekm@hackunix.org>).
-    [jan] Correctly highlight the current view's tab (Bug #896).
-2.0.0-RC2:
-  notes: |
-    Original version string was 2.0.0RC2
-    [jan] Fix recurring events from remote calendars (Bug #559).
-    [cjh] The menubar Goto popup is now always on top of <select> boxes, even in Internet Explorer (Bug #822).
-    [cjh] Menubar Goto link works on the Options screen again.
-2.0.0-RC1:
-  notes: |
-    Original version string was 2.0.0RC1
-    [cjh] Fix the menubar popup date navigator on the New Event screen.
-    [cjh] Remove unused specialized notification listener.
-    [cjh] Update icons.
-    [jan] Fix importing of non-recurring events.
-    [jan] Save categories of imported events.
-    [cjh] Show different calendar views in tabs, not in the menu.
-    [cjh] Show free/busy view only in the event screen.
-2.0.0:
-  notes: |
-    [cjh] UIDs need to be stored in the History system with a kronolith: prefix and with the calendar so as not to confuse different instances of the same event (if two users both have a event on their seperate calendars, they should have unique histories for that event).
-    [cjh] The My Calendars page now has a tool for generating Free/Busy URLs (Bug #571).
-    [cjh] Pass Horde_Date objects instead of timestamps when exporting to iCalendar (Bug #950).
-    [cjh] Clone events before changing their start dates to the current day in the day view so that the week view isn't wrong.
-    [cjh] Fix an off-by-one error in the week view when the user views weeks starting on Sunday.
-    [cjh] Add a preference for whether or not to show the background color for tasks shown on the calendar.
-    [cjh] Don't produce invalid exception dates when exporting iCal files or when loading SQL events.
-    [cjh] Users can now get to the category/color edit screen directly from the category legend, instead of having to find them in Horde's prefs.
 1.1.4:
   notes: |
     [jan] Close XSS when setting the parent frame's page title by javascript (cjh).
@@ -2000,15 +2019,15 @@
 1.1.2:
   notes: |
     [cjh] Fix a bug in the SQL driver preventing events from being displayed.
+1.1.1:
+  notes: |
+    [jan] Fix some display bugs with recurring events in the sql driver (cjh).
 1.1.1-RC1:
   notes: |
     Original version string was 1.1.1RC1
     [jan] Fix broken image tag in day and week views.
     [jan] Fix "New Category" selection in event edit view.
     [jan] Add Arabic (Syria) translation (Platinum Development Team <devteam@platinum-sy.net>).
-1.1.1:
-  notes: |
-    [jan] Fix some display bugs with recurring events in the sql driver (cjh).
 1.1.0:
   notes: |
     [cjh] Kronolith_Event objects now know how to obtain their driver, rather than storing a reference. Makes for much smaller/better return values over XML-RPC, at least.
