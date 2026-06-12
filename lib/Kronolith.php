@@ -2596,26 +2596,32 @@ class Kronolith
             }
             $iCal->addComponent($vevent);
 
-            /* text/calendar part */
+            $icsData = $iCal->exportvCalendar();
+
+            /* Inline text/calendar for IMP/Outlook (iTip UI). */
+            $icsInline = new Horde_Mime_Part();
+            $icsInline->setType('text/calendar');
+            $icsInline->setContents($icsData);
+            $icsInline->setContentTypeParameter('method', $method);
+            $icsInline->setCharset('UTF-8');
+            $icsInline->setDisposition('inline');
+            $icsInline->setEOL("\r\n");
+
+            /* application/ics attachment for ActiveSync attachment list. */
             $ics = new Horde_Mime_Part();
-            $ics->setType('text/calendar');
-            $ics->setContents($iCal->exportvCalendar());
+            $ics->setType('application/ics');
+            $ics->setContents($icsData);
             $ics->setName($filename);
             $ics->setContentTypeParameter('method', $method);
             $ics->setCharset('UTF-8');
             $ics->setEOL("\r\n");
 
-            /* application/ics part */
-            $ics2 = clone $ics;
-            $ics2->setType('application/ics');
-
-            /* multipart/mixed part */
+            $inner = self::buildMimeMessage($view, 'notification', $image);
+            $inner->addPart($icsInline);
             $multipart = new Horde_Mime_Part();
             $multipart->setType('multipart/mixed');
-            $inner = self::buildMimeMessage($view, 'notification', $image);
-            $inner->addPart($ics);
             $multipart->addPart($inner);
-            $multipart->addPart($ics2);
+            $multipart->addPart($ics);
 
             $recipient = $attendee->addressObject;
             $mail = new Horde_Mime_Mail(

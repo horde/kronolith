@@ -1429,7 +1429,13 @@ class Kronolith_Api extends Horde_Registry_Api
             }
             if ($event->hasAttendee($attendee)) {
                 if (is_null($sender) || $sender == $attendee) {
-                    $event->addAttendee($attendee, Kronolith::PART_IGNORE, Kronolith::responseFromICal($atparms[$index]['PARTSTAT']), $name);
+                    $partstat = $atparms[$index]['PARTSTAT'] ?? 'NEEDS-ACTION';
+                    $event->addAttendee(
+                        $attendee,
+                        Kronolith::PART_IGNORE,
+                        Kronolith::responseFromICal($partstat),
+                        $name
+                    );
                     $found = true;
                 } else {
                     $error = _("The attendee hasn't been updated because the update was not sent from the attendee.");
