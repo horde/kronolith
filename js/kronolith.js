@@ -6258,17 +6258,21 @@ KronolithCore = {
                         $H(method.value).each(function(param) {
                             var input = $('kronolithEventAlarmParam' + param.key);
                             if (input && input.type == 'radio') {
-                                var form = input.up('form');
+                                var form = input.closest('form');
                                 if (!form) {
                                     return;
                                 }
-                                form.select('input[type=radio]').each(function(radio) {
-                                    if (radio.name == input.name &&
-                                        radio.value == param.value) {
-                                        radio.setValue(1);
-                                        throw $break;
+                                Array.prototype.some.call(
+                                    form.querySelectorAll('input[type=radio]'),
+                                    function(radio) {
+                                        if (radio.name == input.name &&
+                                            radio.value == param.value) {
+                                            radio.setValue(1);
+                                            return true;
+                                        }
+                                        return false;
                                     }
-                                });
+                                );
                             } else {
                                 input.setValue(param.value);
                             }
@@ -6396,9 +6400,9 @@ KronolithCore = {
 
         /* Hide alarm message for this event. */
         if (r.msgs) {
-            r.msgs = r.msgs.reject(function(msg) {
+            r.msgs = r.msgs.filter(function(msg) {
                 if (msg.type != 'horde.alarm') {
-                    return false;
+                    return true;
                 }
                 var alarm = msg.flags.alarm;
                 if (alarm.params && alarm.params.notify &&
@@ -6407,9 +6411,9 @@ KronolithCore = {
                     alarm.params.notify.show.event &&
                     alarm.params.notify.show.calendar == ev.c &&
                     alarm.params.notify.show.event == ev.id) {
-                    return true;
+                    return false;
                 }
-                return false;
+                return true;
             });
         }
         } catch (e) {
@@ -6678,7 +6682,7 @@ KronolithCore = {
      */
     insertFBRow: function(attendee)
     {
-        var tr = new Element('tr');
+        var tr = document.createElement('tr');
         this.freeBusyRows.set(attendee.i, tr);
         this.updateFBRow(attendee, tr);
         this._insertFBTableRow('kronolithEventAttendeesList', tr);
@@ -6697,11 +6701,13 @@ KronolithCore = {
         }.bind(this));
         this.resources.each(function(resource) {
             var row = this.freeBusyRows.get(resource),
-                tdone = row.down('td');
-            row.update();
-            row.update(tdone);
+                tdone = row.querySelector('td');
+            row.innerHTML = '';
+            row.appendChild(tdone);
             for (i = 0; i < this.FB_HOURS_PER_DAY; i++) {
-                row.insert(new Element('td', { className: 'kronolithFBUnknown' }));
+                var td = document.createElement('td');
+                td.className = 'kronolithFBUnknown';
+                row.appendChild(td);
             }
         }.bind(this));
     },
@@ -6721,9 +6727,11 @@ KronolithCore = {
             case 3: response = 'Declined'; break;
             case 4: response = 'Tentative'; break;
         }
-        row.insert(this.getAttendeeCell(attendee, response));
+        row.appendChild(this.getAttendeeCell(attendee, response));
         for (var i = 0; i < this.FB_HOURS_PER_DAY; i++) {
-            row.insert(new Element('td', { className: 'kronolithFBUnknown' }));
+            var td = document.createElement('td');
+            td.className = 'kronolithFBUnknown';
+            row.appendChild(td);
         }
     },
 
@@ -6745,10 +6753,11 @@ KronolithCore = {
             className += response;
         }
 
-        return new Element('td', {
-            className: className,
-            title: title
-        }).update((attendee.l || title || '').escapeHTML());
+        var td = document.createElement('td');
+        td.className = className;
+        td.title = title;
+        td.innerHTML = (attendee.l || title || '').escapeHTML();
+        return td;
     },
 
     addResourceTabLink: function()
@@ -6802,14 +6811,17 @@ KronolithCore = {
             HordeCore.doAction('getFreeBusy', att, {
                 callback: this.addResourceCallback.curry(resource).bind(this)
             });
-            tr = new Element('tr');
+            tr = document.createElement('tr');
             this.freeBusyRows.set(resource, tr);
-            tr.insert(new Element('td', {
-                title: resource,
-                className: 'kronolithAttendee' + response
-            }).update(resource.escapeHTML()));
+            var rtd = document.createElement('td');
+            rtd.title = resource;
+            rtd.className = 'kronolithAttendee' + response;
+            rtd.innerHTML = resource.escapeHTML();
+            tr.appendChild(rtd);
             for (i = 0; i < this.FB_HOURS_PER_DAY; i++) {
-                tr.insert(new Element('td', { className: 'kronolithFBUnknown' }));
+                var rfb = document.createElement('td');
+                rfb.className = 'kronolithFBUnknown';
+                tr.appendChild(rfb);
             }
             this._insertFBTableRow('kronolithEventResourcesList', tr);
             this.resourceACCache.map.set(resource, v);
