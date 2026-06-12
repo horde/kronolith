@@ -304,6 +304,20 @@ ul.horde-tags li:hover {
 #kronolithEventACBox, #kronolithTaskACBox, #kronolithCalendarinternalACBox {
     border-top: 0;
 }
+/* Constrain the autocompleter remove icon (delete-small.png) so it cannot
+   render at intrinsic size if the deployed asset is bumped. The widget is
+   shared across Horde apps but the rendered <img> has no size attributes;
+   scope it to Kronolith's AC boxes here rather than wait on horde/base. */
+#kronolithUsersACBox .hordeACItemRemove,
+#kronolithAttendeesACBox .hordeACItemRemove,
+#kronolithResourceACBox .hordeACItemRemove,
+#kronolithEventACBox .hordeACItemRemove,
+#kronolithTaskACBox .hordeACItemRemove,
+#kronolithCalendarinternalACBox .hordeACItemRemove {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
 
 #kronolithEventTabAttendees table, #kronolithEventTabResources table {
     border-collapse: collapse;

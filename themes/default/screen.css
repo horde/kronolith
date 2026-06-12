@@ -292,6 +292,23 @@ img.kronolithEventIcon {
     float: left;
     margin: 0 2px 2px 0;
 }
+/* Status and action icons emitted by Event::getLink() and the basic
+   attendees view. The Lucide icon-set bump replaced edit.png and
+   delete.png with 48x48 assets; constrain the rendered <img> so they
+   stay inline-sized in portal blocks and the basic event list. */
+img.iconAlarm,
+img.iconRecur,
+img.iconException,
+img.iconPrivate,
+img.iconPeople,
+img.iconEdit,
+img.iconDelete,
+img.iconAdd,
+img.iconNav {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
 .kronolith-event .kronolith-time {
     font-weight: bold;
     margin-right: 2px;
