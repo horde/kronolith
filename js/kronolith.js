@@ -28,6 +28,8 @@ KronolithCore = {
     loading: 0,
     viewLoading: [],
     fbLoading: 0,
+    // One free/busy column per hour; matches edit.inc thead (0h–23h).
+    FB_HOURS_PER_DAY: 24,
     redBoxLoading: false,
     date: Date.today(),
     tasktype: 'incomplete',
@@ -5850,12 +5852,8 @@ KronolithCore = {
         this.fbLoading = 0;
         this.freeBusyRows = $H();
         this.freeBusyData = $H();
-        if ($('kronolithEventAttendeesList')) {
-            $('kronolithEventAttendeesList').down('tbody').update();
-        }
-        if ($('kronolithEventResourcesList')) {
-            $('kronolithEventResourcesList').down('tbody').update();
-        }
+        this._clearFBTableBody('kronolithEventAttendeesList');
+        this._clearFBTableBody('kronolithEventResourcesList');
         $('kronolithFBLoading').hide();
         $('kronolithResourceFBLoading').hide();
         this.updateCalendarDropDown('kronolithEventTarget');
@@ -6631,19 +6629,59 @@ KronolithCore = {
     },
 
     /**
+     * Returns the tbody of a free/busy attendee/resource list table.
+     *
+     * @param string listId  Element id of the list container div.
+     *
+     * @return Element|null  The tbody element or null.
+     */
+    _getFBTableBody: function(listId)
+    {
+        var list = document.getElementById(listId);
+
+        return list ? list.querySelector('tbody') : null;
+    },
+
+    /**
+     * Removes all rows from a free/busy list table.
+     *
+     * @param string listId  Element id of the list container div.
+     */
+    _clearFBTableBody: function(listId)
+    {
+        var tbody = this._getFBTableBody(listId);
+
+        if (tbody) {
+            tbody.innerHTML = '';
+        }
+    },
+
+    /**
+     * Appends a row to a free/busy list table.
+     *
+     * @param string listId  Element id of the list container div.
+     * @param Element row    The TR element to append.
+     */
+    _insertFBTableRow: function(listId, row)
+    {
+        var tbody = this._getFBTableBody(listId);
+
+        if (tbody) {
+            tbody.appendChild(row);
+        }
+    },
+
+    /**
      * Adds an attendee row to the free/busy table.
      *
      * @param object attendee  An attendee object.
      */
     insertFBRow: function(attendee)
     {
-        var tr = new Element('tr'), response, i;
+        var tr = new Element('tr');
         this.freeBusyRows.set(attendee.i, tr);
         this.updateFBRow(attendee, tr);
-        var attendeesList = $('kronolithEventAttendeesList');
-        if (attendeesList) {
-            attendeesList.down('tbody').insert(tr);
-        }
+        this._insertFBTableRow('kronolithEventAttendeesList', tr);
     },
 
     /**
@@ -6662,7 +6700,7 @@ KronolithCore = {
                 tdone = row.down('td');
             row.update();
             row.update(tdone);
-            for (i = 0; i < 24; i++) {
+            for (i = 0; i < this.FB_HOURS_PER_DAY; i++) {
                 row.insert(new Element('td', { className: 'kronolithFBUnknown' }));
             }
         }.bind(this));
@@ -6684,7 +6722,7 @@ KronolithCore = {
             case 4: response = 'Tentative'; break;
         }
         row.insert(this.getAttendeeCell(attendee, response));
-        for (var i = 0; i < 24; i++) {
+        for (var i = 0; i < this.FB_HOURS_PER_DAY; i++) {
             row.insert(new Element('td', { className: 'kronolithFBUnknown' }));
         }
     },
@@ -6770,10 +6808,10 @@ KronolithCore = {
                 title: resource,
                 className: 'kronolithAttendee' + response
             }).update(resource.escapeHTML()));
-            for (i = 0; i < 24; i++) {
+            for (i = 0; i < this.FB_HOURS_PER_DAY; i++) {
                 tr.insert(new Element('td', { className: 'kronolithFBUnknown' }));
             }
-            $('kronolithEventResourcesList').down('tbody').insert(tr);
+            this._insertFBTableRow('kronolithEventResourcesList', tr);
             this.resourceACCache.map.set(resource, v);
             $('kronolithEventResourceIds').value = this.resourceACCache.map.values();
         } else {
