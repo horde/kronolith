@@ -3139,18 +3139,19 @@ abstract class Kronolith_Event
                 if (count($this->attendees)) {
                     $attendees = [];
                     foreach ($this->attendees as $attendee) {
-                        if (Kronolith::isUserEmail($this->creator, $attendee->email)) {
+                        $attendeeEmail = $attendee->getEmailAddress();
+                        if ($attendeeEmail
+                            && Kronolith::isUserEmail($this->creator, $attendeeEmail)) {
                             $json->cr = intval($attendee->response);
                         }
                         $attendeeJson = $attendee->toJson();
                         $attendeeJson->o
                             = ($json->oy
-                             && Kronolith::isUserEmail(
-                                 $this->creator,
-                                 $attendee->addressObject->bare_address
-                             ))
+                             && $attendeeEmail
+                             && Kronolith::isUserEmail($this->creator, $attendeeEmail))
                             || (!empty($this->organizer)
-                             && $this->organizer == $attendee->addressObject->bare_address);
+                             && $attendeeEmail
+                             && $this->organizer == $attendeeEmail);
                         $attendees[] = $attendeeJson;
                     }
                     $json->at = $attendees;

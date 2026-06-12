@@ -959,7 +959,20 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
             $res = $rfc822->parseAddressList($this->vars->email);
             if ($res[0] && $res[0]->host) {
                 try {
-                    $result->fb = Kronolith_FreeBusy::get($this->vars->email, true);
+                    $email = $res[0]->bare_address;
+                    $user = Kronolith_FreeBusy::getUserFromEmail($email);
+                    if ($user) {
+                        $result->fb = Kronolith_FreeBusy::getForUser(
+                            $user,
+                            [
+                                'json'  => true,
+                                'start' => $this->vars->start,
+                                'end'   => $this->vars->end,
+                            ]
+                        );
+                    } else {
+                        $result->fb = Kronolith_FreeBusy::get($this->vars->email, true);
+                    }
                 } catch (Exception $e) {
                     $notification->push($e->getMessage(), 'horde.warning');
                 }
@@ -1391,11 +1404,26 @@ class Kronolith_Ajax_Application_Handler extends Horde_Core_Ajax_Application_Han
     }
 
     /**
-     * TODO
+     * Persist calendar display preferences from the dynamic interface.
+     *
+     * The toggle itself is applied in
+     * Kronolith_CalendarsManager::_checkToggleCalendars() during
+     * Kronolith::initialize(), which runs on every AJAX request. Calling
+     * toggleDisplayCalendar() here as well would undo the change.
      */
     public function saveCalPref()
     {
-        return false;
+        if (empty($this->vars->toggle_calendar)) {
+            return false;
+        }
+
+        if (empty($GLOBALS['calendar_manager'])) {
+            Kronolith::initialize();
+        }
+
+        Kronolith::persistPrefs();
+
+        return true;
     }
 
     /**
