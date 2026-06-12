@@ -86,9 +86,11 @@ html, body {
 }
 #kronolithQuickEvent {
     background-image: url("../graphics/new.png");
+    background-size: 16px 16px;
 }
 #kronolithQuickEvent.kronolithNewTask {
     background-image: url("../graphics/new_task.png");
+    background-size: 16px 16px;
 }
 #horde-sidebar div.horde-resources .horde-resource-edit-000,
 #horde-sidebar div.horde-resources .horde-resource-edit-fff {
@@ -355,8 +357,9 @@ ul.horde-tags li:hover {
 #kronolithEventTabResources td.kronolithAttendeeDeclined,
 #kronolithEventTabAttendees td.kronolithAttendeeTentative,
 #kronolithEventTabAttendees td.kronolithAttendeeOrganizer {
-    background-position: 0 0;
+    background-position: 2px center;
     background-repeat: no-repeat;
+    background-size: 16px 16px;
     padding-left: 21px;
 }
 #kronolithEventTabAttendees td.kronolithAttendeeNone,
@@ -387,16 +390,24 @@ ul.horde-tags li:hover {
 }
 #kronolithFBDatePrev, #kronolithResourceFBDatePrev {
     background: transparent url("../graphics/left.png") no-repeat center center;
+    background-size: 16px 16px;
+    box-sizing: content-box;
     cursor: pointer;
     text-indent: -10000px;
     padding: 8px;
+    width: 16px;
+    height: 16px;
     float: left;
 }
 #kronolithFBDateNext, #kronolithResourceFBDateNext {
     background: transparent url("../graphics/right.png") no-repeat center center;
+    background-size: 16px 16px;
+    box-sizing: content-box;
     cursor: pointer;
     padding: 8px;
     text-indent: -10000px;
+    width: 16px;
+    height: 16px;
     float: right;
 }
 #kronolithFBDate {
@@ -728,6 +739,7 @@ tr.kronolithNight td {
 }
 .kronolithAddEvent:hover {
     background-image: url("../graphics/new_small.png");
+    background-size: 15px 15px;
 }
 #kronolithViewIframe iframe {
     position: absolute;
