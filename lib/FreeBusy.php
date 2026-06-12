@@ -234,6 +234,12 @@ class Kronolith_FreeBusy
 
         $email = $tmp->bare_address;
 
+        /* Local Horde users have free/busy data even without a URL in the
+         * address book. */
+        if ($user = self::getUserFromEmail($email)) {
+            return self::getForUser($user, ['json' => $json]);
+        }
+
         /* Check if we can retrieve a VFB from the Free/Busy URL, if one is
          * set. */
         $url = self::getUrl($email);
@@ -292,6 +298,48 @@ class Kronolith_FreeBusy
             }
             throw new Kronolith_Exception(sprintf(_("No free/busy url found for %s."), $email));
         }
+    }
+
+    /**
+     * Returns the Horde user name for an email address, if any.
+     *
+     * @param string $email  An email address.
+     *
+     * @return string|null  A user name or null if not found.
+     */
+    public static function getUserFromEmail($email)
+    {
+        global $injector;
+
+        static $map = [];
+
+        if (array_key_exists($email, $map)) {
+            return $map[$email];
+        }
+
+        $auth = $injector->getInstance('Horde_Core_Factory_Auth')->create();
+
+        if (strpos($email, '@') === false) {
+            try {
+                $map[$email] = $auth->exists($email) ? $email : null;
+            } catch (Horde_Auth_Exception $e) {
+                $map[$email] = null;
+            }
+            return $map[$email];
+        }
+
+        try {
+            foreach ($auth->listUsers() as $user) {
+                if (Kronolith::isUserEmail($user, $email)) {
+                    $map[$email] = $user;
+                    return $user;
+                }
+            }
+        } catch (Horde_Auth_Exception $e) {
+        }
+
+        $map[$email] = null;
+        return null;
     }
 
     /**

@@ -318,10 +318,22 @@ class Kronolith_CalendarsManager
      */
     protected function _checkToggleCalendars()
     {
+        if (($calId = Util::getFormData('toggle_calendar')) !== null) {
+            $this->toggleDisplayCalendar($calId);
+        }
+    }
+
+    /**
+     * Toggle a calendar's display state and persist the preference.
+     *
+     * @param string $calId  Calendar identifier, optionally prefixed with the
+     *                       calendar type.
+     */
+    public function toggleDisplayCalendar($calId)
+    {
         global $prefs, $registry;
 
-        if (($calId = Util::getFormData('toggle_calendar')) !== null) {
-            if (strncmp($calId, 'remote_', 7) === 0) {
+        if (strncmp($calId, 'remote_', 7) === 0) {
                 $calId = substr($calId, 7);
                 if (($key = array_search($calId, $this->_displayRemote)) === false) {
                     $this->_displayRemote[] = $calId;
@@ -375,7 +387,6 @@ class Kronolith_CalendarsManager
             }
 
             $prefs->setValue('display_cals', serialize($this->_displayCalendars));
-        }
     }
 
     /**

@@ -210,6 +210,30 @@ class Kronolith_Attendee implements Serializable
     }
 
     /**
+     * Returns the attendee's email address for transport.
+     *
+     * @return string  The bare email address, or an empty string.
+     */
+    public function getEmailAddress()
+    {
+        if (strlen($this->email)) {
+            return $this->addressObject->bare_address;
+        }
+
+        if (strlen($this->user)) {
+            $identity = $GLOBALS['injector']
+                ->getInstance('Horde_Core_Factory_Identity')
+                ->create($this->user);
+            $email = $identity->getValue('from_addr');
+            if (strlen($email)) {
+                return $email;
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * Returns a simple object suitable for JSON transport representing this
      * attendee.
      *
@@ -219,7 +243,7 @@ class Kronolith_Attendee implements Serializable
     {
         return (object) [
             'a' => intval($this->role),
-            'e' => $this->addressObject->bare_address,
+            'e' => $this->getEmailAddress(),
             'i' => $this->id,
             'l' => strval($this->displayName),
             'r' => intval($this->response),

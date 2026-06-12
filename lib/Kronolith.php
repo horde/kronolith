@@ -2532,12 +2532,20 @@ class Kronolith
                     $method = 'REQUEST';
                     if ($attendee->response == self::RESPONSE_NONE) {
                         /* Invitation. */
-                        $filename = 'event-invitation.ics';
+                        $filename = self::_itipIcsFilename(
+                            $event->getTitle(),
+                            '',
+                            'event-invitation.ics'
+                        );
                         $view->subject = $event->getTitle();
                         $view->header = sprintf(_("%s wishes to make you aware of \"%s\"."), $ident->getName(), $event->getTitle());
                     } else {
                         /* Update. */
-                        $filename = 'event-update.ics';
+                        $filename = self::_itipIcsFilename(
+                            $event->getTitle(),
+                            'Updated',
+                            'event-update.ics'
+                        );
                         $view->subject = sprintf(_("Updated: %s."), $event->getTitle());
                         $view->header = sprintf(_("%s wants to notify you about changes of \"%s\"."), $ident->getName(), $event->getTitle());
                     }
@@ -2882,6 +2890,38 @@ class Kronolith
         }
 
         return false;
+    }
+
+    /**
+     * Build a safe .ics attachment filename from an event title.
+     *
+     * @param string $title     Event title.
+     * @param string $prefix    Optional prefix (e.g. "Updated").
+     * @param string $fallback  Filename if the title is empty after sanitizing.
+     *
+     * @return string
+     */
+    protected static function _itipIcsFilename(
+        $title,
+        $prefix = '',
+        $fallback = 'event.ics'
+    ) {
+        $basename = preg_replace('/[\/\\\\:*?"<>|]+/', '', $title);
+        $basename = preg_replace('/\s+/u', ' ', trim($basename));
+        $basename = str_replace(' ', '-', $basename);
+        if (function_exists('mb_substr')) {
+            $basename = mb_substr($basename, 0, 200);
+        } else {
+            $basename = substr($basename, 0, 200);
+        }
+        if ($basename === '') {
+            return $fallback;
+        }
+        if ($prefix !== '') {
+            $basename = $prefix . '-' . $basename;
+        }
+
+        return $basename . '.ics';
     }
 
     /**

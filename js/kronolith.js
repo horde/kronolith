@@ -5814,6 +5814,9 @@ KronolithCore = {
 
     editEvent: function(calendar, id, date, title)
     {
+        if (this.redBoxLoading && !RedBox.getWindow()) {
+            this.redBoxLoading = false;
+        }
         if (this.redBoxLoading) {
             return;
         }
@@ -5844,6 +5847,17 @@ KronolithCore = {
         HordeImple.AutoCompleter.kronolithEventAttendees.reset();
         this.attendees = [];
         this.resources = [];
+        this.fbLoading = 0;
+        this.freeBusyRows = $H();
+        this.freeBusyData = $H();
+        if ($('kronolithEventAttendeesList')) {
+            $('kronolithEventAttendeesList').down('tbody').update();
+        }
+        if ($('kronolithEventResourcesList')) {
+            $('kronolithEventResourcesList').down('tbody').update();
+        }
+        $('kronolithFBLoading').hide();
+        $('kronolithResourceFBLoading').hide();
         this.updateCalendarDropDown('kronolithEventTarget');
         this.toggleAllDay(false);
         this.openTab($('kronolithEventForm').down('.tabset a.kronolithTabLink'));
@@ -5875,9 +5889,9 @@ KronolithCore = {
             var events = this.getCacheForDate(date.toString('yyyyMMdd'), calendar);
             if (events) {
                 var ev = events.find(function(e) { return e.key == id; });
-                if (ev[1].r) {
-                    attributes.rsd = ev[1].start.dateString();
-                    attributes.red = ev[1].end.dateString();
+                if (ev && ev.value && ev.value.r && ev.value.start && ev.value.end) {
+                    attributes.rsd = ev.value.start.dateString();
+                    attributes.red = ev.value.end.dateString();
                 }
             }
             HordeCore.doAction('getEvent', attributes, {
@@ -6135,9 +6149,9 @@ KronolithCore = {
      */
     editEventCallback: function(r)
     {
+        try {
         if (!r.event) {
             RedBox.close();
-            this.go(this.lastLocation);
             return;
         }
 
@@ -6153,7 +6167,9 @@ KronolithCore = {
         $('kronolithEventId').setValue(ev.id);
         $('kronolithEventCalendar').setValue(ev.ty + '|' + ev.c);
         $('kronolithEventTarget').setValue(ev.ty + '|' + ev.c);
-        $('kronolithEventTargetRO').update(Kronolith.conf.calendars[ev.ty][ev.c].name.escapeHTML());
+        if (Kronolith.conf.calendars[ev.ty] && Kronolith.conf.calendars[ev.ty][ev.c]) {
+            $('kronolithEventTargetRO').update(Kronolith.conf.calendars[ev.ty][ev.c].name.escapeHTML());
+        }
         $('kronolithEventTitle').setValue(ev.t);
         $('kronolithEventLocation').setValue(ev.l);
         $('kronolithEventTimezone').setValue(ev.tz);
@@ -6205,7 +6221,10 @@ KronolithCore = {
 
         $('kronolithEventStartTime').setValue(ev.st);
         this.knl.kronolithEventStartTime.setSelected(ev.st);
-        this.updateFBDate(Date.parseExact(ev.sd, Kronolith.conf.date_format));
+        var fbDate = Date.parseExact(ev.sd, Kronolith.conf.date_format);
+        if (fbDate) {
+            this.updateFBDate(fbDate);
+        }
         $('kronolithEventEndTime').setValue(ev.et);
         this.knl.kronolithEventEndTime.setSelected(ev.et);
         this.duration = Math.abs(Date.parse(ev.e).getTime() - Date.parse(ev.s).getTime()) / 60000;
@@ -6240,8 +6259,12 @@ KronolithCore = {
                         $('kronolithEventAlarm' + method.key + 'Params').show();
                         $H(method.value).each(function(param) {
                             var input = $('kronolithEventAlarmParam' + param.key);
-                            if (input.type == 'radio') {
-                                input.up('form').select('input[type=radio]').each(function(radio) {
+                            if (input && input.type == 'radio') {
+                                var form = input.up('form');
+                                if (!form) {
+                                    return;
+                                }
+                                form.select('input[type=radio]').each(function(radio) {
                                     if (radio.name == input.name &&
                                         radio.value == param.value) {
                                         radio.setValue(1);
@@ -6286,37 +6309,47 @@ KronolithCore = {
             this.recurs = false;
         }
 
-        /* Attendees */
-        if (typeof ev.at !== 'undefined') {
-            let emailFilter = function (attendee) {return !!attendee.e}
-            let emails = [];
-            ev.at.findAll(emailFilter).each(function(foundUser) {
-                if (foundUser.l && foundUser.l !== foundUser.e) {
-                    emails.push('"' + foundUser.l +'"' + ' <' + foundUser.e + '>');
-                } else {
-                    emails.push(foundUser.e);
-                }
-                
-            });
-            HordeImple.AutoCompleter.kronolithEventAttendees.reset(emails);
+        this.setTitle(ev.t);
+        this.redBoxLoading = true;
+        RedBox.showHtml($('kronolithEventDialog').show());
 
-            let userFilter = function(attendee) { return !!attendee.u; }
-            let users = [];
-            /* We need to feed the full user string here.
-               Feeding only the caption will produce errors on re-saving existing events
-               as soon as the name is not the username
-            */
-            ev.at.findAll(userFilter).each(function(foundUser) {
-                users.push(foundUser.l + ' [' + foundUser.u + ']');
-            });
-            users = users.map(function(u){
-                return u.replace(',', '');
-            });
-            HordeImple.AutoCompleter.kronolithEventUsers.reset(users);
-            
-            ev.at.each(this.addAttendee.bind(this));
-            if (this.fbLoading) {
-                $('kronolithFBLoading').show();
+        /* Attendees */
+        if (ev.at) {
+            try {
+                var attendees = $A(ev.at), emailFilter, emails, userFilter, users;
+                emailFilter = function (attendee) { return !!attendee.e; };
+                emails = [];
+                attendees.findAll(emailFilter).each(function(foundUser) {
+                    if (foundUser.l && foundUser.l !== foundUser.e) {
+                        emails.push('"' + foundUser.l + '" <' + foundUser.e + '>');
+                    } else {
+                        emails.push(foundUser.e);
+                    }
+                });
+                HordeImple.AutoCompleter.kronolithEventAttendees.reset(emails);
+
+                userFilter = function(attendee) { return !!attendee.u; };
+                users = [];
+                /* We need to feed the full user string here.
+                   Feeding only the caption will produce errors on re-saving existing events
+                   as soon as the name is not the username
+                */
+                attendees.findAll(userFilter).each(function(foundUser) {
+                    users.push((foundUser.l || foundUser.u) + ' [' + foundUser.u + ']');
+                });
+                users = users.map(function(u) {
+                    return u.replace(',', '');
+                });
+                HordeImple.AutoCompleter.kronolithEventUsers.reset(users);
+
+                attendees.each(this.addAttendee.bind(this));
+                if (this.fbLoading) {
+                    $('kronolithFBLoading').show();
+                }
+            } catch (attendeeError) {
+                if (typeof console !== 'undefined' && console.error) {
+                    console.error('editEventCallback attendees', attendeeError);
+                }
             }
         }
 
@@ -6363,10 +6396,6 @@ KronolithCore = {
             $('kronolithEventTargetRO').show();
         }
 
-        this.setTitle(ev.t);
-        this.redBoxLoading = true;
-        RedBox.showHtml($('kronolithEventDialog').show());
-
         /* Hide alarm message for this event. */
         if (r.msgs) {
             r.msgs = r.msgs.reject(function(msg) {
@@ -6384,6 +6413,15 @@ KronolithCore = {
                 }
                 return false;
             });
+        }
+        } catch (e) {
+            if (RedBox.getWindow()) {
+                RedBox.close();
+            }
+            if (typeof console !== 'undefined' && console.error) {
+                console.error('editEventCallback', e);
+            }
+            throw e;
         }
     },
 
@@ -6602,7 +6640,10 @@ KronolithCore = {
         var tr = new Element('tr'), response, i;
         this.freeBusyRows.set(attendee.i, tr);
         this.updateFBRow(attendee, tr);
-        $('kronolithEventAttendeesList').down('tbody').insert(tr);
+        var attendeesList = $('kronolithEventAttendeesList');
+        if (attendeesList) {
+            attendeesList.down('tbody').insert(tr);
+        }
     },
 
     /**
@@ -6643,16 +6684,15 @@ KronolithCore = {
             case 4: response = 'Tentative'; break;
         }
         row.insert(this.getAttendeeCell(attendee, response));
-        for (i = 0; i < 24; i++) {
+        for (var i = 0; i < 24; i++) {
             row.insert(new Element('td', { className: 'kronolithFBUnknown' }));
         }
     },
 
     getAttendeeCell: function(attendee, response)
     {
-        var className, title;
+        var className = 'kronolithAttendee', title = '';
 
-        className = 'kronolithAttendee';
         if (attendee.u) {
             title = attendee.u;
         } else if (attendee.e) {
@@ -6660,15 +6700,17 @@ KronolithCore = {
         }
         if (attendee.o) {
             className += 'Organizer';
-            title += ' (' + Kronolith.text.organizer + ') ';
+            title = title
+                ? title + ' (' + Kronolith.text.organizer + ')'
+                : Kronolith.text.organizer;
         } else {
             className += response;
         }
 
-        return new Element('td')
-            .writeAttribute('title', title)
-            .classList.add(className)
-            .insert(attendee.l.escapeHTML());
+        return new Element('td', {
+            className: className,
+            title: title
+        }).update((attendee.l || title || '').escapeHTML());
     },
 
     addResourceTabLink: function()
@@ -6724,10 +6766,10 @@ KronolithCore = {
             });
             tr = new Element('tr');
             this.freeBusyRows.set(resource, tr);
-            tr.insert(new Element('td')
-                .writeAttribute('title', resource)
-                .classList.add('kronolithAttendee' + response)
-                .insert(resource.escapeHTML()));
+            tr.insert(new Element('td', {
+                title: resource,
+                className: 'kronolithAttendee' + response
+            }).update(resource.escapeHTML()));
             for (i = 0; i < 24; i++) {
                 tr.insert(new Element('td', { className: 'kronolithFBUnknown' }));
             }
@@ -7484,6 +7526,8 @@ KronolithCore = {
      */
     closeRedBox: function()
     {
+        this.redBoxLoading = false;
+        this.fbLoading = 0;
         if (!RedBox.getWindow()) {
             return;
         }
