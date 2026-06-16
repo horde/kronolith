@@ -424,6 +424,8 @@ abstract class Kronolith_Event
      *
      * @var array
      */
+    public const EAS_CLIENTUID_ATTRIBUTE = 'X-HORDE-EAS-CLIENTUID';
+
     protected array $knownAttributes = [
         'ATTACH',
         'ATTENDEE',
@@ -1742,6 +1744,95 @@ abstract class Kronolith_Event
     }
 
     /**
+     * Return the EAS 16 ClientUid stored for this event, if any.
+     */
+    public function getEasClientUid(): ?string
+    {
+        foreach ($this->otherAttributes as $attribute) {
+            if (($attribute['name'] ?? null) === self::EAS_CLIENTUID_ATTRIBUTE) {
+                $value = $attribute['value'] ?? null;
+                return is_string($value) && $value !== '' ? $value : null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Persist the EAS 16 ClientUid for duplicate detection on mobile clients.
+     */
+    public function setEasClientUid(?string $clientUid): void
+    {
+        $this->otherAttributes = array_values(array_filter(
+            $this->otherAttributes,
+            function ($attribute) {
+                return ($attribute['name'] ?? null) !== self::EAS_CLIENTUID_ATTRIBUTE;
+            }
+        ));
+
+        if ($clientUid !== null && $clientUid !== '') {
+            $this->otherAttributes[] = [
+                'name' => self::EAS_CLIENTUID_ATTRIBUTE,
+                'value' => $clientUid,
+                'params' => [],
+                'values' => null,
+            ];
+        }
+    }
+
+    /**
+     * Import an EAS 16 AirSyncBase:Location object into event fields.
+     */
+    protected function _importEasLocation($location): void
+    {
+        if (!is_object($location)) {
+            return;
+        }
+
+        if (!empty($location->displayname)) {
+            $this->location = $location->displayname;
+        } elseif (!empty($location->street)) {
+            $this->location = $location->street;
+        }
+
+        if ($location->latitude !== false && $location->latitude !== ''
+            && $location->longitude !== false && $location->longitude !== '') {
+            $this->geoLocation = [
+                'lat' => $location->latitude,
+                'lon' => $location->longitude,
+            ];
+        }
+    }
+
+    /**
+     * Export event location data as an EAS 16 AirSyncBase:Location object.
+     */
+    protected function _exportEasLocation(string $protocolVersion): ?Horde_ActiveSync_Message_AirSyncBaseLocation
+    {
+        if ($protocolVersion < Horde_ActiveSync::VERSION_SIXTEEN
+            || (empty($this->location) && empty($this->geoLocation))) {
+            return null;
+        }
+
+        $location = new Horde_ActiveSync_Message_AirSyncBaseLocation(
+            [
+                'logger' => $GLOBALS['injector']->getInstance('Horde_Log_Logger'),
+                'protocolversion' => $protocolVersion,
+            ]
+        );
+
+        if (!empty($this->location)) {
+            $location->displayname = $this->location;
+        }
+        if (!empty($this->geoLocation['lat']) && !empty($this->geoLocation['lon'])) {
+            $location->latitude = $this->geoLocation['lat'];
+            $location->longitude = $this->geoLocation['lon'];
+        }
+
+        return $location;
+    }
+
+    /**
      * Handle adding/editing exceptions from EAS 16.0 clients.
      *
      * @param  Horde_ActiveSync_Message_Appointment $message
@@ -1840,15 +1931,12 @@ abstract class Kronolith_Event
             return;
         }
 
-        // Meeting requests come with their own UID value, but only if we
-        // are not using EAS 16.0 (16 sends a ClientUID value, but it's only
-        // purpose is to prevent duplicate events. We currently don't store
-        // this value.
-        if ($version < Horde_ActiveSync::VERSION_SIXTEEN) {
-            $client_uid = $message->getUid();
-            if (empty($this->uid) && !empty($client_uid)) {
-                $this->uid = $message->getUid();
+        if ($version >= Horde_ActiveSync::VERSION_SIXTEEN) {
+            if (!$message->isGhosted('clientuid') && !empty($message->clientuid)) {
+                $this->setEasClientUid($message->clientuid);
             }
+        } elseif (empty($this->uid) && ($client_uid = $message->getUid())) {
+            $this->uid = $client_uid;
         }
 
         // EAS 16 disallows the client to send/set the ORGANIZER.
@@ -1880,15 +1968,13 @@ abstract class Kronolith_Event
             $this->description = $message->getBody();
         }
 
-        // EAS 16 location property is an AirSyncBaseLocation object, not
-        // a string.
-        $location = $message->getLocation();
-        if (is_object($location)) {
-            // @todo - maybe build a more complete name based on city/country?
-            $location = $location->displayname;
-        }
-        if (!$message->isGhosted('location') && strlen($location)) {
-            $this->location = $location;
+        if (!$message->isGhosted('location')) {
+            $location = $message->getLocation();
+            if ($version >= Horde_ActiveSync::VERSION_SIXTEEN && is_object($location)) {
+                $this->_importEasLocation($location);
+            } elseif (is_string($location) && strlen($location)) {
+                $this->location = $location;
+            }
         }
 
         /* Date/times */
@@ -2250,17 +2336,11 @@ abstract class Kronolith_Event
             } else {
                 $message->setBody($this->description);
             }
-            if ($options['protocolversion'] >= Horde_ActiveSync::VERSION_SIXTEEN && !empty($this->location)) {
-                $message->location = new Horde_ActiveSync_Message_AirSyncBaseLocation(
-                    [
-                        'logger' => $GLOBALS['injector']->getInstance('Horde_Log_Logger'),
-                        'protocolversion' => $options['protocolversion'],
-                    ]
-                );
-                // @todo - worth it to try to get full city/country etc...
-                // from geotagging service if available??
-                $message->location->displayname = $this->location;
-            } else {
+            if ($options['protocolversion'] >= Horde_ActiveSync::VERSION_SIXTEEN) {
+                if ($location = $this->_exportEasLocation($options['protocolversion'])) {
+                    $message->location = $location;
+                }
+            } elseif (!empty($this->location)) {
                 $message->setLocation($this->location);
             }
         }
@@ -2364,66 +2444,72 @@ abstract class Kronolith_Event
              * Any dates left in this list when we are done, must represent
              * deleted instances of this recurring event.*/
             if (!empty($this->recurrence) && $exceptions = $this->recurrence->getExceptions()) {
-                $results = $this->boundExceptions();
-                foreach ($results as $exception) {
-                    $e = new Horde_ActiveSync_Message_Exception([
-                        'protocolversion' => $options['protocolversion']]);
-                    $e->setDateTime([
-                        'start' => $exception->start,
-                        'end' => $exception->end,
-                        'allday' => $exception->isAllDay()]);
+                $eas16 = $options['protocolversion'] >= Horde_ActiveSync::VERSION_SIXTEEN;
+                if (!$eas16) {
+                    $results = $this->boundExceptions();
+                    foreach ($results as $exception) {
+                        $e = new Horde_ActiveSync_Message_Exception([
+                            'protocolversion' => $options['protocolversion']]);
+                        $e->setDateTime([
+                            'start' => $exception->start,
+                            'end' => $exception->end,
+                            'allday' => $exception->isAllDay()]);
 
-                    // The start time of the *original* recurring event.
-                    // EAS < 16.0 uses 'exceptionstarttime'. Otherwise it's
-                    // 'instanceid'.
-                    if ($options['protocolversion'] < Horde_ActiveSync::VERSION_SIXTEEN) {
                         $e->setExceptionStartTime($exception->exceptionoriginaldate);
-                    } else {
-                        $e->instanceid = $exception->exceptionoriginaldate;
-                    }
-                    $originaldate = $exception->exceptionoriginaldate->format('Ymd');
-                    $key = array_search($originaldate, $exceptions);
-                    if ($key !== false) {
-                        unset($exceptions[$key]);
-                    }
+                        $originaldate = $exception->exceptionoriginaldate->format('Ymd');
+                        $key = array_search($originaldate, $exceptions);
+                        if ($key !== false) {
+                            unset($exceptions[$key]);
+                        }
 
-                    // Remaining properties that could be different
-                    $e->setSubject($exception->getTitle());
-                    if (!$exception->isPrivate()) {
-                        $e->setLocation($exception->location);
-                        $e->setBody($exception->description);
+                        // Remaining properties that could be different
+                        $e->setSubject($exception->getTitle());
+                        if (!$exception->isPrivate()) {
+                            $e->setLocation($exception->location);
+                            $e->setBody($exception->description);
+                        }
+
+                        $e->setSensitivity($exception->private
+                            ? Horde_ActiveSync_Message_Appointment::SENSITIVITY_PRIVATE
+                            : Horde_ActiveSync_Message_Appointment::SENSITIVITY_NORMAL);
+                        $e->setReminder($exception->alarm);
+                        $e->setDTStamp($_SERVER['REQUEST_TIME']);
+
+                        if ($options['protocolversion'] > Horde_ActiveSync::VERSION_TWELVEONE) {
+                            switch ($exception->status) {
+                                case Kronolith::STATUS_TENTATIVE:
+                                    $e->responsetype = Horde_ActiveSync_Message_Appointment::RESPONSE_TENTATIVE;
+                                    break;
+                                case Kronolith::STATUS_NONE:
+                                    $e->responsetype = Horde_ActiveSync_Message_Appointment::RESPONSE_NORESPONSE;
+                                    break;
+                                case Kronolith::STATUS_CONFIRMED:
+                                    $e->responsetype = Horde_ActiveSync_Message_Appointment::RESPONSE_ACCEPTED;
+                                    break;
+                                default:
+                                    $e->responsetype = Horde_ActiveSync_Message_Appointment::RESPONSE_NONE;
+                            }
+                        }
+
+                        // Tags/Categories
+                        if (!$exception->isPrivate()) {
+                            foreach ($exception->tags as $tag) {
+                                $e->addCategory($tag);
+                            }
+                        }
+
+                        $message->addexception($e);
                     }
-
-                    $e->setSensitivity($exception->private
-                        ? Horde_ActiveSync_Message_Appointment::SENSITIVITY_PRIVATE
-                        : Horde_ActiveSync_Message_Appointment::SENSITIVITY_NORMAL);
-                    $e->setReminder($exception->alarm);
-                    $e->setDTStamp($_SERVER['REQUEST_TIME']);
-
-                    if ($options['protocolversion'] > Horde_ActiveSync::VERSION_TWELVEONE) {
-                        switch ($exception->status) {
-                            case Kronolith::STATUS_TENTATIVE:
-                                $e->responsetype = Horde_ActiveSync_Message_Appointment::RESPONSE_TENTATIVE;
-                                break;
-                            case Kronolith::STATUS_NONE:
-                                $e->responsetype = Horde_ActiveSync_Message_Appointment::RESPONSE_NORESPONSE;
-                                break;
-                            case Kronolith::STATUS_CONFIRMED:
-                                $e->responsetype = Horde_ActiveSync_Message_Appointment::RESPONSE_ACCEPTED;
-                                break;
-                            default:
-                                $e->responsetype = Horde_ActiveSync_Message_Appointment::RESPONSE_NONE;
+                } else {
+                    // Modified instances are separate sync items in EAS 16.0.
+                    // Remove their dates from the deletion candidate list.
+                    foreach ($this->boundExceptions() as $exception) {
+                        $originaldate = $exception->exceptionoriginaldate->format('Ymd');
+                        $key = array_search($originaldate, $exceptions);
+                        if ($key !== false) {
+                            unset($exceptions[$key]);
                         }
                     }
-
-                    // Tags/Categories
-                    if (!$exception->isPrivate()) {
-                        foreach ($exception->tags as $tag) {
-                            $e->addCategory($tag);
-                        }
-                    }
-
-                    $message->addexception($e);
                 }
 
                 // Any dates left in $exceptions must be deleted exceptions
@@ -2560,6 +2646,16 @@ abstract class Kronolith_Event
 
         // 16.0
         if ($options['protocolversion'] >= Horde_ActiveSync::VERSION_SIXTEEN) {
+            if ($this->baseid && $this->exceptionoriginaldate) {
+                $instance = clone $this->exceptionoriginaldate;
+                $instance->setTimezone('UTC');
+                $message->instanceid = $instance;
+            }
+
+            if ($clientUid = $this->getEasClientUid()) {
+                $message->clientuid = $clientUid;
+            }
+
             $files = $this->listFiles();
             if (count($files)) {
                 foreach ($files as $file) {
@@ -4391,7 +4487,7 @@ abstract class Kronolith_Event
         }
 
         if ($icons && $prefs->getValue('show_icons')) {
-            $icon_color = $this->_foregroundColor == '#000' ? '000' : 'fff';
+            $icon_color = Horde_Image::brightness($this->_backgroundColor) < 128 ? 'fff' : '000';
             $status = '';
             if ($this->alarm) {
                 if ($this->alarm % 10080 == 0) {

@@ -540,14 +540,18 @@ class Kronolith_Api extends Horde_Registry_Api
      * purposes. For more control, use the listEvents method.
      *
      * @param string|array $calendars    The calendar to check for events.
-     * @param object $startstamp         The start of the time range.
-     * @param object $endstamp           The end of the time range.
+     * @param integer $startstamp        The start of the time period.
+     * @param integer $endstamp          The end of the time period.
+     * @param array   $options          Options:
+     *   - hide_exceptions: (bool) Hide bound recurrence exceptions.
+     *                      DEFAULT: true
      *
      * @return array  The event ids happening in this time period.
      * @throws Kronolith_Exception
      */
-    public function listUids($calendars = null, $startstamp = 0, $endstamp = 0)
+    public function listUids($calendars = null, $startstamp = 0, $endstamp = 0, array $options = [])
     {
+        $hideExceptions = $options['hide_exceptions'] ?? true;
         if (empty($calendars)) {
             $calendars = Kronolith::getSyncCalendars();
         } elseif (!is_array($calendars)) {
@@ -570,7 +574,7 @@ class Kronolith_Api extends Horde_Registry_Api
                     $startstamp ? new Horde_Date($startstamp) : null,
                     $endstamp ? new Horde_Date($endstamp) : null,
                     ['cover_dates' => false,
-                        'hide_exceptions' => true]
+                        'hide_exceptions' => $hideExceptions]
                 );
                 Kronolith::mergeEvents($results, $events);
             } catch (Kronolith_Exception $e) {
