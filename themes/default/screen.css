@@ -308,6 +308,7 @@ img.iconNav {
     width: 16px;
     height: 16px;
     vertical-align: middle;
+    background: transparent;
 }
 .kronolith-event .kronolith-time {
     font-weight: bold;
@@ -325,8 +326,11 @@ img.iconNav {
     margin-left: 2px;
 }
 .kronolith-event img {
+    width: 12px;
+    height: 12px;
     padding-top: 3px;
     vertical-align: top;
+    background: transparent;
 }
 #kronolithViewMonth .kronolith-event,
 .kronolithViewDay .kronolith-all-day .kronolith-event {
