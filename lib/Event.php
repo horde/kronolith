@@ -1897,11 +1897,11 @@ abstract class Kronolith_Event
             $this->allday = $dates['allday'];
         }
 
-        if (!empty($this->id)
-            && $dates['allday']
+        if ($dates['allday']
             && $version == Horde_ActiveSync::VERSION_SIXTEEN) {
-            // allday events are handled differently when updating vs creating
-            // new when using EAS 16.0
+            // EAS 16.0 all-day events are date-only; timezone conversion would
+            // shift midnight to local offset and cause single-day events to
+            // span two days in the calendar UI.
             $this->start = new Horde_Date(
                 [
                     'year' => !$message->isGhosted('starttime') ? $dates['start']->year : $this->start->year,
