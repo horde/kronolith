@@ -426,6 +426,12 @@ abstract class Kronolith_Event
      */
     public const EAS_CLIENTUID_ATTRIBUTE = 'X-HORDE-EAS-CLIENTUID';
 
+    protected const DISALLOW_COUNTER_ATTRIBUTES = [
+        'DISALLOW-COUNTER',
+        'X-MICROSOFT-DISALLOW-COUNTER',
+        'X-MS-DISALLOW-COUNTER',
+    ];
+
     protected array $knownAttributes = [
         'ATTACH',
         'ATTENDEE',
@@ -1781,6 +1787,52 @@ abstract class Kronolith_Event
     }
 
     /**
+     * Whether this event forbids attendees from proposing new meeting times.
+     */
+    protected function _disallowsNewTimeProposal(): bool
+    {
+        foreach ($this->otherAttributes as $attribute) {
+            $name = strtoupper((string) ($attribute['name'] ?? ''));
+            if (!in_array($name, self::DISALLOW_COUNTER_ATTRIBUTES, true)) {
+                continue;
+            }
+            $value = $attribute['value'] ?? '';
+            if (is_array($value)) {
+                $value = reset($value);
+            }
+            if (is_string($value)
+                && in_array(strtoupper(trim($value)), ['1', 'TRUE', 'YES'], true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Store or clear iCal disallow-counter state for proposal restrictions.
+     */
+    protected function _setDisallowCounter(bool $disallow): void
+    {
+        $this->otherAttributes = array_values(array_filter(
+            $this->otherAttributes,
+            function ($attribute) {
+                $name = strtoupper((string) ($attribute['name'] ?? ''));
+                return !in_array($name, self::DISALLOW_COUNTER_ATTRIBUTES, true);
+            }
+        ));
+
+        if ($disallow) {
+            $this->otherAttributes[] = [
+                'name' => 'DISALLOW-COUNTER',
+                'value' => 'TRUE',
+                'params' => [],
+                'values' => null,
+            ];
+        }
+    }
+
+    /**
      * Import an EAS 16 AirSyncBase:Location object into event fields.
      */
     protected function _importEasLocation($location): void
@@ -2025,6 +2077,11 @@ abstract class Kronolith_Event
         /* Sensitivity */
         if (!$message->isGhosted('sensitivity')) {
             $this->private = ($message->getSensitivity() == Horde_ActiveSync_Message_Appointment::SENSITIVITY_PRIVATE || $message->getSensitivity() == Horde_ActiveSync_Message_Appointment::SENSITIVITY_CONFIDENTIAL) ? true : false;
+        }
+
+        if ($version >= Horde_ActiveSync::VERSION_FOURTEEN
+            && !$message->isGhosted('disallownewtimeproposal')) {
+            $this->_setDisallowCounter(!empty($message->getProperty('disallownewtimeproposal')));
         }
 
         /* Busy Status */
@@ -2407,6 +2464,11 @@ abstract class Kronolith_Event
             ? Horde_ActiveSync_Message_Appointment::SENSITIVITY_PRIVATE
             : Horde_ActiveSync_Message_Appointment::SENSITIVITY_NORMAL);
 
+        if ($options['protocolversion'] >= Horde_ActiveSync::VERSION_FOURTEEN
+            && $this->_disallowsNewTimeProposal()) {
+            $message->disallownewtimeproposal = true;
+        }
+
         // Busy Status
         // This is the *busy* status of the time for this meeting. This is NOT
         // the Kronolith_Event::status or the attendance response for this
@@ -2571,6 +2633,15 @@ abstract class Kronolith_Event
                             break;
                         default:
                             $attendeeAS->status = Horde_ActiveSync_Message_Attendee::STATUS_UNKNOWN;
+                    }
+                }
+
+                if ($options['protocolversion'] >= Horde_ActiveSync::VERSION_SIXTEENONE) {
+                    if (!empty($attendee->proposedStart)) {
+                        $attendeeAS->proposedstarttime = clone $attendee->proposedStart;
+                    }
+                    if (!empty($attendee->proposedEnd)) {
+                        $attendeeAS->proposedendtime = clone $attendee->proposedEnd;
                     }
                 }
 

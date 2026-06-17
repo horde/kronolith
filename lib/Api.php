@@ -1370,10 +1370,12 @@ class Kronolith_Api extends Horde_Registry_Api
      *                                          update. Attendees are only
      *                                          updated if this address
      *                                          matches.
+     * @param boolean $storeProposal            Store proposed meeting times
+     *                                          from a METHOD=COUNTER message.
      *
      * @throws Kronolith_Exception
      */
-    public function updateAttendee($response, $sender = null)
+    public function updateAttendee($response, $sender = null, $storeProposal = false)
     {
         try {
             $uid = $response->getAttribute('UID');
@@ -1440,6 +1442,9 @@ class Kronolith_Api extends Horde_Registry_Api
                         Kronolith::responseFromICal($partstat),
                         $name
                     );
+                    if ($storeProposal) {
+                        $this->_storeAttendeeProposal($event, $attendee, $response);
+                    }
                     $found = true;
                 } else {
                     $error = _("The attendee hasn't been updated because the update was not sent from the attendee.");
@@ -1450,6 +1455,35 @@ class Kronolith_Api extends Horde_Registry_Api
 
         if (!$found) {
             throw new Kronolith_Exception($error);
+        }
+    }
+
+    /**
+     * Store proposed meeting times from a counter-proposal on an attendee.
+     */
+    protected function _storeAttendeeProposal(
+        Kronolith_Event $event,
+        $attendeeEmail,
+        Horde_Icalendar_Vevent $response
+    ) {
+        try {
+            $proposedStart = new Horde_Date($response->getAttribute('DTSTART'));
+        } catch (Horde_Icalendar_Exception $e) {
+            return;
+        }
+
+        $proposedEnd = null;
+        try {
+            $proposedEnd = new Horde_Date($response->getAttribute('DTEND'));
+        } catch (Horde_Icalendar_Exception $e) {
+        }
+
+        foreach ($event->attendees as $attendee) {
+            if ($attendee->matchesEmail($attendeeEmail, false)) {
+                $attendee->proposedStart = $proposedStart;
+                $attendee->proposedEnd = $proposedEnd;
+                break;
+            }
         }
     }
 
