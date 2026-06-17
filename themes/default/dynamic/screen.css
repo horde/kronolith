@@ -781,6 +781,12 @@ tr.kronolithNight td {
     cursor: pointer;
     position: absolute;
 }
+.kronolith-event img {
+    width: 12px;
+    height: 12px;
+    vertical-align: middle;
+    background: transparent;
+}
 #kronolithViewDay .kronolith-event,
 #kronolithViewWeek .kronolith-event,
 #kronolithViewWorkweek .kronolith-event {

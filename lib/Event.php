@@ -4391,7 +4391,7 @@ abstract class Kronolith_Event
         }
 
         if ($icons && $prefs->getValue('show_icons')) {
-            $icon_color = $this->_foregroundColor == '#000' ? '000' : 'fff';
+            $icon_color = Kronolith::foregroundColor($this->_backgroundColor) === '#000' ? '000' : 'fff';
             $status = '';
             if ($this->alarm) {
                 if ($this->alarm % 10080 == 0) {
