@@ -64,6 +64,20 @@ class Kronolith_Attendee implements Serializable
     public $response;
 
     /**
+     * Proposed meeting start time from a counter-proposal.
+     *
+     * @var Horde_Date|null
+     */
+    public $proposedStart;
+
+    /**
+     * Proposed meeting end time from a counter-proposal.
+     *
+     * @var Horde_Date|null
+     */
+    public $proposedEnd;
+
+    /**
      * Constructor.
      *
      * @param array $params  Attendee properties:
@@ -89,6 +103,8 @@ class Kronolith_Attendee implements Serializable
                 'role'     => Kronolith::PART_REQUIRED,
                 'response' => Kronolith::RESPONSE_NONE,
                 'name'     => null,
+                'proposedStart' => null,
+                'proposedEnd' => null,
             ],
             $params
         );
@@ -97,6 +113,8 @@ class Kronolith_Attendee implements Serializable
         $this->name     = $params['name'];
         $this->role     = $params['role'];
         $this->response = $params['response'];
+        $this->proposedStart = $params['proposedStart'];
+        $this->proposedEnd = $params['proposedEnd'];
 
         if (isset($this->user)
             && isset($params['identities'])
@@ -206,6 +224,8 @@ class Kronolith_Attendee implements Serializable
             'name' => $this->name,
             'role' => $this->role,
             'response' => $this->response,
+            'proposedStart' => $this->proposedStart,
+            'proposedEnd' => $this->proposedEnd,
         ];
     }
 
@@ -270,6 +290,8 @@ class Kronolith_Attendee implements Serializable
             'p' => $this->role,
             'r' => $this->response,
             'n' => $this->name,
+            'ps' => $this->proposedStart ? $this->proposedStart->timestamp : null,
+            'pe' => $this->proposedEnd ? $this->proposedEnd->timestamp : null,
         ];
     }
 
@@ -289,5 +311,11 @@ class Kronolith_Attendee implements Serializable
         $this->role     = $data['p'];
         $this->response = $data['r'];
         $this->name     = $data['n'];
+        $this->proposedStart = !empty($data['ps'])
+            ? new Horde_Date($data['ps'])
+            : null;
+        $this->proposedEnd = !empty($data['pe'])
+            ? new Horde_Date($data['pe'])
+            : null;
     }
 }

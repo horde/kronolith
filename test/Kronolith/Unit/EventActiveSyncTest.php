@@ -207,4 +207,56 @@ class Kronolith_Unit_EventActiveSyncTest extends TestCase
         $this->assertSame('52.5200', $exported->location->latitude);
         $this->assertSame('13.4050', $exported->location->longitude);
     }
+
+    public function testToASAppointmentExportsAttendeeProposedTimesForEas161()
+    {
+        $event = $this->_createEvent();
+        $event->status = Kronolith::STATUS_CONFIRMED;
+        $event->attendees->add(new Kronolith_Attendee([
+            'email' => 'guest@example.com',
+            'name' => 'Guest',
+            'response' => Kronolith::RESPONSE_TENTATIVE,
+            'proposedStart' => new Horde_Date('2026-06-17T14:00:00', 'UTC'),
+            'proposedEnd' => new Horde_Date('2026-06-17T15:00:00', 'UTC'),
+        ]));
+
+        $message = $event->toASAppointment([
+            'protocolversion' => Horde_ActiveSync::VERSION_SIXTEENONE,
+        ]);
+
+        $attendees = $message->getAttendees();
+        $this->assertCount(1, $attendees);
+        $this->assertInstanceOf('Horde_Date', $attendees[0]->proposedstarttime);
+        $this->assertInstanceOf('Horde_Date', $attendees[0]->proposedendtime);
+        $this->assertSame(
+            '20260617T140000Z',
+            $attendees[0]->proposedstarttime->format('Ymd\THis\Z')
+        );
+        $this->assertSame(
+            '20260617T150000Z',
+            $attendees[0]->proposedendtime->format('Ymd\THis\Z')
+        );
+    }
+
+    public function testDisallowNewTimeProposalRoundTrip()
+    {
+        $event = $this->_createEvent();
+        $message = $this->_createAppointment();
+        $message->disallownewtimeproposal = true;
+        $message->subject = 'No proposals';
+        $message->starttime = new Horde_Date('2026-06-16T10:00:00', 'UTC');
+        $message->endtime = new Horde_Date('2026-06-16T11:00:00', 'UTC');
+
+        $event->fromASAppointment($message);
+
+        $exported = $event->toASAppointment([
+            'protocolversion' => Horde_ActiveSync::VERSION_FOURTEEN,
+        ]);
+        $this->assertTrue($exported->disallownewtimeproposal);
+
+        $legacy = $event->toASAppointment([
+            'protocolversion' => Horde_ActiveSync::VERSION_TWELVEONE,
+        ]);
+        $this->assertEmpty($legacy->disallownewtimeproposal);
+    }
 }
