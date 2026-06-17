@@ -6372,7 +6372,7 @@ KronolithCore = {
         if (ev.gl) {
             $('kronolithEventLocationLat').value = ev.gl.lat;
             $('kronolithEventLocationLon').value = ev.gl.lon;
-            $('kronolithEventMapZoom').value = Math.max(1, ev.gl.zoom);
+            $('kronolithEventMapZoom').value = this.getEventMapZoom(ev.gl.zoom);
         }
 
         /* Files */
@@ -7595,6 +7595,15 @@ KronolithCore = {
     contextOnClick: Prototype.emptyFunction,
 
     // Map
+    getEventMapZoom: function(zoom)
+    {
+        zoom = parseInt(zoom, 10);
+        if (isNaN(zoom) || zoom < 10) {
+            return 14;
+        }
+        return zoom;
+    },
+
     initializeMap: function(ignoreLL)
     {
         if (this.mapInitialized) {
@@ -7620,7 +7629,7 @@ KronolithCore = {
             var ll = { lat:$('kronolithEventLocationLat').value, lon: $('kronolithEventLocationLon').value };
             // Note that we need to cast the value of zoom to an integer here,
             // otherwise the map display breaks.
-            this.placeMapMarker(ll, true, $('kronolithEventMapZoom').value - 0);
+            this.placeMapMarker(ll, true, this.getEventMapZoom($('kronolithEventMapZoom').value));
         }
         //@TODO: check for Location field - and if present, but no lat/lon value, attempt to
         // geocode it.
