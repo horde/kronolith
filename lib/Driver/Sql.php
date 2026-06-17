@@ -597,7 +597,7 @@ class Kronolith_Driver_Sql extends Kronolith_Driver
             if (!isset($oldProperties[$property])
                 || ($oldProperties[$property] != $newProperties[$property])) {
                 $changes['new'][$property] = $newProperties[$property];
-                $changes['old'][$property] = !isset($oldProperties[$property]) ? $oldProperties[$property] : null;
+                $changes['old'][$property] = $oldProperties[$property] ?? null;
             }
         }
 
