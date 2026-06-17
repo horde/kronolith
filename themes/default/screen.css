@@ -302,7 +302,9 @@ img.iconException,
 img.iconPrivate,
 img.iconPeople,
 img.iconEdit,
+a.iconEdit img,
 img.iconDelete,
+a.iconDelete img,
 img.iconAdd,
 img.iconNav {
     width: 16px;
