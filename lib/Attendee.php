@@ -314,7 +314,7 @@ class Kronolith_Attendee implements Serializable
         $this->proposedStart = !empty($data['ps'] ?? null)
             ? new Horde_Date($data['ps'])
             : null;
-        $this->proposedEnd = !empty($data['pe'])
+        $this->proposedEnd = !empty($data['pe'] ?? null)
             ? new Horde_Date($data['pe'])
             : null;
     }
