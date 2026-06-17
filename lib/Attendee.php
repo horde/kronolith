@@ -290,8 +290,8 @@ class Kronolith_Attendee implements Serializable
             'p' => $this->role,
             'r' => $this->response,
             'n' => $this->name,
-            'ps' => $this->proposedStart ? $this->proposedStart->timestamp : null,
-            'pe' => $this->proposedEnd ? $this->proposedEnd->timestamp : null,
+            'ps' => $this->proposedStart ? $this->proposedStart->timestamp() : null,
+            'pe' => $this->proposedEnd ? $this->proposedEnd->timestamp() : null,
         ];
     }
 
