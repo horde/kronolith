@@ -96,6 +96,7 @@ KronolithCore = {
             $('kronolithLoading').hide();
         }
         this.closeRedBox();
+        this.viewLoading = [];
         HordeCore.notify(HordeCore.text.ajax_error, 'horde.error');
         parentfunc(r, e);
     },
@@ -354,24 +355,27 @@ KronolithCore = {
             }
 
             this.addHistory(fullloc, false);
-            switch (locParts.length) {
-            case 0:
-                // New event.
-                this.editEvent();
-                break;
-            case 1:
-                // New event on a certain date.
-                this.editEvent(null, null, locParts[0]);
-                break;
-            default:
-                // Editing event.
-                var date = locParts.pop(),
-                    event = locParts.pop(),
-                    calendar = locParts.join(':');
-                this.editEvent(calendar, event, date);
-                break;
+            try {
+                switch (locParts.length) {
+                case 0:
+                    // New event.
+                    this.editEvent();
+                    break;
+                case 1:
+                    // New event on a certain date.
+                    this.editEvent(null, null, locParts[0]);
+                    break;
+                default:
+                    // Editing event.
+                    var date = locParts.pop(),
+                        event = locParts.pop(),
+                        calendar = locParts.join(':');
+                    this.editEvent(calendar, event, date);
+                    break;
+                }
+            } finally {
+                this.loadNextView();
             }
-            this.loadNextView();
             break;
 
         case 'task':
@@ -4469,6 +4473,7 @@ KronolithCore = {
         case Event.KEY_ESC:
             Horde_Calendar.hideCal();
             this.closeRedBox();
+            this.go(this.lastLocation);
             break;
         }
     },
@@ -5546,7 +5551,7 @@ KronolithCore = {
       if (event.value.mt && event.value.oy) {
           $('kronolithEventDiv').hide();
           this.showKronolithUpdateDiv();
-          RedBox.showHtml($('kronolithEventDialog').show());
+          this._showEventDialog();
           this.uatts = uatts;
           this.ucb = callback;
       } else {
@@ -5725,7 +5730,7 @@ KronolithCore = {
         if (event.value.mt && event.value.oy) {
             $('kronolithEventDiv').hide();
             this.showKronolithUpdateDiv();
-            RedBox.showHtml($('kronolithEventDialog').show());
+            this._showEventDialog();
             this.uatts = uatts;
             this.ucb = callback;
         } else {
@@ -5816,12 +5821,6 @@ KronolithCore = {
 
     editEvent: function(calendar, id, date, title)
     {
-        if (this.redBoxLoading && !RedBox.getWindow()) {
-            this.redBoxLoading = false;
-        }
-        if (this.redBoxLoading) {
-            return;
-        }
         if (typeof HordeImple.AutoCompleter.kronolithEventTags === 'undefined') {
             this.editEvent.bind(this, calendar, id, date).defer();
             return;
@@ -5845,8 +5844,8 @@ KronolithCore = {
             }
             RedBox.onDisplay = this.redBoxOnDisplay;
         }.bind(this);
-        HordeImple.AutoCompleter.kronolithEventUsers.reset();
-        HordeImple.AutoCompleter.kronolithEventAttendees.reset();
+        this._ensureEventDialogInBody();
+        this._resetEventAutoCompleters(['kronolithEventUsers', 'kronolithEventAttendees']);
         this.attendees = [];
         this.resources = [];
         this.fbLoading = 0;
@@ -5864,8 +5863,7 @@ KronolithCore = {
         this.knl.kronolithEventEndTime.markSelected();
         $('kronolithEventForm').reset();
         this.resetMap();
-        HordeImple.AutoCompleter.kronolithEventTags.reset();
-        HordeImple.AutoCompleter.kronolithEventResources.reset();
+        this._resetEventAutoCompleters(['kronolithEventTags', 'kronolithEventResources']);
         if (Kronolith.conf.maps.driver) {
             $('kronolithEventMapLink').hide();
         }
@@ -5937,8 +5935,7 @@ KronolithCore = {
             this.toggleRecurrence(true, 'None');
             $('kronolithEventEditRecur').hide();
             this.enableAlarm('Event', Kronolith.conf.default_alarm);
-            this.redBoxLoading = true;
-            RedBox.showHtml($('kronolithEventDialog').show());
+            this._showEventDialog();
         }
     },
 
@@ -6149,7 +6146,7 @@ KronolithCore = {
     {
         try {
         if (!r.event) {
-            RedBox.close();
+            this.closeRedBox();
             return;
         }
 
@@ -6312,8 +6309,6 @@ KronolithCore = {
         }
 
         this.setTitle(ev.t);
-        this.redBoxLoading = true;
-        RedBox.showHtml($('kronolithEventDialog').show());
 
         /* Attendees */
         if (ev.at) {
@@ -6416,10 +6411,9 @@ KronolithCore = {
                 return true;
             });
         }
+        this._showEventDialog();
         } catch (e) {
-            if (RedBox.getWindow()) {
-                RedBox.close();
-            }
+            this.closeRedBox();
             if (typeof console !== 'undefined' && console.error) {
                 console.error('editEventCallback', e);
             }
@@ -7572,20 +7566,109 @@ KronolithCore = {
     },
 
     /**
+     * Ensures the event dialog is attached to the document body.
+     */
+    _ensureEventDialogInBody: function()
+    {
+        var dialog = $('kronolithEventDialog');
+        if (!dialog) {
+            return;
+        }
+        dialog.hide();
+        if (!dialog.parentNode || dialog.parentNode !== document.body) {
+            document.body.appendChild(dialog);
+        }
+    },
+
+    /**
+     * Resets event form autocompleters without leaving stale DOM nodes.
+     *
+     * @param Array names  Autocompleter names to reset. Resets all event
+     *                     autocompleters if omitted.
+     */
+    _resetEventAutoCompleters: function(names)
+    {
+        if (typeof HordeImple === 'undefined' || !HordeImple.AutoCompleter) {
+            return;
+        }
+        if (!names) {
+            names = ['kronolithEventUsers', 'kronolithEventAttendees',
+                     'kronolithEventTags', 'kronolithEventResources'];
+        }
+        names.each(function(name) {
+            var ac = HordeImple.AutoCompleter[name];
+            if (ac && ac.reset) {
+                try {
+                    ac.reset();
+                } catch (e) {
+                    if (typeof console !== 'undefined' && console.error) {
+                        console.error('reset ' + name, e);
+                    }
+                }
+            }
+        });
+    },
+
+    /**
+     * Hides any open autocompleter dropdowns before moving dialog DOM.
+     */
+    _hideAutoCompleterOverlays: function()
+    {
+        if (typeof HordeImple === 'undefined' || !HordeImple.AutoCompleter) {
+            return;
+        }
+        $H(HordeImple.AutoCompleter).each(function(pair) {
+            var ac = pair.value;
+            if (ac && ac.aac && ac.aac.knl) {
+                ac.aac.knl.hide();
+            }
+        });
+    },
+
+    /**
+     * Moves RedBox content back to the document body.
+     */
+    _restoreRedBoxContent: function()
+    {
+        this._hideAutoCompleterOverlays();
+        var win = $('RB_window');
+        if (!win) {
+            return;
+        }
+        var child;
+        while ((child = win.firstChild)) {
+            document.body.insert($(child).hide());
+        }
+    },
+
+    /**
+     * Shows the event edit dialog in RedBox.
+     */
+    _showEventDialog: function()
+    {
+        this._ensureEventDialogInBody();
+        this._restoreRedBoxContent();
+        this.redBoxLoading = true;
+        RedBox.showHtml($('kronolithEventDialog').show());
+    },
+
+    /**
      * Closes a RedBox overlay, after saving its content to the body.
      */
     closeRedBox: function()
     {
         this.redBoxLoading = false;
         this.fbLoading = 0;
-        if (!RedBox.getWindow()) {
-            return;
-        }
-        var content = RedBox.getWindowContents();
-        if (content) {
-            document.body.insert(content.hide());
-        }
-        RedBox.close();
+        this.openLocation = this.currentLocation;
+        this._restoreRedBoxContent();
+        this._ensureEventDialogInBody();
+
+        ['RB_window', 'RB_overlay', 'RB_loading'].each(function(id) {
+            var el = $(id);
+            if (el) {
+                el.hide();
+            }
+        });
     },
 
     // By default, no context onShow action
