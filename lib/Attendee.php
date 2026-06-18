@@ -224,8 +224,8 @@ class Kronolith_Attendee implements Serializable
             'name' => $this->name,
             'role' => $this->role,
             'response' => $this->response,
-            'proposedStart' => $this->proposedStart,
-            'proposedEnd' => $this->proposedEnd,
+            'proposedStart' => $this->_proposedDateToHash($this->proposedStart),
+            'proposedEnd' => $this->_proposedDateToHash($this->proposedEnd),
         ];
     }
 
@@ -284,15 +284,24 @@ class Kronolith_Attendee implements Serializable
 
     public function __serialize(): array
     {
-        return [
+        $data = [
             'u' => $this->user,
             'e' => $this->email,
             'p' => $this->role,
             'r' => $this->response,
             'n' => $this->name,
-            'ps' => $this->proposedStart ? $this->proposedStart->timestamp() : null,
-            'pe' => $this->proposedEnd ? $this->proposedEnd->timestamp() : null,
         ];
+
+        if ($this->proposedStart) {
+            $data['ps'] = $this->proposedStart->toJson();
+            $data['pstz'] = $this->proposedStart->timezone;
+        }
+        if ($this->proposedEnd) {
+            $data['pe'] = $this->proposedEnd->toJson();
+            $data['petz'] = $this->proposedEnd->timezone;
+        }
+
+        return $data;
     }
 
     /**
@@ -311,11 +320,43 @@ class Kronolith_Attendee implements Serializable
         $this->role     = $data['p'];
         $this->response = $data['r'];
         $this->name     = $data['n'];
-        $this->proposedStart = !empty($data['ps'] ?? null)
-            ? new Horde_Date($data['ps'])
-            : null;
-        $this->proposedEnd = !empty($data['pe'] ?? null)
-            ? new Horde_Date($data['pe'])
-            : null;
+        $this->proposedStart = $this->_proposedDateFromStorage(
+            $data['ps'] ?? null,
+            $data['pstz'] ?? null
+        );
+        $this->proposedEnd = $this->_proposedDateFromStorage(
+            $data['pe'] ?? null,
+            $data['petz'] ?? null
+        );
+    }
+
+    /**
+     * Export a proposed meeting time for backup/API transport.
+     *
+     * @return array{date: string, time: string, timezone: string}|null
+     */
+    protected function _proposedDateToHash(?Horde_Date $date): ?array
+    {
+        if (!$date) {
+            return null;
+        }
+
+        return [
+            'date' => $date->format('Y-m-d'),
+            'time' => $date->format('H:i:s'),
+            'timezone' => $date->timezone,
+        ];
+    }
+
+    /**
+     * Restore a proposed meeting time from persisted attendee data.
+     */
+    protected function _proposedDateFromStorage($value, $timezone): ?Horde_Date
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return new Horde_Date($value, $timezone ?: null);
     }
 }
