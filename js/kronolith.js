@@ -4472,8 +4472,14 @@ KronolithCore = {
         switch (kc) {
         case Event.KEY_ESC:
             Horde_Calendar.hideCal();
-            this.closeRedBox();
-            this.go(this.lastLocation);
+            // Only restore navigation if a RedBox dialog was actually open;
+            // otherwise this catch-all ESC would redirect on every keypress.
+            if (RedBox.getWindow()) {
+                this.closeRedBox();
+                this.go(this.lastLocation);
+            } else {
+                this.closeRedBox();
+            }
             break;
         }
     },
@@ -7660,15 +7666,21 @@ KronolithCore = {
         this.redBoxLoading = false;
         this.fbLoading = 0;
         this.openLocation = this.currentLocation;
+        // Reparent dialog content to <body> so the next showHtml() can move
+        // it back into RB_window. This must happen before RedBox.close()
+        // because RedBox.close() only fades RB_window; it does not detach
+        // children.
         this._restoreRedBoxContent();
         this._ensureEventDialogInBody();
-
-        ['RB_window', 'RB_overlay', 'RB_loading'].each(function(id) {
-            var el = $(id);
-            if (el) {
-                el.hide();
-            }
-        });
+        if (RedBox.getWindow()) {
+            RedBox.close();
+        }
+        // RB_loading is shown by RedBox.loading() but never hidden by
+        // RedBox.close(); make sure it does not linger across opens.
+        var loading = $('RB_loading');
+        if (loading) {
+            loading.hide();
+        }
     },
 
     // By default, no context onShow action
