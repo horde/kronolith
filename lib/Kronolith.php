@@ -2442,7 +2442,7 @@ class Kronolith
         $view->event = clone $event;
         $view->imageId = $image->getContentId();
 
-        if ($action == self::ITIP_CANCEL && count($cancellations)) {
+        if ($action == self::ITIP_CANCEL && $cancellations !== null && count($cancellations)) {
             $mail_attendees = $cancellations;
         } elseif ($event->organizer
                   && !self::isUserEmail($event->creator, $event->organizer)) {
