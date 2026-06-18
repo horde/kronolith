@@ -213,6 +213,46 @@ class Kronolith_Unit_AttendeeTest extends Horde_Test_Case
         return $serialized;
     }
 
+    public function testSerializeProposedTimesPreservesTimezone()
+    {
+        $attendee = new Kronolith_Attendee([
+            'email' => 'alice@example.com',
+            'proposedStart' => new Horde_Date('2026-06-17T14:00:00', 'Europe/Berlin'),
+            'proposedEnd' => new Horde_Date('2026-06-17T15:00:00', 'Europe/Berlin'),
+        ]);
+
+        $restored = unserialize(serialize($attendee));
+
+        $this->assertInstanceOf('Horde_Date', $restored->proposedStart);
+        $this->assertInstanceOf('Horde_Date', $restored->proposedEnd);
+        $this->assertSame('Europe/Berlin', $restored->proposedStart->timezone);
+        $this->assertSame('Europe/Berlin', $restored->proposedEnd->timezone);
+        $this->assertSame(
+            $attendee->proposedStart->timestamp(),
+            $restored->proposedStart->timestamp()
+        );
+        $this->assertSame(
+            $attendee->proposedEnd->timestamp(),
+            $restored->proposedEnd->timestamp()
+        );
+    }
+
+    public function testToHashExportsScalarProposedTimes()
+    {
+        $attendee = new Kronolith_Attendee([
+            'email' => 'alice@example.com',
+            'proposedStart' => new Horde_Date('2026-06-17T14:00:00', 'UTC'),
+        ]);
+
+        $hash = $attendee->toHash();
+
+        $this->assertIsArray($hash['proposedStart']);
+        $this->assertSame('2026-06-17', $hash['proposedStart']['date']);
+        $this->assertSame('14:00:00', $hash['proposedStart']['time']);
+        $this->assertSame('UTC', $hash['proposedStart']['timezone']);
+        $this->assertNull($hash['proposedEnd']);
+    }
+
     /**
      * @depends testSerialize
      */
