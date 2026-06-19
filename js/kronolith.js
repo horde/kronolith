@@ -5859,6 +5859,8 @@ KronolithCore = {
         this.freeBusyData = $H();
         this._clearFBTableBody('kronolithEventAttendeesList');
         this._clearFBTableBody('kronolithEventResourcesList');
+        $('kronolithEventDisallowNewTimeProposal').setValue(false);
+        $('kronolithEventDisallowCounter').hide();
         $('kronolithFBLoading').hide();
         $('kronolithResourceFBLoading').hide();
         this.updateCalendarDropDown('kronolithEventTarget');
@@ -5922,6 +5924,8 @@ KronolithCore = {
             $('kronolithEventId').clear();
             $('kronolithEventCalendar').clear();
             $('kronolithEventAttend').hide();
+            $('kronolithEventDisallowNewTimeProposal').setValue(false);
+            $('kronolithEventDisallowCounter').hide();
             $('kronolithEventTarget').setValue(Kronolith.conf.default_calendar);
             $('kronolithEventDelete').hide();
             $('kronolithEventStartDate').setValue(d.toString(Kronolith.conf.date_format));
@@ -6233,6 +6237,7 @@ KronolithCore = {
         $('kronolithEventStatus').setValue(ev.x);
         $('kronolithEventDescription').setValue(ev.d);
         $('kronolithEventPrivate').setValue(ev.pv);
+        $('kronolithEventDisallowNewTimeProposal').setValue(!!ev.dntp);
         $('kronolithEventLinkExport').up('li').show();
         $('kronolithEventExport').href = Kronolith.conf.URI_EVENT_EXPORT.interpolate({ id: ev.id, calendar: ev.c, type: ev.ty });
 
@@ -6355,6 +6360,7 @@ KronolithCore = {
                 }
             }
         }
+        this.toggleDisallowNewTimeProposal();
 
         /* Resources */
         if (typeof ev.rs !== 'undefined') {
@@ -6478,6 +6484,30 @@ KronolithCore = {
     },
 
     /**
+     * Shows or hides the disallow-counter option for meeting organizers.
+     */
+    toggleDisallowNewTimeProposal: function()
+    {
+        var div = $('kronolithEventDisallowCounter');
+
+        if (!div) {
+            return;
+        }
+
+        var show = !$F('kronolithEventOrganizer') &&
+            ($F('kronolithEventUsers') ||
+             $F('kronolithEventAttendees') ||
+             this.attendees.length > 0);
+
+        if (show) {
+            div.show();
+        } else {
+            div.hide();
+            $('kronolithEventDisallowNewTimeProposal').setValue(false);
+        }
+    },
+
+    /**
      * Adds an attendee row to the free/busy table.
      *
      * @param string|object attendee  An attendee string or an object with the
@@ -6509,6 +6539,7 @@ KronolithCore = {
         }
 
         this.insertFBRow(attendee);
+        this.toggleDisallowNewTimeProposal();
     },
 
     /**
@@ -6595,6 +6626,7 @@ KronolithCore = {
         });
 
         this.insertFBRow(user);
+        this.toggleDisallowNewTimeProposal();
     },
 
     /**
@@ -6869,6 +6901,7 @@ KronolithCore = {
         var row = this.freeBusyRows.get(attendee.i);
         row.purge();
         row.remove();
+        this.toggleDisallowNewTimeProposal();
     },
 
     /**
@@ -6884,6 +6917,7 @@ KronolithCore = {
           row.purge();
           row.remove();
         }
+        this.toggleDisallowNewTimeProposal();
     },
 
     normalizeAttendee: function(attendee)

@@ -34,6 +34,11 @@ class Kronolith_Unit_TestActiveSyncEvent extends Kronolith_Event
         return [];
     }
 
+    public function vfsInit()
+    {
+        return false;
+    }
+
     public function isPrivate($user = null)
     {
         return (bool) $this->private;
@@ -68,6 +73,7 @@ class Kronolith_Unit_EventActiveSyncTest extends TestCase
             ]);
             $GLOBALS['registry'] = new Kronolith_Stub_Registry('test@example.com', 'kronolith');
             $GLOBALS['injector']->setInstance('Horde_Registry', $GLOBALS['registry']);
+            $GLOBALS['injector']->bindFactory('Kronolith_Geo', 'Kronolith_Factory_Geo', 'create');
             $GLOBALS['conf']['prefs']['driver'] = 'Null';
             $GLOBALS['calendar_manager'] = new Kronolith_Stub_CalendarManager();
         }
@@ -325,5 +331,54 @@ class Kronolith_Unit_EventActiveSyncTest extends TestCase
             'protocolversion' => Horde_ActiveSync::VERSION_TWELVEONE,
         ]);
         $this->assertEmpty($legacy->disallownewtimeproposal);
+    }
+
+    public function testReadFormSetsDisallowNewTimeProposalForOrganizer()
+    {
+        $event = $this->_createEvent();
+        $_POST['disallownewtimeproposal'] = '1';
+
+        $event->readForm();
+
+        $this->assertTrue($event->disallowsNewTimeProposal());
+        unset($_POST['disallownewtimeproposal']);
+    }
+
+    public function testReadFormDoesNotClearDisallowNewTimeProposalForAttendee()
+    {
+        $event = $this->_createEvent();
+        $event->setDisallowNewTimeProposal(true);
+        $_POST['organizer'] = 'organizer@example.test';
+
+        $event->readForm();
+
+        $this->assertTrue($event->disallowsNewTimeProposal());
+        unset($_POST['organizer']);
+    }
+
+    public function testToJsonExportsDisallowNewTimeProposal()
+    {
+        $event = $this->_createEvent();
+        $event->setDisallowNewTimeProposal(true);
+
+        $json = $event->toJson(['full' => true]);
+
+        $this->assertTrue($json->dntp);
+    }
+
+    public function testIcalendarRoundTripPreservesDisallowNewTimeProposal()
+    {
+        $event = $this->_createEvent();
+        $event->setDisallowNewTimeProposal(true);
+
+        $calendar = new Horde_Icalendar();
+        $vevents = $event->toiCalendar($calendar);
+        $this->assertNotEmpty($vevents);
+        $this->assertSame('TRUE', $vevents[0]->getAttribute('DISALLOW-COUNTER'));
+
+        $imported = new Kronolith_Unit_TestActiveSyncEvent(new Kronolith_Stub_Driver());
+        $imported->fromiCalendar($vevents[0]);
+
+        $this->assertTrue($imported->disallowsNewTimeProposal());
     }
 }
