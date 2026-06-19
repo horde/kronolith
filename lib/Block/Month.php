@@ -98,6 +98,7 @@ class Kronolith_Block_Month extends Horde_Core_Block
         }
 
         return $on_day;
+    }
 
     /**
      */
