@@ -236,7 +236,7 @@
 <div id="kronolithEventTabAttendees" class="kronolithTabsOption" style="display:none">
   <div id="kronolithEventDisallowCounter" style="display:none">
     <p>
-      <input type="checkbox" name="disallownewtimeproposal" id="kronolithEventDisallowNewTimeProposal" value="1" tabindex="7" />
+      <input type="checkbox" name="disallownewtimeproposal" id="kronolithEventDisallowNewTimeProposal" value="1" />
       <label for="kronolithEventDisallowNewTimeProposal"><?php echo _("Do not allow attendees to propose new times") ?></label>
     </p>
   </div>
