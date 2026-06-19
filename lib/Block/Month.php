@@ -72,6 +72,14 @@ class Kronolith_Block_Month extends Horde_Core_Block
     {
         $on_day = [];
 
+        $dayStart = clone $day;
+        $dayStart->hour = 0;
+        $dayStart->min = 0;
+        $dayStart->sec = 0;
+
+        $dayEnd = clone $dayStart;
+        $dayEnd->mday++;
+
         foreach ($all_events as $events) {
             if (!is_array($events)) {
                 continue;
@@ -80,8 +88,9 @@ class Kronolith_Block_Month extends Horde_Core_Block
                 if (!($event instanceof Kronolith_Event)) {
                     continue;
                 }
-                if ($event->start->compareDate($day) > 0
-                    || $event->end->compareDate($day) < 0) {
+                // Treat end time as exclusive so events ending at 00:00 don't spill into the next day.
+                if ($event->start->compareDateTime($dayEnd) >= 0
+                    || $event->end->compareDateTime($dayStart) <= 0) {
                     continue;
                 }
                 $on_day[$event->id] = $event;
@@ -89,7 +98,6 @@ class Kronolith_Block_Month extends Horde_Core_Block
         }
 
         return $on_day;
-    }
 
     /**
      */
