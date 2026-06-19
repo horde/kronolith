@@ -1872,6 +1872,22 @@ abstract class Kronolith_Event
     }
 
     /**
+     * Whether attendees are forbidden from proposing new meeting times.
+     */
+    public function disallowsNewTimeProposal(): bool
+    {
+        return $this->_disallowsNewTimeProposal();
+    }
+
+    /**
+     * Store or clear the disallow-counter flag for attendee time proposals.
+     */
+    public function setDisallowNewTimeProposal(bool $disallow): void
+    {
+        $this->_setDisallowCounter($disallow);
+    }
+
+    /**
      * Import an EAS 16 AirSyncBase:Location object into event fields.
      */
     protected function _importEasLocation($location): void
@@ -3338,6 +3354,7 @@ abstract class Kronolith_Event
             $json->tz = $this->timezone;
             $json->a = $this->alarm;
             $json->pv = $this->private;
+            $json->dntp = $this->_disallowsNewTimeProposal();
             if ($this->recurs()) {
                 $json->r = $this->recurrence->toJson();
             }
@@ -3926,6 +3943,10 @@ abstract class Kronolith_Event
             $attendees = $finalAttendees;
         }
         $this->attendees = $attendees;
+
+        if (!$this->organizer) {
+            $this->_setDisallowCounter((bool) Util::getFormData('disallownewtimeproposal'));
+        }
 
         // Event start.
         $allDay = Util::getFormData('whole_day');
