@@ -238,6 +238,28 @@ class Kronolith_Unit_EventActiveSyncTest extends TestCase
         );
     }
 
+    public function testToASAppointmentClearsProposedTimesWhenRequested()
+    {
+        $event = $this->_createEvent();
+        $event->status = Kronolith::STATUS_CONFIRMED;
+        $event->attendees->add(new Kronolith_Attendee([
+            'email' => 'guest@example.com',
+            'name' => 'Guest',
+            'response' => Kronolith::RESPONSE_TENTATIVE,
+        ]));
+        $event->setEasProposalClear(true);
+
+        $GLOBALS['registry']->setAuth('guest@example.com', []);
+
+        $message = $event->toASAppointment([
+            'protocolversion' => Horde_ActiveSync::VERSION_SIXTEENONE,
+        ]);
+
+        $attendees = $message->getAttendees();
+        $this->assertCount(1, $attendees);
+        $this->assertTrue($attendees[0]->clearProposedTimes);
+    }
+
     public function testDisallowNewTimeProposalRoundTrip()
     {
         $event = $this->_createEvent();

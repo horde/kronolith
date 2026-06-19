@@ -904,6 +904,7 @@ class Kronolith
         } else {
             return new Kronolith_Attendee([
                 'user' => $user,
+                'email' => self::getUserEmail($user),
                 'identities' => $injector->getInstance('Horde_Core_Factory_Identity'),
             ]);
         }
@@ -2410,6 +2411,9 @@ class Kronolith
      *                                                are the ONLY people that
      *                                                will receive the CANCEL
      *                                                iTIP.  @since 4.2.10
+     * @param Kronolith_Attendee_List $limitedAttendees  If set, only these
+     *                                                attendees receive the
+     *                                                notification.
      */
     public static function sendITipNotifications(
         Kronolith_Event $event,
@@ -2417,11 +2421,12 @@ class Kronolith
         $action,
         ?Horde_Date $instance = null,
         $range = null,
-        ?Kronolith_Attendee_List $cancellations = null
+        ?Kronolith_Attendee_List $cancellations = null,
+        ?Kronolith_Attendee_List $limitedAttendees = null
     ) {
         global $injector, $prefs, $registry;
 
-        if (!count($event->attendees) || $prefs->getValue('itip_silent')) {
+        if (!$event->attendees || !count($event->attendees) || $prefs->getValue('itip_silent')) {
             return;
         }
 
@@ -2442,7 +2447,9 @@ class Kronolith
         $view->event = clone $event;
         $view->imageId = $image->getContentId();
 
-        if ($action == self::ITIP_CANCEL && $cancellations !== null && count($cancellations)) {
+        if ($limitedAttendees !== null && count($limitedAttendees)) {
+            $mail_attendees = $limitedAttendees;
+        } elseif ($action == self::ITIP_CANCEL && $cancellations !== null && count($cancellations)) {
             $mail_attendees = $cancellations;
         } elseif ($event->organizer
                   && !self::isUserEmail($event->creator, $event->organizer)) {
@@ -2458,18 +2465,39 @@ class Kronolith
             $mail_attendees = $event->attendees;
         }
 
+        if ($action == self::ITIP_REQUEST) {
+            $proposalUpdated = false;
+            foreach ($event->attendees as $attendee) {
+                if (!empty($attendee->proposedStart) || !empty($attendee->proposedEnd)) {
+                    $attendee->proposedStart = null;
+                    $attendee->proposedEnd = null;
+                    $proposalUpdated = true;
+                }
+            }
+            if ($proposalUpdated) {
+                $event->save();
+            }
+        }
+
         foreach ($mail_attendees as $attendee) {
+            $recipientEmail = $attendee->email;
+            if ((!$recipientEmail || strpos($recipientEmail, '@') === false) && $attendee->user) {
+                $recipientEmail = self::getUserEmail($attendee->user);
+            }
+
             /* Don't send notifications to the ORGANIZER if this is the
              * ORGANIZER's copy of the event. */
             if (!$event->organizer
-                && Kronolith::isUserEmail($event->creator, $attendee->email)) {
+                && (self::isUserEmail($event->creator, $recipientEmail)
+                    || ($attendee->user
+                        && self::isUserEmail($event->creator, $attendee->user)))) {
                 continue;
             }
 
             /* Don't bother sending an invitation/update if the recipient does
              * not need to participate, or has declined participating, or
              * doesn't have an email address. */
-            if (strpos($attendee->email, '@') === false
+            if (strpos($recipientEmail, '@') === false
                 || $attendee->response == self::RESPONSE_DECLINED) {
                 continue;
             }
@@ -2596,6 +2624,18 @@ class Kronolith
             }
             $iCal->addComponent($vevent);
 
+            if ($action == self::ITIP_REQUEST) {
+                $requestEvent = is_array($vevent) ? reset($vevent) : $vevent;
+                if ($requestEvent instanceof Horde_Icalendar_Vevent) {
+                    self::_applyItipRequestToLocalUser(
+                        $attendee,
+                        $recipientEmail,
+                        $event->uid,
+                        $requestEvent
+                    );
+                }
+            }
+
             $icsData = $iCal->exportvCalendar();
 
             /* Inline text/calendar for IMP/Outlook (iTip UI). */
@@ -2623,7 +2663,10 @@ class Kronolith
             $multipart->addPart($inner);
             $multipart->addPart($ics);
 
-            $recipient = $attendee->addressObject;
+            $recipient = new Horde_Mail_Rfc822_Address($recipientEmail);
+            if (!empty($attendee->name)) {
+                $recipient->personal = $attendee->name;
+            }
             $mail = new Horde_Mime_Mail(
                 ['Subject' => $view->subject,
                     'To' => $recipient,
@@ -2645,6 +2688,133 @@ class Kronolith
                 );
             }
         }
+    }
+
+    /**
+     * Clear a counter-proposal on a local attendee calendar (server-side).
+     *
+     * Used when the organizer sends METHOD=DECLINECOUNTER so the attendee's
+     * ActiveSync client receives clearProposedTimes on the next sync without
+     * requiring the attendee to process the mail in IMP.
+     *
+     * @return boolean  True if the proposal was cleared on the local calendar.
+     */
+    public static function applyDeclineCounterToLocalUser(
+        $recipientEmail,
+        Horde_Icalendar_Vevent $vEvent
+    ) {
+        global $registry;
+
+        if (!$registry->hasMethod('calendar/declineCounterProposal')) {
+            return false;
+        }
+
+        $localUser = Kronolith_FreeBusy::getUserFromEmail($recipientEmail);
+        if (empty($localUser) || $localUser === $registry->getAuth()) {
+            return false;
+        }
+
+        $previousAuth = $registry->getAuth();
+        $previousCreds = $registry->getAuthCredential();
+        if (!is_array($previousCreds)) {
+            $previousCreds = [];
+        }
+
+        try {
+            $registry->setAuth($localUser, []);
+            $registry->call('calendar/declineCounterProposal', [$vEvent]);
+
+            return true;
+        } catch (Horde_Exception $e) {
+            Horde::log($e, Horde_Log::ERR);
+
+            return false;
+        } finally {
+            if ($previousAuth) {
+                $registry->setAuth($previousAuth, $previousCreds);
+            }
+        }
+    }
+
+    /**
+     * Apply a METHOD=REQUEST update directly to a local attendee calendar.
+     *
+     * Only updates an existing copy on the attendee's calendar. New
+     * invitations are not imported server-side so the attendee can accept,
+     * decline, or propose via mail or ActiveSync meeting request.
+     *
+     * @return boolean  True if the event was applied to the local calendar.
+     */
+    protected static function _applyItipRequestToLocalUser(
+        Kronolith_Attendee $attendee,
+        $recipientEmail,
+        $eventUid,
+        Horde_Icalendar_Vevent $vEvent
+    ) {
+        global $registry;
+
+        if (!$registry->hasMethod('calendar/replace')) {
+            return false;
+        }
+
+        if ($attendee->response == self::RESPONSE_NONE) {
+            return false;
+        }
+
+        $localUser = $attendee->user;
+        if (empty($localUser)) {
+            $localUser = Kronolith_FreeBusy::getUserFromEmail($recipientEmail);
+        }
+
+        if (empty($localUser) || $localUser === $registry->getAuth()) {
+            return false;
+        }
+
+        $applied = false;
+        $previousAuth = $registry->getAuth();
+        $previousCreds = $registry->getAuthCredential();
+        if (!is_array($previousCreds)) {
+            $previousCreds = [];
+        }
+        try {
+            $registry->setAuth($localUser, []);
+            try {
+                $calendars = $registry->call('calendar/listCalendars', [true]);
+                $registry->call('calendar/export', [
+                    $eventUid,
+                    'text/calendar',
+                    [],
+                    $calendars,
+                ]);
+            } catch (Horde_Exception $e) {
+                return false;
+            }
+
+            try {
+                $registry->call('calendar/replace', [
+                    $eventUid,
+                    $vEvent,
+                    'text/calendar',
+                ]);
+                $applied = true;
+            } catch (Horde_Exception $e) {
+                return false;
+            }
+
+            if ($applied && $registry->hasMethod('calendar/declineCounterProposal')) {
+                try {
+                    $registry->call('calendar/declineCounterProposal', [$vEvent]);
+                } catch (Horde_Exception $e) {
+                    Horde::log($e, Horde_Log::ERR);
+                }
+            }
+        } finally {
+            if ($previousAuth) {
+                $registry->setAuth($previousAuth, $previousCreds);
+            }
+        }
+
+        return $applied;
     }
 
     /**

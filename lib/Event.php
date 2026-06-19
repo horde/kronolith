@@ -426,6 +426,8 @@ abstract class Kronolith_Event
      */
     public const EAS_CLIENTUID_ATTRIBUTE = 'X-HORDE-EAS-CLIENTUID';
 
+    public const EAS_PROPOSAL_CLEAR_ATTRIBUTE = 'X-HORDE-EAS-PROPOSAL-CLEAR';
+
     protected const DISALLOW_COUNTER_ATTRIBUTES = [
         'DISALLOW-COUNTER',
         'X-MICROSOFT-DISALLOW-COUNTER',
@@ -1787,6 +1789,43 @@ abstract class Kronolith_Event
     }
 
     /**
+     * Whether the next ActiveSync export should clear proposed meeting times
+     * on the current user's attendee record.
+     */
+    public function needsEasProposalClear(): bool
+    {
+        foreach ($this->otherAttributes as $attribute) {
+            if (($attribute['name'] ?? null) === self::EAS_PROPOSAL_CLEAR_ATTRIBUTE) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Queue or clear an ActiveSync proposal reset for the current user.
+     */
+    public function setEasProposalClear(bool $pending): void
+    {
+        $this->otherAttributes = array_values(array_filter(
+            $this->otherAttributes,
+            function ($attribute) {
+                return ($attribute['name'] ?? null) !== self::EAS_PROPOSAL_CLEAR_ATTRIBUTE;
+            }
+        ));
+
+        if ($pending) {
+            $this->otherAttributes[] = [
+                'name' => self::EAS_PROPOSAL_CLEAR_ATTRIBUTE,
+                'value' => '1',
+                'params' => [],
+                'values' => null,
+            ];
+        }
+    }
+
+    /**
      * Whether this event forbids attendees from proposing new meeting times.
      */
     protected function _disallowsNewTimeProposal(): bool
@@ -2637,11 +2676,17 @@ abstract class Kronolith_Event
                 }
 
                 if ($options['protocolversion'] >= Horde_ActiveSync::VERSION_SIXTEENONE) {
-                    if (!empty($attendee->proposedStart)) {
-                        $attendeeAS->proposedstarttime = clone $attendee->proposedStart;
-                    }
-                    if (!empty($attendee->proposedEnd)) {
-                        $attendeeAS->proposedendtime = clone $attendee->proposedEnd;
+                    $clearProposals = $this->needsEasProposalClear()
+                        && Kronolith::isUserEmail($registry->getAuth(), $attendee->email);
+                    if (!$clearProposals) {
+                        if (!empty($attendee->proposedStart)) {
+                            $attendeeAS->proposedstarttime = clone $attendee->proposedStart;
+                        }
+                        if (!empty($attendee->proposedEnd)) {
+                            $attendeeAS->proposedendtime = clone $attendee->proposedEnd;
+                        }
+                    } else {
+                        $attendeeAS->clearProposedTimes = true;
                     }
                 }
 

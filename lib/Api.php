@@ -966,7 +966,12 @@ class Kronolith_Api extends Horde_Registry_Api
                 return $iCal->exportvCalendar();
 
             case 'activesync':
-                return $event->toASAppointment($options);
+                $message = $event->toASAppointment($options);
+                if ($event->needsEasProposalClear() && $event->hasPermission(Horde_Perms::EDIT)) {
+                    $event->setEasProposalClear(false);
+                    $event->save();
+                }
+                return $message;
         }
 
         throw new Kronolith_Exception(sprintf(_("Unsupported Content-Type: %s"), $contentType));
@@ -1285,12 +1290,32 @@ class Kronolith_Api extends Horde_Registry_Api
             $component->getAttribute('RECURRENCE-ID');
             $this->_addiCalEvent($component, Kronolith::getDriver(null, $calendar), true);
         } catch (Horde_Icalendar_Exception $e) {
+            $hadProposal = $this->_authAttendeeHasProposal($event);
             $event->fromiCalendar($component, true);
             // Ensure we keep the original UID, even when content does not
             // contain one and fromiCalendar creates a new one.
             $event->uid = $uid;
+            if ($hadProposal && !$this->_authAttendeeHasProposal($event)) {
+                $event->setEasProposalClear(true);
+            }
             $event->save();
         }
+    }
+
+    /**
+     * Whether the authenticated user has stored proposal times on this event.
+     */
+    protected function _authAttendeeHasProposal(Kronolith_Event $event): bool
+    {
+        $auth = $GLOBALS['registry']->getAuth();
+        foreach ($event->attendees as $attendee) {
+            if (Kronolith::isUserEmail($auth, $attendee->email)
+                || ($attendee->user && $attendee->user == $auth)) {
+                return !empty($attendee->proposedStart) || !empty($attendee->proposedEnd);
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -1383,33 +1408,7 @@ class Kronolith_Api extends Horde_Registry_Api
             throw new Kronolith_Exception($e);
         }
 
-        $events = Kronolith::getDriver()->getByUID($uid, null, true);
-
-        /* First try the user's own calendars. */
-        $ownerCalendars = Kronolith::listInternalCalendars(true, Horde_Perms::EDIT);
-        $event = null;
-        foreach ($events as $ev) {
-            if (isset($ownerCalendars[$ev->calendar])) {
-                $event = $ev;
-                break;
-            }
-        }
-
-        /* If not successful, try all calendars the user has access to. */
-        if (empty($event)) {
-            $editableCalendars = Kronolith::listInternalCalendars(false, Horde_Perms::EDIT);
-            foreach ($events as $ev) {
-                if (isset($editableCalendars[$ev->calendar])) {
-                    $event = $ev;
-                    break;
-                }
-            }
-        }
-
-        if (empty($event)
-            || ($event->private && $event->creator != $GLOBALS['registry']->getAuth())) {
-            throw new Horde_Exception_PermissionDenied();
-        }
+        $event = $this->_getEditableEventByUid($uid);
 
         $atnames = $response->getAttribute('ATTENDEE');
         if (!is_array($atnames)) {
@@ -1456,6 +1455,208 @@ class Kronolith_Api extends Horde_Registry_Api
         if (!$found) {
             throw new Kronolith_Exception($error);
         }
+    }
+
+    /**
+     * Finalize an accepted counter-proposal on the organizer's event.
+     *
+     * Clears stored proposal metadata for the proposing attendee and sends
+     * METHOD=REQUEST iTip updates so attendees receive the new event times.
+     *
+     * @param Horde_Icalendar_Vevent $response  The METHOD=COUNTER vEvent.
+     * @param string $sender                    Email of the proposing attendee.
+     *
+     * @throws Kronolith_Exception
+     */
+    public function acceptCounterProposal(Horde_Icalendar_Vevent $response, $sender)
+    {
+        try {
+            $uid = $response->getAttribute('UID');
+        } catch (Horde_Icalendar_Exception $e) {
+            throw new Kronolith_Exception($e);
+        }
+
+        $event = $this->_getEditableEventByUid($uid);
+
+        $found = false;
+        foreach ($event->attendees as $attendee) {
+            if ($attendee->matchesEmail($sender, false)) {
+                $attendee->proposedStart = null;
+                $attendee->proposedEnd = null;
+                $found = true;
+                break;
+            }
+        }
+
+        if (!$found) {
+            throw new Kronolith_Exception(
+                _("No attendees have been updated because none of the provided email addresses have been found in the event's attendees list.")
+            );
+        }
+
+        $event->sequence = ($event->sequence ?? 0) + 1;
+        $event->save();
+
+        // Only the organizer's copy should trigger REQUEST updates to attendees.
+        if (empty($event->organizer)
+            || Kronolith::isUserEmail($event->creator, $event->organizer)) {
+            Kronolith::sendITipNotifications(
+                $event,
+                $GLOBALS['notification'],
+                Kronolith::ITIP_REQUEST
+            );
+        }
+    }
+
+    /**
+     * Clear a stored counter-proposal for an attendee.
+     *
+     * On the organizer's calendar, pass the proposing attendee's email and
+     * set $notifyAttendee to send a METHOD=REQUEST update. On an attendee's
+     * calendar, omit $attendeeEmail to clear the current user's proposal.
+     *
+     * @param Horde_Icalendar_Vevent $response  Related vEvent (UID required).
+     * @param string|null $attendeeEmail         Proposing attendee, or null for
+     *                                           the current user.
+     * @param boolean $notifyAttendee            Send REQUEST to the attendee.
+     *
+     * @throws Kronolith_Exception
+     */
+    public function declineCounterProposal(
+        Horde_Icalendar_Vevent $response,
+        $attendeeEmail = null,
+        $notifyAttendee = false
+    ) {
+        try {
+            $uid = $response->getAttribute('UID');
+        } catch (Horde_Icalendar_Exception $e) {
+            throw new Kronolith_Exception($e);
+        }
+
+        $event = $this->_getEditableEventByUid($uid);
+        $found = false;
+        $targetEmail = $attendeeEmail;
+
+        if ($attendeeEmail === null) {
+            $auth = $GLOBALS['registry']->getAuth();
+            foreach ($event->attendees as $attendee) {
+                if (Kronolith::isUserEmail($auth, $attendee->email)
+                    || ($attendee->user && $attendee->user == $auth)) {
+                    $attendee->proposedStart = null;
+                    $attendee->proposedEnd = null;
+                    $targetEmail = $attendee->email;
+                    $found = true;
+                    break;
+                }
+            }
+        } else {
+            foreach ($event->attendees as $attendee) {
+                if ($attendee->matchesEmail($attendeeEmail, false)) {
+                    $attendee->proposedStart = null;
+                    $attendee->proposedEnd = null;
+                    $found = true;
+                    break;
+                }
+            }
+        }
+
+        if (!$found) {
+            throw new Kronolith_Exception(
+                _("No attendees have been updated because none of the provided email addresses have been found in the event's attendees list.")
+            );
+        }
+
+        $event->sequence = ($event->sequence ?? 0) + 1;
+        if ($attendeeEmail === null) {
+            $event->setEasProposalClear(true);
+        }
+        $event->save();
+
+        if ($notifyAttendee
+            && (empty($event->organizer)
+                || Kronolith::isUserEmail($event->creator, $event->organizer))) {
+            $recipients = new Kronolith_Attendee_List();
+            foreach ($event->attendees as $attendee) {
+                if ($attendee->matchesEmail($targetEmail, false)) {
+                    $recipients->add($attendee);
+                    break;
+                }
+            }
+            if (count($recipients)) {
+                Kronolith::sendITipNotifications(
+                    $event,
+                    $GLOBALS['notification'],
+                    Kronolith::ITIP_REQUEST,
+                    null,
+                    null,
+                    null,
+                    $recipients
+                );
+            }
+        }
+    }
+
+    /**
+     * Store proposed meeting times on an attendee record.
+     *
+     * @throws Kronolith_Exception
+     */
+    public function storeAttendeeProposal(
+        $uid,
+        $attendeeEmail,
+        Horde_Date $proposedStart,
+        Horde_Date $proposedEnd = null
+    ) {
+        $event = $this->_getEditableEventByUid($uid);
+
+        foreach ($event->attendees as $attendee) {
+            if ($attendee->matchesEmail($attendeeEmail, false)) {
+                $attendee->proposedStart = $proposedStart;
+                $attendee->proposedEnd = $proposedEnd;
+                $event->save();
+                return;
+            }
+        }
+
+        throw new Kronolith_Exception(
+            _("No attendees have been updated because none of the provided email addresses have been found in the event's attendees list.")
+        );
+    }
+
+    /**
+     * Returns an editable event in the current user's calendars by UID.
+     *
+     * @throws Horde_Exception_PermissionDenied
+     */
+    protected function _getEditableEventByUid($uid)
+    {
+        $events = Kronolith::getDriver()->getByUID($uid, null, true);
+
+        $ownerCalendars = Kronolith::listInternalCalendars(true, Horde_Perms::EDIT);
+        $event = null;
+        foreach ($events as $ev) {
+            if (isset($ownerCalendars[$ev->calendar])) {
+                $event = $ev;
+                break;
+            }
+        }
+
+        if (empty($event)) {
+            $editableCalendars = Kronolith::listInternalCalendars(false, Horde_Perms::EDIT);
+            foreach ($events as $ev) {
+                if (isset($editableCalendars[$ev->calendar])) {
+                    $event = $ev;
+                    break;
+                }
+            }
+        }
+
+        if (empty($event)
+            || ($event->private && $event->creator != $GLOBALS['registry']->getAuth())) {
+            throw new Horde_Exception_PermissionDenied();
+        }
+
+        return $event;
     }
 
     /**
