@@ -2730,9 +2730,7 @@ class Kronolith
 
             return false;
         } finally {
-            if ($previousAuth) {
-                $registry->setAuth($previousAuth, $previousCreds);
-            }
+            $registry->setAuth($previousAuth, $previousCreds);
         }
     }
 
@@ -2809,9 +2807,7 @@ class Kronolith
                 }
             }
         } finally {
-            if ($previousAuth) {
-                $registry->setAuth($previousAuth, $previousCreds);
-            }
+            $registry->setAuth($previousAuth, $previousCreds);
         }
 
         return $applied;

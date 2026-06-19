@@ -2676,8 +2676,10 @@ abstract class Kronolith_Event
                 }
 
                 if ($options['protocolversion'] >= Horde_ActiveSync::VERSION_SIXTEENONE) {
+                    $auth = $registry->getAuth();
                     $clearProposals = $this->needsEasProposalClear()
-                        && Kronolith::isUserEmail($registry->getAuth(), $attendee->email);
+                        && (Kronolith::isUserEmail($auth, $attendee->email)
+                            || ($attendee->user && $attendee->user == $auth));
                     if (!$clearProposals) {
                         if (!empty($attendee->proposedStart)) {
                             $attendeeAS->proposedstarttime = clone $attendee->proposedStart;

@@ -967,7 +967,14 @@ class Kronolith_Api extends Horde_Registry_Api
 
             case 'activesync':
                 $message = $event->toASAppointment($options);
-                if ($event->needsEasProposalClear() && $event->hasPermission(Horde_Perms::EDIT)) {
+                $emittedClear = false;
+                foreach ($message->getAttendees() as $attendeeAS) {
+                    if (!empty($attendeeAS->clearProposedTimes)) {
+                        $emittedClear = true;
+                        break;
+                    }
+                }
+                if ($emittedClear && $event->hasPermission(Horde_Perms::EDIT)) {
                     $event->setEasProposalClear(false);
                     $event->save();
                 }

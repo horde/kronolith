@@ -10,6 +10,7 @@
 
 require_once __DIR__ . '/../Stub/Driver.php';
 require_once __DIR__ . '/../Stub/CalendarManager.php';
+require_once __DIR__ . '/../Stub/Registry.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -65,6 +66,8 @@ class Kronolith_Unit_EventActiveSyncTest extends TestCase
                 'registry' => 'Horde_Registry',
                 'session' => 'Horde_Session',
             ]);
+            $GLOBALS['registry'] = new Kronolith_Stub_Registry('test@example.com', 'kronolith');
+            $GLOBALS['injector']->setInstance('Horde_Registry', $GLOBALS['registry']);
             $GLOBALS['conf']['prefs']['driver'] = 'Null';
             $GLOBALS['calendar_manager'] = new Kronolith_Stub_CalendarManager();
         }
@@ -249,15 +252,57 @@ class Kronolith_Unit_EventActiveSyncTest extends TestCase
         ]));
         $event->setEasProposalClear(true);
 
-        $GLOBALS['registry']->setAuth('guest@example.com', []);
+        $registry = $GLOBALS['registry'];
+        $previousAuth = $registry->getAuth();
+        $previousCreds = $registry->getAuthCredential();
+        if (!is_array($previousCreds)) {
+            $previousCreds = [];
+        }
+        try {
+            $registry->setAuth('guest@example.com', []);
 
-        $message = $event->toASAppointment([
-            'protocolversion' => Horde_ActiveSync::VERSION_SIXTEENONE,
-        ]);
+            $message = $event->toASAppointment([
+                'protocolversion' => Horde_ActiveSync::VERSION_SIXTEENONE,
+            ]);
 
-        $attendees = $message->getAttendees();
-        $this->assertCount(1, $attendees);
-        $this->assertTrue($attendees[0]->clearProposedTimes);
+            $attendees = $message->getAttendees();
+            $this->assertCount(1, $attendees);
+            $this->assertTrue($attendees[0]->clearProposedTimes);
+        } finally {
+            $registry->setAuth($previousAuth, $previousCreds);
+        }
+    }
+
+    public function testToASAppointmentClearsProposedTimesForAttendeeUserId()
+    {
+        $event = $this->_createEvent();
+        $event->status = Kronolith::STATUS_CONFIRMED;
+        $event->attendees->add(new Kronolith_Attendee([
+            'user' => 'guest@example.com',
+            'name' => 'Guest',
+            'response' => Kronolith::RESPONSE_TENTATIVE,
+        ]));
+        $event->setEasProposalClear(true);
+
+        $registry = $GLOBALS['registry'];
+        $previousAuth = $registry->getAuth();
+        $previousCreds = $registry->getAuthCredential();
+        if (!is_array($previousCreds)) {
+            $previousCreds = [];
+        }
+        try {
+            $registry->setAuth('guest@example.com', []);
+
+            $message = $event->toASAppointment([
+                'protocolversion' => Horde_ActiveSync::VERSION_SIXTEENONE,
+            ]);
+
+            $attendees = $message->getAttendees();
+            $this->assertCount(1, $attendees);
+            $this->assertTrue($attendees[0]->clearProposedTimes);
+        } finally {
+            $registry->setAuth($previousAuth, $previousCreds);
+        }
     }
 
     public function testDisallowNewTimeProposalRoundTrip()
