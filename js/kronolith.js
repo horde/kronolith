@@ -1001,7 +1001,7 @@ KronolithCore = {
         calendar.insert(
             new Element('div', { className: 'horde-resource-link' })
                 .insert(link));
-        this.addShareIcon(cal, link);
+        this.addShareIcon(cal, calendar);
         div.insert(calendar);
         if (cal.show) {
             this.addCalendarLegend(type, id, cal);
@@ -1009,19 +1009,34 @@ KronolithCore = {
     },
 
     /**
-     * Add the share icon after the calendar name in the calendar list.
+     * Add the share icon to a calendar/tasklist row in the sidebar menu.
      *
-     * @param object cal       A calendar object from Kronolith.conf.calendars.
-     * @param Element element  The calendar element in the list.
+     * @param object cal   A calendar object from Kronolith.conf.calendars.
+     * @param Element row  The calendar row element in the list.
      */
-    addShareIcon: function(cal, element)
+    addShareIcon: function(cal, row)
     {
+        row.select('[class*="horde-resource-share-"]').invoke('remove');
         if (cal.owner && cal.perms) {
             $H(cal.perms).each(function(perm) {
                 if (perm.key != 'type' &&
                     ((Object.isArray(perm.value) && perm.value.size()) ||
                      (!Object.isArray(perm.value) && perm.value))) {
-                    element.insert(' ').insert(new Element('img', { src: Kronolith.conf.images.attendees.replace(/fff/, cal.fg.substring(1)), title: Kronolith.text.shared }));
+                    var linkDiv = row.down('.horde-resource-link');
+                    if (!linkDiv) {
+                        return;
+                    }
+                    linkDiv.insert({
+                        before: new Element('span', {
+                            className: 'horde-resource-share-' + cal.fg.substring(1),
+                            title: Kronolith.text.shared
+                        }).setStyle({ backgroundColor: cal.bg, color: cal.fg })
+                            .insert(new Element('img', {
+                                src: Kronolith.conf.images.attendees.replace(/fff/, cal.fg.substring(1)),
+                                alt: '',
+                                title: Kronolith.text.shared
+                            }))
+                    });
                     throw $break;
                 }
             });
@@ -3939,7 +3954,7 @@ KronolithCore = {
                         var link = element.down('.horde-resource-link span');
                         element.setStyle(color);
                         link.update(cal.name.escapeHTML());
-                        this.addShareIcon(cal, link);
+                        this.addShareIcon(cal, element);
                         throw $break;
                     }
                 }, this);

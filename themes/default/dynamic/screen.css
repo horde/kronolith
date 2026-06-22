@@ -94,7 +94,7 @@ html, body {
 }
 #horde-sidebar div.horde-resources .horde-resource-edit-000,
 #horde-sidebar div.horde-resources .horde-resource-edit-fff {
-    margin-right: 5px;
+    margin: 2px 2px 0 0;
 }
 /* @todo move to horde. */
 #horde-sidebar div.horde-resources .horde-resource-refresh-000,
@@ -106,7 +106,7 @@ html, body {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 16px 16px;
-    margin: 2px 10px 0 0;
+    margin: 2px 5px 0 0;
     width: 17px;
     height: 17px;
     text-indent: -10000px;
@@ -115,6 +115,25 @@ html, body {
 }
 #horde-sidebar div.horde-resources .horde-resource-refresh-fff {
     background-image: url("../graphics/refresh-sidebar-fff.png");
+}
+/* Share icon grouped with edit/refresh on the right of sidebar rows. */
+#horde-sidebar div.horde-resources .horde-resource-share-000,
+#horde-sidebar div.horde-resources .horde-resource-share-fff {
+    float: right;
+    display: block;
+    background-color: transparent;
+    margin: 2px 2px 0 0;
+    width: 17px;
+    height: 17px;
+    text-align: center;
+    overflow: hidden;
+    cursor: default;
+}
+#horde-sidebar div.horde-resources .horde-resource-share-000 img,
+#horde-sidebar div.horde-resources .horde-resource-share-fff img {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
 }
 
 /* Quick edit */
