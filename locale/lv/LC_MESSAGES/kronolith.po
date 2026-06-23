@@ -645,6 +645,11 @@ msgstr "Atcelts"
 msgid "Cancelled: %s"
 msgstr "Atcelts: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Uzaicinājums: %s"
+
 #: lib/Driver/Ical.php:502
 msgid "Cannot delete exceptions (yet)."
 msgstr "(Pagaidām) nevar izdzēst izņēmumus."

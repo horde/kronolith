@@ -678,3 +678,8 @@ msgstr "недели"
 
 msgid "year(s)"
 msgstr "год(ы)"
+
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Приглашение: %s"

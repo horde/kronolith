@@ -642,6 +642,11 @@ msgstr "Tühistatud"
 msgid "Cancelled: %s"
 msgstr "Tühistatud: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Kutse: %s"
+
 #: lib/Driver/Kolab.php:504
 #, php-format
 msgid "Cannot delete event: %s"

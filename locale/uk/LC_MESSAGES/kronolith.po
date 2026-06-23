@@ -679,6 +679,11 @@ msgstr "Скасовано"
 msgid "Cancelled: %s"
 msgstr "Скасовано: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Запрошення: %s"
+
 #: lib/Driver/Ical.php:559
 msgid "Cannot delete exceptions (yet)."
 msgstr "Не можу витерти винятки (наразі)."

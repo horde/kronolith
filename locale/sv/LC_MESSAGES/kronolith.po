@@ -654,6 +654,11 @@ msgstr "Avbruten"
 msgid "Cancelled: %s"
 msgstr "Avbruten: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Inbjudan: %s"
+
 #: lib/Driver/Ical.php:488
 msgid "Cannot delete exceptions (yet)."
 msgstr "Kan inte radera undantag (än)."

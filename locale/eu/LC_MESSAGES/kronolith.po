@@ -641,6 +641,11 @@ msgstr "Bertan behera utzita"
 msgid "Cancelled: %s"
 msgstr "Bertan behera utzita: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Gonbidapena: %s"
+
 #: lib/Driver/Ical.php:501
 msgid "Cannot delete exceptions (yet)."
 msgstr "Ezin dira salbuespenak ezabatu (oraindik)."

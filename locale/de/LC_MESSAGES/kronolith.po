@@ -705,6 +705,11 @@ msgstr "Abgesagt"
 msgid "Cancelled: %s"
 msgstr "Abgesagt: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Einladung: %s"
+
 #: lib/Driver/Ical.php:594
 msgid "Cannot delete exceptions (yet)."
 msgstr "Ausnahmen können (noch) nicht gelöscht werden."

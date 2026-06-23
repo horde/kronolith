@@ -685,6 +685,11 @@ msgstr "Stornováno"
 msgid "Cancelled: %s"
 msgstr "Stornováno: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Pozvánka: %s"
+
 #: lib/Driver/Ical.php:539
 #, fuzzy
 msgid "Cannot delete exceptions (yet)."

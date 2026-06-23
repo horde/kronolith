@@ -813,6 +813,11 @@ msgstr "Avbrutt"
 msgid "Cancelled: %s"
 msgstr "Avbrutt: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Invitasjon: %s"
+
 msgid "before the event starts"
 msgstr "før hendelsen starter"
 

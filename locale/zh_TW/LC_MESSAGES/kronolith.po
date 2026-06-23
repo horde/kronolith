@@ -376,6 +376,11 @@ msgstr "已取消"
 msgid "Cancelled: %s"
 msgstr "已取消: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "邀請：%s"
+
 #: lib/Driver/kolab.php:1394
 #, php-format
 msgid "Cannot delete event: %s"

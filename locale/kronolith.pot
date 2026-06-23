@@ -680,6 +680,11 @@ msgstr ""
 msgid "Cancelled: %s"
 msgstr ""
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr ""
+
 #: lib/Driver/Ical.php:649
 msgid "Cannot delete exceptions (yet)."
 msgstr ""
