@@ -296,6 +296,25 @@ img.kronolithEventIcon {
    attendees view. The Lucide icon-set bump replaced edit.png and
    delete.png with 48x48 assets; constrain the rendered <img> so they
    stay inline-sized in portal blocks and the basic event list. */
+/* Share icon grouped with edit/refresh on the right of sidebar rows. */
+#horde-sidebar div.horde-resources .horde-resource-share-000,
+#horde-sidebar div.horde-resources .horde-resource-share-fff {
+    float: right;
+    display: block;
+    background-color: transparent;
+    margin: 2px 2px 0 0;
+    width: 17px;
+    height: 17px;
+    text-align: center;
+    overflow: hidden;
+    cursor: default;
+}
+#horde-sidebar div.horde-resources .horde-resource-share-000 img,
+#horde-sidebar div.horde-resources .horde-resource-share-fff img {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
 img.iconAlarm,
 img.iconRecur,
 img.iconException,
