@@ -638,6 +638,11 @@ msgstr "취소함"
 msgid "Cancelled: %s"
 msgstr "취소함: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "초대: %s"
+
 #: lib/Driver/Ical.php:523
 msgid "Cannot delete exceptions (yet)."
 msgstr "(아직) 예외사항을 삭제할 수 없습니다."

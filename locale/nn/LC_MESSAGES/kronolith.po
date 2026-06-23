@@ -678,3 +678,8 @@ msgstr "veker"
 
 msgid "year(s)"
 msgstr "år"
+
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Invitasjon: %s"

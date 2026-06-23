@@ -647,6 +647,11 @@ msgstr "Zrušené"
 msgid "Cancelled: %s"
 msgstr "Zrušené: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Pozvánka: %s"
+
 #: lib/Driver/Kolab.php:504
 #, php-format
 msgid "Cannot delete event: %s"

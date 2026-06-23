@@ -660,6 +660,11 @@ msgstr "Otkazano"
 msgid "Cancelled: %s"
 msgstr "Otkazano: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Pozivnica: %s"
+
 #: lib/Driver/Kolab.php:504
 #, php-format
 msgid "Cannot delete event: %s"

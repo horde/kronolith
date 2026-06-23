@@ -339,6 +339,11 @@ msgstr "已取消"
 msgid "Cancelled: %s"
 msgstr "已取消：%s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "邀请：%s"
+
 #: templates/search/search_advanced.inc:63 templates/edit/edit.inc:76
 msgid "Categor_y"
 msgstr "类别_Y"

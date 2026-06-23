@@ -328,6 +328,11 @@ msgstr "Anul·lat"
 msgid "Cancelled: %s"
 msgstr "Anul·lat: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Invitació: %s"
+
 #: templates/search/search_advanced.inc:63 templates/edit/edit.inc:67
 msgid "Categor_y"
 msgstr "Categori_a"

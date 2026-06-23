@@ -445,3 +445,8 @@ msgstr "saptamani"
 
 msgid "year(s)"
 msgstr "an(i)"
+
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Invitație: %s"

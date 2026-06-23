@@ -649,6 +649,11 @@ msgstr "Afgebroken"
 msgid "Cancelled: %s"
 msgstr "Afgebroken: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Uitnodiging: %s"
+
 #: lib/Driver/Ical.php:518
 msgid "Cannot delete exceptions (yet)."
 msgstr "Kan uitzonderingen (nog) niet verwijderen."

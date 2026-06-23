@@ -848,3 +848,8 @@ msgstr "седмици"
 
 msgid "year(s)"
 msgstr "година"
+
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Покана: %s"

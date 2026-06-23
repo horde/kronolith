@@ -984,3 +984,8 @@ msgstr "الأسابيع"
 #: templates/edit/edit.inc:291 templates/view/view.inc:121
 msgid "year(s)"
 msgstr "سنة (سنوات)"
+
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "دعوة: %s"

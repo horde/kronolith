@@ -642,6 +642,11 @@ msgstr "Peruttu"
 msgid "Cancelled: %s"
 msgstr "Peruttu: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Kutsu: %s"
+
 #: lib/Driver/Ical.php:501
 msgid "Cannot delete exceptions (yet)."
 msgstr "Ei voida poistaa poikkeiksia (vielä)."

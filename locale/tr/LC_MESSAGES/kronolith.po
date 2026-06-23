@@ -638,6 +638,11 @@ msgstr "İptal edildi"
 msgid "Cancelled: %s"
 msgstr "%s iptal edildi."
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Davet: %s"
+
 #: lib/Driver/Ical.php:488
 msgid "Cannot delete exceptions (yet)."
 msgstr "İstisnalar silinemez"

@@ -2436,16 +2436,20 @@ class Kronolith
             return;
         }
 
-        // Generate image mime part first and only once, because we
-        // need the Content-ID.
-        $image = self::getImagePart('big_invitation.png');
-
-        $share = $injector->getInstance('Kronolith_Shares')->getShare($event->calendar);
         $view = new Horde_View(['templatePath' => KRONOLITH_TEMPLATES . '/itip']);
         new Horde_View_Helper_Text($view);
         $view->identity = $ident;
         $view->event = clone $event;
-        $view->imageId = $image->getContentId();
+        $view->recurrence = '';
+        if ($event->recurs()) {
+            $view->recurrence = $event->recurrence->toString(
+                $prefs->getValue('date_format'),
+                $prefs->getValue('time_format')
+            );
+        }
+
+        $share = $injector->getInstance('Kronolith_Shares')->getShare($event->calendar);
+        $mimeBuilder = new Horde\Itip\Generator\MimeEnvelopeBuilder();
 
         if ($limitedAttendees !== null && count($limitedAttendees)) {
             $mail_attendees = $limitedAttendees;
@@ -2565,7 +2569,7 @@ class Kronolith
                             '',
                             'event-invitation.ics'
                         );
-                        $view->subject = $event->getTitle();
+                        $view->subject = sprintf(_('Invitation: %s'), $event->getTitle());
                         $view->header = sprintf(_("%s wishes to make you aware of \"%s\"."), $ident->getName(), $event->getTitle());
                     } else {
                         /* Update. */
@@ -2638,41 +2642,25 @@ class Kronolith
 
             $icsData = $iCal->exportvCalendar();
 
-            /* Inline text/calendar for IMP/Outlook (iTip UI). */
-            $icsInline = new Horde_Mime_Part();
-            $icsInline->setType('text/calendar');
-            $icsInline->setContents($icsData);
-            $icsInline->setContentTypeParameter('method', $method);
-            $icsInline->setCharset('UTF-8');
-            $icsInline->setDisposition('inline');
-            $icsInline->setEOL("\r\n");
-
-            /* application/ics attachment for ActiveSync attachment list. */
-            $ics = new Horde_Mime_Part();
-            $ics->setType('application/ics');
-            $ics->setContents($icsData);
-            $ics->setName($filename);
-            $ics->setContentTypeParameter('method', $method);
-            $ics->setCharset('UTF-8');
-            $ics->setEOL("\r\n");
-
-            $inner = self::buildMimeMessage($view, 'notification', $image);
-            $inner->addPart($icsInline);
-            $multipart = new Horde_Mime_Part();
-            $multipart->setType('multipart/mixed');
-            $multipart->addPart($inner);
-            $multipart->addPart($ics);
+            $multipart = $mimeBuilder->build(
+                $view->render('notification.plain.php'),
+                $view->render('notification.html.php'),
+                $icsData,
+                $method
+            );
 
             $recipient = new Horde_Mail_Rfc822_Address($recipientEmail);
             if (!empty($attendee->name)) {
                 $recipient->personal = $attendee->name;
             }
-            $mail = new Horde_Mime_Mail(
-                ['Subject' => $view->subject,
-                    'To' => $recipient,
-                    'From' => $ident->getDefaultFromAddress(true),
-                    'User-Agent' => 'Kronolith ' . $registry->getVersion()]
-            );
+            $headers = [
+                'Subject' => $view->subject,
+                'To' => $recipient,
+                'From' => $ident->getDefaultFromAddress(true),
+                'User-Agent' => 'Kronolith ' . $registry->getVersion(),
+                'Content-Class' => 'urn:content-classes:calendarmessage',
+            ];
+            $mail = new Horde_Mime_Mail($headers);
             $mail->setBasePart($multipart);
 
             try {
@@ -3109,7 +3097,7 @@ class Kronolith
     public static function buildMimeMessage(
         Horde_View $view,
         $template,
-        Horde_Mime_Part $image
+        ?Horde_Mime_Part $image = null
     ) {
         $multipart = new Horde_Mime_Part();
         $multipart->setType('multipart/alternative');
@@ -3124,12 +3112,16 @@ class Kronolith
         $bodyHtml->setCharset('UTF-8');
         $bodyHtml->setContents($view->render($template . '.html.php'));
         $bodyHtml->setDisposition('inline');
-        $related = new Horde_Mime_Part();
-        $related->setType('multipart/related');
-        $related->setContentTypeParameter('start', $bodyHtml->setContentId());
-        $related->addPart($bodyHtml);
-        $related->addPart($image);
-        $multipart->addPart($related);
+        if ($image !== null) {
+            $related = new Horde_Mime_Part();
+            $related->setType('multipart/related');
+            $related->setContentTypeParameter('start', $bodyHtml->setContentId());
+            $related->addPart($bodyHtml);
+            $related->addPart($image);
+            $multipart->addPart($related);
+        } else {
+            $multipart->addPart($bodyHtml);
+        }
         return $multipart;
     }
 

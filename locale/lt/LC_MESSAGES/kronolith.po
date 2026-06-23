@@ -644,6 +644,11 @@ msgstr "Atšauktas"
 msgid "Cancelled: %s"
 msgstr "Atšaukta: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Pakvietimas: %s"
+
 #: lib/Driver/Kolab.php:504
 #, php-format
 msgid "Cannot delete event: %s"

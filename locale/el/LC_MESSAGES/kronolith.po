@@ -684,6 +684,11 @@ msgstr "Ακυρώθηκε"
 msgid "Cancelled: %s"
 msgstr "Ακυρώθηκε: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Πρόσκληση: %s"
+
 #: lib/Driver/Ical.php:550
 msgid "Cannot delete exceptions (yet)."
 msgstr "Δεν είναι δυνατόν να διαγραφούν οι εξαιρέσεις (ακόμα)."

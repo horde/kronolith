@@ -665,6 +665,11 @@ msgstr "elmarad"
 msgid "Cancelled: %s"
 msgstr "Elmarad: %s"
 
+#: lib/Kronolith.php:2565
+#, php-format
+msgid "Invitation: %s"
+msgstr "Meghívó: %s"
+
 #: lib/Driver/Ical.php:539
 msgid "Cannot delete exceptions (yet)."
 msgstr "Nem lehet a kivételt törölni (még)."
