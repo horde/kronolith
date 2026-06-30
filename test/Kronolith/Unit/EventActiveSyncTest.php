@@ -45,6 +45,9 @@ class Kronolith_Unit_TestActiveSyncEvent extends Kronolith_Event
     }
 }
 
+/**
+ * @coversNothing
+ */
 class Kronolith_Unit_EventActiveSyncTest extends TestCase
 {
     public static function setUpBeforeClass(): void
