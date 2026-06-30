@@ -1612,7 +1612,7 @@ class Kronolith_Api extends Horde_Registry_Api
         $uid,
         $attendeeEmail,
         Horde_Date $proposedStart,
-        Horde_Date $proposedEnd = null
+        ?Horde_Date $proposedEnd = null
     ) {
         $event = $this->_getEditableEventByUid($uid);
 

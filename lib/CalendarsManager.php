@@ -334,59 +334,59 @@ class Kronolith_CalendarsManager
         global $prefs, $registry;
 
         if (strncmp($calId, 'remote_', 7) === 0) {
-                $calId = substr($calId, 7);
-                if (($key = array_search($calId, $this->_displayRemote)) === false) {
-                    $this->_displayRemote[] = $calId;
-                } else {
-                    unset($this->_displayRemote[$key]);
-                }
-                $prefs->setValue('display_remote_cals', serialize($this->_displayRemote));
-            } elseif ((strncmp($calId, 'external_', 9) === 0
-                       && ($calId = substr($calId, 9)))
-                      || (strncmp($calId, 'tasklists_', 10) === 0
-                       && ($calId = substr($calId, 10)))) {
-                if (($key = array_search($calId, $this->_displayExternal)) === false) {
-                    $this->_displayExternal[] = $calId;
-                } else {
-                    unset($this->_displayExternal[$key]);
-                }
-                $prefs->setValue('display_external_cals', serialize($this->_displayExternal));
-
-                if (strpos($calId, 'tasks/') === 0) {
-                    $tasklists = [];
-                    foreach ($this->_displayExternal as $id) {
-                        if (strpos($id, 'tasks/') === 0) {
-                            $tasklists[] = substr($id, 6);
-                        }
-                    }
-                    try {
-                        $registry->tasks->setDisplayedTasklists($tasklists);
-                    } catch (Horde_Exception $e) {
-                    }
-                }
-            } elseif (strncmp($calId, 'holiday_', 8) === 0) {
-                $calId = substr($calId, 8);
-                if (($key = array_search($calId, $this->_displayHolidaysInternal)) === false) {
-                    $this->_displayHolidaysInternal[] = $calId;
-                } else {
-                    unset($this->_displayHolidaysInternal[$key]);
-                }
-                $prefs->setValue('holiday_drivers', serialize($this->_displayHolidaysInternal));
-            } elseif (strncmp($calId, 'resource_', 9) === 0) {
-                $calId = substr($calId, 9);
-                if (($key = array_search($calId, $this->_displayResource)) === false) {
-                    $this->_displayResource[] = $calId;
-                } else {
-                    unset($this->_displayResource[$key]);
-                }
-                $prefs->setValue('display_resource_cals', serialize($this->_displayResource));
-            } elseif (($key = array_search($calId, $this->_displayCalendars)) === false) {
-                $this->_displayCalendars[] = $calId;
+            $calId = substr($calId, 7);
+            if (($key = array_search($calId, $this->_displayRemote)) === false) {
+                $this->_displayRemote[] = $calId;
             } else {
-                unset($this->_displayCalendars[$key]);
+                unset($this->_displayRemote[$key]);
             }
+            $prefs->setValue('display_remote_cals', serialize($this->_displayRemote));
+        } elseif ((strncmp($calId, 'external_', 9) === 0
+                   && ($calId = substr($calId, 9)))
+                  || (strncmp($calId, 'tasklists_', 10) === 0
+                   && ($calId = substr($calId, 10)))) {
+            if (($key = array_search($calId, $this->_displayExternal)) === false) {
+                $this->_displayExternal[] = $calId;
+            } else {
+                unset($this->_displayExternal[$key]);
+            }
+            $prefs->setValue('display_external_cals', serialize($this->_displayExternal));
 
-            $prefs->setValue('display_cals', serialize($this->_displayCalendars));
+            if (strpos($calId, 'tasks/') === 0) {
+                $tasklists = [];
+                foreach ($this->_displayExternal as $id) {
+                    if (strpos($id, 'tasks/') === 0) {
+                        $tasklists[] = substr($id, 6);
+                    }
+                }
+                try {
+                    $registry->tasks->setDisplayedTasklists($tasklists);
+                } catch (Horde_Exception $e) {
+                }
+            }
+        } elseif (strncmp($calId, 'holiday_', 8) === 0) {
+            $calId = substr($calId, 8);
+            if (($key = array_search($calId, $this->_displayHolidaysInternal)) === false) {
+                $this->_displayHolidaysInternal[] = $calId;
+            } else {
+                unset($this->_displayHolidaysInternal[$key]);
+            }
+            $prefs->setValue('holiday_drivers', serialize($this->_displayHolidaysInternal));
+        } elseif (strncmp($calId, 'resource_', 9) === 0) {
+            $calId = substr($calId, 9);
+            if (($key = array_search($calId, $this->_displayResource)) === false) {
+                $this->_displayResource[] = $calId;
+            } else {
+                unset($this->_displayResource[$key]);
+            }
+            $prefs->setValue('display_resource_cals', serialize($this->_displayResource));
+        } elseif (($key = array_search($calId, $this->_displayCalendars)) === false) {
+            $this->_displayCalendars[] = $calId;
+        } else {
+            unset($this->_displayCalendars[$key]);
+        }
+
+        $prefs->setValue('display_cals', serialize($this->_displayCalendars));
     }
 
     /**
