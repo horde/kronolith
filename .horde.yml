@@ -29,10 +29,10 @@ authors:
     active: false
     role: lead
 version:
-  release: 5.0.0-RC5
+  release: 5.0.0
   api: 5.0.0alpha1
 state:
-  release: RC
+  release: stable
   api: alpha
 license:
   identifier: GPL-2.0-only
