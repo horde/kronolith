@@ -2706,7 +2706,12 @@ KronolithCore = {
 
         this.closeRedBox();
         this.quickClose();
-        this.redBoxOnDisplay = RedBox.onDisplay;
+        // Avoid re-wrapping onDisplay: if it is already our wrapper, keep the
+        // original handler already captured (prevents self-reference -> infinite
+        // recursion when the dialog is opened again before it was displayed).
+        if (!RedBox.onDisplay || !RedBox.onDisplay._kronolithWrap) {
+            this.redBoxOnDisplay = RedBox.onDisplay;
+        }
         RedBox.onDisplay = function() {
             if (this.redBoxOnDisplay) {
                 this.redBoxOnDisplay();
@@ -2716,6 +2721,7 @@ KronolithCore = {
             } catch(e) {}
             RedBox.onDisplay = this.redBoxOnDisplay;
         }.bind(this);
+        RedBox.onDisplay._kronolithWrap = true;
 
         this.openTab($('kronolithTaskForm').down('.tabset a.kronolithTabLink'));
         $('kronolithTaskForm').enable();
@@ -3103,7 +3109,12 @@ KronolithCore = {
             return;
         }
 
-        this.redBoxOnDisplay = RedBox.onDisplay;
+        // Avoid re-wrapping onDisplay: if it is already our wrapper, keep the
+        // original handler already captured (prevents self-reference -> infinite
+        // recursion when the dialog is opened again before it was displayed).
+        if (!RedBox.onDisplay || !RedBox.onDisplay._kronolithWrap) {
+            this.redBoxOnDisplay = RedBox.onDisplay;
+        }
         RedBox.onDisplay = function() {
             if (this.redBoxOnDisplay) {
                 this.redBoxOnDisplay();
@@ -3113,6 +3124,7 @@ KronolithCore = {
             } catch(e) {}
             RedBox.onDisplay = this.redBoxOnDisplay;
         }.bind(this);
+        RedBox.onDisplay._kronolithWrap = true;
 
         if ($('kronolithCalendarDialog')) {
             this.redBoxLoading = true;
@@ -3128,10 +3140,17 @@ KronolithCore = {
                         this.redBoxLoading = true;
                         RedBox.showHtml(r.chunk);
                         ['internal', 'tasklists'].each(function(type) {
-                            $('kronolithC' + type + 'PGList').observe('change', function() {
-                                $('kronolithC' + type + 'PG').setValue(1);
-                                this.permsClickHandler(type, 'G');
-                            }.bind(this));
+                            // Guard against a missing element: not all calendar
+                            // types render a PGList <select>. Calling observe() on
+                            // null threw and aborted the callback, leaving the
+                            // dialog empty.
+                            var pgList = $('kronolithC' + type + 'PGList');
+                            if (pgList) {
+                                pgList.observe('change', function() {
+                                    $('kronolithC' + type + 'PG').setValue(1);
+                                    this.permsClickHandler(type, 'G');
+                                }.bind(this));
+                            }
                         }, this);
                         this.editCalendarCallback(calendar);
                     } else {
@@ -5849,7 +5868,12 @@ KronolithCore = {
 
         this.closeRedBox();
         this.quickClose();
-        this.redBoxOnDisplay = RedBox.onDisplay;
+        // Avoid re-wrapping onDisplay: if it is already our wrapper, keep the
+        // original handler already captured (prevents self-reference -> infinite
+        // recursion when the dialog is opened again before it was displayed).
+        if (!RedBox.onDisplay || !RedBox.onDisplay._kronolithWrap) {
+            this.redBoxOnDisplay = RedBox.onDisplay;
+        }
         RedBox.onDisplay = function() {
             if (this.redBoxOnDisplay) {
                 this.redBoxOnDisplay();
@@ -5865,6 +5889,7 @@ KronolithCore = {
             }
             RedBox.onDisplay = this.redBoxOnDisplay;
         }.bind(this);
+        RedBox.onDisplay._kronolithWrap = true;
         this._ensureEventDialogInBody();
         this._resetEventAutoCompleters(['kronolithEventUsers', 'kronolithEventAttendees']);
         this.attendees = [];
