@@ -4626,7 +4626,7 @@ abstract class Kronolith_Event
         }
 
         if ($icons && $prefs->getValue('show_icons')) {
-            $icon_color = Horde_Image::brightness($this->_backgroundColor) < 128 ? 'fff' : '000';
+            $icon_color = Horde_Image::contrastColor($this->_backgroundColor, 'fff', '000');
             $status = '';
             if ($this->alarm) {
                 if ($this->alarm % 10080 == 0) {

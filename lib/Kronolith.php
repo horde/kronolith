@@ -3580,7 +3580,7 @@ class Kronolith
      */
     public static function foregroundColor($calendar)
     {
-        return Horde_Image::brightness(is_string($calendar) ? $calendar : self::backgroundColor($calendar)) < 128 ? '#fff' : '#000';
+        return Horde_Image::contrastColor(is_string($calendar) ? $calendar : self::backgroundColor($calendar), '#fff', '#000');
     }
 
     /**

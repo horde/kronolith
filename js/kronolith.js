@@ -3399,6 +3399,30 @@ KronolithCore = {
     },
 
     /**
+     * Returns '#fff' or '#000', whichever has the higher WCAG contrast ratio
+     * against the given background color. More accurate than the legacy YIQ
+     * brightness threshold, which mislabeled some saturated colors (e.g.
+     * magenta) as needing white text below the AA contrast minimum.
+     *
+     * @param string bg  The hex background color.
+     *
+     * @return string  '#fff' or '#000'.
+     */
+    contrastColor: function(bg)
+    {
+        var rgb = Color.hex2rgb(bg),
+            lum = function(c) {
+                c = c / 255;
+                return (c <= 0.03928) ? c / 12.92
+                                      : Math.pow((c + 0.055) / 1.055, 2.4);
+            },
+            l = 0.2126 * lum(rgb[0]) + 0.7152 * lum(rgb[1]) + 0.0722 * lum(rgb[2]),
+            cLight = (1.0 + 0.05) / (l + 0.05),
+            cDark = (l + 0.05) / (0.0 + 0.05);
+        return (cLight >= cDark) ? '#fff' : '#000';
+    },
+
+    /**
      * Updates the color field in a calendar dialog.
      *
      * @param string type   The calendar type.
@@ -3418,7 +3442,7 @@ KronolithCore = {
             .setValue(color)
             .setStyle({
                 backgroundColor: color,
-                color: Color.brightness(Color.hex2rgb(color)) < 125 ? '#fff' : '#000'
+                color: this.contrastColor(color)
             });
     },
 

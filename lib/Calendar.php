@@ -77,7 +77,7 @@ abstract class Kronolith_Calendar
      */
     public function foreground()
     {
-        return Horde_Image::brightness($this->background()) < 128 ? '#fff' : '#000';
+        return Horde_Image::contrastColor($this->background(), '#fff', '#000');
     }
 
     /**
