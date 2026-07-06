@@ -1958,15 +1958,7 @@ abstract class Kronolith_Event
         }
 
         // EAS 16.0 exception MODIFY often omits Timezone; use the series tz.
-        if (!$message->isGhosted('timezone') && !empty($message->timezone)) {
-            try {
-                $tz = $message->getTimezone();
-            } catch (Horde_Mapi_Exception $e) {
-                $tz = $this->timezone;
-            }
-        } else {
-            $tz = $this->timezone;
-        }
+        $tz = $message->getTimezone($this->timezone ?: date_default_timezone_get());
         if (empty($tz)) {
             $tz = date_default_timezone_get();
         }
@@ -2110,7 +2102,7 @@ abstract class Kronolith_Event
                 !empty($this->timezone) ? $this->timezone : date_default_timezone_get()
             );
         } else {
-            $tz = !$message->isGhosted('timezone') ? $message->getTimezone() : $this->timezone;
+            $tz = $message->getTimezone($this->timezone ?: date_default_timezone_get());
             if (empty($tz)) {
                 $tz = date_default_timezone_get();
             }
