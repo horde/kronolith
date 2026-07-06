@@ -2110,7 +2110,15 @@ abstract class Kronolith_Event
                 !empty($this->timezone) ? $this->timezone : date_default_timezone_get()
             );
         } else {
-            $tz = !$message->isGhosted('timezone') ? $message->getTimezone() : $this->timezone;
+            if (!$message->isGhosted('timezone') && !empty($message->timezone)) {
+                try {
+                    $tz = $message->getTimezone();
+                } catch (Horde_Mapi_Exception $e) {
+                    $tz = $this->timezone;
+                }
+            } else {
+                $tz = $this->timezone;
+            }
             if (empty($tz)) {
                 $tz = date_default_timezone_get();
             }
