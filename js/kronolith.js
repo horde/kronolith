@@ -988,6 +988,7 @@ KronolithCore = {
             .store('calendar', id)
             .store('calendarclass', type)
             .setStyle({ backgroundColor: cal.bg, color: cal.fg });
+        calendar.style.setProperty('--cal-color', cal.bg);
         calendar.insert(
             new Element('span', { className: 'horde-resource-refresh-' + cal.fg.substring(1) })
                 .setStyle({ backgroundColor: cal.bg, color: cal.fg })
@@ -1295,13 +1296,13 @@ KronolithCore = {
      */
     addCalendarLegend: function(type, id, cal)
     {
-        $('kronolith-legend').insert(
-            new Element('span')
-                .insert(cal.name.escapeHTML())
-                .store('calendar', id)
-                .store('calendarclass', type)
-                .setStyle({ backgroundColor: cal.bg, color: cal.fg })
-        );
+        var legendItem = new Element('span')
+            .insert(cal.name.escapeHTML())
+            .store('calendar', id)
+            .store('calendarclass', type)
+            .setStyle({ backgroundColor: cal.bg, color: cal.fg });
+        legendItem.style.setProperty('--cal-color', cal.bg);
+        $('kronolith-legend').insert(legendItem);
     },
 
     /**
@@ -1815,6 +1816,7 @@ KronolithCore = {
                 style = { backgroundColor: Kronolith.conf.calendars[calendar[0]][calendar[1]].bg,
                           color: Kronolith.conf.calendars[calendar[0]][calendar[1]].fg };
 
+            div.style.setProperty('--cal-color', Kronolith.conf.calendars[calendar[0]][calendar[1]].bg);
             div.writeAttribute('title', event.value.t);
 
             if (event.value.al) {
@@ -2101,6 +2103,7 @@ KronolithCore = {
                 div = _createElement(event)
                 .setStyle({ backgroundColor: Kronolith.conf.calendars[calendar[0]][calendar[1]].bg,
                             color: Kronolith.conf.calendars[calendar[0]][calendar[1]].fg });
+            div.style.setProperty('--cal-color', Kronolith.conf.calendars[calendar[0]][calendar[1]].bg);
             div.writeAttribute('title', event.value.t);
             if (before) {
                 before.insert({ before: div });
@@ -2123,6 +2126,7 @@ KronolithCore = {
             var div = _createElement(event)
                 .setStyle({ backgroundColor: Kronolith.conf.calendars[calendar[0]][calendar[1]].bg,
                             color: Kronolith.conf.calendars[calendar[0]][calendar[1]].fg });
+            div.style.setProperty('--cal-color', Kronolith.conf.calendars[calendar[0]][calendar[1]].bg);
             this.createAgendaDay(date);
             $('kronolithAgendaDay' + date).insert(div);
             break;
@@ -3996,6 +4000,7 @@ KronolithCore = {
                     if (element.retrieve('calendar') == id) {
                         var link = element.down('.horde-resource-link span');
                         element.setStyle(color);
+                        element.style.setProperty('--cal-color', cal.bg);
                         link.update(cal.name.escapeHTML());
                         this.addShareIcon(cal, element);
                         throw $break;
@@ -4004,6 +4009,7 @@ KronolithCore = {
                 this.kronolithBody.select('div').each(function(el) {
                     if (el.retrieve('calendar') == type + '|' + id) {
                         el.setStyle(color);
+                        el.style.setProperty('--cal-color', cal.bg);
                     }
                 });
                 legendSpan = $('kronolith-legend').select('span')
@@ -4013,6 +4019,7 @@ KronolithCore = {
                     });
                 if (legendSpan) {
                     legendSpan.setStyle(color).update(cal.name.escapeHTML());
+                    legendSpan.style.setProperty('--cal-color', cal.bg);
                 }
                 Kronolith.conf.calendars[type][id] = cal;
             } else {
