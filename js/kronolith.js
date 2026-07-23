@@ -5810,14 +5810,22 @@ KronolithCore = {
                               offMins: Math.round(event.value.offsetTop / step) * 10 });
             element = div;
         } else if (state.mode == 'resize-top') {
-            attributes = $H({ start: event.value.start });
+            /* Send a naive local-time string, not the Date object.
+             * JSON-serialising a Date yields UTC ISO, which the
+             * server double-converts if the event's stored timezone
+             * differs from the wall-clock timezone the user
+             * dragged in; result was event start/end shifted by the
+             * offset. Sending YYYY-MM-DD HH:MM:SS matches how the
+             * server's Horde_Date constructor accepts naive strings
+             * in date_default_timezone_get(). */
+            attributes = $H({ start: event.value.start.toString('yyyy-MM-dd HH:mm:ss') });
             element = div;
         } else if (state.mode == 'resize-bottom') {
-            attributes = $H({ end: event.value.end });
+            attributes = $H({ end: event.value.end.toString('yyyy-MM-dd HH:mm:ss') });
             element = div;
         } else {
-            attributes = $H({ start: event.value.start,
-                              end: event.value.end });
+            attributes = $H({ start: event.value.start.toString('yyyy-MM-dd HH:mm:ss'),
+                              end: event.value.end.toString('yyyy-MM-dd HH:mm:ss') });
             element = div;
         }
         if (event.value.r) {
