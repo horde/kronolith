@@ -21,7 +21,7 @@ class Kronolith_Ajax
     {
         global $page_output;
 
-        $page_output->addScriptFile('dragdrop2.js');
+        $page_output->addScriptFile('pointerdrag.js', 'horde');
         $page_output->addScriptFile('redbox.js', 'horde');
         $page_output->addScriptFile('tooltips.js', 'horde');
         $page_output->addScriptFile('colorpicker.js', 'horde');

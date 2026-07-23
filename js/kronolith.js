@@ -520,7 +520,7 @@ KronolithCore = {
                     td.classList.add('kronolith-today');
                     this.addTimeMarker('kronolithEvents' + what + dateString);
                 }
-                new Drop(td.down('div'));
+                new HordeDroppable(td.down('div'));
                 div = div.next('div');
                 th = th.next('td');
                 td = td.next('td');
@@ -693,7 +693,7 @@ KronolithCore = {
             if (dateString == today) {
                 cell.classList.add('kronolith-today');
             }
-            new Drop(cell);
+            new HordeDroppable(cell);
             cell.store('date', dateString)
                 .down('.kronolith-day')
                 .store('date', dateString)
@@ -1840,24 +1840,26 @@ KronolithCore = {
                                 minLeft = weekHead.down('.kronolith-first-col').getWidth() + this[storage].spacing + (parseInt(div.getStyle('marginLeft'), 10) || 0),
                                 minTop = weekHead.down('thead').getHeight() + this[storage].spacing + (parseInt(div.getStyle('marginTop'), 10) || 0),
                                 maxLeft = weekHead.getWidth() - layout.get('margin-box-width'),
-                                maxTop = weekHead.down('thead').getHeight() + weekHead.down('.kronolith-all-day').getHeight(),
-                                opts = {
-                                    threshold: 5,
-                                    parentElement: function() {
-                                        return $('kronolithView' + what).down('.kronolith-view-head');
-                                    },
-                                    snap: function(x, y) {
-                                        return [Math.min(Math.max(x, minLeft), maxLeft),
-                                                Math.min(Math.max(y, minTop), maxTop - div.getHeight())];
-                                    }
-                                };
-                            var d = new Drag(event.value.nodeId, opts);
-                            div.store('drags', []);
-                            Object.extend(d, {
+                                maxTop = weekHead.down('thead').getHeight() + weekHead.down('.kronolith-all-day').getHeight();
+                            /* Kronolith's drag/drop toolkit is a thin
+                             * pointer-events wrapper. All coordinate
+                             * math (snap, clamp, quantize) is done
+                             * in the Drag:start/move handlers below.
+                             * Consumer-side constants get stashed on
+                             * the source element and copied into the
+                             * drag's `state` bag at Drag:start. */
+                            $(event.value.nodeId).store('kronDrag', {
+                                mode: 'allday-move',
                                 event: event,
                                 innerDiv: new Element('div'),
-                                midnight: this.parseDate(date)
+                                midnight: this.parseDate(date),
+                                minLeft: minLeft,
+                                maxLeft: maxLeft,
+                                minTop: minTop,
+                                maxTop: maxTop
                             });
+                            var d = new HordeDraggable(event.value.nodeId, { threshold: 5 });
+                            div.store('drags', []);
                             div.retrieve('drags').push(d);
                         }
                     }
@@ -1959,43 +1961,41 @@ KronolithCore = {
                     // Height of the whole event div
                 var divHeight = div.getHeight(),
                     // Maximum height of the whole event div
-                    maxDiv = 24 * this[storage].height - divHeight,
-                    // Whether the top dragger is dragged, vs. the bottom
-                    // dragger
-                    opts = {
-                        threshold: 5,
-                        constraint: 'vertical',
-                        scroll: this.kronolithBody,
-                        nodrop: true,
-                        parentElement: function() {
-                            return parentElement;
-                        }
-                    };
+                    maxDiv = 24 * this[storage].height - divHeight;
 
                 if (draggerTop) {
-                    opts.snap = function(x, y) {
-                        y = Math.max(0, step * (Math.min(maxTop, y - this.scrollTop) / step | 0));
-                        return [0, y];
-                    }.bind(this);
-                    var d = new Drag(event.value.nodeId + 'top', opts);
-                    Object.extend(d, {
+                    $(event.value.nodeId + 'top').store('kronDrag', {
+                        mode: 'resize-top',
                         event: event,
                         innerDiv: innerDiv,
-                        midnight: midnight
+                        midnight: midnight,
+                        step: step,
+                        maxTop: maxTop
+                    });
+                    var d = new HordeDraggable(event.value.nodeId + 'top', {
+                        threshold: 5,
+                        nodrop: true,
+                        scroll: this.kronolithBody
                     });
                     div.retrieve('drags').push(d);
                 }
 
                 if (draggerBottom) {
-                    opts.snap = function(x, y) {
-                        y = Math.min(maxBottom + dragBottomHeight + KronolithCore[storage].spacing, step * ((Math.max(minBottom, y - this.scrollTop) + dragBottomHeight + KronolithCore[storage].spacing) / step | 0)) - dragBottomHeight - KronolithCore[storage].spacing;
-                        return [0, y];
-                    }.bind(this);
-                    var d = new Drag(event.value.nodeId + 'bottom', opts);
-                    Object.extend(d, {
+                    $(event.value.nodeId + 'bottom').store('kronDrag', {
+                        mode: 'resize-bottom',
                         event: event,
                         innerDiv: innerDiv,
-                        midnight: midnight
+                        midnight: midnight,
+                        step: step,
+                        minBottom: minBottom,
+                        maxBottom: maxBottom,
+                        dragBottomHeight: dragBottomHeight,
+                        spacing: this[storage].spacing
+                    });
+                    var d = new HordeDraggable(event.value.nodeId + 'bottom', {
+                        threshold: 5,
+                        nodrop: true,
+                        scroll: this.kronolithBody
                     });
                     div.retrieve('drags').push(d);
                 }
@@ -2006,24 +2006,23 @@ KronolithCore = {
                     maxLeft = this.eventsWeek['kronolithEvents' + what + dates[1].dateString()].offsetLeft - this.eventsWeek['kronolithEvents' + what + date].offsetLeft;
                     stepX = (maxLeft - minLeft) / (view == 'week' ? 6 : 4);
                 }
-                var d = new Drag(div, {
-                    threshold: 5,
-                    nodrop: true,
-                    parentElement: function() { return parentElement; },
-                    snap: function(x, y) {
-                        x = (view == 'week' || view == 'workweek')
-                            ? Math.max(minLeft, stepX * ((Math.min(maxLeft, x - (x < 0 ? stepX : 0)) + stepX / 2) / stepX | 0))
-                            : 0;
-                        y = Math.max(0, step * (Math.min(maxDiv, y - this.scrollTop) / step | 0));
-                        return [x, y];
-                    }.bind(this)
-                });
-                Object.extend(d, {
+                div.store('kronDrag', {
+                    mode: 'move',
+                    event: event,
+                    innerDiv: innerDiv,
+                    midnight: midnight,
+                    step: step,
+                    stepX: stepX,
+                    minLeft: minLeft,
+                    maxLeft: maxLeft,
+                    maxDiv: maxDiv,
                     divHeight: divHeight,
                     startTop: div.offsetTop,
-                    event: event,
-                    midnight: midnight,
-                    stepX: stepX
+                    view: view
+                });
+                var d = new HordeDraggable(div, {
+                    threshold: 5,
+                    nodrop: true
                 });
                 div.retrieve('drags').push(d);
             }
@@ -2112,7 +2111,14 @@ KronolithCore = {
             }
             if (event.value.pe) {
                 div.setStyle({ cursor: 'move' });
-                new Drag(event.value.nodeId, { threshold: 5, parentElement: function() { return $('kronolith-month-body'); }, snapToParent: true });
+                $(event.value.nodeId).store('kronDrag', {
+                    mode: 'month-move',
+                    event: event
+                });
+                new HordeDraggable(event.value.nodeId, {
+                    threshold: 5,
+                    ghosting: true
+                });
             }
             if (Kronolith.conf.max_events) {
                 var more = monthDay.down('.kronolithMore');
@@ -5538,8 +5544,8 @@ KronolithCore = {
      */
     onDrop: function(e)
     {
-        var drop = e.element(),
-            el = e.memo.element;
+        var drop = e.detail.targetEl,
+            el = e.detail.source;
 
         if (drop == el.up()) {
             return;
@@ -5636,19 +5642,57 @@ KronolithCore = {
             return;
         }
 
-        var elt = e.element();
-
-        if (elt.classList.contains('kronolithDragger')) {
-            elt.up().classList.add('kronolith-selected');
-            DragDrop.Drags.getDrag(elt).top = elt.cumulativeOffset().top;
-        } else if (elt.classList.contains('kronolithEditable')) {
-            elt.addClassName('kronolith-selected').setStyle({ left: 0, width: (this.view == 'week' || this.view == 'workweek') ? '90%' : '95%', zIndex: 1 });
+        var elt = e.detail.source,
+            state = e.detail.state,
+            kd = elt.retrieve('kronDrag');
+        if (!kd) {
+            return;
         }
 
-        this.scrollTop = $('kronolithView' + this.view.capitalize())
-            .down('.kronolithViewBody')
-            .scrollTop;
-        this.scrollLast = this.scrollTop;
+        /* Copy consumer-side constants into the drag's state bag.
+         * The state bag persists through Drag:move / Drag:end so we
+         * don't have to look up kronDrag again per move. */
+        Object.extend(state, kd);
+
+        /* Snapshot the source's initial geometry in its
+         * offsetParent frame (the events grid). Every Drag:move
+         * computes the new top/height from live clientX/clientY plus
+         * a fresh read of the events body's viewportOffset and
+         * scrollTop; only these snapshots are captured at start. */
+        var body = $('kronolithView' + this.view.capitalize()).down('.kronolithViewBody'),
+            div = (state.mode == 'resize-top' || state.mode == 'resize-bottom')
+                ? elt.up() : elt,
+            bodyRect = body.getBoundingClientRect();
+        state.div = div;
+        state.body = body;
+        state.startTop = div.offsetTop;
+        state.startLeft = div.offsetLeft;
+        state.startHeight = div.offsetHeight;
+        state.startBottom = state.startTop + state.startHeight;
+        /* Cursor's offset inside the drag source, expressed in
+         * events-grid coordinates. Fixed for the drag; the ghost
+         * (or the source itself, since kronolith writes styles on
+         * the source directly) tracks the cursor while preserving
+         * this offset. */
+        state.grabInsideSource =
+            e.detail.clientY - bodyRect.top + body.scrollTop
+            - (state.mode == 'resize-top' || state.mode == 'resize-bottom'
+                ? elt.offsetTop + div.offsetTop
+                : state.startTop);
+        /* Same for X, needed by move mode in week/workweek. */
+        state.grabInsideSourceX =
+            e.detail.clientX - bodyRect.left + body.scrollLeft
+            - state.startLeft;
+
+        if (state.mode == 'resize-top' || state.mode == 'resize-bottom') {
+            div.classList.add('kronolith-selected');
+        } else if (state.mode == 'move') {
+            div.addClassName('kronolith-selected').setStyle({
+                left: 0,
+                width: (this.view == 'week' || this.view == 'workweek') ? '90%' : '95%',
+                zIndex: 1
+            });
+        }
     },
 
     onDrag: function(e)
@@ -5657,66 +5701,76 @@ KronolithCore = {
             return;
         }
 
-        var elt = e.element(),
-            drag = DragDrop.Drags.getDrag(elt);
+        var state = e.detail.state;
+        if (!state || !state.event) {
+            return;
+        }
+
+        /* Live coordinate reads. bodyRect is a fresh read each move
+         * so page-scroll or auto-scroll of the events body both
+         * compose correctly with no snapshot state to go stale. */
+        var body = state.body,
+            bodyRect = body.getBoundingClientRect(),
+            cursorGridY = e.detail.clientY - bodyRect.top + body.scrollTop,
+            cursorGridX = e.detail.clientX - bodyRect.left + body.scrollLeft,
+            div = state.div,
+            event = state.event.value,
             storage = this.view + 'Sizes',
-            step = this[storage].height / 6;
+            step = state.step;
 
-            if (!drag.event) {
-                return;
-            }
-
-        var event = drag.event.value;
-
-        if (elt.classList.contains('kronolithDragger')) {
-            // Resizing the event.
-            var div = elt.up(),
-                top = drag.ghost.cumulativeOffset().top,
-                scrollTop = $('kronolithView' + this.view.capitalize()).down('.kronolithViewBody').scrollTop,
-                offset = 0,
-                height;
-
-            // Check if view has scrolled since last call.
-            if (scrollTop != this.scrollLast) {
-                offset = scrollTop - this.scrollLast;
-                this.scrollLast = scrollTop;
-            }
-            if (elt.classList.contains('kronolithDraggerTop')) {
-                offset += top - drag.top;
-                height = div.offsetHeight - offset;
-                div.setStyle({
-                    top: (div.offsetTop + offset) + 'px'
-                });
-                offset = drag.ghost.offsetTop;
-                drag.top = top;
-            } else {
-                offset += top - drag.top;
-                height = div.offsetHeight + offset;
-                offset = div.offsetTop;
-                drag.top = top;
-            }
+        if (state.mode == 'resize-top') {
+            var newTop = cursorGridY - state.grabInsideSource;
+            newTop = Math.max(0, Math.min(state.maxTop,
+                Math.round(newTop / step) * step));
+            var newHeight = state.startBottom - newTop;
             div.setStyle({
-                height: height + 'px'
+                top: newTop + 'px',
+                height: newHeight + 'px'
             });
-
-            this.calculateEventDates(event, storage, step, offset, height);
-            drag.innerDiv.update('(' + event.start.toString(Kronolith.conf.time_format) + ' - ' + event.end.toString(Kronolith.conf.time_format) + ') ' + event.t.escapeHTML());
-        } else if (elt.classList.contains('kronolithEditable')) {
-            // Moving the event.
-            if (typeof drag.innerDiv === 'undefined') {
-                drag.innerDiv = drag.ghost.down('.kronolith-event-info');
+            this.calculateEventDates(event, storage, step, newTop, newHeight);
+            state.innerDiv.update('(' + event.start.toString(Kronolith.conf.time_format) + ' - ' + event.end.toString(Kronolith.conf.time_format) + ') ' + event.t.escapeHTML());
+        } else if (state.mode == 'resize-bottom') {
+            var newBottomEdge = cursorGridY - state.grabInsideSource;
+            /* Snap the bottom-handle top edge to the hour grid, in
+             * the same coordinate frame the old dragdrop2 snap
+             * function used. */
+            newBottomEdge = Math.min(
+                state.maxBottom + state.dragBottomHeight + state.spacing,
+                Math.round((newBottomEdge + state.dragBottomHeight + state.spacing) / step) * step
+            ) - state.dragBottomHeight - state.spacing;
+            newBottomEdge = Math.max(state.minBottom, newBottomEdge);
+            var newHeight = newBottomEdge - state.startTop;
+            div.setStyle({ height: newHeight + 'px' });
+            this.calculateEventDates(event, storage, step, state.startTop, newHeight);
+            state.innerDiv.update('(' + event.start.toString(Kronolith.conf.time_format) + ' - ' + event.end.toString(Kronolith.conf.time_format) + ') ' + event.t.escapeHTML());
+        } else if (state.mode == 'move') {
+            var newTop = cursorGridY - state.grabInsideSource;
+            newTop = Math.max(0, Math.min(state.maxDiv,
+                Math.round(newTop / step) * step));
+            var newLeft = 0, offsetX = 0;
+            if (state.view == 'week' || state.view == 'workweek') {
+                newLeft = cursorGridX - state.grabInsideSourceX;
+                newLeft = Math.max(state.minLeft, Math.min(state.maxLeft,
+                    Math.round(newLeft / state.stepX) * state.stepX));
+                offsetX = Math.round(newLeft / state.stepX);
             }
-            if ((this.view == 'week') || (this.view == 'workweek')) {
-                var offsetX = Math.round(drag.ghost.offsetLeft / drag.stepX);
-                event.offsetDays = offsetX;
-                this.calculateEventDates(event, storage, step, drag.ghost.offsetTop, drag.divHeight, event.start.clone().addDays(offsetX), event.end.clone().addDays(offsetX));
+            div.setStyle({ top: newTop + 'px', left: newLeft + 'px' });
+            event.offsetDays = offsetX;
+            event.offsetTop = newTop - state.startTop;
+            if (offsetX) {
+                this.calculateEventDates(event, storage, step, newTop, state.divHeight, event.start.clone().addDays(offsetX), event.end.clone().addDays(offsetX));
             } else {
-                event.offsetDays = 0;
-                this.calculateEventDates(event, storage, step, drag.ghost.offsetTop, drag.divHeight);
+                this.calculateEventDates(event, storage, step, newTop, state.divHeight);
             }
-            event.offsetTop = drag.ghost.offsetTop - drag.startTop;
-            drag.innerDiv.update('(' + event.start.toString(Kronolith.conf.time_format) + ' - ' + event.end.toString(Kronolith.conf.time_format) + ') ' + event.t.escapeHTML());
-            elt.clonePosition(drag.ghost, { offsetLeft: (this.view == 'week' || this.view == 'workweek') ? -2 : 0 });
+            state.innerDiv.update('(' + event.start.toString(Kronolith.conf.time_format) + ' - ' + event.end.toString(Kronolith.conf.time_format) + ') ' + event.t.escapeHTML());
+        } else if (state.mode == 'allday-move') {
+            /* All-day event bar: pure clamp inside the view header
+             * rectangle. No hour-grid snapping. */
+            var newX = e.detail.clientX - bodyRect.left - state.grabInsideSourceX,
+                newY = e.detail.clientY - bodyRect.top - state.grabInsideSource;
+            newX = Math.max(state.minLeft, Math.min(state.maxLeft, newX));
+            newY = Math.max(state.minTop, Math.min(state.maxTop - div.offsetHeight, newY));
+            div.setStyle({ left: newX + 'px', top: newY + 'px' });
         }
     },
 
@@ -5726,22 +5780,20 @@ KronolithCore = {
             return;
         }
 
-        if (!e.element().classList.contains('kronolithDragger') &&
-            !e.element().classList.contains('kronolithEditable')) {
+        var state = e.detail.state;
+        if (!state || !state.event) {
             return;
         }
-
-        var div = e.element(),
-            drag = DragDrop.Drags.getDrag(div),
-            event = drag.event;
-
+        var event = state.event,
+            div = state.div,
+            source = e.detail.source;
 
         if (event.value.al) {
             return;
         }
-        var date = drag.midnight,
+        var date = state.midnight,
             storage = this.view + 'Sizes',
-            step = this[storage].height / 6,
+            step = state.step,
             dates = this.viewDates(date, this.view),
             start = dates[0].dateString(),
             end = dates[1].dateString(),
@@ -5749,20 +5801,20 @@ KronolithCore = {
             element, attributes;
 
         div.classList.remove('kronolith-selected');
-        if (typeof drag.innerDiv !== 'undefined') {
-            this.setEventText(drag.innerDiv, event.value);
+        if (state.innerDiv) {
+            this.setEventText(state.innerDiv, event.value);
         }
         this.startLoading(event.value.calendar, sig);
-        if (typeof event.value.offsetTop !== 'undefined') {
+        if (state.mode == 'move') {
             attributes = $H({ offDays: event.value.offsetDays,
                               offMins: Math.round(event.value.offsetTop / step) * 10 });
             element = div;
-        } else if (div.classList.contains('kronolithDraggerTop')) {
+        } else if (state.mode == 'resize-top') {
             attributes = $H({ start: event.value.start });
-            element = div.up();
-        } else if (div.classList.contains('kronolithDraggerBottom')) {
+            element = div;
+        } else if (state.mode == 'resize-bottom') {
             attributes = $H({ end: event.value.end });
-            element = div.up();
+            element = div;
         } else {
             attributes = $H({ start: event.value.start,
                               end: event.value.end });
@@ -8087,10 +8139,10 @@ KronolithCore = {
 
 /* Initialize global event handlers. */
 document.observe('dom:loaded', KronolithCore.onDomLoad.bind(KronolithCore));
-document.observe('DragDrop2:drag', KronolithCore.onDrag.bindAsEventListener(KronolithCore));
-document.observe('DragDrop2:drop', KronolithCore.onDrop.bindAsEventListener(KronolithCore));
-document.observe('DragDrop2:end', KronolithCore.onDragEnd.bindAsEventListener(KronolithCore));
-document.observe('DragDrop2:start', KronolithCore.onDragStart.bindAsEventListener(KronolithCore));
+document.addEventListener('Drag:move', KronolithCore.onDrag.bind(KronolithCore));
+document.addEventListener('Drag:drop', KronolithCore.onDrop.bind(KronolithCore));
+document.addEventListener('Drag:end', KronolithCore.onDragEnd.bind(KronolithCore));
+document.addEventListener('Drag:start', KronolithCore.onDragStart.bind(KronolithCore));
 document.observe('Horde_Calendar:select', KronolithCore.datePickerHandler.bindAsEventListener(KronolithCore));
 document.observe('FormGhost:reset', KronolithCore.searchReset.bindAsEventListener(KronolithCore));
 document.observe('FormGhost:submit', KronolithCore.searchSubmit.bindAsEventListener(KronolithCore));
