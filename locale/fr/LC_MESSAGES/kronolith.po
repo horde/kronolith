@@ -142,12 +142,12 @@ msgstr "%s fichiers importés avec succès"
 #: templates/share/notification.plain.php:5
 #, php-format
 msgid "%s has assigned the ownership of the calendar \"%s\" to you."
-msgstr "%s vous a assigné la propriété de le calendrier \"%s\"."
+msgstr "%s vous a assigné la propriété du calendrier \"%s\"."
 
 #: templates/share/notification.html.php:13
 #, php-format
 msgid "%s has assigned the ownership of the calendar %s to you."
-msgstr "%s vous a assigné la propriété de le calendrier %s."
+msgstr "%s vous a assigné la propriété du calendrier %s."
 
 #: lib/Kronolith.php:2018
 #, php-format
@@ -637,7 +637,7 @@ msgstr "Fichier calendrier ICS"
 
 #: lib/Block/Summary.php:18
 msgid "Calendar Summary"
-msgstr "Sommaire de le calendrier"
+msgstr "Sommaire du calendrier"
 
 #: lib/Api.php:452 lib/Application.php:1118
 msgid "Calendar does not exist or no permission to delete"
@@ -662,7 +662,7 @@ msgstr "Calendrier de %s"
 
 #: templates/chunks/permissions.inc:57
 msgid "Calendar owner"
-msgstr "Propriétaire de le calendrier"
+msgstr "Propriétaire du calendrier"
 
 #: data.php:154
 msgid "Calendar successfully purged."
@@ -670,7 +670,7 @@ msgstr "Le calendrier a été purgé avec succès."
 
 #: templates/chunks/calendar.php:61
 msgid "Calendar title"
-msgstr "Titre de le calendrier"
+msgstr "Titre du calendrier"
 
 #: templates/update/notification.html.php:18
 #: templates/update/notification.plain.php:4
@@ -1601,7 +1601,7 @@ msgstr "Importer/Exporter un calendrier"
 
 #: lib/Ajax.php:163
 msgid "Importing calendar data. This may take a while..."
-msgstr "Import des données de le calendrier. Cela peut prendre du temps..."
+msgstr "Import des données du calendrier. Cela peut prendre du temps..."
 
 #: templates/chunks/calendar.php:157
 #, php-format
@@ -1664,7 +1664,7 @@ msgstr "Semaine précédente"
 
 #: templates/chunks/calendar.php:142
 msgid "Learn how to embed other calendar views."
-msgstr "Apprenez à intégrer d'autres vues de le calendrier."
+msgstr "Apprenez à intégrer d'autres vues du calendrier."
 
 #: templates/chunks/calendar.php:124 templates/chunks/calendar.php:234
 msgid "Learn how to subscribe via CalDAV from calendar clients."
@@ -1841,7 +1841,7 @@ msgstr "Nom"
 
 #: templates/dynamic/sidebar.html.php:33
 msgid "New Calendar"
-msgstr "Nouvel Calendrier"
+msgstr "Nouveau Calendrier"
 
 #: lib/Application.php:472
 msgid "New Event"
@@ -1857,7 +1857,7 @@ msgid ""
 "New calendar created and automatically shared with the following group(s): "
 "%s."
 msgstr ""
-"Nouvel calendrier créé et partagé automatiquement avec le(s) groupe(s) "
+"Nouveau calendrier créé et partagé automatiquement avec le(s) groupe(s) "
 "suivant : %s."
 
 #: templates/buttonbar.html.php:8 templates/data/import.inc:35
@@ -2263,7 +2263,7 @@ msgstr ""
 #: lib/Form/UnsubscribeRemoteCalendar.php:26
 #, php-format
 msgid "Really unsubscribe from the calendar \"%s\" (%s)?"
-msgstr "Se désincrire réellement de le calendrier \"%s\" (%s) ?"
+msgstr "Se désinscrire réellement du calendrier \"%s\" (%s) ?"
 
 #: templates/edit/edit.inc:362 templates/view/view.inc:131
 msgid "Recur Until"
@@ -2783,7 +2783,7 @@ msgstr "Montrer la légende des disponibilités ?"
 msgid "Show delete, alarm, and recurrence icons in calendar views?"
 msgstr ""
 "Montrer les icônes de suppression, d'alarme et de répétition dans les vues "
-"de le calendrier ?"
+"du calendrier ?"
 
 #: lib/Block/Monthlist.php:35 lib/Block/Prevmonthlist.php:33
 #: lib/Block/Summary.php:54
@@ -2988,12 +2988,12 @@ msgstr "Le fichier %s ne contient aucun événement."
 
 #: lib/Driver.php:66
 msgid "The Calendar backend is not currently available."
-msgstr "Le moteur de le calendrier n'est pas disponible actuellement."
+msgstr "Le moteur du calendrier n'est pas disponible actuellement."
 
 #: lib/Factory/Driver.php:113
 #, php-format
 msgid "The Calendar backend is not currently available: %s"
-msgstr "Le moteur de le calendrier n'est pas disponible actuellement : %s"
+msgstr "Le moteur du calendrier n'est pas disponible actuellement : %s"
 
 #: lib/Application.php:69
 msgid ""
@@ -3056,11 +3056,11 @@ msgstr "Le calendrier n'a pas pu être trouvé."
 #: data.php:156
 #, php-format
 msgid "The calendar could not be purged: %s"
-msgstr "Purge impossible de le calendrier : « %s »"
+msgstr "Purge impossible du calendrier : « %s »"
 
 #: lib/Ajax.php:167
 msgid "The calendar title must not be empty."
-msgstr "Le titre de le calendrier ne doit pas être vide."
+msgstr "Le titre du calendrier ne doit pas être vide."
 
 #: templates/javascript_defs.php:22
 msgid "The end date must be later than the start date."
@@ -3437,7 +3437,7 @@ msgstr "Suppression impossible de « %s » : %s"
 #: lib/Api.php:474
 #, php-format
 msgid "Unable to delete calendar \"%s\": %s"
-msgstr "Suppression impossible de le calendrier « %s » : %s"
+msgstr "Suppression impossible du calendrier « %s » : %s"
 
 #: lib/Api.php:1155
 msgid ""
