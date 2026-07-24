@@ -1841,7 +1841,7 @@ msgstr "Nom"
 
 #: templates/dynamic/sidebar.html.php:33
 msgid "New Calendar"
-msgstr "Nouveau Calendrier"
+msgstr "Nouveau calendrier"
 
 #: lib/Application.php:472
 msgid "New Event"
