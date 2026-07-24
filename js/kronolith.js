@@ -1858,7 +1858,14 @@ KronolithCore = {
                                 minTop: minTop,
                                 maxTop: maxTop
                             });
-                            var d = new HordeDraggable(event.value.nodeId, { threshold: 5 });
+                            /* ghosting: true so the source's position:
+                             * relative anchor stays inside its cell
+                             * (leaving elementFromPoint free to find
+                             * the target day cell under the cursor)
+                             * while a viewport-fixed clone provides
+                             * the visible drag feedback. See
+                             * horde/kronolith#76 review. */
+                            var d = new HordeDraggable(event.value.nodeId, { threshold: 5, ghosting: true });
                             div.store('drags', []);
                             div.retrieve('drags').push(d);
                         }
@@ -5763,15 +5770,12 @@ KronolithCore = {
                 this.calculateEventDates(event, storage, step, newTop, state.divHeight);
             }
             state.innerDiv.update('(' + event.start.toString(Kronolith.conf.time_format) + ' - ' + event.end.toString(Kronolith.conf.time_format) + ') ' + event.t.escapeHTML());
-        } else if (state.mode == 'allday-move') {
-            /* All-day event bar: pure clamp inside the view header
-             * rectangle. No hour-grid snapping. */
-            var newX = e.detail.clientX - bodyRect.left - state.grabInsideSourceX,
-                newY = e.detail.clientY - bodyRect.top - state.grabInsideSource;
-            newX = Math.max(state.minLeft, Math.min(state.maxLeft, newX));
-            newY = Math.max(state.minTop, Math.min(state.maxTop - div.offsetHeight, newY));
-            div.setStyle({ left: newX + 'px', top: newY + 'px' });
         }
+        /* allday-move has no move handler: the ghost (ghosting:true
+         * on the Draggable) provides visual feedback, and onDrop's
+         * elementFromPoint + closest('.horde-drop-target') resolves
+         * the target day cell for persistence. The source stays
+         * pinned in its cell, which is what we want. */
     },
 
     onDragEnd: function(e)
