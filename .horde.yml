@@ -82,7 +82,7 @@ dependencies:
     composer:
       horde/nag: ^5
       horde/timeobjects: ^3
-      horde/activesync: ^3
+      horde/activesync: ^3.3
       horde/backup: ^2
       horde/db: ^3
       horde/openxchange: ^2
@@ -93,7 +93,7 @@ dependencies:
     composer:
       horde/nag: ^5
       horde/timeobjects: ^3
-      horde/activesync: ^3
+      horde/activesync: ^3.3
       horde/backup: ^2
       horde/db: ^3
       horde/openxchange: ^2
