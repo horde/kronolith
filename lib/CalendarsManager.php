@@ -1,7 +1,7 @@
 <?php
 
 use Horde\Util\Util;
-
+use Horde\Kronolith\KronolithConfig;
 /**
  * Copyright 2013-2026 Horde LLC (http://www.horde.org/)
  *
@@ -103,6 +103,8 @@ class Kronolith_CalendarsManager
      */
     protected $_displayExternal = false;
 
+    private KronolithConfig $kronolithConfig;
+
     /**
      * Const'r
      * Sets up various display lists and session variables:
@@ -126,8 +128,13 @@ class Kronolith_CalendarsManager
      */
     public function __construct($user = null)
     {
+        // See horde/kronolith#78 and #79
+        // TODO: In H7 this should be injected via the constructor rather than using the global injector as a service locator.
+        $this->kronolithConfig = $GLOBALS['injector']->get(KronolithConfig::class);
+
         $emptyUser = false;
         if (empty($user)) {
+            // TODO: Use the modern session accessors instead of legacy Horde_Registry
             $user = $GLOBALS['registry']->getAuth();
             $emptyUser = true;
         }
@@ -290,7 +297,7 @@ class Kronolith_CalendarsManager
                 'display_external_cals' => 'displayExternal',
                 'holiday_drivers' => 'displayHolidaysInternal'];
 
-            if (!empty($GLOBALS['conf']['resource']['driver'])) {
+            if (!empty($this->kronolithConfig->get('resources.enabled'))) {
                 $display_prefs['display_resource_cals'] = 'displayResource';
             }
 
@@ -305,7 +312,7 @@ class Kronolith_CalendarsManager
             // Run through getDisplayExternal to trim any that no longer exist.
             $this->_getDisplayExternal();
 
-            if (empty($conf['holidays']['enable'])) {
+            if (empty($this->kronolithConfig->get('holidays.enable'))) {
                 $this->_displayHolidays = [];
                 $this->_displayHolidaysInternal = [];
             }
@@ -608,7 +615,7 @@ class Kronolith_CalendarsManager
     protected function _getAllResource()
     {
         $this->_allResource = [];
-        if (!empty($GLOBALS['conf']['resources']['enabled'])) {
+        if (!empty($this->kronolithConfig->get('resources.enabled'))) {
             foreach (Kronolith::getDriver('Resource')->listResources(Horde_Perms::READ, ['isgroup' => 0]) as $resource) {
                 $rcal = new Kronolith_Calendar_Resource([
                     'resource' => $resource,
