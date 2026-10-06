@@ -473,7 +473,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             }
             $url = $this->_getUrl($eventId);
             try {
-                $response = $this->_getClient($url)->request('GET');
+                $response = $this->_getClient($url)->request('GET', $url);
             } catch (Sabre\HTTP\ClientException $e) {
                 throw new Kronolith_Exception($e);
             } catch (Sabre\DAV\Exception $e) {
@@ -601,7 +601,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             return $this->_getClient($url)
                 ->request(
                     'PUT',
-                    '',
+                    $url,
                     $ical->exportvCalendar(),
                     ['Content-Type' => 'text/calendar']
                 );
@@ -645,7 +645,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
 
         $url = $this->_getUrl($eventId);
         try {
-            $response = $this->_getClient($url)->request('DELETE');
+            $response = $this->_getClient($url)->request('DELETE', $url);
         } catch (Sabre\HTTP\ClientException $e) {
             Horde::log($e, 'INFO');
             throw new Kronolith_Exception($e);
@@ -696,7 +696,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
 
         $error = sprintf(_("Could not open %s"), $url);
         try {
-            $response = $this->_getClient($url)->request('GET');
+            $response = $this->_getClient($url)->request('GET', $url);
             if ($response['statusCode'] != 200) {
                 throw new Kronolith_Exception($error, $response['statusCode']);
             }
@@ -950,7 +950,7 @@ class Kronolith_Driver_Ical extends Kronolith_Driver
             $response = $this->_getClient($url)
                 ->request(
                     $method,
-                    '',
+                    $url,
                     $xml ? $xml->outputMemory() : null,
                     array_merge(
                         ['Cache-Control' => 'no-cache',
