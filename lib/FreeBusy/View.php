@@ -297,7 +297,9 @@ abstract class Kronolith_FreeBusy_View
     protected function _getBlocks(Horde_View $view, $member, $periods, $blockName, $label)
     {
         reset($periods);
-        [$periodStart, $periodEnd] = each($periods);
+        $periodStart = key($periods);
+        $periodEnd = current($periods);
+        next($periods);
 
         $blocks = '';
         foreach ($this->_timeBlocks as $span) {
@@ -311,8 +313,14 @@ abstract class Kronolith_FreeBusy_View
                 continue;
             }
 
-            while ($start > $periodEnd
-                   && [$periodStart, $periodEnd] = each($periods));
+            while ($start > $periodEnd) {
+                $periodStart = key($periods);
+                $periodEnd = current($periods);
+                if ($periodStart === false) {
+                    break;
+                }
+                next($periods);
+            }
 
             if (($periodStart <= $start && $periodEnd >= $start)
                 || ($periodStart <= $end && $periodEnd >= $end)
