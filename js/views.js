@@ -14,11 +14,20 @@ function ShowTab(tab)
         if (c.id == 'tab' + tab) {
             c.classList.add('horde-active');
             t.hidden = false;
+            t.style.display = '';
         } else {
             c.classList.remove('horde-active');
             t.hidden = true;
+            t.style.display = 'none';
         }
     });
 
     return false;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    var active = document.querySelector('#page .tabset ul li.horde-active');
+    if (active) {
+        ShowTab(active.id.substring(3));
+    }
+});
