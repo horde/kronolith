@@ -97,11 +97,11 @@ if ($search_mode == 'basic') {
 
 if ($search_mode == 'basic') {
     $page_output->addInlineScript([
-        '$("pattern_title").focus()',
+        'document.getElementById("pattern_title").focus()',
     ], true);
 } else {
     $page_output->addInlineScript([
-        '$("title").focus()',
+        'document.getElementById("title").focus()',
     ], true);
     Horde_Core_Ui_JsCalendar::init(['full_weekdays' => true]);
     $page_output->addScriptFile('edit.js');

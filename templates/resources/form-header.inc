@@ -2,8 +2,8 @@
 
 function setAction(action, cid)
 {
-    $('actionID').value = action;
-    $('cid').value = cid;
+    document.getElementById('actionID').value = action;
+    document.getElementById('cid').value = cid;
     document.resourcesForm.submit();
     return false;
 }
